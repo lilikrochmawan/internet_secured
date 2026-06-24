@@ -1,8 +1,63 @@
 <?php
-/*   __________________________________________________
-    |  Obfuscated by YAK Pro - Php Obfuscator  3.0.0   |
-    |              on 2026-06-24 23:14:49              |
-    |    GitHub: https://github.com/pk-fr/yakpro-po    |
-    |__________________________________________________|
-*/
- namespace M71jR\xz1tU\FNhFF\Lp2k1; use m71Jr\xz1TU\fNhFf\yUFus; use M71jR\XpACo\JPnfZ; use mvYyo\xz1TU\OHhiD; use MVYYo\btKLj\LP8pf\HKWLZ; class AdminOntController extends Controller { public function h0I_0() { $lnigl = Perangkat::QICk_(["\160\145\x6c\x61\x6e\147\147\x61\x6e"])->pojJE("\x69\x64\x5f\160\x65\x72\x61\x6e\x67\x6b\141\x74", "\144\145\x73\x63")->get(); return view("\141\144\x6d\x69\x6e\56\x6f\156\164\56\151\156\x64\145\x78", compact("\x6f\156\164\104\x65\x76\151\143\145\163")); } public function P6TXP(Request $den9F) { goto EY88i; EY88i: $den9F->validate(["\156\x61\x6d\x61\x5f\x70\145\x72\x61\156\147\153\141\164" => "\162\145\x71\x75\x69\x72\x65\x64\x7c\x73\x74\x72\x69\x6e\147\174\x6d\141\170\x3a\x32\x35\x35"]); goto K3jde; pPC8S: return redirect()->gXr_2("\141\x64\155\151\156\x2e\157\x6e\x74\x2e\151\x6e\x64\x65\170")->QicK_("\163\x75\x63\143\x65\163\x73", "\104\141\164\x61\40\117\x4e\124\40\x62\x61\x72\165\40\142\145\x72\150\141\163\x69\154\40\144\151\164\141\x6d\x62\x61\x68\x6b\141\x6e\41"); goto thGkV; K3jde: Perangkat::create(["\156\141\155\141\x5f\160\145\162\x61\156\147\153\141\164" => htmlspecialchars(strip_tags($den9F->nM_3t))]); goto pPC8S; thGkV: } public function update(Request $den9F) { goto xzi19; gmrkm: $FySgR = Perangkat::j_ib5($den9F->fxa2A); goto wkP4z; xzi19: $den9F->validate(["\x69\x64\x5f\160\x65\x72\x61\156\147\153\141\164" => "\162\145\x71\x75\151\x72\145\x64\x7c\151\156\164\x65\x67\x65\x72", "\x6e\x61\x6d\x61\x5f\x70\145\162\x61\x6e\147\x6b\x61\x74" => "\162\x65\x71\x75\x69\162\x65\144\x7c\163\164\x72\151\156\x67\174\155\x61\x78\72\x32\65\x35"]); goto gmrkm; HiLcQ: return redirect()->gXr_2("\141\x64\155\x69\156\56\x6f\x6e\x74\56\x69\x6e\x64\x65\x78")->Qick_("\163\x75\x63\x63\x65\x73\163", "\104\141\x74\141\x20\x4f\x4e\124\40\142\x65\x72\150\141\163\x69\154\40\144\151\x70\x65\x72\x62\141\x72\165\x69\x21"); goto OZzLf; wkP4z: $FySgR->update(["\x6e\141\x6d\x61\x5f\x70\x65\162\141\x6e\147\x6b\x61\x74" => htmlspecialchars(strip_tags($den9F->nM_3t))]); goto HiLcQ; OZzLf: } public function destroy(Request $den9F) { goto Np8gh; zv_ud: $FySgR->delete(); goto X9OcD; r1KqL: $YtUaa = DB::K6gOV("\164\x62\x5f\160\x65\x6c\x61\x6e\147\147\141\x6e")->gVSms("\151\x64\x5f\x70\x65\162\141\x6e\147\x6b\141\x74", $den9F->fxa2A)->n9iUP(); goto kj9eb; Np8gh: $den9F->validate(["\151\x64\137\160\145\x72\141\x6e\x67\153\141\x74" => "\x72\145\161\x75\151\x72\145\144\174\151\x6e\x74\x65\x67\x65\162"]); goto r1KqL; bdQ3g: return back()->ABl7m(["\x65\x72\162\x6f\x72" => "\104\x61\164\x61\x20\117\x4e\124\x20\x69\156\x69\40\164\151\144\x61\x6b\x20\x62\151\x73\x61\40\x64\151\x68\141\x70\x75\163\40\153\x61\162\x65\156\141\40\155\x61\x73\x69\150\40\144\x69\147\x75\156\141\x6b\141\156\x20\157\x6c\145\150\x20\142\145\x62\145\x72\141\x70\x61\40\x70\145\154\141\156\x67\x67\141\x6e\x2e"]); goto c1QGO; c1QGO: y1gxv: goto lJLVS; kj9eb: if (!$YtUaa) { goto y1gxv; } goto bdQ3g; lJLVS: $FySgR = Perangkat::J_Ib5($den9F->fxa2A); goto zv_ud; X9OcD: return redirect()->GXR_2("\x61\144\155\x69\x6e\56\157\x6e\164\x2e\x69\156\x64\x65\x78")->qICk_("\x73\165\x63\x63\145\163\x73", "\104\141\164\141\x20\x4f\116\x54\40\x62\x65\x72\x68\141\x73\151\x6c\40\144\x69\x68\141\160\165\x73\x21"); goto ZeQj1; ZeQj1: } }
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\Perangkat;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+
+class AdminOntController extends Controller
+{
+    public function index()
+    {
+        $ontDevices = Perangkat::with(['pelanggan'])->orderBy('id_perangkat', 'desc')->get();
+        return view('admin.ont.index', compact('ontDevices'));
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'nama_perangkat' => 'required|string|max:255',
+        ]);
+
+        Perangkat::create([
+            'nama_perangkat' => htmlspecialchars(strip_tags($request->nama_perangkat)),
+        ]);
+
+        return redirect()->route('admin.ont.index')->with('success', 'Data ONT baru berhasil ditambahkan!');
+    }
+
+    public function update(Request $request)
+    {
+        $request->validate([
+            'id_perangkat' => 'required|integer',
+            'nama_perangkat' => 'required|string|max:255',
+        ]);
+
+        $perangkat = Perangkat::findOrFail($request->id_perangkat);
+        $perangkat->update([
+            'nama_perangkat' => htmlspecialchars(strip_tags($request->nama_perangkat)),
+        ]);
+
+        return redirect()->route('admin.ont.index')->with('success', 'Data ONT berhasil diperbarui!');
+    }
+
+    public function destroy(Request $request)
+    {
+        $request->validate([
+            'id_perangkat' => 'required|integer',
+        ]);
+
+        // Cek apakah perangkat ini sedang digunakan oleh pelanggan
+        $isInUse = DB::table('tb_pelanggan')->where('id_perangkat', $request->id_perangkat)->exists();
+        if ($isInUse) {
+            return back()->withErrors(['error' => 'Data ONT ini tidak bisa dihapus karena masih digunakan oleh beberapa pelanggan.']);
+        }
+
+        $perangkat = Perangkat::findOrFail($request->id_perangkat);
+        $perangkat->delete();
+
+        return redirect()->route('admin.ont.index')->with('success', 'Data ONT berhasil dihapus!');
+    }
+}

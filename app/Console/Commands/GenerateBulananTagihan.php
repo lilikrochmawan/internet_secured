@@ -1,8 +1,135 @@
 <?php
-/*   __________________________________________________
-    |  Obfuscated by YAK Pro - Php Obfuscator  3.0.0   |
-    |              on 2026-06-24 23:14:47              |
-    |    GitHub: https://github.com/pk-fr/yakpro-po    |
-    |__________________________________________________|
-*/
- namespace M71jr\PnRyK\koIn3; use MVyyo\PNRyk\bfzKi; use mvYyo\btKLj\LP8PF\HkWlz; use mVyYo\btKLj\LP8Pf\Log; use m71JR\xPaco\rfKjS; use m71JR\xPacO\oBl06; class GenerateBulananTagihan extends Command { protected $HjD9A = "\141\x70\160\72\x67\x65\x6e\x65\162\x61\164\x65\x2d\x62\165\x6c\x61\156\141\156\55\164\x61\147\151\150\141\156\40\x7b\x2d\x2d\x6d\x6f\x6e\164\x68\75\x20\72\40\102\165\154\141\156\x20\x66\x6f\162\x6d\141\x74\x20\x4d\115\x7d\40\173\x2d\x2d\171\145\141\162\75\x20\x3a\x20\124\141\x68\165\x6e\40\146\157\x72\155\x61\x74\40\131\x59\131\131\x7d"; protected $z8iww = "\x47\145\x6e\145\162\x61\164\145\x20\162\x65\147\x75\x6c\x61\162\40\x6d\x6f\x6e\x74\x68\x6c\x79\40\x62\151\x6c\154\163\x20\146\157\162\x20\143\165\163\164\157\155\145\162\163"; public function omDEK() { goto CVxSK; gEwqS: $KEn7u = true; goto vEURV; aBJ0L: $gtvHx = $pAftS->URLPU ?? 10; goto M7dDx; mqNDx: $OVdHq = Pelanggan::qiCk_("\160\141\x6b\x65\x74\x44\x65\x74\141\151\154")->EeDR8(function ($dSJoX) use ($jJEok) { $dSJoX->JEGne(DB::PgsL6(1))->from("\x74\142\137\164\141\x67\151\150\x61\x6e")->h_wZ8("\164\142\x5f\x74\141\x67\x69\x68\141\156\56\151\x64\x5f\x70\145\154\141\156\x67\147\x61\156", "\164\x62\137\x70\x65\154\141\x6e\x67\147\141\x6e\x2e\x69\x64\x5f\160\x65\154\141\156\147\x67\x61\x6e")->gvSms("\164\142\137\x74\141\147\151\150\141\156\56\x62\165\154\141\x6e\x5f\164\141\x68\x75\x6e", $jJEok); })->get(); goto KtF99; V3Y5u: $pAftS = DB::K6gOV("\x74\x62\137\x70\x72\157\146\x69\x6c\145")->first(); goto Hkrov; CVxSK: $SvXxy = $this->JopoO("\155\x6f\x6e\164\x68") ?: date("\155"); goto qr0_f; KVXcV: MfhBY: goto mZy9U; qr0_f: $hsFQ5 = $this->joPoo("\x79\145\141\x72") ?: date("\x59"); goto AvtMo; E4rES: Log::info("\107\145\156\145\x72\x61\x74\x65\102\165\x6c\x61\x6e\x61\156\x54\x61\x67\151\150\x61\156\72\x20\x4e\157\x20\145\154\x69\147\x69\142\154\x65\x20\x63\165\x73\x74\x6f\x6d\145\x72\x73\40\x66\157\165\156\x64\x20\x66\157\x72\40\160\x65\162\x69\x6f\x64\72\x20{$jJEok}"); goto jj3sS; M7dDx: $DvR9a = $pAftS->JzTzC ?? "\x70\x72\141\x62\x61\171\x61\162"; goto mqNDx; eir6s: Log::info("\x47\x65\156\145\x72\x61\x74\x65\102\165\154\141\x6e\x61\x6e\x54\141\147\151\x68\141\x6e\72\x20\123\165\x63\x63\x65\x73\x73\x66\x75\154\x6c\171\x20\x67\x65\x6e\145\x72\x61\x74\x65\144\40{$fzT_S}\x20\x62\x69\154\154\x73\x20\146\157\x72\x20\x70\145\x72\x69\157\144\40{$jJEok}"); goto bBa59; Hkrov: $BKG5E = $pAftS->irtYZ ?? "\164\x61\x6e\x67\147\x61\154\137\164\x65\x74\141\x70"; goto aBJ0L; UpO_6: $this->info("\x4e\157\x20\145\x6c\x69\147\151\142\154\x65\40\143\165\163\164\x6f\x6d\x65\x72\x73\40\x66\157\165\x6e\x64\x20\x66\x6f\162\40\x74\150\151\163\40\160\145\x72\151\157\144\x2e\x20\x41\x6c\x6c\x20\x62\151\x6c\x6c\163\40\x6d\x69\147\x68\164\x20\x61\154\162\x65\x61\x64\x79\x20\142\145\40\x67\145\156\x65\162\x61\x74\145\144\56"); goto E4rES; Lejpm: WrFeM: goto X4QTc; X4QTc: $fzT_S = 0; goto orgVT; TQ8GE: $this->info("\x53\x74\x61\162\x74\x69\x6e\147\40\x62\x69\x6c\x6c\151\x6e\x67\x20\x67\145\x6e\145\x72\x61\164\x69\157\x6e\x20\146\x6f\x72\40\x70\x65\x72\x69\x6f\x64\x3a\40{$SvXxy}\x2d{$hsFQ5}\x20\50{$jJEok}\51\x2e\x2e\x2e"); goto LGQfx; Krlxk: if (!($R8Khp && isset($R8Khp->lgzNg) && $R8Khp->lgzNg === "\x61\x6b\x74\x69\146")) { goto j9oAN; } goto gEwqS; orgVT: foreach ($OVdHq as $LjUe4) { goto OJfiT; t6F_i: ufCun: goto EdJuG; EdJuG: $o1TPL = $tRzu6 + $tRzu6 * $gRNOT; goto He3Fr; h55MH: $fzT_S++; goto ISjMe; mOmDR: rvv96: goto XNNEg; GH3ry: $o1TPL = $tRzu6; goto GFhrH; upeWz: if (!($o1TPL <= 0)) { goto HFdFv; } goto P9cNv; OJfiT: $tRzu6 = $LjUe4->BBe2p->Wf_fi ?? 0; goto LL0C4; TQG07: $e_HwD = (int) date("\144", strtotime($LjUe4->vGsWK)); goto mOmDR; cH0W9: if ($KEn7u) { goto ufCun; } goto GH3ry; P9cNv: goto RQ1oS; goto GeT6I; N5Sr0: if (!($DvR9a === "\160\141\x73\x63\x61\x62\x61\x79\141\162")) { goto VLjnY; } goto W5L_q; GNcbj: DB::zSQvi(function () use ($LjUe4, $jJEok, $o1TPL, $LhobQ) { DB::K6Gov("\164\x62\x5f\164\141\x67\151\150\x61\156")->insert(["\x69\144\x5f\160\x65\154\x61\x6e\147\147\x61\x6e" => $LjUe4->nzuo3, "\142\x75\x6c\x61\156\137\164\141\150\x75\x6e" => $jJEok, "\x6a\155\154\x5f\x62\141\x79\141\162" => $o1TPL, "\x74\145\x72\x62\x61\x79\x61\x72" => null, "\163\164\x61\x74\165\163\137\x62\x61\171\141\x72" => null, "\155\141\156\165\141\x6c\x5f\151\156\166\157\x69\143\145" => 0, "\x6a\141\x74\165\150\x5f\164\x65\155\160\157" => $LhobQ]); DB::k6goV("\164\142\137\x70\145\x6c\x61\x6e\x67\x67\x61\156")->gvsMs("\151\x64\137\160\x65\x6c\x61\x6e\x67\x67\x61\x6e", $LjUe4->nzuo3)->update(["\x6a\141\x74\x75\x68\137\164\145\x6d\160\x6f" => $LhobQ]); }); goto h55MH; LL0C4: $gRNOT = $LjUe4->BBe2p->lgzNg ?? 0; goto cH0W9; GeT6I: HFdFv: goto eK_NW; L94Gi: if (!($BKG5E === "\x74\141\156\147\x67\x61\x6c\137\x70\141\163\141\156\147" && !empty($LjUe4->vGsWK))) { goto rvv96; } goto TQG07; j10SL: VLjnY: goto tNo_d; He3Fr: xn1hd: goto upeWz; ISjMe: RQ1oS: goto z_3ul; C1JRo: $bKnqW = $HpVIG->YjPvr; goto IKW46; eK_NW: $HpVIG = \bpQVF\Carbon::create((int) $hsFQ5, (int) $SvXxy, 1); goto N5Sr0; GFhrH: goto xn1hd; goto t6F_i; csz2b: if (!($e_HwD > $hm755)) { goto XzMFU; } goto uQsxU; TNsb4: XzMFU: goto xX1UK; uQsxU: $e_HwD = $hm755; goto TNsb4; IKW46: $e_HwD = $gtvHx; goto L94Gi; xX1UK: $LhobQ = sprintf("\45\x30\x34\x64\x2d\45\x30\x32\x64\55\x25\60\x32\x64\40\x32\63\x3a\65\x39\x3a\x30\x30", $Rc0OM, $bKnqW, $e_HwD); goto GNcbj; tNo_d: $Rc0OM = $HpVIG->fTqkg; goto C1JRo; W5L_q: $HpVIG->SjSx1(); goto j10SL; XNNEg: $hm755 = (int) date("\164", strtotime($Rc0OM . "\55" . sprintf("\x25\x30\62\144", $bKnqW) . "\x2d\x30\61")); goto csz2b; z_3ul: } goto KVXcV; vEURV: j9oAN: goto V3Y5u; Frzko: $KEn7u = false; goto au__6; mZy9U: $this->info("\x53\x75\x63\143\145\x73\x73\146\x75\x6c\x6c\x79\x20\x67\x65\x6e\145\162\x61\164\x65\144\x20{$fzT_S}\40\142\x69\x6c\x6c\x73\40\x66\157\x72\x20\x70\145\x72\x69\x6f\144\x20{$SvXxy}\x2d{$hsFQ5}\56"); goto eir6s; KtF99: if (!$OVdHq->isEmpty()) { goto WrFeM; } goto UpO_6; LGQfx: Log::info("\107\x65\156\145\162\141\x74\x65\x42\165\154\141\x6e\x61\x6e\x54\141\x67\151\x68\x61\156\72\x20\x53\164\x61\x72\164\151\156\x67\x20\155\x6f\x6e\x74\x68\154\171\x20\142\x69\x6c\x6c\x69\156\x67\40\147\145\156\x65\162\141\164\x69\x6f\156\x20\x66\x6f\162\x20\160\145\162\151\157\144\x3a\40{$jJEok}"); goto Frzko; jj3sS: return Command::K5_CO; goto Lejpm; au__6: $R8Khp = DB::k6gOv("\164\142\154\137\160\x61\x6b\145\x74\155\x69\153\162\157\x74\x69\x6b")->first(); goto Krlxk; AvtMo: $jJEok = $SvXxy . $hsFQ5; goto TQ8GE; bBa59: return Command::K5_CO; goto DKHeK; DKHeK: } }
+
+namespace App\Console\Commands;
+
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use App\Models\Pelanggan;
+use App\Models\Tagihan;
+
+class GenerateBulananTagihan extends Command
+{
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'app:generate-bulanan-tagihan {--month= : Bulan format MM} {--year= : Tahun format YYYY}';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Generate regular monthly bills for customers';
+
+    /**
+     * Execute the console command.
+     */
+    public function handle()
+    {
+        $bulan = $this->option('month') ?: date('m');
+        $tahun = $this->option('year') ?: date('Y');
+        $bulantahun = $bulan . $tahun;
+
+        $this->info("Starting billing generation for period: {$bulan}-{$tahun} ({$bulantahun})...");
+        Log::info("GenerateBulananTagihan: Starting monthly billing generation for period: {$bulantahun}");
+
+        // PPN setting
+        $ppn_aktif = false;
+        $paketSettings = DB::table('tbl_paketmikrotik')->first();
+        if ($paketSettings && isset($paketSettings->ppn) && $paketSettings->ppn === 'aktif') {
+            $ppn_aktif = true;
+        }
+
+        // Global billing settings
+        $settings = DB::table('tb_profile')->first();
+        $tipe = $settings->tipe_jatuh_tempo ?? 'tanggal_tetap';
+        $default_hari = $settings->hari_jatuh_tempo ?? 10;
+        $sistem = $settings->sistem_billing ?? 'prabayar';
+
+        // Find customers who do not have a bill for this month-year
+        $pelanggans = Pelanggan::with('paketDetail')
+            ->whereNotExists(function ($query) use ($bulantahun) {
+                $query->select(DB::raw(1))
+                    ->from('tb_tagihan')
+                    ->whereColumn('tb_tagihan.id_pelanggan', 'tb_pelanggan.id_pelanggan')
+                    ->where('tb_tagihan.bulan_tahun', $bulantahun);
+            })
+            ->get();
+
+        if ($pelanggans->isEmpty()) {
+            $this->info('No eligible customers found for this period. All bills might already be generated.');
+            Log::info("GenerateBulananTagihan: No eligible customers found for period: {$bulantahun}");
+            return Command::SUCCESS;
+        }
+
+        $generated = 0;
+
+        foreach ($pelanggans as $plg) {
+            $harga_paket = $plg->paketDetail->harga ?? 0;
+            $ppn_rate = $plg->paketDetail->ppn ?? 0;
+            
+            if ($ppn_aktif) {
+                $total_tagihan = $harga_paket + ($harga_paket * $ppn_rate);
+            } else {
+                $total_tagihan = $harga_paket;
+            }
+
+            // Skip if price is 0 or not configured properly (to prevent empty invoices unless package is free)
+            if ($total_tagihan <= 0) {
+                continue;
+            }
+
+            // Calculate due date (jatuh tempo)
+            $target_date = \Carbon\Carbon::create((int)$tahun, (int)$bulan, 1);
+            
+            // Jika pascabayar, jatuh tempo adalah di bulan selanjutnya (+1 bulan)
+            if ($sistem === 'pascabayar') {
+                $target_date->addMonth();
+            }
+
+            $due_year = $target_date->year;
+            $due_month = $target_date->month;
+
+            $due_day = $default_hari;
+            if ($tipe === 'tanggal_pasang' && !empty($plg->tgl_pemasangan)) {
+                $due_day = (int) date('d', strtotime($plg->tgl_pemasangan));
+            }
+
+            // Cari jumlah hari maksimum di bulan target
+            $days_in_month = (int) date('t', strtotime($due_year . '-' . sprintf('%02d', $due_month) . '-01'));
+            if ($due_day > $days_in_month) {
+                $due_day = $days_in_month;
+            }
+
+            $tgl_jatuh_tempo = sprintf('%04d-%02d-%02d 23:59:00', $due_year, $due_month, $due_day);
+
+            DB::transaction(function () use ($plg, $bulantahun, $total_tagihan, $tgl_jatuh_tempo) {
+                // Insert bill
+                DB::table('tb_tagihan')->insert([
+                    'id_pelanggan' => $plg->id_pelanggan,
+                    'bulan_tahun' => $bulantahun,
+                    'jml_bayar' => $total_tagihan,
+                    'terbayar' => null,
+                    'status_bayar' => null,
+                    'manual_invoice' => 0,
+                    'jatuh_tempo' => $tgl_jatuh_tempo
+                ]);
+
+                // Update customer due date
+                DB::table('tb_pelanggan')
+                    ->where('id_pelanggan', $plg->id_pelanggan)
+                    ->update(['jatuh_tempo' => $tgl_jatuh_tempo]);
+            });
+
+            $generated++;
+        }
+
+        $this->info("Successfully generated {$generated} bills for period {$bulan}-{$tahun}.");
+        Log::info("GenerateBulananTagihan: Successfully generated {$generated} bills for period {$bulantahun}");
+
+        return Command::SUCCESS;
+    }
+}

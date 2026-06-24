@@ -1,8 +1,322 @@
 <?php
-/*   __________________________________________________
-    |  Obfuscated by YAK Pro - Php Obfuscator  3.0.0   |
-    |              on 2026-06-24 23:14:48              |
-    |    GitHub: https://github.com/pk-fr/yakpro-po    |
-    |__________________________________________________|
-*/
- namespace M71jR\Xz1tu\FnhfF\LP2k1; use M71Jr\xZ1tU\fNHff\yUfus; use m71jR\xpAco\mdwLm; use m71JR\xPAco\RfkJs; use M71JR\XPAcO\Qj0QC; use mVYYo\Xz1Tu\Ohhid; use mvyYO\btkLj\LP8pf\hkWlZ; use MvyYo\bTkLJ\lP8pF\xz1tu; use mvYyo\BtKLj\LP8pf\Log; class AdminNotificationController extends Controller { public function h0i_0() { goto eb6jk; SFj8V: return view("\x61\144\155\151\x6e\x2e\156\157\x74\x69\x66\x69\143\x61\164\151\157\156\56\x69\x6e\x64\145\x78", compact("\157\144\x70\163", "\141\x6e\156\x6f\x75\156\143\x65\x6d\x65\x6e\x74\x73")); goto owLFS; eb6jk: $k_oCJ = Odp::POjje("\x6e\x61\x6d\x61\x5f\x6f\x64\160", "\141\x73\143")->get(); goto SC2Ql; SC2Ql: $bony7 = Informasi::POJje("\151\144\137\151\156\146\157\x72\x6d\141\163\151", "\x64\x65\x73\x63")->SXsmb(5)->get(); goto SFj8V; owLFS: } public function otWs5($dCuFb) { $lFzpn = Pelanggan::GVsMS("\157\x64\x70", $dCuFb)->get(["\x69\144\x5f\x70\x65\x6c\141\156\147\147\x61\156", "\153\x6f\x64\x65\x5f\x70\x65\x6c\x61\156\147\147\141\x6e", "\x6e\141\155\141\137\x70\145\x6c\x61\x6e\147\147\141\156", "\156\157\x5f\164\145\x6c\x70"]); return response()->u0xQL($lFzpn); } public function SYsMa(Request $den9F) { goto SUeQ2; SUeQ2: $den9F->validate(["\x70\x65\163\141\156" => "\x72\145\161\x75\151\162\145\x64\174\163\164\x72\151\x6e\147", "\143\150\141\156\156\x65\154\163" => "\x72\x65\161\165\151\x72\x65\x64\x7c\x61\x72\x72\141\171", "\152\165\144\165\x6c" => "\x72\145\x71\x75\151\x72\145\x64\x5f\x69\x66\72\x63\x68\x61\x6e\156\145\154\163\x2e\x2a\x2c\x61\160\x70\174\x6e\x75\x6c\x6c\141\142\x6c\145\x7c\x73\164\x72\x69\x6e\147"]); goto S5WFI; nX9yz: HRxFD: goto WEGf_; Xuqe4: set_time_limit(1800); goto vFDmv; YBqGg: if (!(!$lqnNI || empty($lqnNI->yOwGQ))) { goto v2UkN; } goto DoJvL; NbieA: if (!in_array("\x77\141", $Hcwy4)) { goto ejF2H; } goto Xuqe4; ycLn9: return response()->U0xQL(["\163\165\x63\x63\145\x73\163" => true, "\x72\145\x73\x75\x6c\164\x73" => $nWGJV, "\x62\x65\x72\150\x61\163\x69\154" => $jPIPS, "\x67\141\147\141\x6c" => $G3J9n, "\155\x65\163\163\141\x67\145" => "\x50\145\x6e\147\151\162\151\155\141\156\40\156\x6f\164\x69\x66\151\x6b\141\x73\x69\x20\x75\155\165\x6d\40\x73\x65\x6c\x65\x73\141\x69\56"]); goto wbSiL; E7B0k: $diyMY = $den9F->HdXTU("\x70\145\163\x61\x6e"); goto Pl24g; uhkdM: v2UkN: goto ZboHA; ZboHA: $FuT00 = Pelanggan::Duptm("\156\157\137\x74\145\x6c\x70")->GvSms("\156\x6f\x5f\164\x65\x6c\x70", "\41\75", '')->get(); goto wyYpp; RJouO: return redirect()->GxR_2("\x61\x64\x6d\x69\x6e\x2e\x62\162\157\141\144\x63\141\163\164\56\151\156\x64\145\x78")->qICK_("\x73\x75\x63\143\145\163\x73", "\120\145\156\147\x75\x6d\165\x6d\x61\156\x20\x61\x70\x6c\151\153\x61\x73\x69\40\x62\145\x72\150\141\x73\x69\154\x20\144\x69\x74\145\x72\x62\x69\x74\x6b\x61\156\x21"); goto qyidR; nxyJU: $G3J9n = 0; goto NbieA; ff4uK: d2UyP: goto IHAjU; S5WFI: $Hcwy4 = $den9F->HDxtU("\x63\150\141\x6e\x6e\x65\x6c\163"); goto wDVfs; IHAjU: $nWGJV = []; goto xqJYg; IR3RD: Informasi::create(["\152\x75\x64\x75\154\137\151\x6e\x66\x6f\162\155\x61\163\x69" => $DdkN9 ?? "\x50\x65\x6e\147\165\x6d\165\155\x61\156\x20\122\145\x73\x6d\x69", "\151\x73\151\137\x69\156\146\x6f\162\155\x61\x73\x69" => $diyMY]); goto ff4uK; vFDmv: $lqnNI = DB::K6gov("\164\142\154\137\x74\157\153\x65\156")->gVsMS("\x69\x64\137\164\x6f\x6b\145\x6e", 1)->first(); goto YBqGg; UxBEh: if (!($den9F->MQPMr() || $den9F->f675e())) { goto hsqTd; } goto ycLn9; Pl24g: if (!in_array("\141\160\160", $Hcwy4)) { goto d2UyP; } goto IR3RD; hyKa3: return response()->U0XQl(["\163\165\143\143\x65\163\x73" => true, "\x72\145\x73\165\154\164\x73" => [], "\x62\x65\x72\x68\x61\163\151\x6c" => 0, "\147\141\x67\141\154" => 0, "\x6d\x65\x73\163\141\x67\145" => "\x54\x69\x64\141\153\x20\x61\x64\141\40\x70\145\154\141\156\x67\x67\141\156\x20\144\x65\156\x67\141\156\40\x6e\157\x6d\157\162\x20\164\145\x6c\145\160\x6f\156\40\141\x6b\164\151\146\56"]); goto FIqX5; WEGf_: ejF2H: goto UxBEh; wyYpp: if (!$FuT00->isEmpty()) { goto y3CBt; } goto hyKa3; xqJYg: $jPIPS = 0; goto nxyJU; wbSiL: hsqTd: goto RJouO; QDNae: foreach ($FuT00 as $TYJL8 => $MQy9w) { goto YZkbL; AJrs0: try { goto LEOOo; kF5Kt: $G3J9n++; goto srPup; UBkC2: $WFRth = $VabCL->U0XQL(); goto P2ym2; P2ym2: if ($VabCL->BfgkA() && isset($WFRth["\x73\x74\x61\x74\165\x73"]) && $WFRth["\x73\164\x61\x74\x75\x73"] === true) { goto crvu0; } goto kF5Kt; hSAXc: crvu0: goto b7lY0; DTfUn: goto ItmQg; goto hSAXc; RAOxI: $nWGJV[] = ["\163\164\x61\164\165\163" => true, "\x6e\x61\x6d\141" => $MQy9w->MbKDH, "\156\x6f\x5f\x74\145\154\x70" => $MQy9w->gMXy1, "\x6d\145\163\163\x61\x67\145" => "\124\145\162\153\x69\x72\151\155"]; goto ntKLm; MY6hW: $nWGJV[] = ["\163\164\141\164\x75\163" => false, "\156\141\x6d\141" => $MQy9w->MbKDH, "\156\x6f\x5f\164\x65\154\x70" => $MQy9w->gMXy1, "\x6d\x65\163\x73\141\147\145" => $WGeD0]; goto DTfUn; srPup: $WGeD0 = $WFRth["\x72\x65\x61\x73\x6f\156"] ?? $WFRth["\155\145\163\163\141\147\x65"] ?? "\106\157\156\156\x74\x65\40\x65\x72\x72\x6f\162\x20\141\164\141\x75\40\x64\145\166\x69\x63\145\40\157\146\x66\154\151\x6e\x65\x2e"; goto MY6hW; LEOOo: $VabCL = Http::OtBS9(10)->riU_x(["\x41\x75\x74\150\x6f\x72\x69\x7a\x61\164\x69\157\x6e" => $lqnNI->yOwGQ])->LxS1A()->EZaQ4("\150\164\x74\160\163\72\57\x2f\x61\x70\x69\56\x66\x6f\156\x6e\x74\145\x2e\143\157\155\x2f\163\x65\x6e\x64", ["\164\141\162\x67\145\164" => $MQy9w->gMXy1, "\x6d\x65\163\x73\141\147\x65" => $ak5bI, "\x63\157\x75\156\164\162\x79\103\x6f\x64\x65" => "\66\62"]); goto UBkC2; ntKLm: ItmQg: goto kKlNB; b7lY0: $jPIPS++; goto RAOxI; kKlNB: } catch (\Exception $qBfNK) { goto DTrWp; DTrWp: $G3J9n++; goto jWeeI; jWeeI: Log::BmEM8("\x42\162\157\141\144\x63\141\x73\x74\40\x57\x41\x20\x65\x72\x72\157\x72\x20\x74\157\x20{$MQy9w->MbKDH}\x3a\40" . $qBfNK->getMessage()); goto aEu09; aEu09: $nWGJV[] = ["\163\164\141\164\x75\163" => false, "\156\x61\x6d\x61" => $MQy9w->MbKDH, "\x6e\x6f\x5f\x74\x65\x6c\160" => $MQy9w->gMXy1, "\x6d\x65\163\x73\x61\147\145" => "\113\157\156\x65\153\163\151\x20\x41\x50\x49\40\x47\141\x67\x61\154\72\40" . $qBfNK->getMessage()]; goto va_UV; va_UV: } goto ngD0e; SEWeS: $ak5bI = str_replace(["\44\156\141\x6d\141", "\x24\160\145\154\141\x6e\x67\x67\x61\x6e"], [$MQy9w->MbKDH, $MQy9w->MbKDH], $diyMY); goto AJrs0; c4OAc: sleep(10); goto zOuh5; zOuh5: Xf_3W: goto SEWeS; YZkbL: if (!($TYJL8 > 0)) { goto Xf_3W; } goto c4OAc; ngD0e: kvRCa: goto r063Y; r063Y: } goto nX9yz; FIqX5: y3CBt: goto QDNae; wDVfs: $DdkN9 = $den9F->HdXtu("\x6a\165\144\x75\154"); goto E7B0k; DoJvL: return response()->U0XqL(["\163\165\143\143\x65\163\163" => false, "\155\x65\x73\163\x61\147\145" => "\x54\157\153\145\x6e\40\x57\x68\x61\164\163\x41\160\160\x20\106\x6f\156\156\164\145\x20\142\x65\x6c\165\x6d\40\144\151\x6b\x6f\x6e\146\151\x67\x75\162\141\163\151\x20\x64\151\40\x70\145\x6e\147\x61\x74\x75\162\141\x6e\56"], 400); goto uhkdM; qyidR: } public function KzuTj(Request $den9F) { goto roH90; G7Wi9: if (!(!$lqnNI || empty($lqnNI->yOwGQ))) { goto faMsh; } goto vrXGw; KUhpF: $nWGJV = []; goto NgBDa; vrXGw: return response()->U0xQL(["\x73\x75\143\143\x65\x73\163" => false, "\x6d\145\163\x73\x61\x67\145" => "\x54\x6f\x6b\145\x6e\40\127\150\x61\164\163\x41\x70\x70\x20\x46\x6f\156\156\x74\145\x20\142\145\x6c\x75\x6d\x20\x64\x69\153\x6f\156\146\x69\147\165\x72\x61\x73\x69\40\x64\151\40\160\x65\156\x67\x61\164\x75\x72\x61\x6e\56"], 400); goto xM1Np; QZWN_: $lqnNI = DB::k6Gov("\x74\x62\154\137\164\157\153\x65\x6e")->gVsms("\x69\144\137\x74\157\153\145\156", 1)->first(); goto G7Wi9; ieNua: $XiHH4 = $den9F->hDxTu("\x63\x6c\x69\145\156\164\137\151\144\163"); goto OwM0P; qyF1z: if (!$FuT00->isEmpty()) { goto ZrXbD; } goto HKzGW; u83uT: foreach ($FuT00 as $TYJL8 => $MQy9w) { goto nVewx; OcWKe: try { goto vhdoS; vhdoS: $VabCL = Http::oTbs9(10)->Riu_x(["\101\x75\x74\150\x6f\x72\x69\172\x61\164\151\157\156" => $lqnNI->yOwGQ])->LXS1A()->ezaQ4("\150\x74\164\x70\x73\x3a\x2f\x2f\141\x70\x69\x2e\146\157\156\x6e\x74\x65\56\x63\x6f\155\x2f\x73\145\x6e\144", ["\164\141\x72\147\x65\x74" => $MQy9w->gMXy1, "\155\x65\x73\x73\x61\x67\145" => $ak5bI, "\143\157\165\x6e\164\162\171\103\157\x64\x65" => "\x36\62"]); goto s4udc; Gv9OW: $nWGJV[] = ["\x73\164\x61\x74\165\x73" => true, "\156\x61\x6d\x61" => $MQy9w->MbKDH, "\156\157\137\164\x65\154\x70" => $MQy9w->gMXy1, "\155\x65\x73\x73\141\x67\145" => "\124\x65\162\x6b\x69\162\151\x6d"]; goto o4gZN; o2lTv: $WGeD0 = $WFRth["\162\x65\141\x73\157\156"] ?? $WFRth["\x6d\x65\163\163\x61\147\145"] ?? "\x46\x6f\156\156\164\x65\40\x65\x72\x72\x6f\162\40\x61\164\x61\x75\40\144\145\x76\x69\x63\x65\40\157\x66\x66\x6c\151\x6e\x65\x2e"; goto IC1BW; AFwXu: $G3J9n++; goto o2lTv; oSfqd: goto tm0qW; goto S1Ij4; S1Ij4: lBBJa: goto QRwzr; s4udc: $WFRth = $VabCL->U0xql(); goto oJ5OX; o4gZN: tm0qW: goto WExNN; oJ5OX: if ($VabCL->Bfgka() && isset($WFRth["\163\x74\x61\164\165\x73"]) && $WFRth["\x73\164\x61\164\165\163"] === true) { goto lBBJa; } goto AFwXu; QRwzr: $jPIPS++; goto Gv9OW; IC1BW: $nWGJV[] = ["\x73\x74\x61\164\165\163" => false, "\156\141\x6d\x61" => $MQy9w->MbKDH, "\156\x6f\137\x74\145\x6c\x70" => $MQy9w->gMXy1, "\155\x65\x73\x73\141\147\x65" => $WGeD0]; goto oSfqd; WExNN: } catch (\Exception $qBfNK) { goto bHYBo; LoFLB: Log::BMem8("\x42\x72\157\141\x64\x63\141\163\x74\40\x57\x41\40\117\104\x50\40\x65\162\x72\x6f\162\40\164\x6f\40{$MQy9w->MbKDH}\72\40" . $qBfNK->getMessage()); goto Pxr9J; bHYBo: $G3J9n++; goto LoFLB; Pxr9J: $nWGJV[] = ["\x73\x74\141\x74\165\x73" => false, "\156\x61\155\141" => $MQy9w->MbKDH, "\x6e\157\137\x74\x65\154\x70" => $MQy9w->gMXy1, "\x6d\x65\163\163\x61\x67\145" => "\113\157\156\145\x6b\x73\x69\40\101\120\111\x20\107\141\147\141\x6c\72\x20" . $qBfNK->getMessage()]; goto hHFhJ; hHFhJ: } goto LF_f7; LF_f7: Ww2nX: goto HqQsE; I4tud: $ak5bI = str_replace(["\x24\x6e\x61\x6d\x61", "\44\160\145\154\141\156\x67\x67\x61\156", "\x24\x6f\x64\160"], [$MQy9w->MbKDH, $MQy9w->MbKDH, $bg0dF->uhofv], $diyMY); goto OcWKe; DZbJl: l5iSb: goto I4tud; nVewx: if (!($TYJL8 > 0)) { goto l5iSb; } goto iTxhV; iTxhV: sleep(10); goto DZbJl; HqQsE: } goto dSD_v; roH90: $den9F->validate(["\151\x64\x5f\x6f\144\160" => "\162\145\161\x75\151\x72\x65\144\174\151\x6e\164\x65\147\145\x72", "\160\x65\163\141\156" => "\162\x65\161\x75\x69\162\145\x64\174\x73\x74\162\x69\x6e\147", "\143\x6c\151\145\156\x74\x5f\151\144\x73" => "\x72\x65\x71\x75\x69\162\145\144\174\x61\x72\162\141\171"]); goto yUvEl; f_ino: return response()->u0xql(["\x73\x75\143\143\145\x73\x73" => true, "\x72\145\163\x75\154\164\x73" => $nWGJV, "\x62\x65\162\150\141\163\x69\x6c" => $jPIPS, "\147\141\147\x61\x6c" => $G3J9n, "\155\145\x73\x73\141\147\x65" => "\120\145\x6e\147\151\162\x69\155\x61\x6e\40\156\x6f\x74\151\x66\151\153\141\163\x69\x20\x4f\x44\x50\x20\163\x65\154\x65\x73\x61\x69\x2e"]); goto jl5tV; dSD_v: WdEII: goto f_ino; DdFid: $FuT00 = Pelanggan::MqCiB("\151\x64\137\160\x65\x6c\141\156\147\x67\x61\156", $XiHH4)->DUpTm("\x6e\x6f\x5f\x74\x65\154\160")->gVsmS("\x6e\157\137\164\x65\154\x70", "\41\x3d", '')->get(); goto qyF1z; NgBDa: $jPIPS = 0; goto SYlNC; HKzGW: return response()->U0xQl(["\163\165\x63\x63\x65\x73\163" => false, "\x6d\x65\x73\163\141\x67\x65" => "\x54\151\x64\x61\153\x20\x61\144\x61\40\160\145\154\x61\156\x67\147\x61\x6e\x20\164\145\x72\x70\151\x6c\151\150\x20\171\x61\156\147\40\x6d\145\x6d\x69\x6c\151\153\x69\40\156\157\x6d\157\x72\40\164\x65\154\x65\x70\157\156\40\141\153\164\151\x66\x2e"], 400); goto OiaAF; xM1Np: faMsh: goto DdFid; yUvEl: set_time_limit(1800); goto IHbRF; eufdS: $diyMY = $den9F->HdXtu("\x70\x65\x73\x61\156"); goto ieNua; IHbRF: $NJo_g = $den9F->HdXTU("\x69\144\137\157\x64\160"); goto eufdS; OwM0P: $bg0dF = Odp::J_IB5($NJo_g); goto QZWN_; SYlNC: $G3J9n = 0; goto u83uT; OiaAF: ZrXbD: goto KUhpF; jl5tV: } public function lu62Q($dCuFb) { goto EE0EW; kUJvN: $DNghV->delete(); goto ew00O; ew00O: return redirect()->gXR_2("\x61\144\x6d\x69\x6e\x2e\142\162\157\141\144\143\141\163\164\56\x69\x6e\x64\145\170")->QICk_("\163\165\143\143\x65\163\x73", "\x50\145\x6e\x67\x75\155\165\x6d\141\156\40\141\x70\x6c\151\153\x61\163\x69\40\142\x65\x72\150\x61\163\151\x6c\x20\x64\x69\x68\x61\160\x75\x73\x21"); goto k5ZFO; EE0EW: $DNghV = Informasi::j_Ib5($dCuFb); goto kUJvN; k5ZFO: } public function reemC() { goto qwIZ9; toGgd: foreach ($RIGCs as $ivk6S) { goto ym3yx; ym3yx: $iFYG2 = \bPqVf\Carbon::parse($ivk6S->gFbFW); goto wN3en; dyF6_: cabfy: goto WCZXc; wN3en: $UIiXb[] = ["\151\x64" => "\x63\157\x6d\160\154\141\151\x6e\x74\x5f" . $ivk6S->YrW9L, "\x74\x79\160\145" => "\x63\157\155\x70\x6c\141\x69\x6e\164", "\164\151\x74\154\145" => "\x4b\x65\154\x75\150\141\156\40\102\x61\162\x75", "\x64\145\163\x63\x72\x69\x70\164\x69\x6f\x6e" => ($ivk6S->UJoNp->MbKDH ?? "\x50\145\154\x61\x6e\x67\x67\141\x6e") . "\x3a\x20" . $ivk6S->IRCJs, "\165\x72\154" => route("\141\x64\155\x69\156\x2e\x6b\145\x6c\x75\x68\141\x6e\56\151\156\144\x65\x78"), "\x74\x69\155\145\x73\164\x61\155\160" => $iFYG2->xSSml(), "\x74\x69\155\x65\137\x68\165\155\141\x6e" => $iFYG2->ndN4d()]; goto dyF6_; WCZXc: } goto BwUul; tI7SL: foreach ($z0Glb as $Gqo7D) { $UIiXb[] = ["\x69\144" => "\x6f\x72\144\145\x72\137\x69\x6e\163\164\x61\x6c\x6c\x65\144\x5f" . $Gqo7D->id, "\x74\x79\160\x65" => "\157\162\x64\145\x72\x5f\151\x6e\163\164\x61\154\x6c\145\x64", "\x74\151\164\154\x65" => "\113\x6f\156\x66\x69\162\155\141\x73\x69\x20\123\145\x6c\145\x73\141\x69\40\120\145\x6d\x61\x73\x61\156\147\x61\x6e", "\144\x65\x73\143\x72\x69\x70\164\151\x6f\x6e" => "\x54\145\x6b\156\x69\x73\x69\40" . ($Gqo7D->mRpJU->CXNly ?? "\x54\x65\153\156\x69\163\x69") . "\40\155\145\x6e\171\x65\154\x65\163\141\x69\x6b\141\156\40\160\x65\155\x61\x73\x61\156\x67\141\x6e\40\165\x6e\164\x75\x6b\x20" . $Gqo7D->xA2QH, "\x75\x72\154" => route("\x61\x64\155\151\156\56\x6f\x72\144\145\x72\x5f\x70\x65\155\141\163\x61\156\147\x61\156\56\151\156\x64\145\x78"), "\164\x69\x6d\x65\163\164\x61\155\x70" => $Gqo7D->xt_RW ? $Gqo7D->xt_RW->XsSML() : now()->Xssml(), "\164\x69\155\145\137\150\165\155\141\156" => $Gqo7D->xt_RW ? $Gqo7D->xt_RW->nDN4d() : "\102\141\x72\165\x20\163\141\152\x61"]; jdksw: } goto RK1nw; l9Iq2: usort($UIiXb, function ($tGBG7, $qe9iF) { return strcmp($qe9iF["\x74\151\x6d\x65\163\x74\x61\155\160"], $tGBG7["\x74\151\155\x65\163\164\x61\x6d\160"]); }); goto ACedi; uHzYE: foreach ($tMxHj as $Gqo7D) { $UIiXb[] = ["\151\144" => "\x6f\x72\x64\x65\x72\137\x70\x65\x6e\x64\x69\x6e\147\x5f" . $Gqo7D->id, "\x74\x79\160\x65" => "\157\162\x64\145\162\x5f\x70\145\x6e\x64\151\156\x67", "\x74\151\x74\x6c\x65" => "\x50\x65\x72\x6d\151\x6e\164\141\141\x6e\x20\x50\141\x73\x61\156\147\x20\x42\x61\x72\x75", "\144\x65\x73\143\162\x69\x70\164\x69\157\x6e" => "\x53\x61\154\x65\163\x20" . ($Gqo7D->PVeSV->CXNly ?? "\x53\141\154\145\163") . "\40\155\x65\156\147\141\x6a\x75\153\141\156\x20\160\145\155\141\163\141\x6e\x67\x61\156\x20\x62\141\162\x75\40\x75\x6e\164\165\x6b\x20" . $Gqo7D->xA2QH, "\x75\162\154" => route("\141\x64\x6d\x69\x6e\x2e\x6f\162\144\x65\x72\137\160\x65\155\141\x73\141\x6e\x67\141\156\x2e\x69\x6e\144\x65\170"), "\x74\x69\x6d\x65\x73\164\141\155\x70" => $Gqo7D->wgFMj ? $Gqo7D->wgFMj->XsSml() : now()->XsSML(), "\164\x69\x6d\x65\x5f\150\165\155\141\x6e" => $Gqo7D->wgFMj ? $Gqo7D->wgFMj->nDn4D() : "\x42\141\162\165\40\163\x61\x6a\x61"]; s8gYQ: } goto s4TQV; RK1nw: PwUO9: goto TrnAJ; ACedi: return response()->U0xQl(["\x73\165\x63\143\x65\x73\x73" => true, "\x6e\x6f\x74\151\146\x69\143\x61\164\151\157\x6e\163" => $UIiXb]); goto c3Gtr; BwUul: j8D4S: goto l9Iq2; qwIZ9: $UIiXb = []; goto PIsvY; PIsvY: $tMxHj = \M71jR\xPacO\OrderPemasangan::qicK_("\x73\x61\154\145\x73")->gvsms("\163\x74\141\x74\x75\x73", "\x70\145\156\x64\x69\156\x67")->pOJJe("\143\x72\145\141\164\x65\144\137\x61\x74", "\144\x65\163\143")->get(); goto uHzYE; s4TQV: MnLrb: goto s3LBE; s3LBE: $z0Glb = \m71JR\xpaCo\OrderPemasangan::qICk_("\164\145\x6b\x6e\151\x73\151")->gVsmS("\163\x74\x61\164\x75\163", "\x69\x6e\x73\164\141\x6c\154\145\x64")->POjje("\x75\x70\144\x61\x74\x65\x64\137\141\x74", "\144\x65\x73\143")->get(); goto tI7SL; TrnAJ: $RIGCs = \M71jr\XpACO\Keluhan::QiCK_("\160\145\154\x61\156\147\x67\141\x6e")->GVsmS("\163\164\x61\164\165\x73\x5f\x6b\145\154\165\x68\141\x6e", "\155\x65\x6e\165\156\x67\147\x75")->PoJJe("\164\x61\x6e\147\x67\x61\154", "\144\145\x73\143")->get(); goto toGgd; c3Gtr: } }
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\Odp;
+use App\Models\Pelanggan;
+use App\Models\Informasi;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
+
+class AdminNotificationController extends Controller
+{
+    public function index()
+    {
+        $odps = Odp::orderBy('nama_odp', 'asc')->get();
+        $announcements = Informasi::orderBy('id_informasi', 'desc')->take(5)->get();
+        return view('admin.notification.index', compact('odps', 'announcements'));
+    }
+
+    public function getOdpClients($id)
+    {
+        $clients = Pelanggan::where('odp', $id)->get(['id_pelanggan', 'kode_pelanggan', 'nama_pelanggan', 'no_telp']);
+        return response()->json($clients);
+    }
+
+    public function sendGeneral(Request $request)
+    {
+        $request->validate([
+            'pesan' => 'required|string',
+            'channels' => 'required|array',
+            'judul' => 'required_if:channels.*,app|nullable|string',
+        ]);
+
+        $channels = $request->input('channels');
+        $judul = $request->input('judul');
+        $pesan = $request->input('pesan');
+
+        // 1. Tampilkan di Aplikasi Login Pelanggan (tbl_informasi)
+        if (in_array('app', $channels)) {
+            Informasi::create([
+                'judul_informasi' => $judul ?? 'Pengumuman Resmi',
+                'isi_informasi' => $pesan,
+            ]);
+        }
+
+        // 2. Kirim via WhatsApp ke Semua Pelanggan
+        $results = [];
+        $berhasil = 0;
+        $gagal = 0;
+
+        if (in_array('wa', $channels)) {
+            set_time_limit(1800);
+
+            $tokenInfo = DB::table('tbl_token')->where('id_token', 1)->first();
+            if (!$tokenInfo || empty($tokenInfo->token)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Token WhatsApp Fonnte belum dikonfigurasi di pengaturan.'
+                ], 400);
+            }
+
+            // Ambil semua pelanggan dengan nomor telepon
+            $pelangganList = Pelanggan::whereNotNull('no_telp')
+                ->where('no_telp', '!=', '')
+                ->get();
+
+            if ($pelangganList->isEmpty()) {
+                return response()->json([
+                    'success' => true,
+                    'results' => [],
+                    'berhasil' => 0,
+                    'gagal' => 0,
+                    'message' => 'Tidak ada pelanggan dengan nomor telepon aktif.'
+                ]);
+            }
+
+            foreach ($pelangganList as $index => $pelanggan) {
+                // Jeda pengiriman 10 detik (kecuali pesan pertama)
+                if ($index > 0) {
+                    sleep(10);
+                }
+
+                // Format dinamis jika menggunakan tag nama
+                $customPesan = str_replace(
+                    ['$nama', '$pelanggan'],
+                    [$pelanggan->nama_pelanggan, $pelanggan->nama_pelanggan],
+                    $pesan
+                );
+
+                try {
+                    $response = Http::timeout(10)->withHeaders([
+                        'Authorization' => $tokenInfo->token
+                    ])->asForm()->post('https://api.fonnte.com/send', [
+                        'target' => $pelanggan->no_telp,
+                        'message' => $customPesan,
+                        'countryCode' => '62'
+                    ]);
+
+                    $resData = $response->json();
+                    if ($response->successful() && isset($resData['status']) && $resData['status'] === true) {
+                        $berhasil++;
+                        $results[] = [
+                            'status' => true,
+                            'nama' => $pelanggan->nama_pelanggan,
+                            'no_telp' => $pelanggan->no_telp,
+                            'message' => 'Terkirim'
+                        ];
+                    } else {
+                        $gagal++;
+                        $reason = $resData['reason'] ?? $resData['message'] ?? 'Fonnte error atau device offline.';
+                        $results[] = [
+                            'status' => false,
+                            'nama' => $pelanggan->nama_pelanggan,
+                            'no_telp' => $pelanggan->no_telp,
+                            'message' => $reason
+                        ];
+                    }
+                } catch (\Exception $e) {
+                    $gagal++;
+                    Log::error("Broadcast WA error to {$pelanggan->nama_pelanggan}: " . $e->getMessage());
+                    $results[] = [
+                        'status' => false,
+                        'nama' => $pelanggan->nama_pelanggan,
+                        'no_telp' => $pelanggan->no_telp,
+                        'message' => 'Koneksi API Gagal: ' . $e->getMessage()
+                    ];
+                }
+            }
+        }
+
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'results' => $results,
+                'berhasil' => $berhasil,
+                'gagal' => $gagal,
+                'message' => 'Pengiriman notifikasi umum selesai.'
+            ]);
+        }
+
+        return redirect()->route('admin.broadcast.index')->with('success', 'Pengumuman aplikasi berhasil diterbitkan!');
+    }
+
+    public function sendOdp(Request $request)
+    {
+        $request->validate([
+            'id_odp' => 'required|integer',
+            'pesan' => 'required|string',
+            'client_ids' => 'required|array',
+        ]);
+
+        set_time_limit(1800);
+
+        $id_odp = $request->input('id_odp');
+        $pesan = $request->input('pesan');
+        $client_ids = $request->input('client_ids');
+
+        $odp = Odp::findOrFail($id_odp);
+
+        $tokenInfo = DB::table('tbl_token')->where('id_token', 1)->first();
+        if (!$tokenInfo || empty($tokenInfo->token)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Token WhatsApp Fonnte belum dikonfigurasi di pengaturan.'
+            ], 400);
+        }
+
+        $pelangganList = Pelanggan::whereIn('id_pelanggan', $client_ids)
+            ->whereNotNull('no_telp')
+            ->where('no_telp', '!=', '')
+            ->get();
+
+        if ($pelangganList->isEmpty()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Tidak ada pelanggan terpilih yang memiliki nomor telepon aktif.'
+            ], 400);
+        }
+
+        $results = [];
+        $berhasil = 0;
+        $gagal = 0;
+
+        foreach ($pelangganList as $index => $pelanggan) {
+            // Jeda pengiriman 10 detik (kecuali pesan pertama)
+            if ($index > 0) {
+                sleep(10);
+            }
+
+            // Format dinamis
+            $customPesan = str_replace(
+                ['$nama', '$pelanggan', '$odp'],
+                [$pelanggan->nama_pelanggan, $pelanggan->nama_pelanggan, $odp->nama_odp],
+                $pesan
+            );
+
+            try {
+                $response = Http::timeout(10)->withHeaders([
+                    'Authorization' => $tokenInfo->token
+                ])->asForm()->post('https://api.fonnte.com/send', [
+                    'target' => $pelanggan->no_telp,
+                    'message' => $customPesan,
+                    'countryCode' => '62'
+                ]);
+
+                $resData = $response->json();
+                if ($response->successful() && isset($resData['status']) && $resData['status'] === true) {
+                    $berhasil++;
+                    $results[] = [
+                        'status' => true,
+                        'nama' => $pelanggan->nama_pelanggan,
+                        'no_telp' => $pelanggan->no_telp,
+                        'message' => 'Terkirim'
+                    ];
+                } else {
+                    $gagal++;
+                    $reason = $resData['reason'] ?? $resData['message'] ?? 'Fonnte error atau device offline.';
+                    $results[] = [
+                        'status' => false,
+                        'nama' => $pelanggan->nama_pelanggan,
+                        'no_telp' => $pelanggan->no_telp,
+                        'message' => $reason
+                    ];
+                }
+            } catch (\Exception $e) {
+                $gagal++;
+                Log::error("Broadcast WA ODP error to {$pelanggan->nama_pelanggan}: " . $e->getMessage());
+                $results[] = [
+                    'status' => false,
+                    'nama' => $pelanggan->nama_pelanggan,
+                    'no_telp' => $pelanggan->no_telp,
+                    'message' => 'Koneksi API Gagal: ' . $e->getMessage()
+                ];
+            }
+        }
+
+        return response()->json([
+            'success' => true,
+            'results' => $results,
+            'berhasil' => $berhasil,
+            'gagal' => $gagal,
+            'message' => 'Pengiriman notifikasi ODP selesai.'
+        ]);
+    }
+
+    public function deleteAnnouncement($id)
+    {
+        $info = Informasi::findOrFail($id);
+        $info->delete();
+        return redirect()->route('admin.broadcast.index')->with('success', 'Pengumuman aplikasi berhasil dihapus!');
+    }
+
+    public function fetchNotifications()
+    {
+        $notifications = [];
+
+        // 1. Pending installation orders (permintaan baru dari sales)
+        $pendingOrders = \App\Models\OrderPemasangan::with('sales')
+            ->where('status', 'pending')
+            ->orderBy('created_at', 'desc')
+            ->get();
+        foreach ($pendingOrders as $order) {
+            $notifications[] = [
+                'id' => 'order_pending_' . $order->id,
+                'type' => 'order_pending',
+                'title' => 'Permintaan Pasang Baru',
+                'description' => 'Sales ' . ($order->sales->nama_user ?? 'Sales') . ' mengajukan pemasangan baru untuk ' . $order->nama,
+                'url' => route('admin.order_pemasangan.index'),
+                'timestamp' => $order->created_at ? $order->created_at->toISOString() : now()->toISOString(),
+                'time_human' => $order->created_at ? $order->created_at->diffForHumans() : 'Baru saja'
+            ];
+        }
+
+        // 2. Installed orders waiting for admin approval (acc selesai pemasangan oleh teknisi)
+        $installedOrders = \App\Models\OrderPemasangan::with('teknisi')
+            ->where('status', 'installed')
+            ->orderBy('updated_at', 'desc')
+            ->get();
+        foreach ($installedOrders as $order) {
+            $notifications[] = [
+                'id' => 'order_installed_' . $order->id,
+                'type' => 'order_installed',
+                'title' => 'Konfirmasi Selesai Pemasangan',
+                'description' => 'Teknisi ' . ($order->teknisi->nama_user ?? 'Teknisi') . ' menyelesaikan pemasangan untuk ' . $order->nama,
+                'url' => route('admin.order_pemasangan.index'),
+                'timestamp' => $order->updated_at ? $order->updated_at->toISOString() : now()->toISOString(),
+                'time_human' => $order->updated_at ? $order->updated_at->diffForHumans() : 'Baru saja'
+            ];
+        }
+
+        // 3. New complaints (keluhan baru dari pelanggan)
+        $complaints = \App\Models\Keluhan::with('pelanggan')
+            ->where('status_keluhan', 'menunggu')
+            ->orderBy('tanggal', 'desc')
+            ->get();
+        foreach ($complaints as $complaint) {
+            $timestamp = \Carbon\Carbon::parse($complaint->tanggal);
+            $notifications[] = [
+                'id' => 'complaint_' . $complaint->id_keluhan,
+                'type' => 'complaint',
+                'title' => 'Keluhan Baru',
+                'description' => ($complaint->pelanggan->nama_pelanggan ?? 'Pelanggan') . ': ' . $complaint->judul_keluhan,
+                'url' => route('admin.keluhan.index'),
+                'timestamp' => $timestamp->toISOString(),
+                'time_human' => $timestamp->diffForHumans()
+            ];
+        }
+
+        // Sort by timestamp descending
+        usort($notifications, function ($a, $b) {
+            return strcmp($b['timestamp'], $a['timestamp']);
+        });
+
+        return response()->json([
+            'success' => true,
+            'notifications' => $notifications
+        ]);
+    }
+}

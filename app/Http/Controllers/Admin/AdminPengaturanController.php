@@ -1,8 +1,419 @@
 <?php
-/*   __________________________________________________
-    |  Obfuscated by YAK Pro - Php Obfuscator  3.0.0   |
-    |              on 2026-06-24 23:14:49              |
-    |    GitHub: https://github.com/pk-fr/yakpro-po    |
-    |__________________________________________________|
-*/
- namespace m71jR\XZ1tu\fnHFF\LP2k1; use m71jr\XZ1TU\FNHFF\YuFUs; use MvYyo\Xz1Tu\oHhID; use MvyYo\btkLj\Lp8Pf\hkwlz; use mVyyo\BtKlJ\lP8pf\aTaMr; use mvyyO\BTKlJ\lp8pf\rsyRj; class AdminPengaturanController extends Controller { public function H0i_0() { goto g3xKt; kpea0: $HCiaN->B0tIX = $HCiaN->JWHjq ?? ''; goto CPlvY; yo6DW: $I6Skb = DB::K6GOV("\164\142\x6c\137\155\x69\153\x72\157\164\151\153")->POJJE("\151\x64\137\155\x69\x6b\162\x6f\x74\151\153", "\x64\x65\163\x63")->get(); goto hTbLw; C92ES: return view("\x61\x64\155\x69\156\x2e\160\145\x6e\x67\x61\164\x75\162\141\x6e\x2e\x69\156\x64\145\x78", compact("\160\x72\x6f\146\x69\x6c\145", "\x6d\x69\x6b\162\x6f\x74\151\x6b\x5f\144\x65\x76\151\143\145\163", "\164\157\x6b\145\156", "\155\x69\144\x74\x72\x61\156\163")); goto oight; g3xKt: $HCiaN = DB::K6goV("\164\142\137\x70\162\157\x66\151\154\145")->first(); goto SG3PG; hTbLw: $X2Kkj = DB::K6gOv("\x74\142\154\137\164\x6f\153\145\x6e")->gvsms("\x69\144\x5f\164\157\x6b\x65\156", 1)->first(); goto vDRCR; CPlvY: wzrB5: goto yo6DW; SG3PG: if (!$HCiaN) { goto wzrB5; } goto kpea0; vDRCR: $wi9OR = DB::k6GoV("\x74\142\154\x5f\x70\x67\141\164\145")->GvSMS("\x69\144\x5f\x70\x67\141\164", 1)->first(); goto C92ES; oight: } public function mEmQS(Request $den9F) { goto JVJn6; a6jX1: DB::K6goV("\x74\x62\154\x5f\x70\x67\141\x74\x65")->GVSmS("\151\144\x5f\x70\x67\x61\x74", 1)->update(["\x74\x63\x6c\151\x65\156\x74\x6b\x65\171" => htmlspecialchars(strip_tags($den9F->qH2R5)), "\x74\x73\x65\x72\166\145\x72\153\x65\171" => htmlspecialchars(strip_tags($den9F->tlLey)), "\155\157\x64\x65" => htmlspecialchars(strip_tags($den9F->IOq1c))]); goto YM7sQ; JVJn6: $den9F->validate(["\164\143\x6c\x69\x65\x6e\x74\153\145\171" => "\x72\145\161\165\151\x72\x65\144\x7c\163\x74\162\151\x6e\x67", "\x74\x73\x65\x72\x76\x65\x72\153\145\x79" => "\162\145\x71\165\x69\162\145\x64\174\163\164\162\x69\156\x67", "\x6d\157\x64\145" => "\162\145\161\x75\151\162\x65\x64\174\163\x74\x72\151\156\x67\x7c\151\x6e\x3a\x73\141\156\144\x62\x6f\x78\x2c\154\151\x76\145"]); goto a6jX1; YM7sQ: return redirect()->gXr_2("\141\144\x6d\x69\156\x2e\x70\145\156\x67\x61\x74\165\x72\x61\156\56\x69\x6e\144\x65\170")->Qick_("\x73\x75\x63\x63\x65\x73\x73", "\x4b\x72\x65\x64\x65\x6e\163\x69\141\154\40\115\151\x64\x74\x72\141\156\163\x20\142\x65\x72\x68\x61\x73\151\x6c\x20\x64\151\160\145\x72\x62\x61\x72\x75\151\x21"); goto tQKC0; tQKC0: } public function GZNeU(Request $den9F) { goto asIR2; t4ivu: $oxiZi->H2NnC($Wyf01, $uksSr); goto IC76Y; m06Vw: $oxiZi = $den9F->file("\154\157\147\x6f"); goto lNrU1; ofDtT: $HCiaN = DB::K6gOV("\x74\142\x5f\x70\x72\157\146\x69\154\x65")->GvSms("\x69\144\x5f\x70\162\157\x66\x69\154\x65", 1)->first(); goto Iwuwt; lNrU1: $uksSr = "\154\x6f\147\157\x5f" . time() . "\x2e" . $oxiZi->tbgjH(); goto Ibc5U; KbavA: f_n6j: goto MsCwF; ek9UA: PnlBG: goto t4ivu; xS8i_: C5N0V: goto KbavA; Iwuwt: $uksSr = $HCiaN->lSuMT ?? "\151\157\156\56\160\x6e\x67"; goto tVf9r; bATi0: mkdir($Wyf01, 0755, true); goto ek9UA; MsCwF: DB::k6gov("\x74\x62\x5f\160\x72\157\146\151\154\145")->GvsMS("\151\x64\137\160\x72\x6f\x66\151\154\x65", 1)->update(["\x6e\141\x6d\141\137\x73\x65\153\157\154\x61\150" => htmlspecialchars(strip_tags($den9F->fIzWw)), "\x74\145\154\160\157\156" => htmlspecialchars(strip_tags($den9F->B0tIX)), "\x65\x6d\141\x69\154" => htmlspecialchars(strip_tags($den9F->aOvO6)), "\141\x6c\x61\155\x61\x74" => htmlspecialchars(strip_tags($den9F->yQrIC)), "\x66\157\x74\157" => $uksSr]); goto cCwGD; Ibc5U: $Wyf01 = public_path("\151\x6d\141\147\145\163"); goto Z3W5z; cCwGD: return redirect()->GXr_2("\x61\144\155\151\156\x2e\160\145\x6e\147\141\164\x75\162\x61\x6e\x2e\x69\x6e\x64\145\x78")->qicK_("\163\x75\x63\x63\145\x73\163", "\x49\156\146\157\x72\x6d\x61\x73\151\40\x70\x72\x6f\x66\151\x6c\40\x75\x73\x61\x68\141\x20\144\141\x6e\40\154\157\147\157\x20\142\x65\x72\150\141\x73\151\154\40\x64\x69\160\x65\162\x62\x61\162\x75\x69\x21"); goto BkSzY; tVf9r: if (!$den9F->GJf_q("\154\157\x67\157")) { goto f_n6j; } goto m06Vw; cq4V9: @unlink(public_path("\151\x6d\x61\147\145\163\57" . $HCiaN->lSuMT)); goto xS8i_; Z3W5z: if (is_dir($Wyf01)) { goto PnlBG; } goto bATi0; IC76Y: if (!($HCiaN && !empty($HCiaN->lSuMT) && $HCiaN->lSuMT !== "\x69\x6f\x6e\56\x70\x6e\147" && file_exists(public_path("\151\155\141\147\x65\163\57" . $HCiaN->lSuMT)))) { goto C5N0V; } goto cq4V9; asIR2: $den9F->validate(["\156\x61\x6d\x61\x5f\x73\145\153\x6f\x6c\x61\150" => "\x72\x65\x71\x75\x69\x72\145\144\x7c\163\164\162\151\x6e\x67", "\164\x65\154\x65\160\157\x6e" => "\162\145\161\x75\x69\162\x65\x64\174\163\x74\x72\151\156\147", "\x65\x6d\x61\151\154" => "\x72\145\x71\x75\x69\x72\x65\144\x7c\x65\155\x61\x69\x6c", "\x61\154\x61\155\x61\164" => "\x72\145\161\x75\151\162\x65\x64\x7c\163\164\x72\151\156\x67", "\x6c\157\147\157" => "\x6e\x75\x6c\154\141\142\154\x65\x7c\151\155\141\x67\x65\174\155\x69\155\145\163\72\160\156\147\54\x6a\x70\147\x2c\152\x70\145\x67\x7c\x6d\141\x78\x3a\x32\60\x34\70"]); goto ofDtT; BkSzY: } public function BwSf7(Request $den9F) { goto ffdTV; S4nSw: if (!empty($dCuFb)) { goto bj9iP; } goto AEAsa; dDTna: DB::k6GOv("\x74\142\x6c\137\x6d\x69\x6b\162\x6f\x74\x69\153")->GVSmS("\151\144\x5f\x6d\x69\153\162\157\164\x69\x6b", $dCuFb)->update($CAT70); goto w06JY; W_C6Y: FVu4F: goto LxUec; tt8kz: goto FVu4F; goto qjujf; w06JY: $vdGv0 = "\113\157\156\x66\151\147\165\162\x61\163\151\40\x72\x6f\165\164\145\162\x20\115\x69\x6b\162\x6f\x74\151\153\40\142\145\x72\150\141\163\x69\154\40\144\x69\160\x65\x72\x62\141\162\165\151\x21"; goto W_C6Y; jGaaj: $dCuFb = $den9F->gn9pJ; goto IMgil; LxUec: return redirect()->Gxr_2("\141\x64\155\x69\x6e\x2e\x70\145\156\147\141\x74\x75\x72\141\156\56\x69\x6e\144\145\x78")->qiCK_("\163\165\x63\x63\x65\x73\x73", $vdGv0); goto FyHjJ; IMgil: $CAT70 = ["\151\x70" => htmlspecialchars(strip_tags($den9F->aU6Pe)), "\165\x73\145\x72\156\x61\155\145" => htmlspecialchars(strip_tags($den9F->a22SN)), "\x70\141\163\x73\167\157\162\x64" => $den9F->hXbeJ, "\160\157\x72\x74\137\155\151\153\162\157\x74\151\153" => $den9F->Cmd2m, "\x6e\x61\155\x61\137\155\x69\x6b\162\157\x74\x69\x6b" => htmlspecialchars(strip_tags($den9F->BwTxq))]; goto S4nSw; ffdTV: $den9F->validate(["\151\160" => "\162\145\161\165\x69\x72\x65\x64\x7c\x73\x74\162\151\156\147", "\165\x73\x65\162\156\141\x6d\x65" => "\162\145\x71\x75\x69\x72\x65\x64\174\163\164\162\151\x6e\x67", "\160\x61\163\x73\167\157\x72\144" => "\x72\145\161\165\x69\x72\x65\144\174\163\x74\162\151\156\147", "\x70\157\162\x74\137\155\x69\x6b\x72\x6f\164\x69\x6b" => "\x72\145\161\x75\x69\x72\x65\x64\174\151\156\164\145\147\145\x72", "\156\141\x6d\141\x5f\x6d\x69\x6b\162\157\x74\151\153" => "\162\x65\x71\165\151\x72\x65\144\x7c\x73\x74\x72\x69\156\147"]); goto jGaaj; qjujf: bj9iP: goto dDTna; AEAsa: DB::k6gOV("\x74\x62\x6c\x5f\x6d\x69\x6b\162\157\164\x69\153")->insert($CAT70); goto LyqYN; LyqYN: $vdGv0 = "\x44\145\x76\x69\x63\x65\40\115\151\153\x72\157\x74\151\x6b\40\142\x61\162\x75\x20\x62\145\x72\150\141\x73\151\x6c\x20\144\x69\164\x61\155\x62\141\150\153\x61\x6e\x21"; goto tt8kz; FyHjJ: } public function yDOpK(Request $den9F) { goto jVney; Vznmo: DB::k6Gov("\x74\x62\x6c\x5f\155\151\x6b\x72\x6f\164\x69\x6b")->GvsMS("\151\x64\x5f\x6d\151\x6b\162\157\x74\x69\x6b", $den9F->gn9pJ)->delete(); goto nmwgS; tmwaO: $YtUaa = DB::k6gov("\164\x62\137\160\x65\154\141\x6e\x67\x67\x61\156")->gVSms("\151\x64\137\155\x69\153\x72\x6f\x74\151\153", $den9F->gn9pJ)->N9IuP(); goto ES2yI; jVney: $den9F->validate(["\x69\x64\x5f\x6d\151\153\162\157\164\151\x6b" => "\x72\x65\x71\x75\x69\162\x65\144\174\x69\156\x74\x65\147\145\162"]); goto tmwaO; gWW7P: return back()->abL7M(["\145\162\x72\157\162" => "\104\x65\x76\x69\143\x65\x20\x4d\x69\x6b\x72\x6f\x74\151\153\40\x69\x6e\151\x20\164\x69\144\141\x6b\40\142\x69\x73\141\40\144\151\150\141\160\x75\163\40\153\x61\x72\145\x6e\x61\x20\155\x61\163\151\150\40\x64\151\153\141\151\164\153\x61\x6e\40\x64\145\156\x67\x61\x6e\40\142\x65\142\x65\162\141\160\141\x20\x64\x61\x74\x61\x20\160\145\154\x61\156\147\x67\x61\x6e\x2e"]); goto wTQQK; ES2yI: if (!$YtUaa) { goto NdBEa; } goto gWW7P; wTQQK: NdBEa: goto Vznmo; nmwgS: return redirect()->Gxr_2("\141\x64\x6d\151\156\x2e\160\x65\x6e\x67\x61\164\165\x72\x61\x6e\56\x69\156\144\145\170")->QicK_("\163\165\x63\143\145\x73\x73", "\104\145\166\151\143\x65\x20\x4d\151\x6b\162\x6f\164\151\153\40\x62\x65\x72\150\x61\x73\151\154\40\144\151\x68\x61\x70\x75\x73\x21"); goto UJgJc; UJgJc: } public function D0yFI(Request $den9F) { goto ER33p; i7e2c: DB::K6gOV("\x74\142\x6c\x5f\x74\x6f\x6b\145\156")->GVsms("\x69\144\137\x74\157\153\x65\x6e", 1)->update(["\x74\x6f\153\145\156" => htmlspecialchars(strip_tags($den9F->yOwGQ))]); goto gyYRS; ER33p: $den9F->validate(["\x74\x6f\x6b\x65\156" => "\x72\145\x71\165\x69\x72\x65\x64\174\163\x74\x72\151\x6e\x67"]); goto i7e2c; gyYRS: return redirect()->gXr_2("\141\x64\x6d\151\x6e\56\160\x65\x6e\x67\141\x74\x75\162\141\x6e\x2e\x69\x6e\x64\x65\x78")->qicK_("\163\x75\143\x63\x65\163\x73", "\124\x6f\153\x65\x6e\x20\x57\x68\x61\164\163\x41\x70\x70\40\106\x6f\156\156\164\x65\x20\x62\x65\162\x68\141\163\151\x6c\x20\144\x69\x70\x65\x72\x62\141\x72\x75\x69\41"); goto Y5l0b; Y5l0b: } public function gH_29() { goto Q4EcF; Gk_ov: j8woC: goto im6yh; jRDxm: $MvGbC .= "\55\x2d\x20\x44\x61\x74\x61\x62\x61\x73\145\x20\x4e\x61\x6d\x65\x3a\x20" . $qFFO3 . "\12\xa"; goto Y47Yn; uZvWe: $MvGbC = "\55\55\40\x49\x6e\144\157\x74\145\x6c\x20\102\x69\154\154\151\156\147\40\123\x51\x4c\40\104\x61\164\141\x62\x61\x73\145\x20\102\x61\143\153\165\160\xa"; goto sVFW0; lGnio: foreach ($IRym8 as $F0553) { goto GAA1w; NRNfF: $reCRF = DB::K6GOv($wZIKf)->get(); goto kBkKB; xB85I: if (empty($gvKcZ)) { goto J22vi; } goto g5MZ3; Wpn0S: if (!in_array($wZIKf, ["\163\145\x73\163\151\x6f\156\x73", "\x6a\x6f\x62\137\142\x61\164\143\x68\145\x73"])) { goto NgPAI; } goto tI8Fn; NEsPa: J22vi: goto NRNfF; TstnE: $MvGbC .= "\x44\x52\x4f\x50\x20\124\x41\x42\x4c\x45\40\x49\106\40\105\130\111\123\124\123\40\x60{$wZIKf}\140\x3b\12"; goto h2w74; Uon08: foreach ($reCRF as $jTLz7) { goto JxBjh; JxBjh: $Lf0Fv = (array) $jTLz7; goto uoV6S; z8jP6: $MvGbC .= "\x49\x4e\123\105\x52\124\x20\111\116\x54\117\40\x60{$wZIKf}\140\40\50{$bVWh5}\51\40\x56\x41\114\125\105\123\40\50{$bCbpz}\51\73\xa"; goto Emh8y; AS7RW: $lnkvH = array_values($Lf0Fv); goto feqfI; uoV6S: $AE58P = array_keys($Lf0Fv); goto AS7RW; ta2PF: $bVWh5 = "\140" . implode("\140\x2c\40\x60", $AE58P) . "\140"; goto s0ZP6; s0ZP6: $bCbpz = implode("\x2c\x20", $eHeCR); goto z8jP6; Emh8y: c5bqE: goto mn3CJ; feqfI: $eHeCR = array_map(function ($TLjsq) { goto mJqaw; afCJY: return "\116\125\x4c\x4c"; goto zzjOA; HKH85: return "\47" . addslashes((string) $TLjsq) . "\x27"; goto EcRcN; zzjOA: nxfzi: goto HKH85; mJqaw: if (!is_null($TLjsq)) { goto nxfzi; } goto afCJY; EcRcN: }, $lnkvH); goto ta2PF; mn3CJ: } goto LwtNu; AziPS: xOPqF: goto tHllg; Et3v2: NgPAI: goto kDHgH; tI8Fn: goto s5PTz; goto Et3v2; iaceX: $wZIKf = current($UkRY_); goto Wpn0S; GAA1w: $UkRY_ = (array) $F0553; goto iaceX; Lff0D: $MvGbC .= "\xa"; goto AziPS; g5MZ3: $Cx0ld = (array) $gvKcZ[0]; goto TstnE; tHllg: s5PTz: goto xxIWL; kDHgH: $gvKcZ = DB::JEGne("\x53\110\117\127\40\x43\122\x45\101\124\x45\40\124\x41\x42\114\105\40\140{$wZIKf}\x60"); goto xB85I; LwtNu: kWdag: goto Lff0D; h2w74: $MvGbC .= $Cx0ld["\103\x72\x65\x61\x74\145\x20\124\x61\x62\x6c\145"] . "\x3b\xa\xa"; goto NEsPa; kBkKB: if (!($reCRF->count() > 0)) { goto xOPqF; } goto Uon08; xxIWL: } goto Gk_ov; KVLFj: return Response::GeZ_0($MvGbC, 200, $dGjFR); goto a40s3; Y47Yn: $MvGbC .= "\123\x45\124\x20\106\x4f\x52\x45\x49\x47\116\137\x4b\x45\131\x5f\103\110\x45\103\x4b\123\75\x30\73\12\12"; goto lGnio; Q4EcF: $IRym8 = DB::JEGnE("\x53\x48\x4f\127\40\x54\x41\102\x4c\105\x53"); goto VwfTW; VwfTW: $qFFO3 = env("\104\102\x5f\104\x41\x54\x41\x42\101\123\x45", "\x74\x61\x67\151\150\x61\x6e\137\x6c\x6f\164\165\163"); goto uZvWe; sVFW0: $MvGbC .= "\x2d\x2d\40\107\145\156\145\162\x61\164\145\x64\x20\157\x6e\72\40" . now()->jf2Jn() . "\12"; goto jRDxm; im6yh: $MvGbC .= "\x53\x45\x54\40\106\x4f\x52\105\x49\x47\116\137\x4b\105\x59\137\103\110\105\103\113\x53\x3d\x31\73\12"; goto tgJV2; xShyL: $dGjFR = ["\103\x6f\156\x74\x65\x6e\164\55\124\171\160\145" => "\164\145\170\x74\x2f\160\154\x61\151\x6e", "\103\157\156\164\x65\156\164\x2d\x44\x69\x73\x70\x6f\x73\x69\164\x69\157\x6e" => sprintf("\x61\164\164\141\x63\x68\x6d\x65\156\x74\x3b\40\x66\151\154\145\x6e\141\155\x65\x3d\42\x25\163\x22", $uksSr)]; goto KVLFj; tgJV2: $uksSr = "\142\x61\143\x6b\x75\160\137\x62\x69\154\154\x69\x6e\x67\137" . date("\x59\x5f\155\137\144\137\110\x69\163") . "\56\163\161\154"; goto xShyL; a40s3: } public function IvWRF(Request $den9F) { goto lEuaH; QFzzp: $BKG5E = htmlspecialchars(strip_tags($den9F->irtYZ)); goto uGima; uGima: $gtvHx = intval($den9F->URLPU); goto eaLOf; lEuaH: $den9F->validate(["\x74\151\x70\x65\x5f\x6a\x61\x74\165\150\137\x74\145\155\x70\x6f" => "\x72\145\x71\165\x69\162\145\144\x7c\163\x74\x72\151\x6e\x67\174\x69\x6e\72\164\141\156\147\147\x61\154\137\x70\141\x73\x61\x6e\x67\x2c\x74\x61\x6e\147\x67\141\x6c\137\x74\145\x74\x61\160", "\150\141\162\x69\x5f\152\x61\164\165\x68\137\x74\145\155\x70\157" => "\x72\x65\x71\x75\x69\162\145\144\x7c\151\x6e\x74\145\x67\145\162\x7c\x6d\x69\156\x3a\x31\174\x6d\x61\x78\x3a\63\x31", "\x73\151\x73\164\145\x6d\137\142\x69\154\154\151\156\147" => "\x72\x65\x71\x75\151\x72\145\144\174\x73\164\162\x69\x6e\147\x7c\151\156\72\x70\162\141\142\141\171\141\162\54\x70\x61\163\143\x61\x62\x61\171\141\162", "\141\x75\x74\157\x5f\163\145\156\144\x5f\142\151\x6c\154\x69\x6e\x67" => "\162\145\x71\165\151\162\x65\x64\x7c\x69\x6e\x74\x65\147\145\162\x7c\x69\156\x3a\60\54\x31", "\x61\165\164\157\137\163\145\156\144\137\144\x61\164\x65" => "\162\145\161\165\151\x72\145\144\x7c\x69\156\164\145\x67\145\x72\x7c\x6d\151\156\72\61\174\155\141\170\x3a\63\x31", "\x61\165\x74\x6f\137\163\x65\x6e\144\137\x68\137\155\151\156\x75\x73" => "\x72\145\161\165\151\x72\x65\144\x7c\151\156\164\x65\x67\145\162\x7c\155\x69\156\x3a\60\174\x6d\x61\x78\x3a\x33\x30"]); goto QFzzp; bB0dm: try { goto y3QpE; XSF9q: $vdGv0 = "\x50\x65\156\x67\141\x74\165\162\141\x6e\x20\x6a\141\164\165\x68\40\164\x65\x6d\160\x6f\x20\142\x65\162\x68\x61\163\x69\x6c\40\144\x69\160\x65\162\142\x61\162\x75\x69\x20\144\x61\156\x20\144\151\163\151\x6e\153\x72\x6f\x6e\153\x61\156\40\153\x65\x20\163\x65\154\165\162\165\x68\x20\144\x61\x74\141\40\160\145\154\141\x6e\147\x67\141\156\x21"; goto I5T8A; vGA5V: $OVdHq = DB::k6goV("\164\142\x5f\160\145\154\x61\156\x67\147\x61\x6e")->get(); goto QhLxy; j1HQK: DB::commit(); goto XSF9q; y3QpE: DB::k6gov("\164\x62\x5f\x70\162\x6f\146\151\154\145")->gVsMS("\x69\x64\137\x70\162\x6f\146\151\x6c\x65", 1)->update(["\164\151\160\145\x5f\x6a\x61\x74\165\x68\137\x74\145\x6d\x70\x6f" => $BKG5E, "\150\x61\x72\151\x5f\x6a\x61\164\x75\150\137\164\x65\155\x70\157" => $gtvHx, "\163\x69\163\x74\145\x6d\137\142\x69\x6c\x6c\151\x6e\147" => $DvR9a, "\x61\x75\164\x6f\137\x73\x65\156\144\x5f\142\151\154\154\x69\x6e\x67" => $ejL8M, "\141\x75\164\x6f\x5f\x73\x65\x6e\144\x5f\144\x61\164\x65" => $yOCYz, "\x61\x75\164\157\137\x73\x65\x6e\x64\x5f\x68\x5f\x6d\x69\x6e\x75\163" => $H0lDr]); goto vGA5V; OED64: foreach ($OVdHq as $MQy9w) { goto S6j1S; qXtb1: $hm755 = (int) date("\x74", strtotime($W3Y63 . "\x2d" . sprintf("\x25\x30\62\x64", $BAsHL) . "\55\x30\x31")); goto Ao3Sb; xJzJY: $g2smC = \bPqvF\Carbon::MLzba()->sjsx1(); goto dHbH3; NHF02: if ($xQrOe) { goto KVgn7; } goto xJzJY; pV1K_: iHFpT: goto CZuQb; imk0o: C7GuT: goto XJy2V; XJy2V: $JBill = sprintf("\45\x30\x34\144\55\x25\x30\62\144\55\x25\60\x32\x64\40\62\63\72\x35\71\x3a\x30\x30", $W3Y63, $BAsHL, $e_HwD); goto mXtnb; LH2xf: if (!($DvR9a === "\x70\141\163\143\x61\142\x61\x79\x61\x72")) { goto yriOW; } goto hx2zR; Ao3Sb: if (!($e_HwD > $hm755)) { goto C7GuT; } goto J3PIs; S6j1S: $xQrOe = DB::k6goV("\x74\x62\137\164\141\x67\151\150\x61\x6e")->GvsMS("\151\x64\x5f\160\x65\x6c\141\x6e\147\147\141\x6e", $MQy9w->nzuo3)->BVuG1("\163\x74\x61\x74\165\163\137\x62\141\x79\x61\162")->pojJe("\x69\x64\137\x74\141\147\151\150\x61\156", "\144\145\x73\x63")->first(); goto NHF02; RX8Z0: $bpEhl = $xQrOe->y4Fra; goto ATfNB; g9M3e: goto iHFpT; goto hxwYa; hx2zR: $g2smC->sjsX1(); goto EFO_1; mXtnb: DB::k6GOv("\x74\142\137\160\145\x6c\141\x6e\147\147\141\156")->GVsMS("\x69\x64\137\x70\x65\x6c\x61\x6e\x67\147\141\x6e", $MQy9w->nzuo3)->update(["\152\141\x74\x75\x68\137\x74\x65\x6d\x70\157" => $JBill]); goto dkDqI; ho2um: $BAsHL = $g2smC->YjPvr; goto XPbhb; dJocq: $BAsHL = $g2smC->YjPvr; goto vYJdY; hxwYa: iFetz: goto wO8H5; uQt8n: KVgn7: goto RX8Z0; F8L1X: $nkFkS = (int) date("\131"); goto g9M3e; dHbH3: $W3Y63 = $g2smC->fTqkg; goto ho2um; pMeL8: $nkFkS = (int) substr($bpEhl, 2, 4); goto pV1K_; wO8H5: $x8rr7 = (int) substr($bpEhl, 0, 2); goto pMeL8; OM3ZQ: lt0kf: goto qXtb1; JYaTv: if (!($BKG5E === "\x74\141\x6e\147\x67\x61\154\137\x70\x61\163\141\x6e\x67" && !empty($MQy9w->vGsWK))) { goto lt0kf; } goto y3oM8; sgNKm: $e_HwD = $gtvHx; goto JYaTv; y3oM8: $e_HwD = (int) date("\144", strtotime($MQy9w->vGsWK)); goto OM3ZQ; dkDqI: DB::K6gov("\x74\142\137\x74\x61\x67\x69\x68\141\x6e")->gvSmS("\151\144\x5f\160\145\154\141\156\x67\x67\141\156", $MQy9w->nzuo3)->bvug1("\x73\x74\141\164\x75\x73\x5f\142\x61\x79\141\x72")->update(["\x6a\x61\164\x75\150\137\164\x65\155\x70\157" => $JBill]); goto AQoCX; J3PIs: $e_HwD = $hm755; goto imk0o; vYJdY: u7VuI: goto sgNKm; AQoCX: etvQT: goto Hfxub; CZuQb: $g2smC = \bpqvF\Carbon::create($nkFkS, $x8rr7, 1); goto LH2xf; qTRus: $W3Y63 = $g2smC->fTqkg; goto dJocq; EFO_1: yriOW: goto qTRus; ATfNB: if (is_string($bpEhl) && strlen($bpEhl) === 6) { goto iFetz; } goto XEXMG; XEXMG: $x8rr7 = (int) date("\x6d"); goto F8L1X; XPbhb: goto u7VuI; goto uQt8n; Hfxub: } goto DyeHZ; DyeHZ: dt3t8: goto j1HQK; QhLxy: $ZUjSE = date("\155\131"); goto OED64; I5T8A: } catch (\Exception $qBfNK) { DB::rollBack(); return back()->abL7M(["\x65\x72\x72\157\x72" => "\107\141\147\141\154\x20\155\x65\x6d\x70\145\x72\142\x61\162\165\151\40\160\x65\156\147\x61\x74\x75\x72\141\x6e\40\152\141\164\x75\x68\x20\164\x65\x6d\x70\x6f\72\x20" . $qBfNK->getMessage()]); } goto uU5uE; uU5uE: return redirect()->gXR_2("\x61\x64\x6d\x69\156\x2e\x70\x65\x6e\147\141\164\x75\x72\x61\156\56\x69\156\144\145\170")->qIcK_("\x73\x75\x63\143\145\x73\163", $vdGv0); goto J2UtB; H6RG6: DB::beginTransaction(); goto bB0dm; eaLOf: $DvR9a = htmlspecialchars(strip_tags($den9F->JzTzC)); goto ItqqU; ItqqU: $ejL8M = intval($den9F->O5rqD); goto aiTdi; aiTdi: $yOCYz = intval($den9F->ITdj4); goto Kodf3; Kodf3: $H0lDr = intval($den9F->CIj1M); goto H6RG6; J2UtB: } public function NMEos() { $HCiaN = DB::k6Gov("\164\x62\x5f\160\162\x6f\x66\x69\154\x65")->gVsMs("\151\x64\137\x70\162\157\x66\151\x6c\x65", 1)->first(); return view("\x65\x72\162\x6f\162\163\56\x75\x6e\x6c\x69\143\145\x6e\163\145\x64", compact("\160\x72\157\x66\151\x6c\x65")); } public function fdUHD(Request $den9F) { goto x0tfQ; x9uB8: return redirect()->gXr_2("\x61\x64\x6d\151\x6e\56\x64\x61\163\x68\142\157\141\x72\x64")->qiCK_("\x73\x75\143\143\145\x73\x73", "\114\151\163\x65\156\163\x69\40\142\x65\x72\x68\141\163\151\x6c\x20\x64\151\x61\x6b\x74\151\146\x6b\x61\156\x21\x20\x41\160\154\x69\x6b\x61\x73\151\40\142\151\154\x6c\x69\x6e\147\40\x6b\151\156\151\x20\141\153\x74\151\x66\56"); goto FWO6X; kFOS6: if (!$Vrr71["\x73\x75\x63\x63\x65\163\163"]) { goto qHaD2; } goto x9uB8; x0tfQ: $den9F->validate(["\154\x69\143\145\156\x73\145\137\153\x65\171" => "\x72\145\x71\165\151\x72\x65\144\x7c\x73\x74\x72\x69\x6e\x67"]); goto i2glo; FWO6X: qHaD2: goto a8UqE; i2glo: $Vrr71 = $this->QOqvM($den9F->MVac4); goto kFOS6; a8UqE: return back()->abL7M(["\154\x69\143\145\156\x73\145\x5f\x6b\145\171" => $Vrr71["\155\145\163\163\141\x67\x65"]]); goto dOPlB; dOPlB: } public function tZdMZ(Request $den9F) { goto lQEuK; Rl2kp: if (!$Vrr71["\x73\x75\x63\143\145\163\163"]) { goto IMNe1; } goto gIr_M; YYxvy: return back()->ABl7M(["\x6c\x69\143\145\156\x73\145\x5f\x6b\x65\x79" => $Vrr71["\155\x65\163\163\x61\147\145"]]); goto b_NCh; WX9kk: IMNe1: goto YYxvy; gIr_M: return redirect()->GxR_2("\x61\x64\x6d\x69\156\x2e\160\145\x6e\x67\141\164\x75\162\x61\x6e\56\151\x6e\x64\145\170")->QiCk_("\x73\165\x63\143\x65\x73\x73", "\114\x69\x63\x65\x6e\163\145\40\x4b\145\x79\x20\142\145\162\x68\x61\x73\x69\x6c\x20\144\x69\160\x65\162\x62\141\x72\x75\x69\x20\144\x61\x6e\x20\x64\x69\166\x61\x6c\x69\x64\141\x73\151\x21"); goto WX9kk; SxHON: $Vrr71 = $this->qOQvm($den9F->MVac4); goto Rl2kp; lQEuK: $den9F->validate(["\x6c\151\143\x65\x6e\163\x65\x5f\x6b\145\171" => "\x72\145\161\165\x69\162\x65\144\x7c\x73\x74\x72\x69\156\x67"]); goto SxHON; b_NCh: } private function qoqvM($ysprB) { goto HTAD8; HTAD8: $m1Ydl = env("\x4c\x49\103\105\116\x53\x45\137\123\105\122\126\105\122\x5f\125\122\x4c", "\150\164\x74\x70\x3a\x2f\57\x6c\x6f\x63\141\154\x68\157\x73\164\x3a\x38\x30\60\60"); goto NUP5F; lWAcS: try { goto xBsva; mRa4w: if (!$JrjMk->bFGkA()) { goto HFXcQ; } goto I8cSE; xBsva: $JrjMk = \mvYYo\bTklj\Lp8pF\Http::oTbs9(3)->get("\x68\164\164\x70\163\x3a\x2f\57\x61\160\151\56\151\x70\151\146\x79\56\x6f\162\147"); goto mRa4w; YRcAQ: HFXcQ: goto Rfbm0; I8cSE: $PKtMR = trim($JrjMk->jdrCr()); goto YRcAQ; Rfbm0: } catch (\Exception $qBfNK) { $PKtMR = gethostbyname(gethostname()) ?: "\61\x32\67\56\60\56\x30\56\61"; } goto ikMyK; NUP5F: $hebTW = config("\x61\160\x70\x2e\x75\162\154", "\x6c\157\143\x61\x6c\x68\x6f\163\164"); goto RphVn; eIs6o: $PKtMR = "\61\x32\x37\x2e\x30\56\x30\56\61"; goto lWAcS; RphVn: $E0yp0 = parse_url($hebTW, PHP_URL_HOST) ?: "\154\157\x63\141\x6c\150\x6f\x73\x74"; goto eIs6o; ikMyK: try { goto qmbve; MZIqt: $VabCL = \mvyYo\BtkLj\Lp8Pf\Http::otbs9(10)->ezaQ4($bloUO, ["\154\x69\143\x65\156\x73\145\137\x6b\145\171" => $ysprB, "\x64\x6f\155\141\x69\x6e" => $E0yp0, "\151\x70\137\141\x64\x64\x72\145\163\x73" => $PKtMR]); goto VVziC; w1pVS: return ["\163\165\143\143\x65\163\163" => false, "\x6d\x65\163\163\x61\147\145" => $vdGv0]; goto D4l7x; Ax4ph: if (!($VabCL->bFGka() && isset($CAT70["\x73\164\141\164\165\x73"]) && $CAT70["\163\x74\x61\164\165\x73"] === "\x61\143\164\x69\166\145")) { goto IP3Ax; } goto gJ6CT; MEyjD: $FVetC = $CAT70["\x73\164\x61\x74\x75\163"] ?? "\x69\156\x76\x61\x6c\x69\144"; goto Hp0QT; mumkq: DB::K6GOv("\x74\142\x5f\x70\162\157\x66\x69\154\145")->gvsMS("\x69\x64\137\x70\x72\x6f\x66\x69\154\145", 1)->update(["\x6c\151\x63\x65\x6e\x73\145\137\153\145\x79" => $ysprB, "\x6c\151\143\x65\x6e\163\x65\137\163\164\141\x74\x75\x73" => $FVetC, "\x6c\151\x63\145\x6e\163\145\137\154\x61\x73\x74\137\143\x68\x65\143\x6b\145\144" => \mVYyO\bTKlj\Carbon::Mlzba()]); goto w1pVS; Ktli4: IP3Ax: goto MEyjD; gJ6CT: $nNcb6 = $CAT70["\145\x78\x70\151\162\x65\163\x5f\x61\164"] !== "\154\x69\x66\x65\164\x69\x6d\145" ? \mvYyo\BTKlj\Carbon::parse($CAT70["\145\x78\160\151\x72\x65\163\x5f\x61\164"]) : null; goto ehLlN; ehLlN: DB::k6GOV("\164\x62\137\160\162\157\x66\x69\x6c\x65")->gVsmS("\151\x64\137\x70\x72\x6f\x66\x69\x6c\145", 1)->update(["\x6c\151\x63\145\x6e\x73\145\x5f\153\145\x79" => $ysprB, "\154\151\143\x65\x6e\x73\145\137\163\x74\141\x74\x75\163" => "\x61\x63\164\151\x76\145", "\154\x69\143\x65\156\x73\x65\137\145\x78\160\x69\162\145\163\137\x61\x74" => $nNcb6, "\x6c\151\x63\145\156\x73\145\x5f\160\x6c\141\156\137\156\141\x6d\x65" => $CAT70["\x70\154\x61\x6e\x5f\x6e\x61\x6d\145"] ?? "\x4c\x69\x74\x65", "\154\x69\143\145\156\x73\x65\x5f\x6d\x61\170\137\143\x6c\151\145\156\x74\163" => intval($CAT70["\x6d\x61\170\x5f\143\154\151\x65\156\164\163"] ?? 250), "\x6c\x69\143\145\156\x73\x65\137\x63\x6c\151\x65\156\x74\137\x6e\x61\x6d\145" => $CAT70["\143\154\x69\145\156\164\x5f\x6e\x61\155\x65"] ?? null, "\x6c\151\x63\x65\156\x73\x65\137\x6c\141\163\164\137\143\150\x65\x63\x6b\145\x64" => \MvYyO\bTklJ\Carbon::mlzba()]); goto O_RJR; qmbve: $bloUO = rtrim($m1Ydl, "\57") . "\57\141\x70\151\57\x6c\151\143\x65\156\163\x65\57\x76\x65\162\151\x66\171"; goto MZIqt; Hp0QT: $vdGv0 = $CAT70["\x6d\x65\x73\163\x61\147\x65"] ?? "\114\151\163\x65\156\163\x69\x20\164\x69\x64\x61\153\x20\166\x61\154\x69\144\56"; goto mumkq; VVziC: $CAT70 = $VabCL->u0xqL(); goto Ax4ph; O_RJR: return ["\x73\165\x63\143\x65\x73\163" => true, "\x6d\145\x73\163\141\147\145" => "\114\151\x73\x65\156\163\151\40\x61\x6b\x74\151\146\x2e"]; goto Ktli4; D4l7x: } catch (\Exception $qBfNK) { return ["\163\165\x63\x63\x65\163\x73" => false, "\x6d\x65\x73\163\141\147\145" => "\x47\141\x67\x61\154\40\x6d\x65\156\x67\x68\x75\x62\165\x6e\147\x69\40\x73\145\162\x76\x65\162\40\x6c\x69\x73\x65\x6e\x73\151\x20\165\x6e\164\165\153\40\x76\x65\x72\x69\146\x69\153\x61\163\x69\x3a\40" . $qBfNK->getMessage()]; } goto Lao3R; Lao3R: } }
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Schema;
+
+class AdminPengaturanController extends Controller
+{
+    public function index()
+    {
+        $profile = DB::table('tb_profile')->first();
+        if ($profile) {
+            $profile->telepon = $profile->telpon ?? '';
+        }
+        $mikrotik_devices = DB::table('tbl_mikrotik')->orderBy('id_mikrotik', 'desc')->get();
+        $token = DB::table('tbl_token')->where('id_token', 1)->first();
+        $midtrans = DB::table('tbl_pgate')->where('id_pgat', 1)->first();
+
+        return view('admin.pengaturan.index', compact('profile', 'mikrotik_devices', 'token', 'midtrans'));
+    }
+
+    public function updateMidtrans(Request $request)
+    {
+        $request->validate([
+            'tclientkey' => 'required|string',
+            'tserverkey' => 'required|string',
+            'mode' => 'required|string|in:sandbox,live',
+        ]);
+
+        DB::table('tbl_pgate')->where('id_pgat', 1)->update([
+            'tclientkey' => htmlspecialchars(strip_tags($request->tclientkey)),
+            'tserverkey' => htmlspecialchars(strip_tags($request->tserverkey)),
+            'mode' => htmlspecialchars(strip_tags($request->mode)),
+        ]);
+
+        return redirect()->route('admin.pengaturan.index')->with('success', 'Kredensial Midtrans berhasil diperbarui!');
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $request->validate([
+            'nama_sekolah' => 'required|string',
+            'telepon' => 'required|string',
+            'email' => 'required|email',
+            'alamat' => 'required|string',
+            'logo' => 'nullable|image|mimes:png,jpg,jpeg|max:2048',
+        ]);
+
+        $profile = DB::table('tb_profile')->where('id_profile', 1)->first();
+        $filename = $profile->foto ?? 'ion.png';
+
+        if ($request->hasFile('logo')) {
+            $file = $request->file('logo');
+            $filename = 'logo_' . time() . '.' . $file->getClientOriginalExtension();
+            
+            $uploadDir = public_path('images');
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0755, true);
+            }
+            
+            $file->move($uploadDir, $filename);
+
+            if ($profile && !empty($profile->foto) && $profile->foto !== 'ion.png' && file_exists(public_path('images/' . $profile->foto))) {
+                @unlink(public_path('images/' . $profile->foto));
+            }
+        }
+
+        DB::table('tb_profile')->where('id_profile', 1)->update([
+            'nama_sekolah' => htmlspecialchars(strip_tags($request->nama_sekolah)),
+            'telpon' => htmlspecialchars(strip_tags($request->telepon)),
+            'email' => htmlspecialchars(strip_tags($request->email)),
+            'alamat' => htmlspecialchars(strip_tags($request->alamat)),
+            'foto' => $filename,
+        ]);
+
+        return redirect()->route('admin.pengaturan.index')->with('success', 'Informasi profil usaha dan logo berhasil diperbarui!');
+    }
+
+    public function updateMikrotik(Request $request)
+    {
+        $request->validate([
+            'ip' => 'required|string',
+            'username' => 'required|string',
+            'password' => 'required|string',
+            'port_mikrotik' => 'required|integer',
+            'nama_mikrotik' => 'required|string',
+        ]);
+
+        $id = $request->id_mikrotik;
+        $data = [
+            'ip' => htmlspecialchars(strip_tags($request->ip)),
+            'username' => htmlspecialchars(strip_tags($request->username)),
+            'password' => $request->password, // Simpan password Winbox
+            'port_mikrotik' => $request->port_mikrotik,
+            'nama_mikrotik' => htmlspecialchars(strip_tags($request->nama_mikrotik)),
+        ];
+
+        if (!empty($id)) {
+            DB::table('tbl_mikrotik')->where('id_mikrotik', $id)->update($data);
+            $msg = 'Konfigurasi router Mikrotik berhasil diperbarui!';
+        } else {
+            DB::table('tbl_mikrotik')->insert($data);
+            $msg = 'Device Mikrotik baru berhasil ditambahkan!';
+        }
+
+        return redirect()->route('admin.pengaturan.index')->with('success', $msg);
+    }
+
+    public function deleteMikrotik(Request $request)
+    {
+        $request->validate([
+            'id_mikrotik' => 'required|integer',
+        ]);
+
+        // Cek jika ID Mikrotik ini masih digunakan oleh pelanggan
+        $isInUse = DB::table('tb_pelanggan')->where('id_mikrotik', $request->id_mikrotik)->exists();
+        if ($isInUse) {
+            return back()->withErrors(['error' => 'Device Mikrotik ini tidak bisa dihapus karena masih dikaitkan dengan beberapa data pelanggan.']);
+        }
+
+        DB::table('tbl_mikrotik')->where('id_mikrotik', $request->id_mikrotik)->delete();
+
+        return redirect()->route('admin.pengaturan.index')->with('success', 'Device Mikrotik berhasil dihapus!');
+    }
+
+    public function updateToken(Request $request)
+    {
+        $request->validate([
+            'token' => 'required|string',
+        ]);
+
+        DB::table('tbl_token')->where('id_token', 1)->update([
+            'token' => htmlspecialchars(strip_tags($request->token)),
+        ]);
+
+        return redirect()->route('admin.pengaturan.index')->with('success', 'Token WhatsApp Fonnte berhasil diperbarui!');
+    }
+
+    /**
+     * Portable Database Exporter (Generates a clean SQL backup and downloads it)
+     */
+    public function backupDb()
+    {
+        // Hubungkan semua tabel di database
+        $tables = DB::select('SHOW TABLES');
+        $dbName = env('DB_DATABASE', 'tagihan_lotus');
+        
+        $sqlDump = "-- Indotel Billing SQL Database Backup\n";
+        $sqlDump .= "-- Generated on: " . now()->toDateTimeString() . "\n";
+        $sqlDump .= "-- Database Name: " . $dbName . "\n\n";
+        $sqlDump .= "SET FOREIGN_KEY_CHECKS=0;\n\n";
+
+        foreach ($tables as $table) {
+            $array = (array)$table;
+            $tableName = current($array);
+            
+            // Skip Laravel session & job tables if they are too large
+            if (in_array($tableName, ['sessions', 'job_batches'])) {
+                continue;
+            }
+
+            // Get Create Table structure
+            $createTableQuery = DB::select("SHOW CREATE TABLE `{$tableName}`");
+            if (!empty($createTableQuery)) {
+                $createTableArray = (array)$createTableQuery[0];
+                $sqlDump .= "DROP TABLE IF EXISTS `{$tableName}`;\n";
+                $sqlDump .= $createTableArray['Create Table'] . ";\n\n";
+            }
+
+            // Get Rows data
+            $rows = DB::table($tableName)->get();
+            if ($rows->count() > 0) {
+                foreach ($rows as $row) {
+                    $rowArray = (array)$row;
+                    $keys = array_keys($rowArray);
+                    $values = array_values($rowArray);
+
+                    // Escaped values
+                    $escapedValues = array_map(function ($value) {
+                        if (is_null($value)) {
+                            return 'NULL';
+                        }
+                        return "'" . addslashes((string)$value) . "'";
+                    }, $values);
+
+                    $keysStr = "`" . implode("`, `", $keys) . "`";
+                    $valuesStr = implode(", ", $escapedValues);
+
+                    $sqlDump .= "INSERT INTO `{$tableName}` ({$keysStr}) VALUES ({$valuesStr});\n";
+                }
+                $sqlDump .= "\n";
+            }
+        }
+
+        $sqlDump .= "SET FOREIGN_KEY_CHECKS=1;\n";
+
+        // Return file download
+        $filename = "backup_billing_" . date('Y_m_d_His') . ".sql";
+        $headers = [
+            'Content-Type' => 'text/plain',
+            'Content-Disposition' => sprintf('attachment; filename="%s"', $filename),
+        ];
+
+        return Response::make($sqlDump, 200, $headers);
+    }
+
+    public function updateJatuhTempo(Request $request)
+    {
+        $request->validate([
+            'tipe_jatuh_tempo' => 'required|string|in:tanggal_pasang,tanggal_tetap',
+            'hari_jatuh_tempo' => 'required|integer|min:1|max:31',
+            'sistem_billing' => 'required|string|in:prabayar,pascabayar',
+            'auto_send_billing' => 'required|integer|in:0,1',
+            'auto_send_date' => 'required|integer|min:1|max:31',
+            'auto_send_h_minus' => 'required|integer|min:0|max:30',
+        ]);
+
+        $tipe = htmlspecialchars(strip_tags($request->tipe_jatuh_tempo));
+        $default_hari = intval($request->hari_jatuh_tempo);
+        $sistem = htmlspecialchars(strip_tags($request->sistem_billing));
+        $auto_send = intval($request->auto_send_billing);
+        $auto_date = intval($request->auto_send_date);
+        $auto_h_minus = intval($request->auto_send_h_minus);
+
+        DB::beginTransaction();
+        try {
+            DB::table('tb_profile')->where('id_profile', 1)->update([
+                'tipe_jatuh_tempo' => $tipe,
+                'hari_jatuh_tempo' => $default_hari,
+                'sistem_billing' => $sistem,
+                'auto_send_billing' => $auto_send,
+                'auto_send_date' => $auto_date,
+                'auto_send_h_minus' => $auto_h_minus,
+            ]);
+
+            // Sinkronisasi jatuh_tempo pelanggan dan tagihan yang belum lunas
+            $pelanggans = DB::table('tb_pelanggan')->get();
+            $current_month_code = date('mY'); // format 'mY' e.g. '062026'
+
+            foreach ($pelanggans as $pelanggan) {
+                // Cari apakah ada tagihan belum dibayar
+                $unpaidBill = DB::table('tb_tagihan')
+                    ->where('id_pelanggan', $pelanggan->id_pelanggan)
+                    ->whereNull('status_bayar')
+                    ->orderBy('id_tagihan', 'desc')
+                    ->first();
+
+                if ($unpaidBill) {
+                    // Ada tagihan belum dibayar. Hitung jatuh tempo berdasarkan bulan_tahun tagihan tersebut.
+                    $bulan_tahun = $unpaidBill->bulan_tahun;
+                    if (is_string($bulan_tahun) && strlen($bulan_tahun) === 6) {
+                        $target_month = (int) substr($bulan_tahun, 0, 2);
+                        $target_year = (int) substr($bulan_tahun, 2, 4);
+                    } else {
+                        // Fallback jika format salah
+                        $target_month = (int) date('m');
+                        $target_year = (int) date('Y');
+                    }
+
+                    // Tentukan bulan berdasarkan prabayar/pascabayar
+                    $date = \Carbon\Carbon::create($target_year, $target_month, 1);
+                    if ($sistem === 'pascabayar') {
+                        $date->addMonth();
+                    }
+                    $year = $date->year;
+                    $month = $date->month;
+                } else {
+                    // Tidak ada tagihan belum dibayar. Maka jatuh tempo berikutnya di bulan depan.
+                    $date = \Carbon\Carbon::now()->addMonth();
+                    $year = $date->year;
+                    $month = $date->month;
+                }
+
+                // Hitung hari jatuh tempo
+                $due_day = $default_hari;
+                if ($tipe === 'tanggal_pasang' && !empty($pelanggan->tgl_pemasangan)) {
+                    $due_day = (int) date('d', strtotime($pelanggan->tgl_pemasangan));
+                }
+
+                // Proteksi batas hari maksimum di bulan target
+                $days_in_month = (int) date('t', strtotime($year . '-' . sprintf('%02d', $month) . '-01'));
+                if ($due_day > $days_in_month) {
+                    $due_day = $days_in_month;
+                }
+
+                // Pukul diatur ke 23:59:00 sesuai request user
+                $new_jatuh_tempo = sprintf('%04d-%02d-%02d 23:59:00', $year, $month, $due_day);
+
+                // Update data pelanggan
+                DB::table('tb_pelanggan')
+                    ->where('id_pelanggan', $pelanggan->id_pelanggan)
+                    ->update(['jatuh_tempo' => $new_jatuh_tempo]);
+
+                // Update data tagihan yang belum dibayar
+                DB::table('tb_tagihan')
+                    ->where('id_pelanggan', $pelanggan->id_pelanggan)
+                    ->whereNull('status_bayar')
+                    ->update(['jatuh_tempo' => $new_jatuh_tempo]);
+            }
+
+            DB::commit();
+            $msg = 'Pengaturan jatuh tempo berhasil diperbarui dan disinkronkan ke seluruh data pelanggan!';
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withErrors(['error' => 'Gagal memperbarui pengaturan jatuh tempo: ' . $e->getMessage()]);
+        }
+
+        return redirect()->route('admin.pengaturan.index')->with('success', $msg);
+    }
+
+    public function showUnlicensed()
+    {
+        $profile = DB::table('tb_profile')->where('id_profile', 1)->first();
+        return view('errors.unlicensed', compact('profile'));
+    }
+
+    public function activateLicense(Request $request)
+    {
+        $request->validate([
+            'license_key' => 'required|string',
+        ]);
+
+        $result = $this->verifyLicenseWithServer($request->license_key);
+
+        if ($result['success']) {
+            return redirect()->route('admin.dashboard')->with('success', 'Lisensi berhasil diaktifkan! Aplikasi billing kini aktif.');
+        }
+
+        return back()->withErrors(['license_key' => $result['message']]);
+    }
+
+    public function updateLicense(Request $request)
+    {
+        $request->validate([
+            'license_key' => 'required|string',
+        ]);
+
+        $result = $this->verifyLicenseWithServer($request->license_key);
+
+        if ($result['success']) {
+            return redirect()->route('admin.pengaturan.index')->with('success', 'License Key berhasil diperbarui dan divalidasi!');
+        }
+
+        return back()->withErrors(['license_key' => $result['message']]);
+    }
+
+    private function verifyLicenseWithServer($licenseKey)
+    {
+        $serverUrl = env('LICENSE_SERVER_URL', 'http://localhost:8000');
+        $appUrl = config('app.url', 'localhost');
+        $domain = parse_url($appUrl, PHP_URL_HOST) ?: 'localhost';
+
+        $ipAddress = '127.0.0.1';
+        try {
+            $responseIp = \Illuminate\Support\Facades\Http::timeout(3)->get('https://api.ipify.org');
+            if ($responseIp->successful()) {
+                $ipAddress = trim($responseIp->body());
+            }
+        } catch (\Exception $e) {
+            $ipAddress = gethostbyname(gethostname()) ?: '127.0.0.1';
+        }
+
+        try {
+            $apiUrl = rtrim($serverUrl, '/') . '/api/license/verify';
+            $response = \Illuminate\Support\Facades\Http::timeout(10)->post($apiUrl, [
+                'license_key' => $licenseKey,
+                'domain' => $domain,
+                'ip_address' => $ipAddress,
+            ]);
+
+            $data = $response->json();
+
+            if ($response->successful() && isset($data['status']) && $data['status'] === 'active') {
+                $expiresAt = $data['expires_at'] !== 'lifetime' 
+                    ? \Illuminate\Support\Carbon::parse($data['expires_at']) 
+                    : null;
+
+                DB::table('tb_profile')->where('id_profile', 1)->update([
+                    'license_key' => $licenseKey,
+                    'license_status' => 'active',
+                    'license_expires_at' => $expiresAt,
+                    'license_plan_name' => $data['plan_name'] ?? 'Lite',
+                    'license_max_clients' => intval($data['max_clients'] ?? 250),
+                    'license_client_name' => $data['client_name'] ?? null,
+                    'license_last_checked' => \Illuminate\Support\Carbon::now(),
+                ]);
+
+                return [
+                    'success' => true,
+                    'message' => 'Lisensi aktif.'
+                ];
+            }
+
+            $status = $data['status'] ?? 'invalid';
+            $msg = $data['message'] ?? 'Lisensi tidak valid.';
+            
+            DB::table('tb_profile')->where('id_profile', 1)->update([
+                'license_key' => $licenseKey,
+                'license_status' => $status,
+                'license_last_checked' => \Illuminate\Support\Carbon::now(),
+            ]);
+
+            return [
+                'success' => false,
+                'message' => $msg
+            ];
+
+        } catch (\Exception $e) {
+            return [
+                'success' => false,
+                'message' => 'Gagal menghubungi server lisensi untuk verifikasi: ' . $e->getMessage()
+            ];
+        }
+    }
+}

@@ -1,8 +1,336 @@
 <?php
-/*   __________________________________________________
-    |  Obfuscated by YAK Pro - Php Obfuscator  3.0.0   |
-    |              on 2026-06-24 23:14:48              |
-    |    GitHub: https://github.com/pk-fr/yakpro-po    |
-    |__________________________________________________|
-*/
- namespace M71jr\xZ1tU\FnhFf\lP2K1; use M71Jr\xZ1Tu\fnhfF\Yufus; use m71JR\xPaCo\rfkJS; use M71Jr\xPaCo\OvyBr; use m71jR\xpAcO\obL06; use m71jR\xpaCo\UWIB3; use mvyyo\BTklj\Lp8pf\hKwLZ; use bpqvF\BPQVF; class AdminDashboardController extends Controller { public function h0I_0() { goto ICqpR; xWmB1: $AtKLv = Tagihan::GvsMs("\x73\164\x61\x74\x75\x73\x5f\x62\x61\x79\141\x72", 1)->gvSmS("\x62\165\154\x61\156\x5f\164\x61\x68\x75\x6e", "\154\x69\x6b\145", $CFuGC . "\x25")->mqCIB("\x69\144\x5f\160\145\154\141\156\x67\147\141\x6e", $GIac6)->count(); goto gbokC; tWZOp: $LcRR8 = DB::K6goV("\x74\142\154\x5f\155\151\x6b\x72\157\x74\151\153")->get(); goto X5Jgy; jo98z: if (session()->iqbv5("\154\x69\143\145\x6e\163\x65\x5f\167\x61\x72\x6e\x69\x6e\147\137\x73\x68\x6f\167\156")) { goto yRe3g; } goto TtXMd; yojAY: usort($zhoQp, function ($tGBG7, $qe9iF) { goto m5QGL; oRRSj: $PCzO1 = strtotime(str_replace("\x2e", "\x3a", $qe9iF->V_aQ1)); goto vDINL; vDINL: return $PCzO1 <=> $TEeQ3; goto RyeTo; m5QGL: $TEeQ3 = strtotime(str_replace("\x2e", "\72", $tGBG7->V_aQ1)); goto oRRSj; RyeTo: }); goto dQIHi; cTFCY: $bf0nu = 0; goto jT7i6; gmCac: $baBGs = DB::K6gOv("\164\142\x6c\137\x6f\144\x70")->count(); goto mBZ_D; CJFPc: $CR09j = Tagihan::gvsMs(function ($rbP7F) { $rbP7F->bvug1("\x73\164\x61\x74\x75\163\x5f\x62\141\171\141\162")->TXs92("\x73\x74\x61\164\165\163\137\142\141\x79\141\x72", [0, "\60", "\142\x65\154\165\155", '']); })->GVSMs("\155\x61\156\165\141\154\137\151\156\x76\x6f\x69\143\x65", 1)->mQCib("\151\144\x5f\160\145\x6c\141\x6e\x67\147\x61\156", $GIac6)->count(); goto v2Eos; fYuOl: $v0eog = Tagihan::BVUG1("\163\164\x61\x74\x75\163\x5f\x62\141\171\x61\x72")->EnSCX("\152\x61\x74\165\x68\x5f\x74\x65\155\x70\157", [Carbon::MlzBA(), Carbon::mLZbA()->t0785(3)])->mqcIb("\151\144\137\160\x65\x6c\x61\x6e\147\147\141\x6e", $GIac6)->a8rqR("\151\144\x5f\x70\x65\x6c\141\x6e\x67\x67\x61\x6e")->count("\x69\x64\137\160\145\x6c\x61\x6e\147\x67\x61\x6e"); goto ySIYB; fpvQv: $BAsHL = Carbon::MLzba()->OWOp0($Uw56p); goto qjhwW; wxs1C: $DVt71 = []; goto yDnrp; IoiAy: $IUdUu = $TVdxs - $btaEa; goto wxs1C; ICqpR: $qpXzw = Carbon::oXIjx()->aOa6Z(); goto T4Vol; lG5R_: $Ujx83 = Keluhan::GvSMs("\163\x74\141\x74\165\163\137\153\x65\x6c\165\150\141\x6e", "\160\162\x6f\x73\x65\163")->MQcIB("\151\x64\137\x70\145\x6c\x61\x6e\147\147\x61\x6e", $GIac6)->count(); goto C8yDu; fsxSf: $xyEPw = (int) DB::k6goV("\x74\x62\154\137\157\x64\160")->Q30OE("\160\157\162\x74\137\x6f\x64\160"); goto V503b; ls3Hl: $VrZXj = Tagihan::GVsMS(function ($rbP7F) { $rbP7F->BVUg1("\163\x74\141\164\165\x73\137\142\x61\x79\141\x72")->TXs92("\163\x74\141\164\165\x73\x5f\x62\x61\171\141\162", [0, "\60", "\x62\x65\154\165\x6d", '']); })->gVsmS("\x62\x75\x6c\x61\156\x5f\x74\x61\x68\165\x6e", $CFuGC)->gvsmS("\152\141\164\165\x68\x5f\164\145\155\160\x6f", "\74", Carbon::mLzbA())->gvsmS(function ($rbP7F) { $rbP7F->BvUG1("\142\x6c\157\153\151\x72\137\x73\164\141\164\x75\163")->QojkH("\142\154\x6f\153\x69\162\137\163\x74\x61\x74\165\163", "\41\x3d", 1); })->MqcIb("\x69\144\x5f\x70\x65\154\141\156\147\147\141\156", $GIac6)->a8Rqr("\151\x64\137\x70\145\x6c\x61\x6e\147\147\x61\156")->count("\151\144\x5f\x70\145\154\141\x6e\147\x67\141\x6e"); goto ppuKd; T6nL8: $xo1lx = Tagihan::QicK_(["\x70\x65\154\x61\x6e\x67\147\x61\x6e", "\160\145\156\x65\162\x69\155\x61"])->duPtM("\x77\141\153\164\x75\x5f\x62\141\171\141\162")->mqCib("\x69\x64\x5f\x70\x65\x6c\141\x6e\147\x67\x61\156", $GIac6)->poJJE("\x77\141\x6b\164\165\137\x62\141\x79\x61\162", "\x64\145\x73\x63")->pYgjv(10)->get(); goto gG2f7; lGz2L: XiTYY: goto h8CGP; LoI9q: Zq6K7: goto yojAY; JPTPi: $EOL8K = Tagihan::qICk_("\160\x65\x6c\x61\156\147\147\141\x6e")->dupTM("\x77\x61\153\164\x75\137\x62\x61\x79\x61\x72")->mQcIb("\x69\144\x5f\160\145\154\x61\x6e\x67\147\x61\x6e", $GIac6)->POJJE("\167\141\x6b\x74\x75\137\142\141\171\141\x72", "\x64\x65\163\x63")->PygJv(10)->get(); goto Miejc; kP2v3: if (!($HCiaN && $HCiaN->ttUAF === "\x61\x63\x74\x69\x76\145" && $HCiaN->jZIOQ)) { goto Kp0gH; } goto A2xSh; ppuKd: $M0p08 = Keluhan::gVSMs("\x73\x74\141\164\165\x73\x5f\153\x65\154\x75\150\141\x6e", "\x6d\145\x6e\x75\156\x67\x67\165")->mQciB("\151\144\137\160\145\x6c\141\x6e\147\147\141\x6e", $GIac6)->count(); goto lG5R_; A2xSh: $XMQkl = Carbon::parse($HCiaN->jZIOQ); goto a7XGz; gG2f7: $sNhhE = false; goto lTZyV; X5Jgy: $gbBxP = $LcRR8->count(); goto OH7sk; aHC30: $gtxOH = Tagihan::gVSMS(function ($rbP7F) { $rbP7F->BvUG1("\x73\164\x61\x74\165\163\x5f\x62\141\x79\x61\x72")->TXs92("\x73\164\x61\164\x75\x73\x5f\x62\141\171\x61\x72", [0, "\60", "\142\x65\154\165\155", '']); })->GvsMs("\142\165\154\141\156\137\164\x61\150\165\156", $CFuGC)->GvSmS(function ($rbP7F) { $rbP7F->BvUg1("\155\x61\156\x75\x61\154\137\x69\156\x76\157\x69\x63\x65")->QojKh("\x6d\141\156\165\x61\154\137\151\156\x76\x6f\151\143\x65", 0); })->mqCib("\151\144\137\160\145\x6c\x61\x6e\x67\x67\x61\x6e", $GIac6)->count(); goto CJFPc; LO2Kk: if (!($Uw56p >= 0)) { goto XiTYY; } goto fpvQv; jT7i6: $xsorl = []; goto JuNAS; L4PbO: $lI0s6 = (int) ceil($d2hwc); goto jo98z; wshBz: $b8DxY = Tagihan::gVsMs("\x73\164\141\164\x75\163\x5f\x62\x61\x79\x61\x72", 1)->gvsMS("\x62\x75\154\x61\x6e\x5f\x74\x61\x68\x75\156", $CFuGC)->GVsms(function ($rbP7F) { $rbP7F->BVug1("\x6d\141\x6e\x75\141\x6c\x5f\x69\x6e\x76\x6f\151\143\145")->QoJKH("\155\141\156\165\141\154\137\151\x6e\x76\x6f\151\143\x65", 0); })->MQCib("\151\144\x5f\x70\x65\154\141\x6e\147\x67\x61\156", $GIac6)->count(); goto ls3Hl; mBZ_D: $vV_K7 = DB::k6Gov("\164\x62\x5f\160\x65\154\x61\156\147\147\141\x6e")->mQcIb("\151\144\137\160\145\154\141\156\x67\147\x61\156", $GIac6)->dUpTM("\157\144\x70")->GVSms("\x6f\144\x70", "\x3c\x3e", '')->count(); goto fsxSf; D2VwR: yRe3g: goto aqQ_7; AczFX: Kp0gH: goto uWBas; h8CGP: $uSU04 = count($GIac6); goto yIe52; G94mL: $HCiaN = DB::K6goV("\x74\142\x5f\x70\162\x6f\x66\151\x6c\x65")->first(); goto xWmB1; aqQ_7: z75UH: goto AczFX; qCw56: XxmNU: goto QboU6; ySIYB: require_once base_path("\x69\156\x63\154\x75\x64\x65\x2f\x72\x6f\x75\x74\x65\162\157\163\137\141\160\x69\x2e\160\x68\160"); goto tWZOp; zzjFP: $btaEa = DB::k6GOv("\x74\x62\x5f\153\x61\x73")->GvsMS("\x74\x67\x6c\137\x6b\141\163", "\x6c\151\153\x65", $n1G65 . "\45")->Q30OE("\160\x65\156\147\145\x6c\165\141\x72\x61\x6e"); goto IoiAy; otBYq: f7R2Q: goto SWLCO; FcIcb: $Uw56p--; goto u9taQ; SWLCO: $cHFVL = DB::K6Gov("\x74\142\x6c\x5f\157\144\x63")->count(); goto gmCac; X0rxO: $TVdxs = DB::k6Gov("\164\142\x5f\153\x61\x73")->gVSms("\164\x67\154\x5f\153\141\163", "\x6c\x69\x6b\145", $n1G65 . "\x25")->Q30OE("\x70\x65\156\x65\x72\151\155\x61\x61\156"); goto zzjFP; HP7Jd: if (!($d2hwc >= 0 && $d2hwc <= 14)) { goto z75UH; } goto L4PbO; T4Vol: $n1G65 = Carbon::Mlzba()->format("\131\55\x6d"); goto z73e7; SF_qH: foreach ($EOL8K as $XlfUi) { goto NEm4U; Ig1G_: $zhoQp[] = (object) ["\x77\141\x6b\164\x75" => Carbon::parse($XlfUi->lFIPO)->format("\144\57\x6d\57\131\54\40\x48\56\151\x2e\x73"), "\143\x75\x73\164\x6f\x6d\x65\162" => $XlfUi->UJoNp->MbKDH, "\x61\x6b\163\x69" => "\x52\x45\x53\x54\117\x52\105", "\x73\x74\x61\164\x75\x73" => "\123\x75\x6b\x73\x65\163"]; goto UZzJQ; NEm4U: if (!$XlfUi->UJoNp) { goto O2bEP; } goto Ig1G_; UZzJQ: O2bEP: goto MM6MC; MM6MC: wyPS1: goto NGvI0; NGvI0: } goto qCw56; z73e7: $CFuGC = Carbon::mLzBa()->format("\x6d\131"); goto MkcfE; yIe52: $Uc5RQ = Tagihan::BVUG1("\163\x74\x61\164\x75\163\x5f\x62\141\x79\141\x72")->GvSMs("\142\x6c\x6f\153\151\162\137\163\164\x61\164\x75\163", 1)->mqcIB("\151\x64\137\160\x65\154\x61\156\147\147\141\x6e", $GIac6)->a8rQR("\x69\144\137\x70\x65\154\141\x6e\x67\x67\141\x6e")->count("\x69\x64\137\160\x65\x6c\x61\x6e\147\147\x61\x6e"); goto WEiRj; V503b: $hWLXG = max(0, $xyEPw - $vV_K7); goto JPTPi; QHdzv: $dQ_MW = DB::K6gov("\x74\142\137\x6b\141\163")->gvsMs("\164\x67\x6c\137\x6b\x61\x73", $qpXzw)->q30oE("\160\x65\x6e\x65\x72\x69\x6d\141\x61\x6e"); goto X0rxO; OH7sk: $CUBlz = 0; goto cTFCY; MkcfE: $GIac6 = Pelanggan::DUVk3()->yu00Q("\151\144\137\x70\145\x6c\141\156\147\147\x61\x6e")->toArray(); goto QHdzv; JPHUz: $Jt0bT = Tagihan::gvSMS("\163\x74\x61\x74\x75\x73\x5f\142\x61\x79\x61\162", 1)->gVsMS("\x62\x75\154\x61\x6e\x5f\164\141\150\x75\x6e", "\x6c\x69\153\x65", $CFuGC . "\45")->MQCib("\151\x64\137\160\145\154\x61\x6e\147\147\x61\156", $GIac6)->q30OE("\152\155\154\137\x62\141\171\x61\x72"); goto DDF7a; lTZyV: $lI0s6 = null; goto kP2v3; TtXMd: $sNhhE = true; goto SIxJn; skT14: $qJ9ot = $M0p08 + $Ujx83 + $yulOb; goto fYuOl; SIxJn: session()->YvpuA("\154\x69\143\145\156\163\145\x5f\x77\x61\x72\156\151\x6e\x67\137\x73\x68\157\167\156", true); goto D2VwR; v2Eos: $pUF_7 = $gtxOH + $CR09j; goto wshBz; jHzun: $wZ_1w = Tagihan::BVuG1("\x73\x74\x61\164\165\163\137\142\x61\171\x61\x72")->GVsmS("\152\141\x74\165\x68\137\164\x65\x6d\x70\x6f", "\74", Carbon::mlzba()->yEQpB(60))->MQCiB("\x69\x64\x5f\x70\x65\x6c\x61\156\147\x67\x61\156", $GIac6)->a8rQR("\x69\144\x5f\160\x65\x6c\x61\156\x67\x67\x61\156")->count("\151\x64\137\x70\145\x6c\x61\156\147\x67\141\156"); goto tMyK6; qjhwW: $xarIl = $BAsHL->format("\x59\55\x6d"); goto VgEWP; yDnrp: $Uw56p = 5; goto Q2kIQ; QboU6: foreach ($K3TeJ as $XlfUi) { goto P7xin; E_6N2: vs30O: goto kKVyS; OW3dQ: $kI6I5 = $XlfUi->jWCHt ? Carbon::parse($XlfUi->jWCHt) : Carbon::MlzbA(); goto GpDw2; PF150: VdGMv: goto E_6N2; P7xin: if (!$XlfUi->UJoNp) { goto VdGMv; } goto OW3dQ; GpDw2: $zhoQp[] = (object) ["\167\x61\153\164\x75" => $kI6I5->format("\x64\57\x6d\x2f\x59\54\40\x48\x2e\x69\x2e\163"), "\143\165\x73\x74\x6f\155\x65\x72" => $XlfUi->UJoNp->MbKDH, "\141\153\163\151" => "\111\123\117\x4c\101\x54\105", "\163\x74\141\164\x75\163" => "\x53\165\153\x73\145\163"]; goto PF150; kKVyS: } goto LoI9q; uWBas: return view("\x61\x64\155\151\156\56\x64\141\163\150\142\x6f\141\162\144", compact("\153\x61\163\x48\x61\162\x69\x49\156\151", "\x6b\141\163\102\165\154\141\156\111\x6e\x69", "\153\x65\x6c\165\141\x72\x42\x75\154\x61\156\111\x6e\151", "\x73\x61\x6c\144\x6f\102\165\x6c\x61\156\111\x6e\x69", "\x6b\x65\165\141\156\x67\141\x6e\66\102\165\x6c\x61\156", "\164\157\x74\141\x6c\x50\x65\x6c\x61\156\147\x67\x61\156", "\141\153\164\x69\146\103\x6f\x75\156\164", "\x74\x65\x72\151\163\157\154\151\162\x43\157\165\x6e\164", "\156\157\156\141\153\164\151\x66\x43\x6f\165\156\164", "\142\165\153\141\123\x65\155\x65\x6e\x74\141\x72\x61\103\157\165\x6e\x74", "\142\x65\x6c\x75\155\x54\145\x72\142\x61\171\x61\x72\x43\157\165\156\x74", "\163\165\x6b\x73\x65\x73\x42\141\171\141\x72\x43\x6f\165\156\x74", "\x6a\x61\x74\x75\x68\x54\x65\155\x70\157\x33\x48\x61\162\151", "\153\145\154\x75\x68\x61\x6e\x4d\x65\156\165\x6e\x67\147\x75", "\x6b\145\154\x75\150\x61\x6e\120\x72\157\x73\x65\x73", "\153\x65\x6c\x75\x68\x61\156\123\x65\x6c\145\163\x61\x69", "\153\x65\x6c\165\150\x61\x6e\x54\x6f\x74\x61\154", "\164\157\164\x61\154\115\x69\153\162\x6f\x74\x69\x6b", "\155\x69\153\162\157\x74\151\x6b\x4f\x6e\x6c\x69\156\x65", "\155\x69\x6b\x72\x6f\x74\151\153\117\x66\146\154\x69\x6e\145", "\144\x65\166\151\143\145\x4c\151\163\x74", "\x74\157\x74\141\x6c\x4f\144\x63", "\164\157\x74\141\154\117\144\x70", "\160\157\x72\x74\124\x65\162\x70\x61\153\141\151", "\160\x6f\162\x74\124\x65\x72\x73\x65\x64\151\141", "\141\x6b\164\151\166\151\164\141\163\x54\145\162\x62\141\162\x75", "\x70\x72\157\146\x69\x6c\145", "\164\157\164\141\154\x4c\165\x6e\141\163\x43\157\x75\156\164", "\x74\x6f\164\x61\154\102\x65\154\165\x6d\x42\141\x79\141\x72\x43\157\x75\x6e\x74", "\164\x6f\164\x61\154\120\x65\156\145\x72\x69\x6d\x61\141\156\124\141\x67\151\x68\x61\156", "\164\157\x74\141\x6c\x42\x65\154\165\155\x42\x61\x79\141\x72\124\141\x67\x69\150\141\x6e", "\x70\x72\145\x64\x69\153\163\151\x50\x65\156\x64\x61\x70\141\164\141\x6e", "\x74\x72\141\x6e\x73\141\x6b\163\151\x54\145\162\142\141\x72\x75", "\163\150\157\167\x4c\x69\x63\x65\156\x73\145\127\x61\x72\x6e\x69\x6e\x67", "\x6c\x69\143\145\x6e\163\145\104\141\x79\163\122\145\155\141\x69\x6e\x69\x6e\147")); goto tDsfZ; JkCUq: ITj18: goto FcIcb; gbokC: $n2jE1 = Tagihan::BvUG1("\163\x74\x61\164\165\163\137\x62\141\x79\x61\x72")->gvSmS("\142\x75\x6c\x61\x6e\x5f\x74\141\150\165\156", "\154\x69\x6b\x65", $CFuGC . "\x25")->MqCib("\x69\144\x5f\x70\x65\x6c\x61\x6e\x67\x67\x61\156", $GIac6)->count(); goto JPHUz; o2_dh: $UDCja = DB::K6gOV("\164\x62\137\x6b\x61\x73")->GVSMs("\x74\147\x6c\x5f\x6b\141\163", "\x6c\151\x6b\145", $xarIl . "\x25")->Q30oE("\160\x65\156\x67\145\x6c\x75\x61\x72\141\156"); goto lt3ta; a7XGz: $d2hwc = Carbon::mLzBa()->A4RYa($XMQkl, false); goto HP7Jd; u9taQ: goto bDtEy; goto lGz2L; q3YiD: $Kff6o = Tagihan::gvsmS("\142\165\x6c\x61\156\137\164\x61\x68\x75\x6e", "\x6c\151\153\x65", $CFuGC . "\45")->MqciB("\x69\144\x5f\160\x65\x6c\141\156\147\x67\141\156", $GIac6)->Q30oE("\152\155\x6c\x5f\142\x61\x79\141\162"); goto T6nL8; DDF7a: $uXkQe = Tagihan::BVuG1("\x73\164\x61\x74\x75\163\137\142\141\x79\141\x72")->GvsmS("\x62\165\154\141\x6e\x5f\164\141\150\x75\x6e", "\154\151\153\145", $CFuGC . "\45")->mqCIB("\151\x64\x5f\160\x65\x6c\141\156\147\147\141\x6e", $GIac6)->Q30Oe("\x6a\x6d\154\x5f\142\141\171\x61\162"); goto q3YiD; Miejc: $K3TeJ = Tagihan::qiCK_("\160\145\154\x61\156\147\x67\x61\x6e")->gVsMs("\x62\154\157\153\151\162\x5f\163\164\141\x74\x75\x73", 1)->mqCiB("\151\x64\137\x70\145\154\141\x6e\x67\x67\x61\x6e", $GIac6)->POjjE("\151\144\137\x74\141\x67\151\150\x61\156", "\144\x65\x73\x63")->PyGjV(10)->get(); goto Lo83z; TWl0n: $jobbU = DB::k6GOV("\164\142\137\x6b\x61\163")->GVsMS("\x74\147\154\137\x6b\141\163", "\154\x69\x6b\145", $xarIl . "\x25")->Q30OE("\160\x65\x6e\145\x72\x69\x6d\141\141\156"); goto o2_dh; JuNAS: foreach ($LcRR8 as $C3Il7) { goto St8zm; HRea4: $NB549->pSFwA = 1; goto fvF9z; yfZa5: $CUBlz++; goto e2Edu; Zu0mw: $xsorl[] = (object) ["\156\141\x6d\x61" => $C3Il7->BwTxq, "\x69\160" => $C3Il7->aU6Pe, "\157\156\x6c\151\x6e\145" => $Je5h2, "\167\141\153\164\165" => Carbon::mLZBa()->format("\144\40\115\40\x59\54\40\x48\72\151")]; goto HIBk2; X19Cf: $NB549->harX7 = 0; goto Dtjxq; gKCau: Pq9CN: goto yfZa5; Dtjxq: $Je5h2 = false; goto H9rND; hoyar: goto cb3nt; goto gKCau; e2Edu: cb3nt: goto Zu0mw; H9rND: try { goto PWc0i; Mb8RK: WqNLx: goto OKJAl; PWc0i: if (!$NB549->connect($C3Il7->aU6Pe, $C3Il7->a22SN, $C3Il7->hXbeJ)) { goto WqNLx; } goto wR61p; xqL4y: $NB549->hdC5Q(); goto Mb8RK; wR61p: $Je5h2 = true; goto xqL4y; OKJAl: } catch (\Exception $qBfNK) { $Je5h2 = false; } goto p9hE6; p9hE6: if ($Je5h2) { goto Pq9CN; } goto ZUgwT; ZUgwT: $bf0nu++; goto hoyar; fvF9z: $NB549->WmSah = 1; goto X19Cf; HIBk2: MouKk: goto GDxIB; St8zm: $NB549 = new \RouterosAPI(); goto HRea4; GDxIB: } goto otBYq; Q2kIQ: bDtEy: goto LO2Kk; lt3ta: $DVt71[] = ["\x6c\141\x62\145\154" => $AJBST, "\x70\x65\x6d\x61\163\165\x6b\141\156" => (int) $jobbU, "\160\x65\156\x67\145\x6c\x75\x61\x72\141\156" => (int) $UDCja]; goto JkCUq; C8yDu: $yulOb = Keluhan::gvsMS("\x73\164\x61\x74\165\163\137\153\x65\154\165\150\141\x6e", "\x73\145\x6c\x65\163\141\x69")->mQcIb("\x69\144\137\x70\x65\154\x61\x6e\x67\x67\141\156", $GIac6)->count(); goto skT14; Lo83z: $zhoQp = []; goto SF_qH; dQIHi: $zhoQp = array_slice($zhoQp, 0, 10); goto G94mL; WEiRj: $VrZXj = Tagihan::bvug1("\163\164\x61\164\165\x73\x5f\142\x61\171\x61\x72")->GvsMs("\x6a\x61\x74\165\150\137\164\145\x6d\x70\157", "\74", Carbon::mlZbA())->gvSMS(function ($rbP7F) { $rbP7F->BVug1("\142\154\157\x6b\151\162\x5f\163\164\x61\x74\165\163")->qOjKH("\142\x6c\157\153\x69\x72\137\x73\164\141\164\165\x73", "\x21\x3d", 1); })->mQcIb("\x69\x64\137\x70\145\154\x61\x6e\x67\147\141\x6e", $GIac6)->A8RQr("\151\x64\137\x70\x65\154\x61\156\147\147\141\156")->count("\x69\x64\x5f\x70\x65\x6c\141\x6e\x67\147\x61\x6e"); goto jHzun; tMyK6: $eH05m = max(0, $uSU04 - $Uc5RQ - $wZ_1w); goto aHC30; VgEWP: $AJBST = $BAsHL->NTnw_("\115\40\131"); goto TWl0n; tDsfZ: } }
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\Pelanggan;
+use App\Models\Keluhan;
+use App\Models\Tagihan;
+use App\Models\Profile;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
+
+class AdminDashboardController extends Controller
+{
+    public function index()
+    {
+        $today = Carbon::today()->toDateString();
+        $thisMonth = Carbon::now()->format('Y-m');
+        $thisMonthForTagihan = Carbon::now()->format('mY'); // format 'mY' untuk tagihan, misal '062026'
+
+        // Get allowed customer IDs for query scoping
+        $allowedPelangganIds = Pelanggan::allowedForUser()->pluck('id_pelanggan')->toArray();
+
+        // 1. Ambil Pemasukan Hari Ini (dari tb_kas)
+        $kasHariIni = DB::table('tb_kas')
+            ->where('tgl_kas', $today)
+            ->sum('penerimaan');
+
+        // 2. Keuangan Bulan Ini (dari tb_kas)
+        $kasBulanIni = DB::table('tb_kas')
+            ->where('tgl_kas', 'like', $thisMonth . '%')
+            ->sum('penerimaan');
+
+        $keluarBulanIni = DB::table('tb_kas')
+            ->where('tgl_kas', 'like', $thisMonth . '%')
+            ->sum('pengeluaran');
+
+        $saldoBulanIni = $kasBulanIni - $keluarBulanIni;
+
+        // 1.a. Data Tren Keuangan 6 Bulan Terakhir (Pemasukan vs Pengeluaran)
+        $keuangan6Bulan = [];
+        for ($i = 5; $i >= 0; $i--) {
+            $month = Carbon::now()->subMonths($i);
+            $monthStr = $month->format('Y-m');
+            $monthLabel = $month->translatedFormat('M Y');
+            
+            $pemasukan = DB::table('tb_kas')
+                ->where('tgl_kas', 'like', $monthStr . '%')
+                ->sum('penerimaan');
+                
+            $pengeluaran = DB::table('tb_kas')
+                ->where('tgl_kas', 'like', $monthStr . '%')
+                ->sum('pengeluaran');
+                
+            $keuangan6Bulan[] = [
+                'label' => $monthLabel,
+                'pemasukan' => (int) $pemasukan,
+                'pengeluaran' => (int) $pengeluaran,
+            ];
+        }
+
+        // 2. Status Pelanggan (Aktif, Terisolir, Non-aktif)
+        $totalPelanggan = count($allowedPelangganIds);
+        $terisolirCount = Tagihan::whereNull('status_bayar')
+            ->where('blokir_status', 1)
+            ->whereIn('id_pelanggan', $allowedPelangganIds)
+            ->distinct('id_pelanggan')
+            ->count('id_pelanggan');
+
+        $bukaSementaraCount = Tagihan::whereNull('status_bayar')
+            ->where('jatuh_tempo', '<', Carbon::now())
+            ->where(function($q) {
+                $q->whereNull('blokir_status')->orWhere('blokir_status', '!=', 1);
+            })
+            ->whereIn('id_pelanggan', $allowedPelangganIds)
+            ->distinct('id_pelanggan')
+            ->count('id_pelanggan');
+
+        // Non-aktif: Pelanggan yang nunggak > 60 hari
+        $nonaktifCount = Tagihan::whereNull('status_bayar')
+            ->where('jatuh_tempo', '<', Carbon::now()->subDays(60))
+            ->whereIn('id_pelanggan', $allowedPelangganIds)
+            ->distinct('id_pelanggan')
+            ->count('id_pelanggan');
+
+        $aktifCount = max(0, $totalPelanggan - $terisolirCount - $nonaktifCount);
+
+        // 2.a. Status Pembayaran
+        $regularBelumBayar = Tagihan::where(function($q) {
+                $q->whereNull('status_bayar')->orWhereIn('status_bayar', [0, '0', 'belum', '']);
+            })
+            ->where('bulan_tahun', $thisMonthForTagihan)
+            ->where(function($q) {
+                $q->whereNull('manual_invoice')->orWhere('manual_invoice', 0);
+            })
+            ->whereIn('id_pelanggan', $allowedPelangganIds)
+            ->count();
+
+        $manualBelumBayar = Tagihan::where(function($q) {
+                $q->whereNull('status_bayar')->orWhereIn('status_bayar', [0, '0', 'belum', '']);
+            })
+            ->where('manual_invoice', 1)
+            ->whereIn('id_pelanggan', $allowedPelangganIds)
+            ->count();
+
+        $belumTerbayarCount = $regularBelumBayar + $manualBelumBayar;
+
+        $suksesBayarCount = Tagihan::where('status_bayar', 1)
+            ->where('bulan_tahun', $thisMonthForTagihan)
+            ->where(function($q) {
+                $q->whereNull('manual_invoice')->orWhere('manual_invoice', 0);
+            })
+            ->whereIn('id_pelanggan', $allowedPelangganIds)
+            ->count();
+
+        $bukaSementaraCount = Tagihan::where(function($q) {
+                $q->whereNull('status_bayar')->orWhereIn('status_bayar', [0, '0', 'belum', '']);
+            })
+            ->where('bulan_tahun', $thisMonthForTagihan)
+            ->where('jatuh_tempo', '<', Carbon::now())
+            ->where(function($q) {
+                $q->whereNull('blokir_status')->orWhere('blokir_status', '!=', 1);
+            })
+            ->whereIn('id_pelanggan', $allowedPelangganIds)
+            ->distinct('id_pelanggan')
+            ->count('id_pelanggan');
+
+
+        // 3. Keluhan Stats
+        $keluhanMenunggu = Keluhan::where('status_keluhan', 'menunggu')
+            ->whereIn('id_pelanggan', $allowedPelangganIds)
+            ->count();
+        $keluhanProses = Keluhan::where('status_keluhan', 'proses')
+            ->whereIn('id_pelanggan', $allowedPelangganIds)
+            ->count();
+        $keluhanSelesai = Keluhan::where('status_keluhan', 'selesai')
+            ->whereIn('id_pelanggan', $allowedPelangganIds)
+            ->count();
+        $keluhanTotal = $keluhanMenunggu + $keluhanProses + $keluhanSelesai;
+
+        // 4. Status Isolasi & Tunggakan
+        $jatuhTempo3Hari = Tagihan::whereNull('status_bayar')
+            ->whereBetween('jatuh_tempo', [Carbon::now(), Carbon::now()->addDays(3)])
+            ->whereIn('id_pelanggan', $allowedPelangganIds)
+            ->distinct('id_pelanggan')
+            ->count('id_pelanggan');
+
+        // 5. Status Perangkat Mikrotik (Realtime Check)
+        require_once base_path('include/routeros_api.php');
+        $mikrotikDevices = DB::table('tbl_mikrotik')->get();
+        $totalMikrotik = $mikrotikDevices->count();
+        $mikrotikOnline = 0;
+        $mikrotikOffline = 0;
+        $deviceList = [];
+
+        foreach ($mikrotikDevices as $dev) {
+            $api = new \RouterosAPI();
+            $api->timeout = 1;
+            $api->attempts = 1;
+            $api->delay = 0;
+            
+            $isOnline = false;
+            try {
+                if ($api->connect($dev->ip, $dev->username, $dev->password)) {
+                    $isOnline = true;
+                    $api->disconnect();
+                }
+            } catch (\Exception $e) {
+                $isOnline = false;
+            }
+            
+            if ($isOnline) {
+                $mikrotikOnline++;
+            } else {
+                $mikrotikOffline++;
+            }
+            
+            $deviceList[] = (object) [
+                'nama' => $dev->nama_mikrotik,
+                'ip' => $dev->ip,
+                'online' => $isOnline,
+                'waktu' => Carbon::now()->format('d M Y, H:i')
+            ];
+        }
+
+        // 6. Infrastruktur ODC / ODP
+        $totalOdc = DB::table('tbl_odc')->count();
+        $totalOdp = DB::table('tbl_odp')->count();
+        $portTerpakai = DB::table('tb_pelanggan')
+            ->whereIn('id_pelanggan', $allowedPelangganIds)
+            ->whereNotNull('odp')
+            ->where('odp', '<>', '')
+            ->count();
+        $totalCapacityPort = (int) DB::table('tbl_odp')->sum('port_odp');
+        $portTersedia = max(0, $totalCapacityPort - $portTerpakai);
+
+        // 7. Aktivitas Terbaru (Isolate / Restore)
+        // Ambil pembayaran tagihan terbaru (RESTORE)
+        $recentPayments = Tagihan::with('pelanggan')
+            ->whereNotNull('waktu_bayar')
+            ->whereIn('id_pelanggan', $allowedPelangganIds)
+            ->orderBy('waktu_bayar', 'desc')
+            ->limit(10)
+            ->get();
+
+        // Ambil pemblokiran terbaru (ISOLATE)
+        $recentBlocks = Tagihan::with('pelanggan')
+            ->where('blokir_status', 1)
+            ->whereIn('id_pelanggan', $allowedPelangganIds)
+            ->orderBy('id_tagihan', 'desc')
+            ->limit(10)
+            ->get();
+
+        $aktivitasTerbaru = [];
+        foreach ($recentPayments as $tx) {
+            if ($tx->pelanggan) {
+                $aktivitasTerbaru[] = (object) [
+                    'waktu' => Carbon::parse($tx->waktu_bayar)->format('d/m/Y, H.i.s'),
+                    'customer' => $tx->pelanggan->nama_pelanggan,
+                    'aksi' => 'RESTORE',
+                    'status' => 'Sukses'
+                ];
+            }
+        }
+        foreach ($recentBlocks as $tx) {
+            if ($tx->pelanggan) {
+                $blockTime = $tx->jatuh_tempo ? Carbon::parse($tx->jatuh_tempo) : Carbon::now();
+                $aktivitasTerbaru[] = (object) [
+                    'waktu' => $blockTime->format('d/m/Y, H.i.s'),
+                    'customer' => $tx->pelanggan->nama_pelanggan,
+                    'aksi' => 'ISOLATE',
+                    'status' => 'Sukses'
+                ];
+            }
+        }
+
+        // Urutkan aktivitas berdasarkan waktu DESC
+        usort($aktivitasTerbaru, function($a, $b) {
+            $timeA = strtotime(str_replace('.', ':', $a->waktu));
+            $timeB = strtotime(str_replace('.', ':', $b->waktu));
+            return $timeB <=> $timeA;
+        });
+        $aktivitasTerbaru = array_slice($aktivitasTerbaru, 0, 10);
+
+        // Profile data
+        $profile = DB::table('tb_profile')->first();
+
+        // Statistik Tagihan (Bulan ini) untuk kompatibilitas jika dibutuhkan
+        $totalLunasCount = Tagihan::where('status_bayar', 1)
+            ->where('bulan_tahun', 'like', $thisMonthForTagihan . '%')
+            ->whereIn('id_pelanggan', $allowedPelangganIds)
+            ->count();
+
+        $totalBelumBayarCount = Tagihan::whereNull('status_bayar')
+            ->where('bulan_tahun', 'like', $thisMonthForTagihan . '%')
+            ->whereIn('id_pelanggan', $allowedPelangganIds)
+            ->count();
+
+        $totalPenerimaanTagihan = Tagihan::where('status_bayar', 1)
+            ->where('bulan_tahun', 'like', $thisMonthForTagihan . '%')
+            ->whereIn('id_pelanggan', $allowedPelangganIds)
+            ->sum('jml_bayar');
+
+        $totalBelumBayarTagihan = Tagihan::whereNull('status_bayar')
+            ->where('bulan_tahun', 'like', $thisMonthForTagihan . '%')
+            ->whereIn('id_pelanggan', $allowedPelangganIds)
+            ->sum('jml_bayar');
+
+        $prediksiPendapatan = Tagihan::where('bulan_tahun', 'like', $thisMonthForTagihan . '%')
+            ->whereIn('id_pelanggan', $allowedPelangganIds)
+            ->sum('jml_bayar');
+
+        $transaksiTerbaru = Tagihan::with(['pelanggan', 'penerima'])
+            ->whereNotNull('waktu_bayar')
+            ->whereIn('id_pelanggan', $allowedPelangganIds)
+            ->orderBy('waktu_bayar', 'desc')
+            ->limit(10)
+            ->get();
+
+        // 8. Cek Pengingat Jatuh Tempo Lisensi (H-14)
+        $showLicenseWarning = false;
+        $licenseDaysRemaining = null;
+
+        if ($profile && $profile->license_status === 'active' && $profile->license_expires_at) {
+            $expiry = Carbon::parse($profile->license_expires_at);
+            $days = Carbon::now()->diffInDays($expiry, false);
+
+            if ($days >= 0 && $days <= 14) {
+                $licenseDaysRemaining = (int) ceil($days);
+                
+                if (!session()->has('license_warning_shown')) {
+                    $showLicenseWarning = true;
+                    session()->put('license_warning_shown', true);
+                }
+            }
+        }
+
+        return view('admin.dashboard', compact(
+            'kasHariIni',
+            'kasBulanIni',
+            'keluarBulanIni',
+            'saldoBulanIni',
+            'keuangan6Bulan',
+            'totalPelanggan',
+            'aktifCount',
+            'terisolirCount',
+            'nonaktifCount',
+            'bukaSementaraCount',
+            'belumTerbayarCount',
+            'suksesBayarCount',
+            'jatuhTempo3Hari',
+            'keluhanMenunggu',
+            'keluhanProses',
+            'keluhanSelesai',
+            'keluhanTotal',
+            'totalMikrotik',
+            'mikrotikOnline',
+            'mikrotikOffline',
+            'deviceList',
+            'totalOdc',
+            'totalOdp',
+            'portTerpakai',
+            'portTersedia',
+            'aktivitasTerbaru',
+            'profile',
+            'totalLunasCount',
+            'totalBelumBayarCount',
+            'totalPenerimaanTagihan',
+            'totalBelumBayarTagihan',
+            'prediksiPendapatan',
+            'transaksiTerbaru',
+            'showLicenseWarning',
+            'licenseDaysRemaining'
+        ));
+    }
+}

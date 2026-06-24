@@ -1,8 +1,167 @@
 <?php
-/*   __________________________________________________
-    |  Obfuscated by YAK Pro - Php Obfuscator  3.0.0   |
-    |              on 2026-06-24 23:14:47              |
-    |    GitHub: https://github.com/pk-fr/yakpro-po    |
-    |__________________________________________________|
-*/
- namespace m71JR\pNryk\koIn3; use mVYYO\PNRyk\BfzkI; use MvyYO\bTkLJ\LP8PF\hkwLZ; use mvyYo\BTKLJ\Lp8pF\XZ1Tu; use MVYyo\BtkLj\lp8pf\Log; use bpQvf\BPqVF; use M71jr\xpACO\OBL06; class SendAutoBillingNotifications extends Command { protected $HjD9A = "\x61\160\x70\x3a\x73\145\x6e\x64\x2d\141\165\164\157\55\142\151\x6c\x6c\x69\x6e\147\55\156\157\x74\151\x66\151\143\x61\164\151\157\156\163"; protected $z8iww = "\x4f\164\157\155\x61\164\151\163\40\x6d\145\156\147\151\162\151\155\153\x61\x6e\x20\156\x6f\x74\151\x66\x69\x6b\x61\163\x69\x20\x74\x61\x67\151\x68\141\x6e\x20\142\165\154\141\156\141\x6e\x20\x6b\x65\160\x61\144\x61\x20\160\145\x6c\141\x6e\147\147\141\156\40\x76\151\141\x20\127\150\x61\x74\163\x41\x70\160\40\x46\x6f\156\156\164\x65\x20\x41\x50\111"; public function oMdeK() { goto spVZq; QYksG: P2n8B: goto BxRnP; rf1H5: return Command::y17CW; goto D1CJv; XK3u2: if ($BKG5E === "\164\141\156\147\147\141\x6c\137\164\x65\x74\141\160") { goto oaesl; } goto tPLuF; aUNiK: $BKG5E = $HCiaN->irtYZ ?? "\164\x61\156\147\x67\141\154\x5f\x74\145\164\141\x70"; goto gxGTZ; OUCRz: return Command::K5_CO; goto hAVBL; UW1mn: $lqnNI = DB::K6gOv("\x74\142\x6c\x5f\x74\157\153\x65\x6e")->gVsMS("\x69\x64\137\x74\157\x6b\145\x6e", 1)->first(); goto CksvI; pr_VT: Log::info("\x53\145\156\144\x41\x75\x74\x6f\102\x69\154\x6c\151\156\x67\116\157\164\151\146\x69\x63\141\x74\151\x6f\x6e\163\72\40\115\145\x6d\x75\154\141\151\40\x70\x65\156\147\x69\162\151\155\141\x6e\x20\x6f\x74\157\x6d\x61\x74\x69\163\x2e\40\124\151\x70\x65\x20\112\141\x74\x75\150\x20\124\145\155\x70\157\x3a\x20{$BKG5E}"); goto ZSpHw; gxGTZ: $yOCYz = $HCiaN->ITdj4 ?? 5; goto kpV57; ia3XI: return Command::y17CW; goto yzlDf; Y8AFI: if ($HCiaN) { goto NuMU0; } goto DtThj; ijrrI: $Y57C3 = 0; goto DmGbv; z0hXI: $this->info("\104\x69\164\145\x6d\165\x6b\x61\x6e\40" . $x2Psq->count() . "\x20\x74\141\x67\x69\150\x61\156\x20\x75\156\x74\x75\x6b\40\x64\x69\x6b\151\x72\151\155\x2e"); goto BOl_R; spVZq: $HCiaN = DB::k6GOv("\x74\x62\137\x70\162\157\146\x69\154\x65")->GvsMs("\x69\144\137\x70\x72\x6f\x66\x69\154\145", 1)->first(); goto Y8AFI; HFDw3: $qUh99 = 0; goto ijrrI; s9phX: $this->info("\110\141\x72\151\x20\x69\156\151\x20\164\141\156\x67\x67\x61\x6c\40{$zLA_v}\56\x20\x54\x61\156\x67\147\x61\154\40\x6b\151\x72\151\155\x20\157\x74\157\155\141\164\151\163\40\144\151\x6b\157\156\146\x69\x67\x75\162\x61\x73\x69\40\160\141\x64\x61\x20\x74\x61\156\147\x67\141\x6c\x20{$yOCYz}\x2e\x20\x50\x72\157\163\145\163\x20\144\x69\141\x62\141\x69\x6b\141\x6e\56"); goto QfLhF; YoPUM: return Command::K5_CO; goto bLfom; dEq1b: oaesl: goto BnuZ3; KztSh: $this->b1dnZ("\106\x69\164\x75\162\x20\156\x6f\164\151\146\151\x6b\x61\x73\x69\40\127\150\141\x74\163\101\x70\x70\40\x64\x69\156\157\x6e\141\153\x74\151\x66\x6b\141\156\x20\x73\145\x63\x61\x72\x61\40\x67\x6c\157\142\141\x6c\x20\144\151\x20\160\145\156\147\141\164\165\162\x61\x6e\x20\143\x75\x73\x74\x6f\155\40\x70\145\163\x61\x6e\56"); goto WBLXP; dtnJe: $this->info("\120\162\x6f\x73\x65\x73\x20\x70\x65\x6e\147\151\162\151\x6d\141\156\x20\x6f\164\x6f\155\141\164\x69\x73\40\x73\x65\x6c\145\163\141\151\x2e\x20\102\145\162\x68\141\163\x69\x6c\72\40{$qUh99}\54\x20\107\141\147\141\x6c\x3a\40{$Y57C3}"); goto xQJ0g; lV_B_: SKdEW: goto dtnJe; Wytuo: $this->info("\115\x65\156\152\141\154\x61\x6e\153\x61\156\40\160\x65\156\147\151\162\151\x6d\x61\156\40\164\141\x67\x69\150\141\x6e\40\x6f\164\x6f\155\141\x74\x69\163\x2e\x20\124\x69\160\145\x20\x4a\x61\x74\x75\150\x20\124\145\x6d\x70\x6f\x3a\40{$BKG5E}"); goto pr_VT; NNEhE: Log::info("\x53\145\x6e\x64\x41\x75\x74\x6f\x42\x69\154\x6c\x69\x6e\147\116\x6f\164\x69\x66\x69\x63\141\x74\151\x6f\x6e\163\x3a\40\124\x69\x64\x61\153\x20\x61\144\x61\40\164\x61\x67\151\150\x61\x6e\x20\x75\x6e\x74\x75\x6b\x20\x64\151\x6b\x69\162\151\x6d\x20\150\x61\x72\x69\x20\151\156\x69\56"); goto FAeBO; OBbBH: $this->info("\x46\151\x74\x75\x72\x20\x70\145\x6e\x67\x69\162\x69\155\141\x6e\x20\164\x61\x67\151\150\141\x6e\40\x6f\x74\157\155\141\x74\x69\163\40\144\x69\156\157\x6e\x61\153\164\x69\x66\153\x61\x6e\56"); goto YoPUM; DmGbv: foreach ($x2Psq as $TYJL8 => $XlfUi) { goto yvg4k; aJxJJ: Ic7jp: goto tLzN6; yvg4k: $MQy9w = $XlfUi->UJoNp; goto i7my0; i7my0: if (!(!$MQy9w || empty($MQy9w->gMXy1))) { goto Ic7jp; } goto qWUxC; qDYDT: $diyMY = str_replace("\44\150\x61\162\x69\137\151\156\x69", Carbon::MlzBa()->ntNw_("\x64\x20\106\x20\x59"), $diyMY); goto x0pg4; uyEXJ: goto o1vCY; goto aJxJJ; qLsxM: $diyMY = str_replace("\44\156\x61\155\141", $MQy9w->MbKDH, $diyMY); goto EcpcY; l9YE1: $diyMY = str_replace("\44\152\x61\x74\165\x68\137\164\145\x6d\x70\157", Carbon::parse($XlfUi->jWCHt)->ntNW_("\144\x20\x46\x20\131") ?? $MQy9w->jWCHt, $diyMY); goto EXXup; Yq8Eb: $Y57C3++; goto uyEXJ; qWUxC: $this->B1DNZ("\124\x61\147\151\x68\141\156\x20\111\x44\x20{$XlfUi->BSqmz}\40\x64\151\x61\x62\x61\151\x6b\141\x6e\40\153\141\x72\x65\156\x61\40\x64\141\x74\x61\x20\160\x65\154\x61\156\147\147\x61\x6e\40\164\151\x64\x61\x6b\40\144\151\x74\x65\x6d\165\153\x61\x6e\x20\x61\164\141\165\40\156\157\155\x6f\x72\40\164\x65\154\145\160\x6f\x6e\x20\153\x6f\163\157\156\147\x2e"); goto Yq8Eb; EXXup: $diyMY = str_replace("\44\x74\141\147\151\x68\141\156", number_format($XlfUi->dADmS, 0, "\x2c", "\x2e"), $diyMY); goto qDYDT; m5epe: vUmDm: goto bFeQc; P91u7: sleep(10); goto m5epe; iUUof: o1vCY: goto q_ec9; EcpcY: $diyMY = str_replace("\44\x6e\157\137\x74\x65\x6c\x70", $MQy9w->gMXy1, $diyMY); goto l9YE1; x0pg4: try { goto tWQdP; tWQdP: $VabCL = Http::Otbs9(10)->riu_x(["\x41\165\x74\150\157\162\151\172\x61\164\x69\x6f\x6e" => $lqnNI->yOwGQ])->LxS1A()->eZaQ4("\x68\164\164\x70\x73\72\x2f\x2f\141\x70\151\x2e\x66\157\x6e\x6e\164\x65\56\143\157\155\57\x73\x65\156\x64", ["\164\141\x72\147\x65\164" => $MQy9w->gMXy1, "\x6d\x65\163\163\141\147\145" => $diyMY, "\143\x6f\165\156\164\x72\x79\103\157\x64\145" => "\66\x32"]); goto q47x4; DsYVB: $Y57C3++; goto pXZv6; rXTlv: if ($VabCL->Bfgka() && isset($WFRth["\163\164\141\164\165\x73"]) && $WFRth["\x73\x74\141\164\165\163"] === true) { goto mpH15; } goto DsYVB; GA7M6: $this->BMEm8("\x47\x61\x67\x61\154\40\155\x65\156\147\x69\x72\151\155\40\156\x6f\x74\151\x66\151\153\x61\163\x69\x20\153\x65\40{$MQy9w->MbKDH}\72\x20{$WGeD0}"); goto IFAYG; UOAOC: goto rVSX6; goto VTgZN; AOya3: $XlfUi->update(["\164\145\x72\x6b\x69\x72\x69\x6d" => "\x74\x65\x72\x6b\x69\162\x69\155"]); goto Qv04e; VTgZN: mpH15: goto AOya3; Qv04e: $qUh99++; goto HG_Y8; q47x4: $WFRth = $VabCL->U0xqL(); goto rXTlv; HG_Y8: $this->info("\102\145\162\x68\141\x73\x69\x6c\x20\x6d\145\156\147\151\162\151\x6d\x20\156\157\x74\x69\146\151\x6b\x61\x73\x69\x20\x74\x61\147\151\150\141\x6e\x20\x6b\x65\40{$MQy9w->MbKDH}\x20\x28{$MQy9w->gMXy1}\x29"); goto a_kam; pXZv6: $WGeD0 = $WFRth["\x72\145\x61\x73\x6f\156"] ?? $WFRth["\x6d\x65\x73\163\x61\x67\x65"] ?? "\104\145\166\x69\x63\145\x20\x46\x6f\156\x6e\164\x65\x20\x74\x65\162\x70\165\164\165\163\40\x61\164\141\x75\x20\164\157\x6b\145\x6e\x20\x74\x69\144\141\x6b\40\x76\x61\154\151\x64"; goto GA7M6; a_kam: rVSX6: goto dqVjN; IFAYG: Log::bMem8("\123\145\156\x64\101\165\164\157\x42\x69\x6c\x6c\x69\x6e\x67\x4e\157\164\x69\146\151\x63\x61\x74\151\157\156\x73\x3a\x20\x47\x61\147\141\x6c\40\155\x65\156\x67\151\162\151\155\40\153\x65\40{$MQy9w->MbKDH}\56\40\x46\x6f\156\x6e\x74\x65\x3a\40{$WGeD0}"); goto UOAOC; dqVjN: } catch (\Exception $qBfNK) { goto vAkmy; vAkmy: $Y57C3++; goto i1kpj; i1kpj: $this->BmeM8("\x45\x78\x63\145\160\164\x69\157\x6e\40\x73\x61\141\x74\x20\155\145\156\x67\x69\x72\151\155\40\153\145\x20{$MQy9w->MbKDH}\72\x20" . $qBfNK->getMessage()); goto whzgL; whzgL: Log::bmEM8("\x53\x65\156\144\101\x75\x74\x6f\102\x69\x6c\x6c\x69\156\147\x4e\157\164\151\146\x69\x63\x61\x74\x69\x6f\156\x73\72\x20\105\x78\143\145\160\164\x69\157\x6e\x20\153\x65\40{$MQy9w->MbKDH}\72\40" . $qBfNK->getMessage()); goto jgvMf; jgvMf: } goto iUUof; tLzN6: if (!($TYJL8 > 0)) { goto vUmDm; } goto P91u7; bFeQc: $diyMY = $qRsNP->Vc308; goto qLsxM; q_ec9: } goto lV_B_; ZSpHw: $x2Psq = collect(); goto XK3u2; BOl_R: Log::info("\x53\145\x6e\x64\x41\165\164\157\x42\x69\154\154\151\x6e\147\x4e\x6f\x74\151\x66\151\x63\141\164\151\x6f\156\x73\72\40\x44\x69\x74\x65\155\165\x6b\141\x6e\x20" . $x2Psq->count() . "\40\164\x61\147\x69\150\x61\156\40\x75\x6e\x74\165\x6b\x20\144\151\x6b\x69\x72\151\155\x2e"); goto HFDw3; NGVDh: $this->info("\x54\x69\144\141\x6b\x20\141\144\x61\40\164\x61\147\x69\x68\141\x6e\40\142\145\x6c\165\x6d\40\x64\x69\142\141\171\x61\162\x20\171\x61\x6e\147\40\155\145\x6d\x65\x6e\x75\150\x69\x20\x6b\x72\151\164\x65\162\151\141\40\x70\145\156\147\x69\x72\151\155\141\156\x20\x68\x61\x72\x69\x20\x69\x6e\151\56"); goto NNEhE; CwTsc: if (!(!$qRsNP || $qRsNP->cbnl6 !== "\141\153\164\151\x66")) { goto AP13X; } goto KztSh; DtThj: $this->bmEM8("\x50\145\x6e\x67\141\x74\165\x72\141\156\40\160\x72\x6f\x66\151\154\x20\x28\164\142\137\160\162\157\146\151\x6c\x65\51\x20\x74\x69\x64\141\153\40\144\x69\164\145\x6d\165\x6b\141\156\56"); goto rf1H5; TnN3t: jyYVx: goto U8nFq; bLfom: I2E5h: goto fbpwG; nxm7X: if (!(($HCiaN->O5rqD ?? 0) != 1)) { goto I2E5h; } goto OBbBH; QfLhF: return Command::K5_CO; goto TnN3t; WBLXP: Log::AFQp_("\123\x65\x6e\x64\x41\x75\x74\157\102\151\x6c\x6c\x69\x6e\x67\116\157\164\x69\x66\151\143\x61\164\x69\157\156\x73\72\x20\116\157\x74\x69\146\x69\153\x61\x73\x69\40\127\x68\x61\164\x73\101\160\x70\x20\x64\151\x6e\x6f\x6e\x61\153\x74\151\x66\x6b\x61\156\x20\x73\145\143\x61\162\141\40\x67\154\x6f\142\x61\154\x2e"); goto UpvZg; yzlDf: QvoWS: goto aUNiK; horbD: if (!($zLA_v !== (int) $yOCYz)) { goto jyYVx; } goto s9phX; qqfmR: Log::BmEm8("\x53\145\156\144\101\x75\x74\157\102\151\x6c\x6c\x69\156\x67\116\157\164\151\146\x69\x63\141\164\151\x6f\156\163\x3a\40\x54\x6f\153\x65\156\x20\106\157\156\x6e\x74\145\40\x62\x65\x6c\165\155\x20\144\x69\153\157\156\146\x69\147\165\x72\x61\163\151\x2e"); goto ia3XI; kpV57: $H0lDr = $HCiaN->CIj1M ?? 3; goto Wytuo; d0Fxh: $this->bMeM8("\x54\157\153\145\156\x20\x57\150\141\x74\163\x41\x70\x70\40\106\157\156\156\x74\x65\x20\x62\145\x6c\x75\155\x20\144\151\x6b\x6f\156\x66\x69\x67\x75\x72\141\x73\x69\40\x64\x69\x20\x70\x65\x6e\147\141\164\x75\162\141\156\x2e"); goto qqfmR; DC5bg: AP13X: goto UW1mn; gi3my: sGBt4: goto z0hXI; xQJ0g: Log::info("\x53\145\156\144\101\x75\164\157\x42\151\154\x6c\x69\156\x67\x4e\157\x74\x69\146\151\x63\x61\164\151\157\x6e\x73\72\x20\x53\145\x6c\145\x73\x61\x69\56\40\x42\145\162\150\x61\x73\151\154\x3a\40{$qUh99}\54\x20\107\141\x67\141\154\72\x20{$Y57C3}"); goto OUCRz; BnuZ3: $zLA_v = (int) date("\x64"); goto horbD; UpvZg: return Command::K5_CO; goto DC5bg; tPLuF: $fedcN = Carbon::oXIjX()->T0785($H0lDr)->aOa6z(); goto YO0go; fbpwG: $qRsNP = DB::K6gov("\x74\x62\x6c\137\x6e\157\x74\151\146")->first(); goto CwTsc; FAeBO: return Command::K5_CO; goto gi3my; GHJwV: goto P2n8B; goto dEq1b; YO0go: $x2Psq = Tagihan::Qick_("\x70\145\x6c\x61\x6e\x67\147\141\156")->bVuG1("\163\x74\141\x74\x75\163\137\142\141\x79\141\162")->gVSMs(function ($rbP7F) { $rbP7F->BVuG1("\164\x65\162\x6b\x69\x72\151\155")->QoJKH("\164\x65\162\x6b\x69\x72\x69\155", "\74\x3e", "\x74\x65\x72\x6b\x69\x72\x69\x6d"); })->svRNX("\152\141\164\x75\x68\137\164\x65\x6d\x70\x6f", $fedcN)->get(); goto GHJwV; D1CJv: NuMU0: goto nxm7X; BxRnP: if (!$x2Psq->isEmpty()) { goto sGBt4; } goto NGVDh; CksvI: if (!(!$lqnNI || empty($lqnNI->yOwGQ))) { goto QvoWS; } goto d0Fxh; GAViV: $x2Psq = Tagihan::QIck_("\x70\x65\154\x61\156\x67\x67\141\x6e")->GvSMs("\x62\x75\x6c\x61\x6e\x5f\x74\141\x68\165\156", $bmq_U)->BvUg1("\163\164\x61\x74\x75\163\x5f\142\x61\171\141\162")->GVSms(function ($rbP7F) { $rbP7F->BvUG1("\x74\145\162\x6b\151\162\151\155")->qoJkh("\164\x65\x72\153\x69\162\151\x6d", "\x3c\x3e", "\x74\x65\x72\153\x69\162\151\155"); })->get(); goto QYksG; U8nFq: $bmq_U = date("\x6d\x59"); goto GAViV; hAVBL: } }
+
+namespace App\Console\Commands;
+
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
+use App\Models\Tagihan;
+
+class SendAutoBillingNotifications extends Command
+{
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'app:send-auto-billing-notifications';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Otomatis mengirimkan notifikasi tagihan bulanan kepada pelanggan via WhatsApp Fonnte API';
+
+    /**
+     * Execute the console command.
+     */
+    public function handle()
+    {
+        // 1. Ambil pengaturan profile
+        $profile = DB::table('tb_profile')->where('id_profile', 1)->first();
+        if (!$profile) {
+            $this->error('Pengaturan profil (tb_profile) tidak ditemukan.');
+            return Command::FAILURE;
+        }
+
+        // Cek apakah fitur pengiriman otomatis diaktifkan
+        if (($profile->auto_send_billing ?? 0) != 1) {
+            $this->info('Fitur pengiriman tagihan otomatis dinonaktifkan.');
+            return Command::SUCCESS;
+        }
+
+        // Cek status global notifikasi WhatsApp
+        $notifSetting = DB::table('tbl_notif')->first();
+        if (!$notifSetting || $notifSetting->status_notifikasi !== 'aktif') {
+            $this->warn('Fitur notifikasi WhatsApp dinonaktifkan secara global di pengaturan custom pesan.');
+            Log::warning('SendAutoBillingNotifications: Notifikasi WhatsApp dinonaktifkan secara global.');
+            return Command::SUCCESS;
+        }
+
+        // Cek token Fonnte
+        $tokenInfo = DB::table('tbl_token')->where('id_token', 1)->first();
+        if (!$tokenInfo || empty($tokenInfo->token)) {
+            $this->error('Token WhatsApp Fonnte belum dikonfigurasi di pengaturan.');
+            Log::error('SendAutoBillingNotifications: Token Fonnte belum dikonfigurasi.');
+            return Command::FAILURE;
+        }
+
+        $tipe = $profile->tipe_jatuh_tempo ?? 'tanggal_tetap';
+        $auto_date = $profile->auto_send_date ?? 5;
+        $auto_h_minus = $profile->auto_send_h_minus ?? 3;
+
+        $this->info("Menjalankan pengiriman tagihan otomatis. Tipe Jatuh Tempo: {$tipe}");
+        Log::info("SendAutoBillingNotifications: Memulai pengiriman otomatis. Tipe Jatuh Tempo: {$tipe}");
+
+        $bills = collect();
+
+        if ($tipe === 'tanggal_tetap') {
+            // Cek apakah hari ini sama dengan tanggal kirim otomatis
+            $todayDay = (int) date('d');
+            if ($todayDay !== (int) $auto_date) {
+                $this->info("Hari ini tanggal {$todayDay}. Tanggal kirim otomatis dikonfigurasi pada tanggal {$auto_date}. Proses diabaikan.");
+                return Command::SUCCESS;
+            }
+
+            // Ambil tagihan yang belum lunas dan belum dikirim untuk periode bulan ini
+            $currentPeriod = date('mY'); // format mY e.g. 062026
+            $bills = Tagihan::with('pelanggan')
+                ->where('bulan_tahun', $currentPeriod)
+                ->whereNull('status_bayar')
+                ->where(function($q) {
+                    $q->whereNull('terkirim')->orWhere('terkirim', '<>', 'terkirim');
+                })
+                ->get();
+        } else {
+            // Tipe Jatuh Tempo: tanggal_pasang
+            // Ambil tagihan yang jatuh temponya tepat auto_h_minus hari dari hari ini
+            $targetDate = Carbon::today()->addDays($auto_h_minus)->toDateString();
+            
+            $bills = Tagihan::with('pelanggan')
+                ->whereNull('status_bayar')
+                ->where(function($q) {
+                    $q->whereNull('terkirim')->orWhere('terkirim', '<>', 'terkirim');
+                })
+                ->whereDate('jatuh_tempo', $targetDate)
+                ->get();
+        }
+
+        if ($bills->isEmpty()) {
+            $this->info('Tidak ada tagihan belum dibayar yang memenuhi kriteria pengiriman hari ini.');
+            Log::info('SendAutoBillingNotifications: Tidak ada tagihan untuk dikirim hari ini.');
+            return Command::SUCCESS;
+        }
+
+        $this->info("Ditemukan " . $bills->count() . " tagihan untuk dikirim.");
+        Log::info("SendAutoBillingNotifications: Ditemukan " . $bills->count() . " tagihan untuk dikirim.");
+
+        $successCount = 0;
+        $failCount = 0;
+
+        foreach ($bills as $index => $tx) {
+            $pelanggan = $tx->pelanggan;
+            if (!$pelanggan || empty($pelanggan->no_telp)) {
+                $this->warn("Tagihan ID {$tx->id_tagihan} diabaikan karena data pelanggan tidak ditemukan atau nomor telepon kosong.");
+                $failCount++;
+                continue;
+            }
+
+            // Beri jeda 10 detik untuk mencegah spam filter/rate limit dari Fonnte (kecuali pesan pertama)
+            if ($index > 0) {
+                sleep(10);
+            }
+
+            // Format isi pesan menggunakan template notifikasi
+            $pesan = $notifSetting->pesan_notifikasi;
+            $pesan = str_replace('$nama', $pelanggan->nama_pelanggan, $pesan);
+            $pesan = str_replace('$no_telp', $pelanggan->no_telp, $pesan);
+            $pesan = str_replace('$jatuh_tempo', Carbon::parse($tx->jatuh_tempo)->translatedFormat('d F Y') ?? $pelanggan->jatuh_tempo, $pesan);
+            $pesan = str_replace('$tagihan', number_format($tx->jml_bayar, 0, ',', '.'), $pesan);
+            $pesan = str_replace('$hari_ini', Carbon::now()->translatedFormat('d F Y'), $pesan);
+
+            try {
+                $response = Http::timeout(10)->withHeaders([
+                    'Authorization' => $tokenInfo->token
+                ])->asForm()->post('https://api.fonnte.com/send', [
+                    'target' => $pelanggan->no_telp,
+                    'message' => $pesan,
+                    'countryCode' => '62'
+                ]);
+
+                $resData = $response->json();
+                if ($response->successful() && isset($resData['status']) && $resData['status'] === true) {
+                    $tx->update(['terkirim' => 'terkirim']);
+                    $successCount++;
+                    $this->info("Berhasil mengirim notifikasi tagihan ke {$pelanggan->nama_pelanggan} ({$pelanggan->no_telp})");
+                } else {
+                    $failCount++;
+                    $reason = $resData['reason'] ?? $resData['message'] ?? 'Device Fonnte terputus atau token tidak valid';
+                    $this->error("Gagal mengirim notifikasi ke {$pelanggan->nama_pelanggan}: {$reason}");
+                    Log::error("SendAutoBillingNotifications: Gagal mengirim ke {$pelanggan->nama_pelanggan}. Fonnte: {$reason}");
+                }
+            } catch (\Exception $e) {
+                $failCount++;
+                $this->error("Exception saat mengirim ke {$pelanggan->nama_pelanggan}: " . $e->getMessage());
+                Log::error("SendAutoBillingNotifications: Exception ke {$pelanggan->nama_pelanggan}: " . $e->getMessage());
+            }
+        }
+
+        $this->info("Proses pengiriman otomatis selesai. Berhasil: {$successCount}, Gagal: {$failCount}");
+        Log::info("SendAutoBillingNotifications: Selesai. Berhasil: {$successCount}, Gagal: {$failCount}");
+
+        return Command::SUCCESS;
+    }
+}

@@ -1,8 +1,45 @@
 <?php
-/*   __________________________________________________
-    |  Obfuscated by YAK Pro - Php Obfuscator  3.0.0   |
-    |              on 2026-06-24 23:14:48              |
-    |    GitHub: https://github.com/pk-fr/yakpro-po    |
-    |__________________________________________________|
-*/
- namespace M71jr\xZ1tU\Fnhff\Lp2k1; use m71jR\xZ1tU\fnHFF\YUFUs; use m71JR\XpAco\rfkJS; use M71jr\xpAco\gRbBl; use m71JR\xPaCo\mDWlm; use mVYYO\xz1TU\oHHid; class AdminMapController extends Controller { public function H0I_0(Request $den9F) { goto NMVm8; jw42C: return view("\141\144\x6d\x69\156\x2e\x6d\x61\160\x70\x69\156\147\x2e\x69\x6e\144\145\x78", compact("\164\157\x74\141\x6c\117\144\143", "\x74\x6f\164\141\154\x4f\x64\160", "\x74\x6f\164\x61\x6c\120\x65\x6c\141\156\147\x67\x61\x6e")); goto GsbPw; i_5Yw: $uSU04 = Pelanggan::DuPTM("\x6c\x6f\x63\x61\x74\x69\157\156")->gvSMS("\x6c\157\x63\141\x74\151\x6f\x6e", "\74\x3e", '')->count(); goto jw42C; NMVm8: $cHFVL = Odc::dupTm("\x6c\157\x63\x61\164\151\x6f\156")->GvsMS("\154\x6f\143\141\x74\x69\157\156", "\x3c\76", '')->count(); goto ccCQw; ccCQw: $baBGs = Odp::DupTm("\154\x6f\x63\141\164\151\157\x6e")->gVsMs("\x6c\x6f\143\x61\x74\151\x6f\156", "\74\x3e", '')->count(); goto i_5Yw; GsbPw: } public function kQ5zG() { goto boAbF; rkHA1: foreach ($MQy9w as $jTLz7) { goto xWoaX; xWoaX: $roSmB = explode("\x2c", $jTLz7->i4HEm); goto Tl2Og; D6nMV: $cSyDB[] = ["\151\x64\137\160\145\x6c\141\156\x67\x67\141\156" => $jTLz7->nzuo3, "\x6e\141\155\x61\x5f\x70\x65\154\x61\156\x67\147\x61\156" => $jTLz7->MbKDH, "\153\x6f\x64\145\137\160\x65\154\x61\x6e\147\147\141\x6e" => $jTLz7->pbcQr, "\x61\x6c\141\155\141\x74" => $jTLz7->yQrIC, "\156\x6f\x5f\164\145\x6c\160" => $jTLz7->gMXy1, "\x6f\144\160\x5f\156\141\155\x65" => $jTLz7->gRCBP->uhofv ?? "\116\57\x41", "\x6c\x61\164" => floatval(trim($roSmB[0])), "\x6c\156\147" => floatval(trim($roSmB[1]))]; goto U8Nnj; TO5ik: JpuMa: goto QujPG; Tl2Og: if (!(count($roSmB) == 2)) { goto dGFPm; } goto D6nMV; U8Nnj: dGFPm: goto TO5ik; QujPG: } goto X08Ts; X08Ts: h72bE: goto BwgBY; boAbF: $MQy9w = Pelanggan::qIcK_("\x6f\x64\x70\x44\x65\164\141\151\x6c")->duptm("\154\x6f\x63\141\x74\x69\157\x6e")->GvSMs("\154\157\x63\141\164\x69\157\156", "\x3c\76", '')->get(); goto xRf5Y; BwgBY: return response()->U0xqL($cSyDB); goto v0mQo; xRf5Y: $cSyDB = []; goto rkHA1; v0mQo: } }
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\Pelanggan;
+use App\Models\Odc;
+use App\Models\Odp;
+use Illuminate\Http\Request;
+
+class AdminMapController extends Controller
+{
+    public function index(Request $request)
+    {
+        $totalOdc = Odc::whereNotNull('location')->where('location', '<>', '')->count();
+        $totalOdp = Odp::whereNotNull('location')->where('location', '<>', '')->count();
+        $totalPelanggan = Pelanggan::whereNotNull('location')->where('location', '<>', '')->count();
+
+        return view('admin.mapping.index', compact('totalOdc', 'totalOdp', 'totalPelanggan'));
+    }
+
+    public function getCoordinates()
+    {
+        $pelanggan = Pelanggan::with('odpDetail')->whereNotNull('location')->where('location', '<>', '')->get();
+        $coordinates = [];
+
+        foreach ($pelanggan as $row) {
+            $coord_parts = explode(',', $row->location);
+            if (count($coord_parts) == 2) {
+                $coordinates[] = [
+                    'id_pelanggan' => $row->id_pelanggan,
+                    'nama_pelanggan' => $row->nama_pelanggan,
+                    'kode_pelanggan' => $row->kode_pelanggan,
+                    'alamat' => $row->alamat,
+                    'no_telp' => $row->no_telp,
+                    'odp_name' => $row->odpDetail->nama_odp ?? 'N/A',
+                    'lat' => floatval(trim($coord_parts[0])),
+                    'lng' => floatval(trim($coord_parts[1]))
+                ];
+            }
+        }
+
+        return response()->json($coordinates);
+    }
+}

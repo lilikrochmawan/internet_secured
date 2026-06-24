@@ -1,8 +1,160 @@
 <?php
-/*   __________________________________________________
-    |  Obfuscated by YAK Pro - Php Obfuscator  3.0.0   |
-    |              on 2026-06-24 23:14:47              |
-    |    GitHub: https://github.com/pk-fr/yakpro-po    |
-    |__________________________________________________|
-*/
- namespace M71JR\pNrYk\KoIn3; use MvYyo\PnRYk\bfZkI; use mvyYO\btkLJ\lp8pf\hkwLz; use mVYyO\BtKLJ\LP8pf\Log; use M71JR\xpAcO\Obl06; use M71jR\XpAco\rfKJs; use M71jR\XpacO\kwAzP; class AutoBlockPelanggan extends Command { protected $HjD9A = "\x61\160\x70\x3a\141\165\164\x6f\55\x62\154\x6f\x63\153\x2d\160\x65\x6c\141\156\147\147\x61\x6e"; protected $z8iww = "\x4f\x74\157\x6d\141\164\151\x73\x20\155\145\x6d\x62\154\x6f\153\x69\162\40\x70\145\x6c\141\156\147\147\x61\x6e\40\x79\141\x6e\147\40\x62\145\154\x75\155\40\155\145\155\142\x61\x79\141\162\40\x74\x61\x67\151\150\x61\x6e\40\155\145\154\145\167\141\x74\151\x20\152\x61\x74\x75\x68\x20\x74\x65\155\x70\157"; public function oMdek() { goto vgV2z; zxBXx: A0WU7: goto aTDiH; lFm1J: $cQppJ = Tagihan::qiCk_("\160\145\x6c\x61\156\x67\x67\x61\156")->bVuG1("\x73\164\x61\x74\165\163\x5f\x62\x61\x79\141\162")->GVSMs(function ($dSJoX) { $dSJoX->BVuG1("\x62\x6c\x6f\x6b\x69\162\137\x73\x74\141\164\x75\163")->QojKh("\142\x6c\x6f\x6b\151\162\x5f\163\x74\x61\x74\x75\x73", 0); })->gVSMS("\x6a\141\164\x75\x68\137\164\x65\155\160\157", "\x3c", $sn_2p)->get(); goto U0oew; rzRI5: Log::info("\101\165\164\x6f\x42\154\157\x63\153\x50\145\154\x61\156\x67\147\x61\156\x3a\x20\115\x65\x6d\165\x6c\141\151\x20\x70\x72\x6f\163\x65\163\x20\x70\x65\x6d\142\x6c\157\x6b\x69\162\141\x6e\x20\x6f\164\x6f\155\141\164\151\x73\x2e\x20\x53\x69\x73\164\145\155\72\40" . $DvR9a); goto BSPQA; J7JwI: require_once base_path("\151\156\143\x6c\x75\144\145\x2f\162\x6f\x75\164\145\162\x6f\x73\137\x61\160\x69\x2e\x70\x68\160"); goto DZHqf; eD0UE: Log::info("\101\x75\164\157\102\154\x6f\143\153\x50\x65\x6c\141\156\147\147\x61\156\72\x20\120\162\x6f\163\x65\x73\x20\x70\145\x6d\x62\x6c\x6f\153\151\x72\141\x6e\x20\157\x74\157\155\141\x74\151\163\x20\163\x65\154\145\163\141\151\x2e"); goto gFKwB; vgV2z: $pAftS = DB::k6gOV("\164\142\x5f\160\x72\x6f\x66\x69\154\145")->first(); goto coYpn; hlqsu: foreach ($xMtas as $yLvSk) { $yLvSk->hDc5q(); uDp9G: } goto frBuh; EedBx: Log::info("\x41\165\x74\x6f\102\154\157\x63\x6b\x50\x65\154\x61\156\147\147\141\x6e\x3a\x20\104\151\x74\145\155\165\153\141\156\40" . $cQppJ->count() . "\40\x74\x61\147\151\150\141\156\40\157\x76\x65\162\144\x75\x65\x2e"); goto J7JwI; xnjjH: return Command::K5_CO; goto zxBXx; CsIOh: YhzMU: goto hlqsu; ysxVH: $xMtas = []; goto S3MVG; S3MVG: foreach ($cQppJ as $XlfUi) { goto hH6WQ; MpA2Y: $KS8c9 = $MQy9w->gn9pJ ?: 1; goto rlrHI; PpiGj: $yLvSk = $xMtas[$KS8c9]; goto diYSa; zCXrK: $this->bmem8("\107\141\x67\141\x6c\x20\x74\145\162\150\165\x62\165\156\147\40\153\145\x20\x4d\x69\x6b\162\157\x74\x69\153\x3a\x20" . $xxBKl->BwTxq); goto weT0T; oOuLF: $yLvSk = new \RouterosAPI(); goto ze2Gf; weT0T: Log::bMEm8("\101\x75\x74\x6f\x42\x6c\157\143\153\x50\x65\x6c\x61\x6e\x67\x67\x61\156\x3a\x20\107\x61\x67\x61\x6c\40\164\145\x72\150\165\142\165\156\147\40\153\x65\40\115\x69\x6b\x72\157\x74\151\x6b\40\111\x44\40" . $KS8c9); goto g1j1k; q6yMU: if ($MQy9w) { goto grWLE; } goto diPfJ; aJxeR: goto z280n; goto IsjxC; g1j1k: goto z280n; goto iwvUC; QhWTG: if (isset($xMtas[$KS8c9])) { goto yyK0B; } goto oOuLF; rlrHI: $LjaJw = User::gvSms("\151\144\137\x70\145\x6c\141\156\x67\147\x61\x6e", $MQy9w->nzuo3)->first(); goto RPPM4; diYSa: $sjJxH = false; goto xNDe9; Sqfgq: $this->bMem8("\115\x69\x6b\162\157\164\x69\x6b\40\111\x44\x20" . $KS8c9 . "\40\x74\151\144\141\x6b\x20\x64\151\164\145\155\165\153\141\156\40\165\156\x74\x75\x6b\40\160\145\154\141\156\x67\x67\141\x6e\x3a\x20" . $MQy9w->MbKDH); goto c94zl; HYJrm: yyK0B: goto PpiGj; VWt0S: if ($xxBKl) { goto Pqsvc; } goto Sqfgq; ze2Gf: $yLvSk->pSFwA = 5; goto M7r9q; hH6WQ: $MQy9w = $XlfUi->UJoNp; goto q6yMU; lHFle: grWLE: goto MpA2Y; RMMx1: z280n: goto k9Imv; diPfJ: $this->bmeM8("\124\141\147\151\150\x61\x6e\x20\111\104\40" . $XlfUi->BSqmz . "\40\x74\151\x64\141\x6b\x20\155\145\155\x69\x6c\x69\153\x69\40\144\x61\x74\x61\x20\160\x65\x6c\x61\x6e\x67\147\x61\x6e\56"); goto Ni3UY; c94zl: Log::BmEM8("\101\165\164\x6f\102\x6c\157\x63\x6b\120\145\x6c\x61\156\147\x67\141\156\72\x20\x4d\151\153\162\x6f\x74\x69\x6b\x20\x49\x44\x20" . $KS8c9 . "\40\164\x69\x64\x61\x6b\x20\x64\x69\x74\x65\155\165\x6b\141\156\40\165\x6e\164\165\153\x20" . $MQy9w->MbKDH); goto aJxeR; hsgEx: hSDD7: goto fy0hT; fy0hT: $xMtas[$KS8c9] = $yLvSk; goto ZNvk1; M7r9q: if ($yLvSk->connect($xxBKl->aU6Pe, $xxBKl->a22SN, $xxBKl->hXbeJ)) { goto hSDD7; } goto zCXrK; iwvUC: goto Frxy8; goto hsgEx; xNDe9: try { goto gXbnp; wWwXt: goto kWM2l; goto J7SGX; MzARc: foreach ($bz5lB as $lqd4N) { $yLvSk->B24vL("\x2f\160\160\x70\x2f\141\143\164\x69\x76\145\57\162\x65\155\157\166\145", ["\x2e\x69\x64" => $lqd4N["\x2e\x69\x64"]]); ERaVI: } goto JGKkN; gXbnp: if ($piOeW && $piOeW->K5uo0 === "\163\164\141\x74\151\x6b") { goto LL6iI; } goto psjzi; SnOBl: $sjJxH = true; goto UBhQC; Vvoth: $XlfUi->update(["\x62\x6c\157\153\x69\x72\x5f\x73\164\141\x74\165\163" => 1]); goto hwh1z; qQH7Y: $yLvSk->B24VL("\57\x69\x70\x2f\146\x69\x72\x65\167\x61\x6c\x6c\57\x61\x64\144\162\x65\x73\x73\55\x6c\151\163\x74\57\141\x64\144", ["\x6c\x69\163\164" => "\142\154\157\x63\x6b\x65\144\137\143\154\151\x65\x6e\x74\163", "\141\144\x64\x72\145\163\x73" => $MQy9w->zqpsp, "\x63\157\x6d\x6d\145\x6e\x74" => "\102\154\157\x6b\x69\162\40\x42\165\154\x61\156\x61\156\40" . $MQy9w->zqpsp]); goto RSMVg; J7SGX: f4p3E: goto nxdRB; oly9P: if (!$sjJxH) { goto fk1o3; } goto Vvoth; hwh1z: $this->info("\102\145\162\150\x61\163\x69\154\x20\155\145\155\142\154\x6f\x6b\x69\x72\x20\160\145\x6c\141\x6e\x67\147\x61\x6e\72\40" . $MQy9w->MbKDH); goto sy4bR; OdN1x: fBvY4: goto oly9P; a5wcr: $this->BmEM8("\x50\145\156\147\x67\165\156\141\40\50\x75\163\x65\162\51\x20\164\151\x64\x61\x6b\40\x64\x69\x74\145\x6d\165\153\x61\x6e\40\165\x6e\x74\165\x6b\40\160\145\x6c\141\156\x67\147\x61\x6e\x3a\40" . $MQy9w->MbKDH); goto Smhat; nxdRB: $yLvSk->b24VL("\x2f\x70\160\160\x2f\163\x65\x63\x72\145\164\x2f\x73\x65\164", ["\156\x75\155\142\x65\162\163" => $LjaJw->a22SN, "\160\x72\x6f\x66\x69\154\145" => "\x70\160\x70\x6f\145\55\x69\x73\157\x6c\x69\162"]); goto UHfBb; AFvPL: LL6iI: goto qQH7Y; dbI7o: goto fBvY4; goto AFvPL; RSMVg: $sjJxH = true; goto OdN1x; T3_FI: $bz5lB = $yLvSk->b24VL("\57\160\x70\x70\57\141\x63\164\x69\166\x65\x2f\x70\x72\x69\156\164", ["\x3f\x6e\x61\x6d\145" => $LjaJw->a22SN]); goto MzARc; UHfBb: $yLvSk->b24VL("\x2f\160\x70\160\x2f\163\x65\x63\162\x65\x74\x2f\x65\x6e\x61\142\x6c\145", ["\x6e\165\x6d\142\x65\162\x73" => $LjaJw->a22SN]); goto T3_FI; Smhat: Log::AfQp_("\x41\x75\164\x6f\102\x6c\157\143\x6b\x50\145\x6c\141\x6e\147\147\141\x6e\x3a\x20\x55\x73\x65\162\x20\x74\x69\x64\141\153\40\x64\151\164\x65\155\x75\x6b\141\x6e\x20\x75\156\x74\x75\x6b\x20" . $MQy9w->MbKDH); goto wWwXt; sy4bR: Log::info("\x41\x75\164\x6f\102\x6c\157\x63\153\x50\145\x6c\141\x6e\x67\147\141\156\72\x20\102\x65\162\x68\x61\163\x69\x6c\x20\155\x65\155\142\x6c\157\153\x69\x72\x20" . $MQy9w->MbKDH); goto Vfuu3; psjzi: if ($LjaJw) { goto f4p3E; } goto a5wcr; JGKkN: iTbzu: goto SnOBl; Vfuu3: fk1o3: goto Gyoym; UBhQC: kWM2l: goto dbI7o; Gyoym: } catch (\Exception $qBfNK) { $this->bmeM8("\x45\x72\162\x6f\162\40\x6d\x65\155\x62\154\x6f\x6b\151\x72\x20\160\x65\154\x61\x6e\x67\x67\141\156\x20" . $MQy9w->MbKDH . "\x3a\40" . $qBfNK->getMessage()); Log::BMEM8("\101\165\164\x6f\102\x6c\157\x63\x6b\120\145\x6c\141\156\x67\x67\x61\x6e\72\40\x45\170\143\x65\x70\164\x69\157\x6e\40\x73\x61\x61\x74\40\x6d\145\x6d\x62\154\157\153\151\x72\x20" . $MQy9w->MbKDH . "\72\x20" . $qBfNK->getMessage()); } goto RMMx1; Ni3UY: goto z280n; goto lHFle; RPPM4: $xxBKl = DB::k6GOV("\164\x62\154\137\155\151\x6b\162\x6f\164\151\x6b")->GvsMS("\x69\x64\x5f\x6d\x69\153\162\157\164\151\x6b", $KS8c9)->first(); goto VWt0S; ZNvk1: Frxy8: goto HYJrm; IsjxC: Pqsvc: goto QhWTG; k9Imv: } goto CsIOh; BSPQA: $sn_2p = now(); goto lFm1J; OF1YD: Log::info("\101\x75\164\157\x42\154\157\143\x6b\x50\145\x6c\x61\156\147\147\x61\x6e\x3a\x20\124\x69\x64\x61\153\x20\x61\x64\x61\x20\164\141\x67\x69\x68\x61\x6e\x20\152\141\x74\165\x68\40\x74\x65\x6d\160\157\x20\x79\x61\x6e\147\x20\x70\x65\x72\154\165\x20\x64\151\142\x6c\x6f\x6b\151\x72\56"); goto xnjjH; x5d6l: $this->info("\115\145\155\x75\x6c\141\151\x20\160\145\156\x67\145\x63\145\x6b\141\x6e\x20\x74\x61\147\151\x68\141\156\x20\152\141\x74\x75\150\x20\164\145\155\x70\157\x2e\x2e\56\40\x53\x69\163\x74\145\155\x3a\40" . strtoupper($DvR9a)); goto rzRI5; coYpn: $DvR9a = $pAftS->JzTzC ?? "\x70\162\x61\142\x61\x79\141\x72"; goto x5d6l; aTDiH: $this->info("\104\151\x74\x65\155\165\x6b\141\x6e\x20" . $cQppJ->count() . "\40\164\x61\x67\x69\150\x61\156\x20\x6f\x76\x65\162\144\165\x65\x20\x79\141\156\147\40\141\x6b\141\156\x20\x64\151\x62\154\157\153\x69\162\x2e"); goto EedBx; U0oew: if (!$cQppJ->isEmpty()) { goto A0WU7; } goto R0gUj; R0gUj: $this->info("\124\151\144\141\153\40\x61\144\141\40\x74\141\147\x69\x68\141\156\x20\152\141\164\165\150\x20\x74\x65\x6d\160\x6f\40\171\141\156\x67\40\160\x65\162\154\165\40\x64\151\x62\x6c\157\153\x69\162\x2e"); goto OF1YD; DZHqf: $piOeW = DB::K6Gov("\164\142\x6c\137\160\145\x6e\147\x67\x75\156\141\x6d\x69\153\162\157\x74\x69\x6b")->first(); goto ysxVH; g4tlK: $this->info("\x50\145\156\147\x65\143\x65\x6b\141\x6e\40\x64\x61\156\40\160\145\155\x62\154\x6f\153\x69\x72\x61\156\40\163\145\154\x65\163\x61\x69\x2e"); goto eD0UE; frBuh: qKXHL: goto g4tlK; gFKwB: return Command::K5_CO; goto JKqwo; JKqwo: } }
+
+namespace App\Console\Commands;
+
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use App\Models\Tagihan;
+use App\Models\Pelanggan;
+use App\Models\User;
+
+class AutoBlockPelanggan extends Command
+{
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'app:auto-block-pelanggan';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Otomatis memblokir pelanggan yang belum membayar tagihan melewati jatuh tempo';
+
+    /**
+     * Execute the console command.
+     */
+    public function handle()
+    {
+        // Ambil info sistem billing global
+        $settings = DB::table('tb_profile')->first();
+        $sistem = $settings->sistem_billing ?? 'prabayar';
+
+        $this->info('Memulai pengecekan tagihan jatuh tempo... Sistem: ' . strtoupper($sistem));
+        Log::info('AutoBlockPelanggan: Memulai proses pemblokiran otomatis. Sistem: ' . $sistem);
+
+        // Cari tagihan yang belum bayar, belum diblokir, dan jatuh tempo sudah lewat
+        $now = now();
+        $overdueBills = Tagihan::with('pelanggan')
+            ->whereNull('status_bayar')
+            ->where(function ($query) {
+                $query->whereNull('blokir_status')
+                      ->orWhere('blokir_status', 0);
+            })
+            ->where('jatuh_tempo', '<', $now)
+            ->get();
+
+        if ($overdueBills->isEmpty()) {
+            $this->info('Tidak ada tagihan jatuh tempo yang perlu diblokir.');
+            Log::info('AutoBlockPelanggan: Tidak ada tagihan jatuh tempo yang perlu diblokir.');
+            return Command::SUCCESS;
+        }
+
+        $this->info('Ditemukan ' . $overdueBills->count() . ' tagihan overdue yang akan diblokir.');
+        Log::info('AutoBlockPelanggan: Ditemukan ' . $overdueBills->count() . ' tagihan overdue.');
+
+        require_once base_path('include/routeros_api.php');
+        $checkUser = DB::table('tbl_penggunamikrotik')->first();
+
+        // Hubungkan ke router berdasarkan device mikrotik masing-masing
+        $connections = [];
+
+        foreach ($overdueBills as $tx) {
+            $pelanggan = $tx->pelanggan;
+            if (!$pelanggan) {
+                $this->error('Tagihan ID ' . $tx->id_tagihan . ' tidak memiliki data pelanggan.');
+                continue;
+            }
+
+            $id_mikrotik = $pelanggan->id_mikrotik ?: 1;
+            $user = User::where('id_pelanggan', $pelanggan->id_pelanggan)->first();
+
+            // Ambil data mikrotik
+            $mikrotik = DB::table('tbl_mikrotik')->where('id_mikrotik', $id_mikrotik)->first();
+            if (!$mikrotik) {
+                $this->error('Mikrotik ID ' . $id_mikrotik . ' tidak ditemukan untuk pelanggan: ' . $pelanggan->nama_pelanggan);
+                Log::error('AutoBlockPelanggan: Mikrotik ID ' . $id_mikrotik . ' tidak ditemukan untuk ' . $pelanggan->nama_pelanggan);
+                continue;
+            }
+
+            // Hubungkan jika belum terhubung
+            if (!isset($connections[$id_mikrotik])) {
+                $API = new \RouterosAPI();
+                $API->timeout = 5;
+                if ($API->connect($mikrotik->ip, $mikrotik->username, $mikrotik->password)) {
+                    $connections[$id_mikrotik] = $API;
+                } else {
+                    $this->error('Gagal terhubung ke Mikrotik: ' . $mikrotik->nama_mikrotik);
+                    Log::error('AutoBlockPelanggan: Gagal terhubung ke Mikrotik ID ' . $id_mikrotik);
+                    continue;
+                }
+            }
+
+            $API = $connections[$id_mikrotik];
+            $success = false;
+
+            try {
+                if ($checkUser && $checkUser->ippelanggan === 'statik') {
+                    // Blokir Statik: Tambah IP ke Address-List
+                    $API->comm("/ip/firewall/address-list/add", [
+                        "list"     => "blocked_clients",
+                        "address"  => $pelanggan->ip_address,
+                        "comment"  => "Blokir Bulanan " . $pelanggan->ip_address
+                    ]);
+                    $success = true;
+                } else {
+                    // Blokir PPPOE: Disable Secret & Disconnect Active Connection
+                    if ($user) {
+                        $API->comm("/ppp/secret/set", [
+                            "numbers" => $user->username,
+                            "profile" => "pppoe-isolir",
+                        ]);
+                        $API->comm("/ppp/secret/enable", [
+                            "numbers" => $user->username,
+                        ]);
+
+                        // Cari dan putuskan koneksi aktif
+                        $activeConnections = $API->comm("/ppp/active/print", [
+                            "?name" => $user->username,
+                        ]);
+
+                        foreach ($activeConnections as $conn) {
+                            $API->comm("/ppp/active/remove", [
+                                ".id" => $conn['.id'],
+                            ]);
+                        }
+                        $success = true;
+                    } else {
+                        $this->error('Pengguna (user) tidak ditemukan untuk pelanggan: ' . $pelanggan->nama_pelanggan);
+                        Log::warning('AutoBlockPelanggan: User tidak ditemukan untuk ' . $pelanggan->nama_pelanggan);
+                    }
+                }
+
+                if ($success) {
+                    // Update status blokir di database
+                    $tx->update(['blokir_status' => 1]);
+                    $this->info('Berhasil memblokir pelanggan: ' . $pelanggan->nama_pelanggan);
+                    Log::info('AutoBlockPelanggan: Berhasil memblokir ' . $pelanggan->nama_pelanggan);
+                }
+
+            } catch (\Exception $e) {
+                $this->error('Error memblokir pelanggan ' . $pelanggan->nama_pelanggan . ': ' . $e->getMessage());
+                Log::error('AutoBlockPelanggan: Exception saat memblokir ' . $pelanggan->nama_pelanggan . ': ' . $e->getMessage());
+            }
+        }
+
+        // Putus koneksi semua router
+        foreach ($connections as $API) {
+            $API->disconnect();
+        }
+
+        $this->info('Pengecekan dan pemblokiran selesai.');
+        Log::info('AutoBlockPelanggan: Proses pemblokiran otomatis selesai.');
+
+        return Command::SUCCESS;
+    }
+}

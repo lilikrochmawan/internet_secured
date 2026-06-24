@@ -1,8 +1,451 @@
 <?php
-/*   __________________________________________________
-    |  Obfuscated by YAK Pro - Php Obfuscator  3.0.0   |
-    |              on 2026-06-24 23:14:49              |
-    |    GitHub: https://github.com/pk-fr/yakpro-po    |
-    |__________________________________________________|
-*/
- namespace M71JR\xZ1tu\fNHff\lp2K1; use m71Jr\Xz1TU\fnHFF\yUfUs; use m71JR\XPaco\VpAcA; use M71JR\XpACO\rfkJs; use M71Jr\xPACo\KwaZP; use M71JR\xPacO\zRYSC; use M71jR\XPaco\MDWlM; use mVyyo\XZ1Tu\oHHId; use mvyYO\BtKLJ\lP8pF\yzYUB; use mVyYO\btKLJ\Lp8Pf\HKwLz; use mvYYO\BtkLj\pxAYD; use BPqVF\BPqvf; class AdminOrderPemasanganController extends Controller { public function H0i_0(Request $den9F) { goto UJtEj; vc3ux: $fYlit = OrderPemasangan::QicK_(["\x73\141\x6c\x65\163", "\x74\145\x6b\x6e\x69\163\x69", "\160\141\x6b\145\164\104\145\164\x61\x69\x6c"])->gvSmS(function ($rbP7F) use ($LjaJw) { $rbP7F->gvsMS("\x69\x64\137\x74\145\x6b\x6e\x69\x73\x69", $LjaJw->id)->QojkH("\151\144\137\x74\x65\153\x6e\151\163\x69", 0); })->MQCiB("\x73\x74\141\164\x75\163", ["\x61\160\x70\x72\x6f\x76\145\144", "\151\156\163\x74\x61\154\x6c\x65\x64"])->PoJjE("\x69\x64", "\144\x65\163\x63")->get(); goto oaZrn; QsXM8: q1Qb3: goto zvViF; kQUEP: $EPCcy = []; goto scXmC; qsoAy: $GQ24f = []; goto GuHqh; RuHYx: $PKdHb = Paket::i03H4(); goto QMX2i; zvViF: if ($LjaJw->level === "\163\x61\x6c\x65\163") { goto VXqCK; } goto cHObg; gJxsx: goto CqMXv; goto Sv8WD; oAOXs: $fYlit = OrderPemasangan::qick_(["\x73\141\x6c\x65\163", "\x74\145\153\156\x69\x73\151", "\160\x61\153\145\x74\104\145\164\141\x69\x6c"])->poJjE("\151\x64", "\144\145\x73\143")->get(); goto KhnNi; KhnNi: goto CqMXv; goto d4QNm; scXmC: $CKe27 = []; goto wYiDl; gCeyU: $fYlit = OrderPemasangan::qICK_(["\163\x61\154\x65\x73", "\164\x65\153\x6e\151\x73\x69", "\160\x61\153\x65\x74\104\x65\164\141\151\x6c"])->Gvsms("\x69\x64\x5f\x73\x61\154\x65\163", $LjaJw->id)->pojJE("\151\144", "\144\x65\163\143")->get(); goto gJxsx; GuHqh: if (!($LjaJw->level === "\x61\144\155\151\156")) { goto q1Qb3; } goto HEvVO; d4QNm: VXqCK: goto gCeyU; FhAkX: $MYZB7 = User::gVSMS("\x6c\x65\166\145\x6c", "\x74\145\x6b\156\x69\163\x69")->get()->enAAI(function ($AGWUu) { $AGWUu->xVstZ = OrderPemasangan::GVsMs("\151\144\x5f\x74\x65\153\x6e\x69\163\151", $AGWUu->id)->MQCiB("\163\164\141\164\x75\163", ["\141\x70\x70\x72\157\166\x65\144", "\x69\156\x73\x74\x61\154\x6c\x65\x64"])->n9IuP(); return $AGWUu; }); goto Ra082; nSOan: $k_oCJ = []; goto kQUEP; CZHeD: return view("\x61\x64\x6d\151\x6e\56\x6f\x72\144\145\162\x5f\160\145\x6d\x61\163\141\x6e\147\141\156\56\151\x6e\x64\x65\x78", compact("\x6f\162\x64\x65\162\x73", "\x70\x61\153\x65\164\x73", "\155\x69\153\x72\x6f\164\151\x6b\163", "\x6f\144\x70\x73", "\x62\162\141\156\143\150\145\163", "\163\165\142\x42\x72\141\x6e\143\150\145\163", "\164\145\x6b\156\151\x73\151\x73", "\164\x6f\160\x54\145\x6b\156\x69\163\151")); goto Mn3We; hd5cC: $ji5qs = Carbon::mlzBA()->cggYU()->jF2JN(); goto Wuaou; Ra082: $OdbGY = Carbon::MLzba()->u2YmK()->jf2JN(); goto hd5cC; QMX2i: $P4Nhg = []; goto nSOan; cHObg: if ($LjaJw->level === "\x74\145\x6b\x6e\151\x73\x69") { goto N643Y; } goto oAOXs; X234A: $k_oCJ = Odp::AgosD("\x70\x65\x6c\141\x6e\x67\x67\x61\156\163")->get(); goto JAFgS; UJtEj: $LjaJw = Auth::wz2vM(); goto RuHYx; pQ0Tp: $CKe27 = DB::k6gOv("\164\x62\137\163\x75\x62\x5f\142\162\x61\x6e\x63\150")->get(); goto FhAkX; oaZrn: CqMXv: goto CZHeD; HEvVO: $P4Nhg = DB::k6gOv("\x74\142\x6c\x5f\x6d\151\x6b\162\x6f\x74\x69\x6b")->get(); goto X234A; Wuaou: $GQ24f = DB::k6Gov("\164\142\154\x5f\157\x72\x64\145\162\x5f\160\145\155\141\163\x61\x6e\x67\141\156")->join("\164\x62\x5f\165\x73\145\162", "\x74\x62\154\137\157\162\x64\145\x72\x5f\160\145\155\141\x73\x61\x6e\147\141\x6e\56\151\x64\x5f\x74\x65\x6b\x6e\151\163\151", "\x3d", "\x74\x62\137\x75\163\x65\x72\56\x69\144")->jegNE("\164\x62\137\x75\163\145\x72\56\156\141\155\x61\x5f\165\163\145\162", DB::PGsl6("\x63\x6f\165\156\x74\50\x74\142\x6c\137\x6f\162\144\145\162\x5f\160\145\x6d\x61\163\141\x6e\147\141\156\x2e\x69\144\x29\x20\x61\x73\x20\x74\x6f\x74\141\x6c"))->gvsMS("\x74\142\x6c\137\157\162\x64\145\x72\137\x70\145\x6d\141\x73\x61\x6e\147\141\156\56\163\164\x61\164\x75\163", "\151\156\163\164\141\x6c\154\x65\144")->eNSCX("\164\142\154\137\157\x72\x64\x65\x72\137\160\x65\x6d\x61\163\x61\156\x67\141\x6e\x2e\x75\160\x64\x61\x74\145\x64\137\141\164", [$OdbGY, $ji5qs])->xtvMW("\x74\x62\x6c\137\157\162\x64\x65\162\137\x70\145\x6d\141\163\141\156\147\x61\156\x2e\x69\144\137\x74\x65\153\156\151\163\x69", "\164\142\x5f\165\x73\145\x72\x2e\x6e\141\x6d\141\137\165\163\x65\x72")->PoJJE("\x74\x6f\x74\x61\154", "\x64\145\x73\143")->pyGJv(10)->get(); goto QsXM8; JAFgS: $EPCcy = DB::k6gOv("\164\142\137\x62\162\141\156\x63\x68")->get(); goto pQ0Tp; wYiDl: $MYZB7 = []; goto qsoAy; Sv8WD: N643Y: goto vc3ux; Mn3We: } public function p6TxP(Request $den9F) { goto caViE; rV6K8: $lrOiY = ''; goto zu9cu; cOkJp: $lrOiY = uniqid() . "\x5f" . Str::ZCWkk(pathinfo($oxiZi->Ud51D(), PATHINFO_FILENAME)) . "\56" . $oxiZi->TbgJH(); goto zNUqr; caViE: $den9F->validate(["\x6e\151\x6b" => "\162\145\x71\165\x69\162\145\144\x7c\x73\164\x72\151\x6e\147\x7c\x6d\141\x78\x3a\x35\x30", "\156\x61\x6d\x61" => "\x72\145\x71\x75\x69\x72\x65\144\x7c\x73\x74\x72\151\x6e\x67\174\x6d\x61\x78\x3a\x32\65\x35", "\x6e\157\x5f\x74\145\154\x70" => "\x72\145\161\x75\151\162\x65\144\x7c\163\x74\x72\151\156\x67\174\x6d\141\x78\72\62\60", "\x70\141\153\x65\164" => "\x72\145\x71\165\x69\162\145\x64\x7c\x69\x6e\164\145\147\x65\x72\174\145\x78\x69\163\x74\x73\x3a\x74\x62\x5f\160\141\153\x65\164\x2c\151\144\137\160\141\153\x65\164", "\x61\x6c\141\155\141\164\x5f\x6b\164\x70" => "\162\x65\161\165\x69\162\x65\x64\x7c\163\164\x72\x69\156\147", "\141\x6c\x61\155\141\164\137\160\145\155\141\163\x61\x6e\147\141\156" => "\x72\x65\x71\165\151\162\145\x64\174\163\164\x72\151\x6e\x67", "\153\x6f\x6f\162\x64\x69\x6e\141\x74\137\x70\145\155\141\163\x61\x6e\147\x61\x6e" => "\162\145\x71\165\x69\x72\x65\144\174\x73\164\x72\151\156\x67\174\155\141\x78\72\61\60\60", "\x6a\x61\x64\167\x61\x6c\x5f\160\145\x6d\x61\163\x61\x6e\x67\141\x6e" => "\156\165\x6c\154\x61\142\154\x65\x7c\x73\x74\162\x69\x6e\147", "\x66\x6f\x74\157\x5f\x6b\x74\160" => "\x72\145\x71\x75\151\162\x65\144\174\151\x6d\x61\147\x65\174\x6d\x69\x6d\x65\163\x3a\152\x70\145\147\54\152\x70\x67\x2c\x70\156\147\x2c\x67\x69\x66\54\x77\145\x62\160\174\155\x61\170\72\x35\61\62\60"], ["\146\x6f\164\x6f\x5f\x6b\x74\160\x2e\x72\145\161\x75\x69\x72\x65\144" => "\106\x6f\164\x6f\40\113\x54\x50\40\x77\141\x6a\x69\x62\40\x64\x69\165\156\147\147\141\150\56", "\146\157\164\157\x5f\153\x74\x70\56\151\155\x61\x67\x65" => "\x46\x69\154\x65\40\150\x61\x72\x75\x73\x20\x62\x65\162\165\x70\141\x20\x67\x61\x6d\142\141\162\x2e", "\146\x6f\x74\157\137\153\x74\160\x2e\155\x61\170" => "\125\x6b\x75\x72\141\156\40\146\151\154\145\40\x6d\141\x6b\x73\x69\x6d\141\x6c\x20\65\x20\115\x42\56", "\x70\x61\x6b\x65\x74\56\x72\x65\161\x75\x69\x72\x65\x64" => "\120\x61\x6b\x65\x74\40\151\x6e\164\145\162\x6e\x65\x74\x20\167\141\152\151\x62\x20\144\x69\x70\151\154\x69\150\x2e"]); goto rV6K8; zNUqr: $oxiZi->h2nnc($Wyf01, $lrOiY); goto ja9dI; IJ5IS: $oxiZi = $den9F->file("\x66\157\164\x6f\x5f\153\x74\x70"); goto cOkJp; ja9dI: iT8x5: goto LtBbT; yR7lT: if (is_dir($Wyf01)) { goto nuzDG; } goto YF3Kq; yTWUv: $Wyf01 = base_path("\141\144\x6d\x69\156\x69\x73\164\162\141\x74\157\x72\x2f\160\x61\x67\x65\x2f\x6f\162\x64\x65\162\57\151\155\141\x67\145\163"); goto yR7lT; GsG1X: return redirect()->gxR_2("\x61\144\155\x69\x6e\x2e\157\x72\144\x65\x72\137\x70\x65\155\x61\x73\141\156\x67\141\156\56\151\x6e\x64\x65\170")->QICk_("\x73\x75\143\143\x65\163\163", "\117\162\x64\145\162\x20\160\145\155\141\163\x61\156\x67\141\x6e\x20\x62\x61\x72\165\40\x62\145\162\150\x61\x73\x69\x6c\x20\144\151\x6b\151\x72\151\x6d\40\144\x61\156\x20\155\145\x6e\165\156\x67\x67\165\x20\x70\145\162\x73\x65\164\x75\152\x75\x61\156\40\141\x64\155\x69\156\41"); goto vKfEj; LtBbT: $oY_rw = null; goto TzqXI; MUsY2: BCV8O: goto byMwF; TzqXI: if (empty($den9F->SgRoI)) { goto BCV8O; } goto gEFlz; qhask: nuzDG: goto IJ5IS; YF3Kq: mkdir($Wyf01, 0755, true); goto qhask; zu9cu: if (!$den9F->GjF_q("\146\157\x74\x6f\x5f\x6b\164\160")) { goto iT8x5; } goto yTWUv; gEFlz: try { $oY_rw = Carbon::parse($den9F->SgRoI)->format("\x59\55\155\x2d\144\40\x48\x3a\151\72\x73"); } catch (\Exception $qBfNK) { $oY_rw = null; } goto MUsY2; byMwF: OrderPemasangan::create(["\x6e\x69\153" => htmlspecialchars(strip_tags($den9F->HcRB6)), "\x6e\x61\x6d\x61" => htmlspecialchars(strip_tags($den9F->xA2QH)), "\156\x6f\x5f\x74\x65\x6c\x70" => htmlspecialchars(strip_tags($den9F->gMXy1)), "\160\141\153\145\x74" => intval($den9F->w3H9D), "\141\x6c\141\x6d\141\164\x5f\153\x74\x70" => htmlspecialchars(strip_tags($den9F->aqPWj)), "\141\x6c\x61\x6d\141\x74\x5f\160\145\x6d\x61\163\141\156\147\141\x6e" => htmlspecialchars(strip_tags($den9F->pONXJ)), "\153\x6f\x6f\x72\x64\151\x6e\141\x74\x5f\160\145\155\141\163\141\x6e\147\x61\x6e" => htmlspecialchars(strip_tags($den9F->MB1qP)), "\x6a\141\144\x77\141\154\x5f\x70\145\155\141\x73\141\156\147\x61\156" => $oY_rw, "\x66\157\x74\157\x5f\153\164\160" => $lrOiY, "\x73\x74\x61\x74\165\163" => "\160\x65\156\x64\151\156\x67", "\151\144\x5f\x73\141\154\x65\x73" => Auth::p23jm()]); goto GsG1X; vKfEj: } public function to8GL(Request $den9F) { goto hKEXE; Zix40: return back()->abl7M(["\145\162\162\157\x72" => "\124\x65\x6b\x6e\151\x73\151\x20\x74\145\x72\163\145\142\x75\x74\40\x6d\141\x73\151\x68\40\x6d\x65\155\x69\x6c\151\153\x69\40\157\162\x64\145\162\40\160\x65\x6d\x61\163\x61\156\147\141\156\x20\171\x61\156\147\40\x61\153\164\151\146\40\x61\x74\x61\x75\40\155\x65\156\165\156\x67\x67\x75\40\x76\x65\162\x69\146\151\x6b\141\x73\x69\x20\x61\144\155\x69\x6e\41"]); goto rJwkB; FFDu5: if (!$q3Emq) { goto Zn_aZ; } goto Zix40; hKEXE: $den9F->validate(["\151\x64\x5f\x6f\x72\x64\145\162" => "\x72\145\x71\x75\151\x72\145\144\x7c\x69\156\164\145\147\145\x72\174\145\x78\x69\163\164\x73\72\x74\x62\x6c\x5f\157\162\144\145\162\x5f\160\145\155\x61\x73\x61\156\x67\x61\156\x2c\151\x64", "\x69\x64\x5f\164\x65\x6b\x6e\151\x73\151" => "\162\x65\x71\165\x69\162\145\144\174\x69\156\x74\145\x67\145\162"]); goto R00_N; SMN99: $Gqo7D->update(["\x69\x64\x5f\x74\145\153\x6e\x69\163\151" => $den9F->hgkiH]); goto MdqV9; R00_N: if (!($den9F->hgkiH > 0)) { goto OKMMQ; } goto CHZkl; rJwkB: Zn_aZ: goto A0F9z; MdqV9: return redirect()->GxR_2("\141\x64\x6d\151\x6e\56\x6f\162\x64\x65\162\137\x70\145\155\141\163\141\x6e\147\141\x6e\x2e\151\156\144\145\170")->Qick_("\x73\x75\143\x63\145\163\163", "\124\x65\x6b\x6e\x69\x73\151\40\x62\145\x72\x68\x61\x73\151\154\40\144\x69\164\x75\x67\x61\163\x6b\141\x6e\x20\165\x6e\164\x75\x6b\40\157\162\144\145\x72\40\x69\x6e\151\41"); goto BhxD7; cHcIu: $Gqo7D = OrderPemasangan::j_IB5($den9F->TpjJ2); goto SMN99; A0F9z: OKMMQ: goto cHcIu; CHZkl: $q3Emq = OrderPemasangan::gvsMs("\x69\x64\137\x74\x65\x6b\x6e\x69\x73\151", $den9F->hgkiH)->mqcIb("\163\x74\x61\x74\165\163", ["\x61\160\160\x72\157\x76\145\x64", "\151\x6e\163\164\141\154\x6c\145\144"])->N9Iup(); goto FFDu5; BhxD7: } public function EZjx5(Request $den9F) { goto X8jIT; S3hQp: $AWfTq = $UJD58->fTqkg; goto pByg7; uMkJ1: H8VeU: goto eUDPQ; Sd3jp: RI1Bu: goto IUCWP; CX0FJ: $RGL0f = DB::K6Gov("\x74\142\x6c\137\x6f\144\160")->GVsms("\151\144\137\x6f\144\x70", $jm7eR)->first(); goto eYTNf; x1XvC: $uSzLv = Pelanggan::gvsms("\156\157\137\x74\145\154\160", $fvrN6)->first(); goto p0Y4j; i4uRY: RK85n: goto qNKHx; p0Y4j: if (!$uSzLv) { goto Wk01a; } goto fNq1o; fNq1o: return back()->ABl7m(["\156\x6f\x5f\164\145\154\x70" => "\x4e\157\x6d\x6f\162\40\164\x65\154\x65\x70\x6f\x6e\40\x73\165\144\141\x68\40\x74\145\x72\143\x61\x74\141\164\x20\144\151\40\144\141\164\141\142\141\x73\145\x2e\40\123\151\x6c\141\153\x61\x6e\x20\x67\x75\156\x61\153\x61\x6e\x20\x6e\x6f\x6d\x6f\162\x20\x6c\x61\x69\x6e\x2e"])->qkv2A(); goto GoSL3; pByg7: $numfh = $UJD58->YjPvr; goto mK4zp; Vksyu: if (!($SDIDW >= $b3jMn)) { goto H8VeU; } goto hOUrr; Kj2t5: return redirect()->Gxr_2("\x61\x64\155\x69\156\x2e\157\162\x64\x65\x72\137\160\145\x6d\141\x73\141\x6e\147\141\x6e\56\151\156\144\x65\x78")->QICk_("\163\165\143\x63\x65\x73\x73", "\x4f\x72\144\145\162\x20\142\x65\x72\x68\141\x73\151\154\x20\x64\x69\163\x65\x74\x75\152\x75\151\x20\x28\101\103\x43\x29\x20\x64\141\156\x20\144\x61\x74\x61\40\160\145\154\x61\x6e\x67\147\141\x6e\x20\164\145\x6c\x61\150\40\x74\x65\x72\144\141\146\x74\141\x72\x21"); goto JI1iK; jcwOy: $LhobQ = sprintf("\x25\60\64\144\55\x25\60\x32\144\x2d\x25\x30\62\144\40\x32\x33\x3a\x35\71\72\60\x30", $AWfTq, $numfh, $e_HwD); goto BS_P8; mK4zp: $e_HwD = $gtvHx; goto IX18v; GwNYi: if (!is_null($Gqo7D->hgkiH)) { goto NXppw; } goto Vpk6i; eYTNf: if (!$RGL0f) { goto uqwIX; } goto S5VJe; aKUxx: $SDIDW = Pelanggan::gVsms("\157\144\x70", $jm7eR)->count(); goto Vksyu; Pm_JV: $n4zfB = $den9F->R7_fM ? intval($den9F->R7_fM) : null; goto x1XvC; wqBuF: if (!$jm7eR) { goto RI1Bu; } goto CX0FJ; ckNTp: $LDMDV = "\x57\116\107\60\x33\x31\60\60" . $AVEM8; goto zPH9N; DXKiW: $q4L7K = htmlspecialchars(strip_tags($den9F->hXbeJ)); goto DBxdP; fIEwi: FQmPf: goto wqBuF; gy7dI: if (!$UBzY3) { goto FQmPf; } goto sDh5k; KkSwe: $e_HwD = $hm755; goto xV233; nivMf: $AVEM8 = $q9VGA + 1; goto ckNTp; y6C6B: $BKG5E = $pAftS->irtYZ ?? "\x74\141\156\x67\147\x61\x6c\137\x74\x65\164\x61\x70"; goto ReT6T; Vpk6i: return back()->ABL7M(["\x65\x72\x72\157\x72" => "\x57\141\x6a\151\142\x20\155\145\x6e\x75\147\141\x73\x6b\x61\156\x20\164\145\153\156\151\x73\x69\x20\164\145\x72\154\x65\x62\151\x68\x20\x64\x61\x68\165\154\x75\40\163\x65\142\x65\154\x75\155\40\155\145\154\x61\x6b\165\x6b\141\x6e\x20\101\x43\x43\x21"])->qKv2A(); goto OVyKT; vvt2f: if (!($e_HwD > $hm755)) { goto V6HDJ; } goto KkSwe; Lwjl4: $UJD58 = $DvR9a === "\x70\x61\x73\143\141\142\141\x79\141\162" ? Carbon::MLZBA()->sJSX1() : Carbon::mLzBa(); goto S3hQp; JYxBH: $Hizcd = $den9F->NcH_1 ? intval($den9F->NcH_1) : null; goto Pm_JV; rdeoy: $den9F->validate(["\165\x73\145\162\156\141\x6d\145" => "\x72\145\x71\165\x69\162\145\x64\174\x73\164\162\151\156\x67", "\160\141\x73\163\x77\157\162\144" => "\162\145\161\165\151\x72\145\144\174\x73\x74\162\151\156\147", "\x6e\x6f\137\164\145\x6c\160" => "\x72\x65\161\x75\151\162\x65\144\174\x73\x74\162\151\x6e\x67", "\x70\141\x6b\x65\x74" => "\x72\145\x71\165\151\162\x65\144\174\151\156\x74\x65\x67\x65\162", "\151\144\x5f\155\151\x6b\162\157\x74\x69\153" => "\162\145\x71\165\x69\x72\145\144\174\151\156\x74\145\x67\145\x72", "\x69\x64\137\142\x72\141\156\x63\150" => "\x6e\x75\154\154\141\142\x6c\x65\x7c\x69\x6e\164\145\147\x65\162", "\151\144\137\163\165\x62\x5f\x62\x72\x61\x6e\x63\x68" => "\x6e\165\x6c\154\141\142\154\x65\174\151\156\x74\145\147\x65\162", "\157\144\x70" => "\156\x75\154\x6c\x61\142\154\145\174\x69\x6e\164\x65\147\x65\x72"]); goto W1HTq; sDh5k: return back()->AbL7M(["\165\163\x65\162\156\141\x6d\145" => "\125\163\145\x72\x6e\141\155\145\40\151\156\x69\x20\x73\x75\x64\141\x68\x20\x64\151\147\x75\156\141\153\x61\x6e\56\x20\x53\x69\x6c\x61\153\x61\156\40\x63\141\x72\x69\x20\165\163\x65\x72\x6e\141\x6d\145\x20\154\141\x69\x6e\x2e"])->QkV2a(); goto fIEwi; xV233: V6HDJ: goto jcwOy; IX18v: if (!($BKG5E === "\164\141\x6e\147\147\x61\x6c\x5f\160\x61\163\141\x6e\147")) { goto RK85n; } goto DnWiD; DnWiD: $e_HwD = (int) Carbon::mLZba()->er7uw; goto i4uRY; eUDPQ: uqwIX: goto Sd3jp; oLcsZ: $UBzY3 = User::GvSmS("\x75\163\145\x72\x6e\141\155\x65", $QwhIb)->first(); goto gy7dI; IUCWP: $q9VGA = Pelanggan::max("\x69\x64\x5f\x70\145\154\x61\x6e\147\147\141\156") ?? 0; goto nivMf; qNKHx: $hm755 = (int) date("\164", strtotime($AWfTq . "\55" . sprintf("\45\60\62\144", $numfh) . "\55\60\61")); goto vvt2f; DBxdP: $fvrN6 = htmlspecialchars(strip_tags($den9F->gMXy1)); goto kbz1Q; eL0rZ: $jm7eR = $den9F->V5TMc; goto JYxBH; e6Kzo: $QwhIb = htmlspecialchars(strip_tags($den9F->a22SN)); goto DXKiW; GoSL3: Wk01a: goto oLcsZ; OVyKT: NXppw: goto rdeoy; kbz1Q: $YMpnp = $den9F->w3H9D; goto UKsSc; BS_P8: DB::zsQvI(function () use ($Gqo7D, $LDMDV, $QwhIb, $q4L7K, $fvrN6, $YMpnp, $KS8c9, $jm7eR, $Hizcd, $n4zfB, $zjDFz, $LhobQ) { goto mPDma; mPDma: $ULuk0 = DB::K6GoV("\x74\142\137\160\145\x6c\141\x6e\147\x67\141\156")->JtpYA(["\156\151\153" => $Gqo7D->HcRB6, "\153\x6f\144\145\x5f\x70\x65\x6c\x61\x6e\x67\x67\x61\x6e" => $LDMDV, "\156\x61\155\141\x5f\x70\x65\x6c\141\156\147\147\141\x6e" => $Gqo7D->xA2QH, "\141\x6c\141\x6d\141\164" => $Gqo7D->pONXJ, "\156\157\x5f\x74\x65\x6c\x70" => $fvrN6, "\160\141\x6b\x65\x74" => $YMpnp, "\151\x70\137\x61\x64\x64\162\x65\x73\x73" => null, "\164\147\154\137\160\x65\155\x61\163\141\156\147\141\x6e" => $zjDFz, "\x6a\x61\164\x75\150\x5f\x74\x65\155\160\157" => $LhobQ, "\x6c\157\x63\141\x74\151\x6f\x6e" => $Gqo7D->MB1qP, "\x69\144\137\160\145\162\141\156\x67\153\141\x74" => null, "\157\144\x70" => $jm7eR, "\151\144\x5f\155\x69\x6b\162\x6f\x74\151\153" => $KS8c9, "\151\144\x5f\142\162\141\x6e\x63\150" => $Hizcd, "\151\144\x5f\163\x75\142\x5f\142\x72\141\x6e\143\x68" => $n4zfB]); goto CBy0p; A9MVO: $TyFsX = DB::k6gOV("\x74\x62\154\137\x6e\160\x65\x6d\141\x73\x61\x6e\x67\141\x6e")->first(); goto pPz0A; ow6bz: $diyMY = str_replace("\x24\x61\x6c\141\x6d\141\x74", $Gqo7D->pONXJ, $diyMY); goto b7RUI; CBy0p: DB::K6gOV("\x74\142\137\165\x73\145\162")->insert(["\165\x73\x65\x72\x6e\x61\155\145" => $QwhIb, "\156\x61\155\x61\137\x75\x73\145\x72" => $Gqo7D->xA2QH, "\160\x61\x73\163\167\157\162\144" => $q4L7K, "\154\145\166\x65\x6c" => "\x75\x73\x65\x72", "\146\x6f\164\x6f" => "\141\144\155\151\156\x2e\160\x6e\x67", "\151\x64\137\x70\x65\154\141\156\x67\147\141\x6e" => $ULuk0]); goto t_V4A; uXTfU: if (!($lqnNI && !empty($lqnNI->yOwGQ))) { goto M7O3i; } goto gjTkM; mWd9R: if (!$yLvSk->connect($xxBKl->aU6Pe, $xxBKl->a22SN, $xxBKl->hXbeJ)) { goto I6zaw; } goto Irqvh; M2NNZ: OC66_: goto guNAp; k20ti: $ro9LU = Paket::MWPm_($YMpnp); goto HobRW; gvJMY: $lqnNI = DB::K6gOV("\x74\x62\x6c\x5f\164\157\153\145\x6e")->gvsMs("\x69\144\x5f\164\157\153\145\x6e", 1)->first(); goto uXTfU; C6_qm: I6zaw: goto M2NNZ; Cy2K4: if (!($piOeW && $piOeW->Rg1qB == "\x79\141")) { goto i1oTK; } goto J28IN; n1O3D: AaBLJ: goto Iz14p; nvIdx: $diyMY = $TyFsX->fPAFW; goto dbZr_; guNAp: i1oTK: goto A9MVO; wzSTj: $diyMY = str_replace("\44\x70\x61\153\x65\x74", $Z3mpe, $diyMY); goto Wna2U; ntuG5: M7O3i: goto n1O3D; t_V4A: $Gqo7D->update(["\x73\x74\141\164\x75\x73" => "\141\x70\x70\x72\157\x76\145\144"]); goto zi4Ms; E4D8G: if (!$xxBKl) { goto OC66_; } goto zWJB2; dbZr_: $diyMY = str_replace("\x24\x6e\x61\x6d\141", $Gqo7D->xA2QH, $diyMY); goto ow6bz; Irqvh: $yLvSk->b24vL("\57\160\x70\x70\57\163\145\143\162\145\x74\57\x61\x64\144", ["\x6e\141\x6d\145" => $QwhIb, "\160\x61\x73\163\x77\x6f\x72\x64" => $q4L7K, "\x73\x65\x72\166\151\x63\x65" => "\160\160\160\x6f\x65", "\x70\x72\157\x66\x69\154\145" => $yPfBC]); goto jdNnx; Mp1Ck: $diyMY = str_replace("\44\x70\x61\163\x73\167\157\x72\x64", $q4L7K, $diyMY); goto gvJMY; Wna2U: $diyMY = str_replace("\x24\x74\x67\154\137\x70\145\x6d\141\163\x61\156\147\x61\x6e", $zjDFz, $diyMY); goto jHtei; jHtei: $diyMY = str_replace("\44\x75\163\145\x72\156\141\x6d\145", $QwhIb, $diyMY); goto Mp1Ck; b7RUI: $diyMY = str_replace("\44\156\x6f\137\164\x65\x6c\160", $fvrN6, $diyMY); goto wzSTj; A70rd: $xxBKl = DB::K6GOV("\x74\x62\154\x5f\x6d\x69\x6b\x72\x6f\x74\x69\153")->GVSms("\x69\144\x5f\155\x69\153\x72\157\x74\x69\x6b", $KS8c9)->first(); goto E4D8G; gjTkM: try { \MVyYO\BTklJ\Lp8pf\Http::rIu_x(["\x41\165\x74\x68\x6f\x72\x69\172\x61\x74\x69\x6f\x6e" => $lqnNI->yOwGQ])->lxS1a()->eZAq4("\150\164\164\x70\x73\72\x2f\57\x61\x70\x69\56\x66\x6f\156\156\x74\145\56\143\x6f\x6d\57\x73\x65\156\x64", ["\x74\141\162\x67\145\x74" => $fvrN6, "\155\x65\x73\163\x61\x67\145" => $diyMY, "\143\x6f\165\156\164\162\x79\103\157\x64\x65" => "\66\x32"]); } catch (\Exception $qBfNK) { \mVYYo\btklJ\lp8pF\Log::BmeM8("\x46\157\x6e\156\164\x65\40\x41\120\111\x20\105\162\x72\157\x72\40\117\162\144\145\x72\40\101\x70\x70\162\157\x76\x65\x64\72\40" . $qBfNK->getMessage()); } goto ntuG5; Lcliw: $yLvSk = new \RouterosAPI(); goto mWd9R; mPUda: $yPfBC = $ro9LU ? $ro9LU->IX1Pc : ''; goto A70rd; jdNnx: $yLvSk->Hdc5q(); goto C6_qm; zi4Ms: $piOeW = DB::k6GOv("\164\x62\154\x5f\x70\x65\156\147\147\165\156\141\155\x69\x6b\x72\x6f\164\x69\153")->first(); goto Cy2K4; pPz0A: if (!($TyFsX && $TyFsX->KA_8T == "\x61\153\164\151\146")) { goto AaBLJ; } goto k20ti; HobRW: $Z3mpe = $ro9LU ? $ro9LU->ooLqs : ''; goto nvIdx; zWJB2: require_once base_path("\151\156\x63\154\165\144\145\57\162\x6f\165\164\x65\162\157\163\137\x61\x70\x69\56\160\x68\160"); goto Lcliw; J28IN: $ro9LU = Paket::mwPm_($YMpnp); goto mPUda; Iz14p: }); goto Kj2t5; S5VJe: $b3jMn = $RGL0f->A3iaj; goto aKUxx; XVQE3: $DvR9a = $pAftS->JzTzC ?? "\160\162\x61\x62\x61\x79\x61\162"; goto Lwjl4; UKsSc: $KS8c9 = intval($den9F->gn9pJ); goto eL0rZ; hOUrr: return back()->abl7m(["\x6f\x64\x70" => "\x42\141\164\141\x73\40\x70\x6f\162\x74\40\x4f\104\x50\40\x74\145\162\163\145\142\165\164\x20\163\x75\x64\141\150\x20\160\145\x6e\165\150\x2e"])->QKV2A(); goto uMkJ1; Ag8_Z: $Gqo7D = OrderPemasangan::J_iB5($den9F->TpjJ2); goto GwNYi; S4Ge6: $pAftS = DB::k6GOv("\164\x62\x5f\160\162\x6f\x66\x69\x6c\x65")->first(); goto y6C6B; X8jIT: $den9F->validate(["\151\x64\137\157\x72\144\145\x72" => "\x72\x65\x71\x75\x69\x72\x65\x64\174\151\x6e\x74\145\147\145\162\x7c\x65\x78\x69\163\164\x73\72\x74\142\x6c\x5f\157\x72\x64\x65\x72\x5f\x70\145\x6d\141\x73\141\x6e\147\141\x6e\54\x69\x64"]); goto Ag8_Z; zPH9N: $zjDFz = Carbon::mlzBa()->format("\131\55\x6d\55\x64\40\x48\x3a\151"); goto S4Ge6; W1HTq: $Gqo7D = OrderPemasangan::j_ib5($den9F->TpjJ2); goto e6Kzo; ReT6T: $gtvHx = $pAftS->URLPU ?? 10; goto XVQE3; JI1iK: } public function wDkfO(Request $den9F) { goto Hs3Aq; bu2IT: foreach ($den9F->file("\146\157\x74\x6f\x5f\x64\157\x6b\165\155\x65\156\164\141\x73\x69") as $TYJL8 => $oxiZi) { goto LdNfo; LdNfo: $lrOiY = "\144\157\143\x5f" . $den9F->TpjJ2 . "\137" . $TYJL8 . "\137" . uniqid() . "\x2e" . $oxiZi->tbGjh(); goto Kz81V; mN0s7: VxW81: goto wh7gz; Kz81V: $oxiZi->H2nNC($Wyf01, $lrOiY); goto nicEi; nicEi: $mNB3K[] = $lrOiY; goto mN0s7; wh7gz: } goto B8V_0; vs6BJ: $Wyf01 = base_path("\141\x64\x6d\x69\156\151\163\x74\162\141\x74\157\162\x2f\x70\141\x67\x65\57\157\162\x64\145\162\x2f\151\x6d\141\147\145\163"); goto e9_bD; lLK3S: $Gqo7D->update(["\x73\x74\141\164\165\x73" => "\151\156\x73\x74\x61\154\x6c\145\144", "\x66\x6f\164\x6f\137\x64\157\153\165\x6d\145\156\x74\x61\x73\151" => json_encode($mNB3K)]); goto SnzmU; e9_bD: if (is_dir($Wyf01)) { goto pSMMU; } goto jwgGv; Hs3Aq: $den9F->validate(["\x69\144\x5f\157\x72\144\x65\162" => "\162\x65\x71\x75\151\162\145\144\174\151\x6e\x74\x65\147\x65\x72\174\x65\x78\151\x73\x74\x73\72\x74\142\x6c\x5f\157\162\144\x65\162\x5f\x70\145\155\141\x73\141\x6e\147\x61\x6e\54\x69\144", "\x66\x6f\x74\x6f\137\x64\157\x6b\x75\x6d\145\x6e\x74\x61\163\151" => "\162\145\x71\165\x69\162\x65\144\x7c\141\162\162\141\x79\174\155\151\x6e\72\x31\174\x6d\x61\x78\x3a\x33", "\x66\x6f\164\157\137\x64\x6f\153\165\x6d\145\x6e\x74\141\163\x69\56\x2a" => "\151\155\141\x67\145\x7c\x6d\151\155\145\x73\72\x6a\160\145\x67\x2c\152\160\147\x2c\x70\156\x67\54\147\x69\x66\54\167\x65\x62\x70\x7c\x6d\141\170\72\x35\61\62\x30"], ["\x66\x6f\164\x6f\137\x64\x6f\x6b\x75\155\145\156\164\x61\x73\151\x2e\x72\x65\161\x75\x69\162\145\x64" => "\127\x61\x6a\151\x62\x20\x6d\x65\154\x61\155\160\x69\162\x6b\141\156\x20\146\x6f\164\x6f\40\142\x75\153\164\151\40\x64\x6f\153\x75\x6d\x65\156\x74\x61\x73\x69\x20\x70\145\155\x61\x73\141\x6e\147\141\x6e\x21", "\x66\157\x74\x6f\137\x64\x6f\x6b\x75\155\145\x6e\x74\x61\x73\x69\x2e\x61\162\x72\x61\x79" => "\106\157\x72\x6d\x61\x74\40\x66\x69\154\x65\40\164\x69\144\141\x6b\40\x76\x61\x6c\x69\x64\x2e", "\x66\x6f\x74\x6f\137\144\157\153\165\x6d\145\156\164\x61\163\x69\56\x6d\x69\x6e" => "\127\141\x6a\x69\142\x20\x6d\x65\x6c\x61\155\x70\151\x72\x6b\x61\x6e\x20\x6d\x69\x6e\x69\x6d\141\154\40\61\x20\146\157\164\157\x20\142\x75\153\164\151\40\x64\157\153\x75\x6d\x65\x6e\164\x61\x73\x69\41", "\146\157\x74\157\137\x64\157\x6b\x75\155\x65\156\x74\141\x73\x69\56\155\141\x78" => "\x4d\x61\x6b\x73\x69\x6d\x61\154\40\x68\141\156\171\141\40\142\x6f\x6c\x65\x68\40\x6d\x65\156\147\x75\x6e\x67\x67\141\150\x20\x33\40\x66\x6f\164\157\x20\x62\165\153\x74\151\40\x64\x6f\x6b\x75\155\x65\x6e\x74\141\163\151\x21", "\146\x6f\x74\x6f\137\x64\x6f\153\165\x6d\145\156\x74\x61\163\151\56\52\x2e\x69\155\x61\147\x65" => "\x46\x69\x6c\145\40\x68\141\162\165\x73\x20\x62\x65\162\x75\160\x61\40\x67\x61\155\x62\x61\162\56", "\x66\157\x74\157\x5f\x64\157\153\x75\x6d\145\x6e\x74\x61\x73\x69\56\52\x2e\155\141\170" => "\x55\x6b\x75\162\141\156\40\163\x65\x74\x69\141\160\x20\x66\x69\154\x65\40\147\x61\x6d\x62\x61\162\40\155\x61\153\x73\x69\x6d\141\154\x20\65\x20\115\102\56"]); goto amaMh; BnTGy: QIquq: goto pDIZ2; amaMh: $mNB3K = []; goto b4i39; B8V_0: qefwQ: goto BnTGy; hOFQc: pSMMU: goto bu2IT; b4i39: if (!$den9F->GJf_Q("\146\157\164\x6f\137\144\x6f\153\165\x6d\x65\x6e\164\141\163\151")) { goto QIquq; } goto vs6BJ; pDIZ2: $Gqo7D = OrderPemasangan::j_Ib5($den9F->TpjJ2); goto lLK3S; SnzmU: return redirect()->GXr_2("\x61\x64\x6d\151\156\56\x6f\162\144\x65\162\137\x70\145\x6d\x61\163\x61\x6e\x67\x61\156\x2e\x69\x6e\144\x65\x78")->qICK_("\163\165\x63\143\145\x73\x73", "\x50\145\155\141\x73\x61\156\x67\x61\156\40\x73\x65\154\x65\163\141\x69\x20\144\151\160\x61\163\x61\x6e\x67\x20\x64\141\x6e\x20\142\165\x6b\x74\x69\x20\146\157\164\157\x20\142\145\162\150\141\x73\151\x6c\40\x64\151\165\x6e\147\147\x61\150\x2e\x20\115\145\x6e\165\x6e\147\x67\x75\x20\x76\x65\162\151\x66\x69\x6b\x61\163\x69\x20\x61\144\155\x69\x6e\41"); goto zD7Ec; jwgGv: mkdir($Wyf01, 0755, true); goto hOFQc; zD7Ec: } public function K9V8s(Request $den9F) { goto pi3pa; F1m_0: Pchph: goto zap7H; SOWtj: $Gqo7D = OrderPemasangan::J_IB5($den9F->TpjJ2); goto goLAH; goLAH: if (!($Gqo7D->hgkiH !== 0)) { goto Pchph; } goto ukSsi; ukSsi: return back()->ABL7M(["\x65\162\162\x6f\162" => "\117\162\144\145\x72\40\x69\156\x69\40\x73\165\x64\141\x68\x20\x64\151\x61\x6d\x62\151\154\x20\x61\164\x61\x75\x20\144\x69\164\165\147\141\163\x6b\141\x6e\40\153\145\40\164\x65\153\x6e\x69\x73\151\40\x6c\x61\151\156\56"]); goto F1m_0; zap7H: $Gqo7D->update(["\151\x64\x5f\x74\145\x6b\156\x69\163\151" => Auth::p23jm()]); goto fgf1b; pi3pa: $den9F->validate(["\151\x64\137\x6f\x72\x64\145\162" => "\x72\x65\x71\x75\151\x72\x65\x64\x7c\151\156\164\x65\x67\x65\x72\174\145\170\151\x73\x74\x73\72\x74\142\x6c\137\x6f\162\144\145\162\x5f\x70\x65\x6d\141\x73\x61\156\x67\x61\x6e\54\151\144"]); goto sETJM; M4qTm: if (!$q3Emq) { goto nt_CS; } goto Bfc9w; fgf1b: return redirect()->gXR_2("\x61\144\155\x69\156\56\157\162\144\x65\162\x5f\x70\145\x6d\x61\x73\x61\x6e\147\x61\156\x2e\151\x6e\144\x65\170")->QicK_("\x73\165\x63\143\x65\x73\x73", "\117\162\144\x65\x72\40\160\145\x6d\x61\x73\x61\156\147\141\156\40\x62\145\x72\150\141\x73\x69\x6c\x20\x41\156\144\x61\x20\141\155\142\x69\154\x21"); goto pjC1f; SakI5: nt_CS: goto SOWtj; sETJM: $q3Emq = OrderPemasangan::gVsmS("\x69\x64\x5f\x74\145\153\156\151\x73\x69", Auth::p23jM())->mqcIB("\163\164\x61\164\165\163", ["\x61\x70\160\162\157\166\x65\x64", "\151\x6e\163\x74\x61\154\x6c\x65\x64"])->N9iuP(); goto M4qTm; Bfc9w: return back()->Abl7m(["\x65\162\162\x6f\x72" => "\101\x6e\144\x61\x20\155\x61\x73\151\150\40\x6d\145\x6d\151\x6c\x69\153\151\x20\x6f\x72\x64\x65\162\x20\160\x65\x6d\x61\163\141\x6e\x67\141\156\x20\x79\x61\156\x67\x20\x61\153\x74\151\146\40\x61\x74\x61\165\x20\x6d\145\156\x75\156\x67\x67\x75\x20\166\x65\x72\151\x66\151\153\x61\x73\151\40\x61\x64\x6d\151\156\41"]); goto SakI5; pjC1f: } public function EC3Oz($uksSr) { goto o3Vg4; jkHA0: abort(404); goto TpDdA; O6MPL: if (file_exists($tMmNE)) { goto xbv6J; } goto jkHA0; WlwS1: return response()->file($tMmNE); goto F9Yo7; o3Vg4: $tMmNE = base_path("\x61\x64\x6d\x69\x6e\151\x73\x74\162\x61\164\x6f\162\57\160\141\147\x65\x2f\157\162\144\x65\162\x2f\151\155\141\147\145\163\57" . $uksSr); goto O6MPL; TpDdA: xbv6J: goto WlwS1; F9Yo7: } public function DE6KL(Request $den9F) { goto mt33O; TREUF: $Gqo7D->update(["\163\164\x61\164\165\x73" => "\x63\x6f\x6d\160\154\x65\x74\145\x64"]); goto E8y9g; mt33O: $den9F->validate(["\x69\144\137\157\x72\144\145\162" => "\162\145\161\165\151\162\x65\x64\174\x69\156\164\145\x67\145\162\x7c\x65\x78\x69\x73\164\x73\x3a\x74\142\x6c\137\x6f\x72\x64\x65\x72\137\160\x65\155\141\163\x61\x6e\147\141\156\54\x69\x64"]); goto zqqYv; Jyy34: c2h48: goto TREUF; kJnmn: return back()->ABL7M(["\145\x72\x72\x6f\x72" => "\117\x72\144\x65\162\40\x69\x6e\151\x20\142\145\x6c\x75\155\x20\144\x69\x70\141\163\x61\x6e\x67\x20\x6f\x6c\x65\x68\x20\x74\145\x6b\x6e\x69\163\x69\x20\x61\x74\x61\x75\x20\163\164\141\164\x75\x73\x20\164\151\144\x61\153\40\166\x61\x6c\x69\x64\40\x75\x6e\164\165\153\40\153\157\156\x66\151\162\155\141\163\151\x2e"]); goto Jyy34; SvJ6c: if (!($Gqo7D->status !== "\151\x6e\163\164\x61\x6c\154\x65\x64")) { goto c2h48; } goto kJnmn; E8y9g: return redirect()->GxR_2("\141\144\155\151\156\56\x6f\x72\x64\145\162\x5f\160\x65\155\x61\x73\141\x6e\x67\x61\x6e\x2e\x69\x6e\144\145\x78")->QICk_("\x73\x75\143\143\x65\x73\163", "\x50\x65\155\x61\x73\141\156\x67\x61\156\40\x62\145\162\150\x61\x73\x69\154\40\144\x69\x6b\157\x6e\x66\x69\x72\x6d\141\163\151\40\x73\145\x6c\145\x73\141\x69\x20\x64\141\156\40\141\153\164\151\146\41"); goto MYVBA; zqqYv: $Gqo7D = OrderPemasangan::j_Ib5($den9F->TpjJ2); goto SvJ6c; MYVBA: } public function DIXxj($uksSr) { goto cyHZQ; it835: if (file_exists($tMmNE)) { goto zW9GS; } goto uGLiV; EGc1R: return response()->file($tMmNE); goto ZC8Hj; eCnJO: zW9GS: goto EGc1R; cyHZQ: $tMmNE = base_path("\x61\144\155\x69\x6e\x69\x73\164\x72\141\x74\157\x72\x2f\160\x61\147\x65\x2f\x6f\x72\x64\x65\162\x2f\151\x6d\x61\x67\145\x73\57" . $uksSr); goto it835; uGLiV: abort(404); goto eCnJO; ZC8Hj: } }
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\OrderPemasangan;
+use App\Models\Pelanggan;
+use App\Models\User;
+use App\Models\Paket;
+use App\Models\Odp;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use Carbon\Carbon;
+
+class AdminOrderPemasanganController extends Controller
+{
+    public function index(Request $request)
+    {
+        $user = Auth::user();
+
+        // Fetch options for the approval modal (Admin only)
+        $pakets = Paket::all();
+        $mikrotiks = [];
+        $odps = [];
+        $branches = [];
+        $subBranches = [];
+        $teknisis = [];
+        $topTeknisi = [];
+
+        if ($user->level === 'admin') {
+            $mikrotiks = DB::table('tbl_mikrotik')->get();
+            $odps = Odp::withCount('pelanggans')->get();
+            $branches = DB::table('tb_branch')->get();
+            $subBranches = DB::table('tb_sub_branch')->get();
+            $teknisis = User::where('level', 'teknisi')->get()->map(function($tek) {
+                $tek->has_active_order = OrderPemasangan::where('id_teknisi', $tek->id)
+                    ->whereIn('status', ['approved', 'installed'])
+                    ->exists();
+                return $tek;
+            });
+
+            // Query top 10 technicians for the current month
+            $currentMonthStart = Carbon::now()->startOfMonth()->toDateTimeString();
+            $currentMonthEnd = Carbon::now()->endOfMonth()->toDateTimeString();
+
+            $topTeknisi = DB::table('tbl_order_pemasangan')
+                ->join('tb_user', 'tbl_order_pemasangan.id_teknisi', '=', 'tb_user.id')
+                ->select('tb_user.nama_user', DB::raw('count(tbl_order_pemasangan.id) as total'))
+                ->where('tbl_order_pemasangan.status', 'installed')
+                ->whereBetween('tbl_order_pemasangan.updated_at', [$currentMonthStart, $currentMonthEnd])
+                ->groupBy('tbl_order_pemasangan.id_teknisi', 'tb_user.nama_user')
+                ->orderBy('total', 'desc')
+                ->limit(10)
+                ->get();
+        }
+
+        // Fetch orders based on role
+        if ($user->level === 'sales') {
+            // Sales sees only their own uploaded orders
+            $orders = OrderPemasangan::with(['sales', 'teknisi', 'paketDetail'])
+                ->where('id_sales', $user->id)
+                ->orderBy('id', 'desc')
+                ->get();
+        } elseif ($user->level === 'teknisi') {
+            // Technician sees orders assigned to them or assigned to All (0) that are approved or installed
+            $orders = OrderPemasangan::with(['sales', 'teknisi', 'paketDetail'])
+                ->where(function($q) use ($user) {
+                    $q->where('id_teknisi', $user->id)
+                      ->orWhere('id_teknisi', 0);
+                })
+                ->whereIn('status', ['approved', 'installed'])
+                ->orderBy('id', 'desc')
+                ->get();
+        } else {
+            // Admin and others see all orders
+            $orders = OrderPemasangan::with(['sales', 'teknisi', 'paketDetail'])
+                ->orderBy('id', 'desc')
+                ->get();
+        }
+
+        return view('admin.order_pemasangan.index', compact(
+            'orders', 'pakets', 'mikrotiks', 'odps', 'branches', 'subBranches', 'teknisis', 'topTeknisi'
+        ));
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'nik' => 'required|string|max:50',
+            'nama' => 'required|string|max:255',
+            'no_telp' => 'required|string|max:20',
+            'paket' => 'required|integer|exists:tb_paket,id_paket',
+            'alamat_ktp' => 'required|string',
+            'alamat_pemasangan' => 'required|string',
+            'koordinat_pemasangan' => 'required|string|max:100',
+            'jadwal_pemasangan' => 'nullable|string',
+            'foto_ktp' => 'required|image|mimes:jpeg,jpg,png,gif,webp|max:5120',
+        ], [
+            'foto_ktp.required' => 'Foto KTP wajib diunggah.',
+            'foto_ktp.image' => 'File harus berupa gambar.',
+            'foto_ktp.max' => 'Ukuran file maksimal 5 MB.',
+            'paket.required' => 'Paket internet wajib dipilih.',
+        ]);
+
+        $fotoName = '';
+        if ($request->hasFile('foto_ktp')) {
+            $uploadDir = base_path('administrator/page/order/images');
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0755, true);
+            }
+            $file = $request->file('foto_ktp');
+            $fotoName = uniqid() . '_' . Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) . '.' . $file->getClientOriginalExtension();
+            $file->move($uploadDir, $fotoName);
+        }
+
+        $jadwal = null;
+        if (!empty($request->jadwal_pemasangan)) {
+            try {
+                $jadwal = Carbon::parse($request->jadwal_pemasangan)->format('Y-m-d H:i:s');
+            } catch (\Exception $e) {
+                $jadwal = null;
+            }
+        }
+
+        OrderPemasangan::create([
+            'nik' => htmlspecialchars(strip_tags($request->nik)),
+            'nama' => htmlspecialchars(strip_tags($request->nama)),
+            'no_telp' => htmlspecialchars(strip_tags($request->no_telp)),
+            'paket' => intval($request->paket),
+            'alamat_ktp' => htmlspecialchars(strip_tags($request->alamat_ktp)),
+            'alamat_pemasangan' => htmlspecialchars(strip_tags($request->alamat_pemasangan)),
+            'koordinat_pemasangan' => htmlspecialchars(strip_tags($request->koordinat_pemasangan)),
+            'jadwal_pemasangan' => $jadwal,
+            'foto_ktp' => $fotoName,
+            'status' => 'pending',
+            'id_sales' => Auth::id(),
+        ]);
+
+        return redirect()->route('admin.order_pemasangan.index')->with('success', 'Order pemasangan baru berhasil dikirim dan menunggu persetujuan admin!');
+    }
+
+    public function assign(Request $request)
+    {
+        $request->validate([
+            'id_order' => 'required|integer|exists:tbl_order_pemasangan,id',
+            'id_teknisi' => 'required|integer', // Allow 0 for "Semua Teknisi"
+        ]);
+
+        if ($request->id_teknisi > 0) {
+            $hasActive = OrderPemasangan::where('id_teknisi', $request->id_teknisi)
+                ->whereIn('status', ['approved', 'installed'])
+                ->exists();
+            if ($hasActive) {
+                return back()->withErrors(['error' => 'Teknisi tersebut masih memiliki order pemasangan yang aktif atau menunggu verifikasi admin!']);
+            }
+        }
+
+        $order = OrderPemasangan::findOrFail($request->id_order);
+        $order->update([
+            'id_teknisi' => $request->id_teknisi,
+        ]);
+
+        return redirect()->route('admin.order_pemasangan.index')->with('success', 'Teknisi berhasil ditugaskan untuk order ini!');
+    }
+
+    public function approve(Request $request)
+    {
+        $request->validate([
+            'id_order' => 'required|integer|exists:tbl_order_pemasangan,id',
+        ]);
+
+        $order = OrderPemasangan::findOrFail($request->id_order);
+        if (is_null($order->id_teknisi)) {
+            return back()->withErrors(['error' => 'Wajib menugaskan teknisi terlebih dahulu sebelum melakukan ACC!'])->withInput();
+        }
+
+        $request->validate([
+            'username' => 'required|string',
+            'password' => 'required|string',
+            'no_telp' => 'required|string',
+            'paket' => 'required|integer',
+            'id_mikrotik' => 'required|integer',
+            'id_branch' => 'nullable|integer',
+            'id_sub_branch' => 'nullable|integer',
+            'odp' => 'nullable|integer',
+        ]);
+
+        $order = OrderPemasangan::findOrFail($request->id_order);
+
+        $username = htmlspecialchars(strip_tags($request->username));
+        $password = htmlspecialchars(strip_tags($request->password));
+        $no_telp = htmlspecialchars(strip_tags($request->no_telp));
+        $paketId = $request->paket;
+        $id_mikrotik = intval($request->id_mikrotik);
+        $odpId = $request->odp;
+        $id_branch = $request->id_branch ? intval($request->id_branch) : null;
+        $id_sub_branch = $request->id_sub_branch ? intval($request->id_sub_branch) : null;
+
+        // Check if phone number already exists in pelanggan
+        $existingPhone = Pelanggan::where('no_telp', $no_telp)->first();
+        if ($existingPhone) {
+            return back()->withErrors(['no_telp' => 'Nomor telepon sudah tercatat di database. Silakan gunakan nomor lain.'])->withInput();
+        }
+
+        // Check if username already exists in users
+        $existingUser = User::where('username', $username)->first();
+        if ($existingUser) {
+            return back()->withErrors(['username' => 'Username ini sudah digunakan. Silakan cari username lain.'])->withInput();
+        }
+
+        // Check ODP port capacity
+        if ($odpId) {
+            $odpInfo = DB::table('tbl_odp')->where('id_odp', $odpId)->first();
+            if ($odpInfo) {
+                $maxPort = $odpInfo->port_odp;
+                $currentPortUsage = Pelanggan::where('odp', $odpId)->count();
+                if ($currentPortUsage >= $maxPort) {
+                    return back()->withErrors(['odp' => 'Batas port ODP tersebut sudah penuh.'])->withInput();
+                }
+            }
+        }
+
+        // Generate customer code
+        $lastId = Pelanggan::max('id_pelanggan') ?? 0;
+        $newId = $lastId + 1;
+        $kode_pelanggan = "WNG03100" . $newId;
+
+        // Date calculation for billing
+        $tgl_pemasangan = Carbon::now()->format('Y-m-d H:i');
+        $settings = DB::table('tb_profile')->first();
+        $tipe = $settings->tipe_jatuh_tempo ?? 'tanggal_tetap';
+        $default_hari = $settings->hari_jatuh_tempo ?? 10;
+        $sistem = $settings->sistem_billing ?? 'prabayar';
+
+        $targetBilling = ($sistem === 'pascabayar') ? Carbon::now()->addMonth() : Carbon::now();
+        $next_year = $targetBilling->year;
+        $next_month = $targetBilling->month;
+
+        $due_day = $default_hari;
+        if ($tipe === 'tanggal_pasang') {
+            $due_day = (int) Carbon::now()->day;
+        }
+
+        $days_in_month = (int) date('t', strtotime($next_year . '-' . sprintf('%02d', $next_month) . '-01'));
+        if ($due_day > $days_in_month) {
+            $due_day = $days_in_month;
+        }
+
+        $tgl_jatuh_tempo = sprintf('%04d-%02d-%02d 23:59:00', $next_year, $next_month, $due_day);
+
+        // Transaction DB
+        DB::transaction(function() use (
+            $order, $kode_pelanggan, $username, $password, $no_telp, $paketId, $id_mikrotik, 
+            $odpId, $id_branch, $id_sub_branch, $tgl_pemasangan, $tgl_jatuh_tempo
+        ) {
+            // 1. Insert into tb_pelanggan
+            $pelangganId = DB::table('tb_pelanggan')->insertGetId([
+                'nik' => $order->nik,
+                'kode_pelanggan' => $kode_pelanggan,
+                'nama_pelanggan' => $order->nama,
+                'alamat' => $order->alamat_pemasangan,
+                'no_telp' => $no_telp,
+                'paket' => $paketId,
+                'ip_address' => null,
+                'tgl_pemasangan' => $tgl_pemasangan,
+                'jatuh_tempo' => $tgl_jatuh_tempo,
+                'location' => $order->koordinat_pemasangan,
+                'id_perangkat' => null,
+                'odp' => $odpId,
+                'id_mikrotik' => $id_mikrotik,
+                'id_branch' => $id_branch,
+                'id_sub_branch' => $id_sub_branch,
+            ]);
+
+            // 2. Insert into tb_user
+            DB::table('tb_user')->insert([
+                'username' => $username,
+                'nama_user' => $order->nama,
+                'password' => $password, // Plain text for legacy support
+                'level' => 'user',
+                'foto' => 'admin.png',
+                'id_pelanggan' => $pelangganId,
+            ]);
+
+            // 3. Update order status to approved
+            $order->update([
+                'status' => 'approved',
+            ]);
+
+            // 4. Sync with Mikrotik if enabled
+            $checkUser = DB::table('tbl_penggunamikrotik')->first();
+            if ($checkUser && $checkUser->addppsecret == 'ya') {
+                $paket = Paket::find($paketId);
+                $id_profile = $paket ? $paket->id_pmikrotik : '';
+
+                $mikrotik = DB::table('tbl_mikrotik')->where('id_mikrotik', $id_mikrotik)->first();
+                if ($mikrotik) {
+                    require_once base_path('include/routeros_api.php');
+                    $API = new \RouterosAPI();
+                    if ($API->connect($mikrotik->ip, $mikrotik->username, $mikrotik->password)) {
+                        $API->comm("/ppp/secret/add", [
+                            "name" => $username,
+                            "password" => $password,
+                            "service" => 'pppoe',
+                            "profile" => $id_profile,
+                        ]);
+                        $API->disconnect();
+                    }
+                }
+            }
+
+            // 5. WhatsApp notification if enabled
+            $notifikasi = DB::table('tbl_npemasangan')->first();
+            if ($notifikasi && $notifikasi->status_notif == 'aktif') {
+                $paket = Paket::find($paketId);
+                $namaPaket = $paket ? $paket->nama_paket : '';
+
+                $pesan = $notifikasi->pesan_notif;
+                $pesan = str_replace('$nama', $order->nama, $pesan);
+                $pesan = str_replace('$alamat', $order->alamat_pemasangan, $pesan);
+                $pesan = str_replace('$no_telp', $no_telp, $pesan);
+                $pesan = str_replace('$paket', $namaPaket, $pesan);
+                $pesan = str_replace('$tgl_pemasangan', $tgl_pemasangan, $pesan);
+                $pesan = str_replace('$username', $username, $pesan);
+                $pesan = str_replace('$password', $password, $pesan);
+
+                $tokenInfo = DB::table('tbl_token')->where('id_token', 1)->first();
+                if ($tokenInfo && !empty($tokenInfo->token)) {
+                    try {
+                        \Illuminate\Support\Facades\Http::withHeaders([
+                            'Authorization' => $tokenInfo->token
+                        ])->asForm()->post('https://api.fonnte.com/send', [
+                            'target' => $no_telp,
+                            'message' => $pesan,
+                            'countryCode' => '62'
+                        ]);
+                    } catch (\Exception $e) {
+                        \Illuminate\Support\Facades\Log::error('Fonnte API Error Order Approved: ' . $e->getMessage());
+                    }
+                }
+            }
+        });
+
+        return redirect()->route('admin.order_pemasangan.index')->with('success', 'Order berhasil disetujui (ACC) dan data pelanggan telah terdaftar!');
+    }
+
+    public function complete(Request $request)
+    {
+        $request->validate([
+            'id_order' => 'required|integer|exists:tbl_order_pemasangan,id',
+            'foto_dokumentasi' => 'required|array|min:1|max:3',
+            'foto_dokumentasi.*' => 'image|mimes:jpeg,jpg,png,gif,webp|max:5120',
+        ], [
+            'foto_dokumentasi.required' => 'Wajib melampirkan foto bukti dokumentasi pemasangan!',
+            'foto_dokumentasi.array' => 'Format file tidak valid.',
+            'foto_dokumentasi.min' => 'Wajib melampirkan minimal 1 foto bukti dokumentasi!',
+            'foto_dokumentasi.max' => 'Maksimal hanya boleh mengunggah 3 foto bukti dokumentasi!',
+            'foto_dokumentasi.*.image' => 'File harus berupa gambar.',
+            'foto_dokumentasi.*.max' => 'Ukuran setiap file gambar maksimal 5 MB.',
+        ]);
+
+        $uploadedFiles = [];
+        if ($request->hasFile('foto_dokumentasi')) {
+            $uploadDir = base_path('administrator/page/order/images');
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0755, true);
+            }
+            foreach ($request->file('foto_dokumentasi') as $index => $file) {
+                $fotoName = 'doc_' . $request->id_order . '_' . $index . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                $file->move($uploadDir, $fotoName);
+                $uploadedFiles[] = $fotoName;
+            }
+        }
+
+        $order = OrderPemasangan::findOrFail($request->id_order);
+        $order->update([
+            'status' => 'installed',
+            'foto_dokumentasi' => json_encode($uploadedFiles),
+        ]);
+
+        return redirect()->route('admin.order_pemasangan.index')->with('success', 'Pemasangan selesai dipasang dan bukti foto berhasil diunggah. Menunggu verifikasi admin!');
+    }
+
+    public function claim(Request $request)
+    {
+        $request->validate([
+            'id_order' => 'required|integer|exists:tbl_order_pemasangan,id',
+        ]);
+
+        // Make sure technician doesn't have active order
+        $hasActive = OrderPemasangan::where('id_teknisi', Auth::id())
+            ->whereIn('status', ['approved', 'installed'])
+            ->exists();
+        if ($hasActive) {
+            return back()->withErrors(['error' => 'Anda masih memiliki order pemasangan yang aktif atau menunggu verifikasi admin!']);
+        }
+
+        $order = OrderPemasangan::findOrFail($request->id_order);
+
+        // Make sure it is currently assigned to All (0)
+        if ($order->id_teknisi !== 0) {
+            return back()->withErrors(['error' => 'Order ini sudah diambil atau ditugaskan ke teknisi lain.']);
+        }
+
+        $order->update([
+            'id_teknisi' => Auth::id(),
+        ]);
+
+        return redirect()->route('admin.order_pemasangan.index')->with('success', 'Order pemasangan berhasil Anda ambil!');
+    }
+
+    public function showKtp($filename)
+    {
+        $path = base_path('administrator/page/order/images/' . $filename);
+        if (!file_exists($path)) {
+            abort(404);
+        }
+        return response()->file($path);
+    }
+
+    public function confirm(Request $request)
+    {
+        $request->validate([
+            'id_order' => 'required|integer|exists:tbl_order_pemasangan,id',
+        ]);
+
+        $order = OrderPemasangan::findOrFail($request->id_order);
+        
+        // Make sure it is currently 'installed'
+        if ($order->status !== 'installed') {
+            return back()->withErrors(['error' => 'Order ini belum dipasang oleh teknisi atau status tidak valid untuk konfirmasi.']);
+        }
+
+        $order->update([
+            'status' => 'completed',
+        ]);
+
+        return redirect()->route('admin.order_pemasangan.index')->with('success', 'Pemasangan berhasil dikonfirmasi selesai dan aktif!');
+    }
+
+    public function showDokumentasi($filename)
+    {
+        $path = base_path('administrator/page/order/images/' . $filename);
+        if (!file_exists($path)) {
+            abort(404);
+        }
+        return response()->file($path);
+    }
+}

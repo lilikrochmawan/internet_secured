@@ -1,8 +1,150 @@
 <?php
-/*   __________________________________________________
-    |  Obfuscated by YAK Pro - Php Obfuscator  3.0.0   |
-    |              on 2026-06-24 23:14:48              |
-    |    GitHub: https://github.com/pk-fr/yakpro-po    |
-    |__________________________________________________|
-*/
- namespace m71JR\XZ1tU\fnhFF\LP2K1; use m71jR\XZ1tu\fNHFf\YUfus; use m71jr\xpaCo\oVYbR; use m71jr\XpAco\rfkjs; use mvyYO\XZ1tu\oHHid; use mVyYo\btKLj\lp8pf\YZYub; use mVYYO\BTkLj\lp8Pf\hKWLz; class AdminKeluhanController extends Controller { public function H0i_0() { $bLKJB = Keluhan::qIcK_(["\x70\x65\154\x61\156\x67\147\141\x6e"])->mqcIb("\x69\144\x5f\160\x65\x6c\141\x6e\147\x67\141\156", Pelanggan::DuVK3()->yU00q("\151\144\x5f\160\x65\x6c\x61\156\147\147\x61\156"))->POJJE("\151\x64\x5f\x6b\x65\x6c\165\150\x61\156", "\x64\145\x73\143")->get(); return view("\141\x64\155\151\156\56\x6b\145\x6c\x75\x68\x61\156\56\x69\156\144\x65\x78", compact("\153\145\154\165\x68\x61\x6e")); } public function AutD8(Request $den9F) { goto Od3xR; g3ulr: $bLKJB->update(["\163\x74\x61\164\x75\163\x5f\153\145\154\165\x68\141\156" => "\160\162\157\x73\x65\x73", "\x75\x73\145\x72\137\151\x64" => Auth::P23Jm()]); goto drwzV; Od3xR: $den9F->validate(["\x69\144\137\x6b\x65\x6c\165\x68\141\156" => "\162\x65\x71\x75\x69\162\145\144\174\151\156\164\145\x67\145\162"]); goto nKeS6; nKeS6: $bLKJB = Keluhan::j_Ib5($den9F->YrW9L); goto g3ulr; drwzV: return redirect()->gXr_2("\x61\x64\155\x69\x6e\x2e\x6b\x65\x6c\165\x68\141\156\x2e\151\x6e\x64\145\x78")->qICk_("\x73\165\143\x63\145\163\x73", "\x4b\x65\154\165\x68\141\x6e\40\142\x65\x72\x68\x61\x73\151\154\40\144\x69\160\145\162\x62\141\x72\165\151\x20\x6b\145\x20\x73\x74\x61\x74\165\163\72\40\x50\x72\157\x73\145\x73\x21"); goto KzbUl; KzbUl: } public function Fd1gV(Request $den9F) { goto kc2g7; XVBaK: if (!$b2Wim) { goto AvVEB; } goto bEhmE; bEhmE: $Ex9cX .= "\40\x4e\157\x74\151\146\151\x6b\141\x73\x69\x20\127\x68\141\x74\x73\x41\160\160\x20\x74\x65\154\141\x68\x20\x64\151\x6b\x69\162\151\155\40\153\x65\x20\160\x65\154\x61\156\147\x67\141\156\x2e"; goto nxOxd; pwKt5: try { goto VhwKS; dRLVm: Wzoae: goto CENbZ; VhwKS: $VabCL = \mVYyo\BtKlj\Lp8pf\Http::RIU_X(["\x41\165\164\150\x6f\162\x69\172\141\x74\151\x6f\156" => $lqnNI->yOwGQ])->lXS1A()->ezaQ4("\x68\164\x74\x70\163\72\57\x2f\x61\160\x69\56\146\x6f\x6e\x6e\164\145\x2e\x63\157\x6d\57\163\145\x6e\x64", ["\x74\x61\162\x67\x65\x74" => $bLKJB->JhdaB, "\x6d\x65\163\x73\141\147\x65" => $diyMY, "\143\157\x75\x6e\x74\162\x79\103\x6f\144\145" => "\66\x32"]); goto OOtPC; RHbA5: $b2Wim = true; goto dRLVm; GroV1: if (!($VabCL->bFgkA() && isset($WFRth["\x73\x74\x61\x74\x75\163"]) && $WFRth["\x73\164\x61\164\x75\x73"] === true)) { goto Wzoae; } goto RHbA5; OOtPC: $WFRth = $VabCL->u0xql(); goto GroV1; CENbZ: } catch (\Exception $qBfNK) { \mvYYO\BTKlJ\Lp8pf\Log::bMEM8("\106\x6f\x6e\156\x74\145\x20\101\x50\x49\40\105\x72\162\x6f\x72\x20\113\x65\x6c\165\150\x61\x6e\40\123\145\154\x65\x73\x61\151\x3a\x20" . $qBfNK->getMessage()); } goto sqGtj; sqGtj: Gb1KC: goto z_7f0; FGyJ6: return redirect()->Gxr_2("\141\x64\x6d\151\156\x2e\153\145\x6c\165\x68\x61\x6e\x2e\x69\x6e\x64\x65\x78")->qicK_("\x73\165\x63\x63\x65\163\x73", $Ex9cX); goto Li0SD; kKNcP: $b2Wim = false; goto THcmd; NxLZ5: $bLKJB->update(["\x73\164\141\x74\x75\x73\137\x6b\x65\x6c\x75\150\141\x6e" => "\163\x65\x6c\145\x73\141\151", "\155\141\163\x61\x6c\x61\x68" => htmlspecialchars(strip_tags($den9F->TQAor)), "\165\163\x65\x72\137\151\144" => Auth::p23jm()]); goto zQJUF; z_7f0: $Ex9cX = "\x4b\145\154\x75\150\x61\156\40\142\145\162\x68\x61\x73\x69\x6c\x20\x64\151\163\x65\x6c\x65\x73\x61\x69\x6b\141\156\x20\144\x61\156\40\144\x69\x63\x61\164\141\x74\40\160\145\x6e\171\x65\x62\141\142\57\x6d\x61\163\x61\154\141\x68\156\171\141\x21"; goto XVBaK; kc2g7: $den9F->validate(["\151\144\x5f\153\145\x6c\165\150\x61\156" => "\162\145\161\165\151\x72\x65\144\x7c\151\x6e\x74\145\x67\145\162", "\x6d\141\163\141\x6c\x61\150" => "\162\145\161\165\x69\162\145\x64\x7c\163\164\x72\151\x6e\147"]); goto iQHol; XZ9vK: $vyWEt = $bLKJB->UJoNp->MbKDH ?? "\x50\145\x6c\141\156\x67\x67\x61\x6e"; goto GkNPu; THcmd: if (!($lqnNI && !empty($lqnNI->yOwGQ) && !empty($bLKJB->JhdaB))) { goto Gb1KC; } goto XZ9vK; nxOxd: AvVEB: goto FGyJ6; GkNPu: $diyMY = "\x48\x61\154\157\x20\102\x61\160\141\153\57\111\x62\x75\40\52{$vyWEt}\52\12\xa" . "\x4c\x61\x70\157\162\141\x6e\40\x67\141\x6e\x67\147\165\x61\156\x20\x41\156\x64\x61\x20\144\145\156\x67\x61\156\x20\116\157\155\x6f\x72\x20\124\x69\153\x65\x74\x20\52\x23{$bLKJB->lb2hA}\x2a\40\144\x61\156\x20\x6b\x65\x6c\x75\x68\x61\x6e\x20\x2a{$bLKJB->IRCJs}\52\40\164\x65\154\x61\x68\x20\142\x65\x72\150\141\x73\x69\x6c\x20\x64\151\163\145\154\145\x73\x61\151\153\x61\x6e\40\157\x6c\x65\x68\x20\x70\x65\164\x75\x67\141\x73\40\153\141\x6d\x69\56\xa\12" . "\x2a\104\x65\164\x61\151\154\x20\120\145\156\171\145\142\141\142\x20\x2f\40\123\157\154\x75\x73\151\72\52\xa" . "{$bLKJB->TQAor}\xa\12" . "\124\145\162\151\x6d\141\153\141\163\x69\150\40\x61\164\x61\x73\x20\x6b\145\160\145\162\x63\x61\171\x61\x61\156\40\101\x6e\x64\141\40\155\145\156\147\x67\165\156\x61\153\x61\x6e\40\154\141\x79\141\156\x61\156\x20\x69\156\164\x65\162\156\x65\x74\40\x6b\x61\155\151\56"; goto pwKt5; iQHol: $bLKJB = Keluhan::qick_("\160\145\x6c\141\x6e\147\x67\141\x6e")->J_IB5($den9F->YrW9L); goto NxLZ5; zQJUF: $lqnNI = DB::k6gOv("\164\142\154\x5f\x74\x6f\153\x65\156")->gVsmS("\151\144\137\164\157\153\145\156", 1)->first(); goto kKNcP; Li0SD: } public function z9CRd($uksSr) { goto q4iFm; vCRyy: if (file_exists($tMmNE)) { goto XVV27; } goto tG3cD; V3s12: return response()->file($tMmNE); goto wAOXX; q4iFm: $tMmNE = base_path("\141\144\x6d\151\156\x69\x73\x74\x72\x61\x74\157\x72\x2f\x70\141\147\145\57\x6b\x65\154\165\x68\141\156\57\x69\155\141\x67\145\x73\57" . $uksSr); goto vCRyy; d6Y1v: XVV27: goto V3s12; tG3cD: abort(404); goto d6Y1v; wAOXX: } public function V3raZ(Request $den9F) { goto dXI2R; DcEjb: m_9i0: goto Q5G20; S9VVw: if (!($HCiaN && !isset($HCiaN->B0tIX))) { goto EtqyB; } goto zhY0G; D0eyJ: $hAiii = $den9F->get("\164\141\156\x67\147\141\154", date("\131\x2d\x6d\x2d\x64")); goto un2OY; Un_PE: $HREPw = "\x4c\141\160\x6f\162\x61\x6e\x20\x4b\x65\x6c\x75\150\141\156\40\102\165\x6c\x61\156\x61\x6e\x20\50" . ($FVetC === "\x73\x65\x6d\165\x61" ? "\123\145\x6d\x75\x61\x20\123\164\x61\x74\x75\163" : ucfirst($FVetC)) . "\x29\x20\x2d\x20" . \BPQVF\Carbon::create()->VZWLd((int) $SvXxy)->ntNW_("\x46") . "\40" . $hsFQ5; goto WMs5A; aBZui: EtqyB: goto cr6yV; jI5le: $dSJoX->TOn_2("\164\141\156\147\147\x61\x6c", $SvXxy)->ZsKzU("\x74\x61\x6e\147\x67\141\154", $hsFQ5); goto Un_PE; dZdel: goto TZJKS; goto hU1xD; zTMmm: $HREPw = "\114\141\x70\x6f\162\141\x6e\40\x4b\145\x6c\165\x68\141\156\40\115\x69\x6e\x67\x67\x75\x61\x6e\40\x28" . ($FVetC === "\x73\145\155\x75\x61" ? "\x53\145\155\165\x61\40\123\x74\x61\x74\165\163" : ucfirst($FVetC)) . "\x29\x20\x2d\x20" . \bpqVF\Carbon::parse($EIKSZ)->NTnw_("\x64\x20\106\x20\131") . "\40\x73\x2f\144\x20" . \BPQvf\Carbon::parse($thbFl)->ntNW_("\x64\40\106\40\131"); goto Y_qL_; uq2ZL: if ($BKG5E === "\x6d\x69\156\147\x67\165\141\x6e") { goto m_9i0; } goto dVKQM; ejfII: $dSJoX = Keluhan::qicK_("\x70\x65\154\141\x6e\x67\147\x61\x6e")->mqcib("\x69\x64\137\160\x65\x6c\x61\x6e\147\147\x61\156", Pelanggan::duvK3()->yu00q("\151\144\x5f\160\145\x6c\141\156\147\x67\141\156"))->PojJE("\x74\141\156\x67\147\141\x6c", "\x61\163\143"); goto X5B9B; cr6yV: return view("\x61\x64\155\x69\x6e\x2e\x6b\145\154\165\150\141\x6e\56\x70\162\151\x6e\164", compact("\x6b\145\x6c\165\150\x61\156", "\164\151\164\x6c\145", "\x70\162\x6f\146\x69\x6c\145", "\164\151\x70\145", "\x73\164\141\164\x75\163")); goto mOQND; dXI2R: $BKG5E = $den9F->get("\x74\151\160\145", "\x62\165\154\141\x6e\141\x6e"); goto EGL8g; VT1wD: $bLKJB = $dSJoX->get(); goto qsw43; KFCXl: if (!($FVetC !== "\x73\145\x6d\165\x61")) { goto TFF7q; } goto mpKbC; x3T9d: $HREPw = "\x4c\141\x70\157\x72\x61\x6e\40\113\145\154\165\x68\x61\156\40\110\x61\162\x69\141\156\40\50" . ($FVetC === "\163\x65\155\x75\141" ? "\123\x65\x6d\x75\x61\x20\x53\164\x61\164\x75\x73" : ucfirst($FVetC)) . "\51\40\x2d\x20" . \bPqVf\Carbon::parse($hAiii)->NtNw_("\144\x20\x46\40\x59"); goto REsr7; hU1xD: zdgF7: goto D0eyJ; dVKQM: if ($BKG5E === "\142\165\154\141\156\141\x6e") { goto qKePe; } goto rGDul; mpKbC: $dSJoX->gvSMS("\x73\164\141\x74\165\163\x5f\x6b\145\154\x75\x68\x61\x6e", $FVetC); goto EhCfk; ITWAi: FW21t: goto FaHst; i8N0I: $thbFl = $den9F->get("\x74\147\154\137\x73\x65\154\145\x73\141\151", date("\x59\x2d\155\x2d\144")); goto cNYKE; W5yz5: $hsFQ5 = $den9F->get("\x74\141\x68\165\156\137\x62\x75\x6c\x61\156", date("\131")); goto jI5le; evuBn: if ($BKG5E === "\150\x61\x72\151\x61\156") { goto zdgF7; } goto uq2ZL; X5B9B: $HREPw = "\114\141\x70\x6f\x72\141\156\x20\x4b\145\154\x75\150\x61\156\40\120\x65\154\141\x6e\x67\147\141\x6e"; goto KFCXl; gObgu: TZJKS: goto VT1wD; Fkrw_: $SvXxy = $den9F->get("\142\x75\154\141\x6e", date("\155")); goto W5yz5; qsw43: $HCiaN = DB::k6gOv("\164\142\137\x70\x72\157\146\151\x6c\x65")->first(); goto S9VVw; Vc_kI: $dSJoX->ZsKZU("\164\141\x6e\x67\147\141\x6c", $hsFQ5); goto cVGab; zhY0G: $HCiaN->B0tIX = $HCiaN->JWHjq ?? ''; goto aBZui; bWXOz: qKePe: goto Fkrw_; cVGab: $HREPw = "\114\141\x70\157\162\x61\156\40\113\x65\x6c\165\150\x61\156\x20\124\141\150\x75\156\x61\156\40\50" . ($FVetC === "\163\x65\155\x75\141" ? "\x53\145\155\x75\141\x20\123\x74\141\164\x75\x73" : ucfirst($FVetC)) . "\x29\40\55\40" . $hsFQ5; goto gObgu; Q5G20: $EIKSZ = $den9F->get("\x74\x67\x6c\x5f\155\x75\154\141\x69", date("\x59\55\155\55\144", strtotime("\x2d\66\x20\144\x61\171\163"))); goto i8N0I; EhCfk: TFF7q: goto evuBn; WMs5A: goto TZJKS; goto ITWAi; EGL8g: $FVetC = $den9F->get("\x73\164\x61\164\165\163", "\x73\145\155\165\141"); goto ejfII; cNYKE: $dSJoX->EnScX("\x74\x61\x6e\x67\147\x61\x6c", [$EIKSZ . "\x20\x30\60\x3a\x30\x30\x3a\60\60", $thbFl . "\40\x32\x33\x3a\x35\x39\72\65\71"]); goto zTMmm; rGDul: if ($BKG5E === "\164\x61\150\x75\156\x61\156") { goto FW21t; } goto dZdel; REsr7: goto TZJKS; goto DcEjb; un2OY: $dSJoX->svrNX("\x74\x61\156\147\147\141\154", $hAiii); goto x3T9d; Y_qL_: goto TZJKS; goto bWXOz; FaHst: $hsFQ5 = $den9F->get("\x74\141\x68\x75\156", date("\x59")); goto Vc_kI; mOQND: } }
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\Keluhan;
+use App\Models\Pelanggan;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+
+class AdminKeluhanController extends Controller
+{
+    public function index()
+    {
+        // Ambil data keluhan beserta data pelanggan terkait (scoped by branch access)
+        $keluhan = Keluhan::with(['pelanggan'])
+            ->whereIn('id_pelanggan', Pelanggan::allowedForUser()->pluck('id_pelanggan'))
+            ->orderBy('id_keluhan', 'desc')
+            ->get();
+        return view('admin.keluhan.index', compact('keluhan'));
+    }
+
+    public function proses(Request $request)
+    {
+        $request->validate([
+            'id_keluhan' => 'required|integer',
+        ]);
+
+        $keluhan = Keluhan::findOrFail($request->id_keluhan);
+        
+        // Ubah status keluhan menjadi proses
+        $keluhan->update([
+            'status_keluhan' => 'proses',
+            'user_id' => Auth::id(), // Staff yang memproses keluhan
+        ]);
+
+        return redirect()->route('admin.keluhan.index')->with('success', 'Keluhan berhasil diperbarui ke status: Proses!');
+    }
+
+    public function selesai(Request $request)
+    {
+        $request->validate([
+            'id_keluhan' => 'required|integer',
+            'masalah' => 'required|string',
+        ]);
+
+        $keluhan = Keluhan::with('pelanggan')->findOrFail($request->id_keluhan);
+        
+        // Ubah status keluhan menjadi selesai dan catat masalah/penyebab
+        $keluhan->update([
+            'status_keluhan' => 'selesai',
+            'masalah' => htmlspecialchars(strip_tags($request->masalah)),
+            'user_id' => Auth::id(), // Staff yang menyelesaikan keluhan
+        ]);
+
+        // Kirim Notifikasi WhatsApp ke Client via Fonnte API
+        $tokenInfo = DB::table('tbl_token')->where('id_token', 1)->first();
+        $waSent = false;
+        
+        if ($tokenInfo && !empty($tokenInfo->token) && !empty($keluhan->no_wa)) {
+            $nama_pelanggan = $keluhan->pelanggan->nama_pelanggan ?? 'Pelanggan';
+            $pesan = "Halo Bapak/Ibu *{$nama_pelanggan}*\n\n"
+                   . "Laporan gangguan Anda dengan Nomor Tiket *#{$keluhan->nomor_tiket}* dan keluhan *{$keluhan->judul_keluhan}* telah berhasil diselesaikan oleh petugas kami.\n\n"
+                   . "*Detail Penyebab / Solusi:*\n"
+                   . "{$keluhan->masalah}\n\n"
+                   . "Terimakasih atas kepercayaan Anda menggunakan layanan internet kami.";
+
+            try {
+                $response = \Illuminate\Support\Facades\Http::withHeaders([
+                    'Authorization' => $tokenInfo->token
+                ])->asForm()->post('https://api.fonnte.com/send', [
+                    'target' => $keluhan->no_wa,
+                    'message' => $pesan,
+                    'countryCode' => '62'
+                ]);
+                
+                $resData = $response->json();
+                if ($response->successful() && isset($resData['status']) && $resData['status'] === true) {
+                    $waSent = true;
+                }
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error('Fonnte API Error Keluhan Selesai: ' . $e->getMessage());
+            }
+        }
+
+        $successMsg = 'Keluhan berhasil diselesaikan dan dicatat penyebab/masalahnya!';
+        if ($waSent) {
+            $successMsg .= ' Notifikasi WhatsApp telah dikirim ke pelanggan.';
+        }
+
+        return redirect()->route('admin.keluhan.index')->with('success', $successMsg);
+    }
+
+    public function showGambar($filename)
+    {
+        $path = base_path('administrator/page/keluhan/images/' . $filename);
+        if (!file_exists($path)) {
+            abort(404);
+        }
+        return response()->file($path);
+    }
+
+    public function printReport(Request $request)
+    {
+        $tipe = $request->get('tipe', 'bulanan');
+        $status = $request->get('status', 'semua');
+        
+        $query = Keluhan::with('pelanggan')
+            ->whereIn('id_pelanggan', Pelanggan::allowedForUser()->pluck('id_pelanggan'))
+            ->orderBy('tanggal', 'asc');
+        $title = 'Laporan Keluhan Pelanggan';
+
+        // Filter Status
+        if ($status !== 'semua') {
+            $query->where('status_keluhan', $status);
+        }
+
+        // Filter Period
+        if ($tipe === 'harian') {
+            $tanggal = $request->get('tanggal', date('Y-m-d'));
+            $query->whereDate('tanggal', $tanggal);
+            $title = 'Laporan Keluhan Harian (' . ($status === 'semua' ? 'Semua Status' : ucfirst($status)) . ') - ' . \Carbon\Carbon::parse($tanggal)->translatedFormat('d F Y');
+        } elseif ($tipe === 'mingguan') {
+            $tgl_mulai = $request->get('tgl_mulai', date('Y-m-d', strtotime('-6 days')));
+            $tgl_selesai = $request->get('tgl_selesai', date('Y-m-d'));
+            $query->whereBetween('tanggal', [$tgl_mulai . ' 00:00:00', $tgl_selesai . ' 23:59:59']);
+            $title = 'Laporan Keluhan Mingguan (' . ($status === 'semua' ? 'Semua Status' : ucfirst($status)) . ') - ' . \Carbon\Carbon::parse($tgl_mulai)->translatedFormat('d F Y') . ' s/d ' . \Carbon\Carbon::parse($tgl_selesai)->translatedFormat('d F Y');
+        } elseif ($tipe === 'bulanan') {
+            $bulan = $request->get('bulan', date('m'));
+            $tahun = $request->get('tahun_bulan', date('Y'));
+            $query->whereMonth('tanggal', $bulan)->whereYear('tanggal', $tahun);
+            $title = 'Laporan Keluhan Bulanan (' . ($status === 'semua' ? 'Semua Status' : ucfirst($status)) . ') - ' . \Carbon\Carbon::create()->month((int)$bulan)->translatedFormat('F') . ' ' . $tahun;
+        } elseif ($tipe === 'tahunan') {
+            $tahun = $request->get('tahun', date('Y'));
+            $query->whereYear('tanggal', $tahun);
+            $title = 'Laporan Keluhan Tahunan (' . ($status === 'semua' ? 'Semua Status' : ucfirst($status)) . ') - ' . $tahun;
+        }
+
+        $keluhan = $query->get();
+        
+        $profile = DB::table('tb_profile')->first();
+        if ($profile && !isset($profile->telepon)) {
+            $profile->telepon = $profile->telpon ?? '';
+        }
+
+        return view('admin.keluhan.print', compact('keluhan', 'title', 'profile', 'tipe', 'status'));
+    }
+}
+

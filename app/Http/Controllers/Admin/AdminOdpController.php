@@ -1,8 +1,115 @@
 <?php
-/*   __________________________________________________
-    |  Obfuscated by YAK Pro - Php Obfuscator  3.0.0   |
-    |              on 2026-06-24 23:14:49              |
-    |    GitHub: https://github.com/pk-fr/yakpro-po    |
-    |__________________________________________________|
-*/
- namespace m71Jr\xZ1tU\fnHFF\lP2k1; use M71JR\Xz1tu\Fnhff\YuFUs; use m71jR\XpAcO\MdwlM; use M71Jr\xpacO\gRBbl; use mVyyO\XZ1tu\OHHiD; use mvyYo\bTkLJ\Lp8pf\hKwLz; class AdminOdpController extends Controller { public function h0I_0(Request $den9F) { goto stT0i; X2GLT: return view("\x61\x64\155\151\156\x2e\157\x64\x70\56\x69\x6e\x64\145\x78", compact("\x6f\x64\160", "\157\x64\143")); goto SH6wT; stT0i: $bg0dF = Odp::QIcK_(["\x6f\144\x63\104\145\x74\141\x69\x6c", "\160\145\x6c\141\156\147\147\x61\156\x73\56\x70\x61\153\145\x74\x44\145\x74\141\151\154"])->agosd("\160\x65\154\x61\x6e\x67\x67\x61\156\x73")->pOjJE("\151\144\137\x6f\144\x70", "\144\x65\x73\143")->get(); goto Zy_Pa; Zy_Pa: $gydFO = Odc::pojje("\x6e\141\155\x61\x5f\x6f\144\143")->get(); goto X2GLT; SH6wT: } public function P6tXP(Request $den9F) { goto VrCEc; VrCEc: $den9F->validate(["\x6e\141\155\141\137\x6f\x64\160" => "\x72\x65\161\165\x69\x72\x65\144\x7c\x73\164\162\x69\x6e\x67\174\x6d\x61\x78\x3a\62\x35\65", "\x70\x6f\162\164\x5f\x6f\x64\160" => "\x72\145\161\x75\x69\162\145\x64\174\x73\x74\162\x69\x6e\x67\174\155\x61\170\x3a\63\60", "\154\x6f\143\x61\164\x69\x6f\156" => "\162\145\161\165\x69\x72\x65\144\174\x73\x74\x72\151\x6e\147", "\x6f\x64\143" => "\x72\145\x71\165\151\162\x65\144\174\151\156\x74\145\147\145\x72\174\x65\170\x69\163\164\163\x3a\164\x62\154\x5f\157\x64\143\x2c\151\144\x5f\x6f\x64\143", "\x72\145\144\x61\x6d\141\156" => "\x6e\165\x6c\x6c\141\x62\154\x65\174\163\x74\162\151\156\147\x7c\155\x61\170\72\x35\x30"]); goto axXwf; Lxdsl: return redirect()->gXr_2("\x61\144\155\x69\156\56\x6f\x64\x70\x2e\151\x6e\144\145\170")->qiCK_("\163\x75\143\143\x65\163\163", "\117\104\120\x20\x62\x61\162\x75\40\x62\145\162\150\141\x73\x69\x6c\40\144\x69\164\141\x6d\142\141\x68\153\x61\156\x21"); goto X0E5B; axXwf: Odp::create(["\156\141\x6d\141\137\x6f\x64\x70" => $den9F->uhofv, "\x70\x6f\162\164\137\x6f\x64\160" => $den9F->A3iaj, "\x6c\x6f\x63\141\164\151\x6f\x6e" => $den9F->i4HEm, "\157\144\x63" => $den9F->j5bsd, "\162\x65\144\x61\x6d\x61\x6e" => $den9F->V0orf]); goto Lxdsl; X0E5B: } public function update(Request $den9F) { goto PjV10; gZ9To: return redirect()->GxR_2("\141\144\x6d\x69\x6e\56\157\144\160\56\x69\x6e\x64\145\170")->QIcK_("\x73\165\x63\x63\145\x73\163", "\x4f\x44\x50\x20\142\x65\x72\150\141\163\151\154\x20\144\151\x70\x65\162\142\x61\x72\165\x69\41"); goto EKokc; PjV10: $den9F->validate(["\x69\144\137\x6f\144\160" => "\x72\x65\161\165\151\162\145\x64\x7c\x69\156\164\x65\147\145\x72\x7c\145\x78\151\x73\x74\x73\x3a\x74\142\x6c\137\157\x64\160\54\x69\144\137\x6f\144\x70", "\156\x61\x6d\x61\137\157\144\160" => "\x72\145\x71\165\x69\162\145\144\174\163\164\x72\x69\156\x67\174\155\141\x78\x3a\62\65\x35", "\160\x6f\x72\x74\137\157\x64\x70" => "\x72\x65\x71\165\x69\x72\145\x64\x7c\x73\164\x72\151\156\x67\174\155\x61\x78\x3a\x33\60", "\154\157\x63\x61\x74\x69\x6f\x6e" => "\x72\145\161\x75\151\x72\145\x64\174\x73\164\x72\x69\x6e\x67", "\157\x64\143" => "\x72\145\x71\x75\151\162\145\x64\174\x69\x6e\x74\x65\x67\145\162\x7c\145\170\x69\163\164\x73\72\164\x62\154\x5f\x6f\144\143\x2c\151\x64\x5f\157\x64\143", "\162\145\x64\141\155\141\x6e" => "\x6e\x75\x6c\154\141\142\x6c\145\174\x73\164\x72\151\156\x67\174\155\x61\170\x3a\65\x30"]); goto q_XG4; MiZja: $bg0dF->update(["\156\x61\x6d\141\137\x6f\x64\160" => $den9F->uhofv, "\160\x6f\162\164\x5f\157\x64\x70" => $den9F->A3iaj, "\x6c\x6f\143\x61\164\x69\157\x6e" => $den9F->i4HEm, "\x6f\x64\143" => $den9F->j5bsd, "\162\145\144\x61\x6d\x61\x6e" => $den9F->V0orf]); goto gZ9To; q_XG4: $bg0dF = Odp::J_Ib5($den9F->vkPvA); goto MiZja; EKokc: } public function destroy(Request $den9F) { goto tCkze; tCkze: $den9F->validate(["\151\144\137\157\x64\160" => "\x72\145\161\165\x69\x72\x65\144\x7c\x69\x6e\164\x65\147\x65\x72\x7c\x65\170\151\163\164\x73\72\164\142\x6c\137\157\144\x70\x2c\x69\x64\x5f\157\144\x70"]); goto Z2bHv; Lbeg9: Clj3w: goto fxpha; VbQFt: if (!($qwHDa > 0)) { goto Clj3w; } goto VtUpW; VtUpW: return back()->aBL7M(["\x65\162\162\x6f\162" => "\x47\x61\x67\x61\x6c\40\155\145\x6e\x67\x68\x61\x70\x75\163\40\x4f\104\x50\x2e\x20\x4d\141\x73\x69\x68\40\164\145\162\x64\x61\x70\141\164\40" . $qwHDa . "\40\x70\x65\x6c\141\x6e\x67\147\141\x6e\40\171\141\x6e\147\x20\x74\145\x72\x68\x75\x62\165\156\147\40\x6b\x65\40\x4f\104\120\x20\151\156\151\56"]); goto Lbeg9; fxpha: $bg0dF = Odp::j_IB5($den9F->vkPvA); goto XohaM; Bi2RF: return redirect()->GXR_2("\141\144\x6d\151\156\56\157\144\160\56\x69\156\144\x65\170")->Qick_("\163\x75\143\x63\145\x73\163", "\117\x44\120\40\142\x65\x72\x68\141\x73\x69\x6c\40\x64\x69\150\x61\x70\165\x73\x21"); goto Ae91N; XohaM: $bg0dF->delete(); goto Bi2RF; Z2bHv: $qwHDa = DB::K6GoV("\164\142\x5f\160\145\x6c\x61\x6e\x67\x67\x61\156")->GVsMs("\x6f\144\x70", $den9F->vkPvA)->count(); goto VbQFt; Ae91N: } public function KQ5ZG() { goto YB3_f; z3xZo: return response()->U0Xql($cSyDB); goto nZsYU; QyjBa: foreach ($k_oCJ as $jTLz7) { goto MtXrK; LBXvP: AKYh8: goto U1ucj; tBJc2: wEQeu: goto JxW6M; jlZtI: if (!(count($roSmB) == 2)) { goto AKYh8; } goto UZC9L; OtKMZ: foreach ($jTLz7->I0mrw as $qSAXv) { $ZaY4s[] = ["\156\141\155\141" => $qSAXv->MbKDH, "\x6b\157\144\x65" => $qSAXv->pbcQr]; w1NYH: } goto bKkh4; tj0KI: $roSmB = explode("\x2c", $jTLz7->i4HEm); goto jlZtI; bKkh4: OvczO: goto yfx3n; U1ucj: NPTp4: goto tBJc2; UZC9L: $ZaY4s = []; goto OtKMZ; MtXrK: if (empty($jTLz7->i4HEm)) { goto NPTp4; } goto tj0KI; yfx3n: $cSyDB[] = ["\x69\x64\x5f\x6f\x64\x70" => $jTLz7->vkPvA, "\x6e\x61\155\x61\137\157\x64\x70" => $jTLz7->uhofv, "\160\x6f\x72\164\x5f\x6f\x64\x70" => $jTLz7->A3iaj, "\162\145\144\141\155\x61\156" => $jTLz7->V0orf ?? "\x2d", "\156\141\x6d\141\x5f\x6f\x64\143" => $jTLz7->IW92n->Lj18V ?? "\116\57\101", "\x63\154\x69\145\x6e\164\163" => $ZaY4s, "\x6c\x61\164" => floatval(trim($roSmB[0])), "\154\156\147" => floatval(trim($roSmB[1]))]; goto LBXvP; JxW6M: } goto I8RNs; YB3_f: $k_oCJ = Odp::qIck_(["\157\x64\x63\104\x65\164\x61\x69\x6c", "\x70\x65\154\x61\x6e\x67\147\x61\156\163"])->get(); goto QUWWp; QUWWp: $cSyDB = []; goto QyjBa; I8RNs: mMCo1: goto z3xZo; nZsYU: } }
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\Odp;
+use App\Models\Odc;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+
+class AdminOdpController extends Controller
+{
+    public function index(Request $request)
+    {
+        $odp = Odp::with(['odcDetail', 'pelanggans.paketDetail'])->withCount('pelanggans')->orderBy('id_odp', 'desc')->get();
+        $odc = Odc::orderBy('nama_odc')->get();
+        return view('admin.odp.index', compact('odp', 'odc'));
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'nama_odp' => 'required|string|max:255',
+            'port_odp' => 'required|string|max:30',
+            'location' => 'required|string',
+            'odc' => 'required|integer|exists:tbl_odc,id_odc',
+            'redaman' => 'nullable|string|max:50',
+        ]);
+
+        Odp::create([
+            'nama_odp' => $request->nama_odp,
+            'port_odp' => $request->port_odp,
+            'location' => $request->location,
+            'odc' => $request->odc,
+            'redaman' => $request->redaman,
+        ]);
+
+        return redirect()->route('admin.odp.index')->with('success', 'ODP baru berhasil ditambahkan!');
+    }
+
+    public function update(Request $request)
+    {
+        $request->validate([
+            'id_odp' => 'required|integer|exists:tbl_odp,id_odp',
+            'nama_odp' => 'required|string|max:255',
+            'port_odp' => 'required|string|max:30',
+            'location' => 'required|string',
+            'odc' => 'required|integer|exists:tbl_odc,id_odc',
+            'redaman' => 'nullable|string|max:50',
+        ]);
+
+        $odp = Odp::findOrFail($request->id_odp);
+        $odp->update([
+            'nama_odp' => $request->nama_odp,
+            'port_odp' => $request->port_odp,
+            'location' => $request->location,
+            'odc' => $request->odc,
+            'redaman' => $request->redaman,
+        ]);
+
+        return redirect()->route('admin.odp.index')->with('success', 'ODP berhasil diperbarui!');
+    }
+
+    public function destroy(Request $request)
+    {
+        $request->validate([
+            'id_odp' => 'required|integer|exists:tbl_odp,id_odp',
+        ]);
+
+        // Cek jika ODP masih memiliki pelanggan
+        $clientCount = DB::table('tb_pelanggan')->where('odp', $request->id_odp)->count();
+        if ($clientCount > 0) {
+            return back()->withErrors(['error' => 'Gagal menghapus ODP. Masih terdapat ' . $clientCount . ' pelanggan yang terhubung ke ODP ini.']);
+        }
+
+        $odp = Odp::findOrFail($request->id_odp);
+        $odp->delete();
+
+        return redirect()->route('admin.odp.index')->with('success', 'ODP berhasil dihapus!');
+    }
+
+    public function getCoordinates()
+    {
+        $odps = Odp::with(['odcDetail', 'pelanggans'])->get();
+        $coordinates = [];
+
+        foreach ($odps as $row) {
+            if (!empty($row->location)) {
+                $coord_parts = explode(',', $row->location);
+                if (count($coord_parts) == 2) {
+                    $clientsList = [];
+                    foreach ($row->pelanggans as $p) {
+                        $clientsList[] = [
+                            'nama' => $p->nama_pelanggan,
+                            'kode' => $p->kode_pelanggan,
+                        ];
+                    }
+
+                    $coordinates[] = [
+                        'id_odp' => $row->id_odp,
+                        'nama_odp' => $row->nama_odp,
+                        'port_odp' => $row->port_odp,
+                        'redaman' => $row->redaman ?? '-',
+                        'nama_odc' => $row->odcDetail->nama_odc ?? 'N/A',
+                        'clients' => $clientsList,
+                        'lat' => floatval(trim($coord_parts[0])),
+                        'lng' => floatval(trim($coord_parts[1]))
+                    ];
+                }
+            }
+        }
+
+        return response()->json($coordinates);
+    }
+}

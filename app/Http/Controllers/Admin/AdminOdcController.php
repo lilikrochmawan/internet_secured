@@ -1,8 +1,114 @@
 <?php
-/*   __________________________________________________
-    |  Obfuscated by YAK Pro - Php Obfuscator  3.0.0   |
-    |              on 2026-06-24 23:14:49              |
-    |    GitHub: https://github.com/pk-fr/yakpro-po    |
-    |__________________________________________________|
-*/
- namespace m71JR\xZ1TU\FNhFF\lP2K1; use M71jr\xZ1tu\fNhfF\yUfuS; use M71Jr\XPAcO\GrbBL; use MvYYo\xZ1TU\ohhiD; use MvYyO\BtkLJ\LP8pF\hKWlZ; class AdminOdcController extends Controller { public function H0I_0(Request $den9F) { $gydFO = Odc::QICk_(["\157\x64\x70\163\x2e\160\145\x6c\141\x6e\x67\x67\x61\156\163"])->aGosd("\157\x64\x70\x73")->pojje("\151\144\137\x6f\x64\x63", "\144\145\163\x63")->get(); return view("\x61\144\x6d\x69\156\56\157\144\143\56\x69\156\x64\145\170", compact("\x6f\x64\143")); } public function p6Txp(Request $den9F) { goto w2x4P; WBc9d: Odc::create(["\x6e\x61\155\x61\137\x6f\144\x63" => $den9F->Lj18V, "\160\x65\x72\x61\156\x67\153\x61\x74\x5f\x6f\144\143" => $den9F->R3ND2, "\x70\x6f\x72\x74\x5f\157\x64\x63" => $den9F->y4c5j, "\x6c\157\x63\x61\x74\x69\157\x6e" => $den9F->i4HEm, "\x72\145\144\x61\155\x61\156" => $den9F->V0orf, "\x74\165\x62\x65" => $den9F->EWFmN, "\143\157\x72\x65\x5f\x6e\x75\155\x62\145\x72" => $den9F->Sb2lx]); goto YYjPn; w2x4P: $den9F->validate(["\156\x61\155\x61\137\x6f\144\143" => "\x72\145\x71\165\x69\x72\145\x64\174\163\x74\x72\x69\156\x67\174\x6d\141\x78\72\x32\65\x35", "\160\x65\x72\x61\x6e\147\x6b\x61\164\x5f\157\144\143" => "\x72\x65\161\165\151\x72\145\144\174\163\x74\162\x69\156\147\x7c\x6d\141\x78\72\x35\x30", "\160\x6f\162\x74\x5f\157\x64\x63" => "\162\145\x71\x75\151\x72\x65\x64\174\163\164\x72\x69\156\147\x7c\x6d\141\170\x3a\x33\60", "\x6c\x6f\143\x61\164\151\x6f\x6e" => "\162\x65\x71\x75\x69\x72\x65\x64\174\163\164\x72\151\x6e\147", "\x72\145\x64\x61\155\x61\x6e" => "\x6e\x75\154\x6c\141\142\x6c\145\174\x73\164\162\151\x6e\x67\174\x6d\141\x78\x3a\65\60", "\164\x75\x62\x65" => "\x6e\165\x6c\x6c\x61\x62\154\145\174\163\164\x72\x69\156\x67\x7c\155\141\170\x3a\65\60", "\143\157\162\x65\137\156\165\x6d\142\x65\162" => "\x6e\x75\154\x6c\x61\142\154\145\174\x69\156\x74\x65\147\x65\x72"]); goto WBc9d; YYjPn: return redirect()->gXr_2("\x61\x64\155\151\x6e\56\157\144\143\56\x69\156\144\145\170")->QicK_("\x73\x75\143\143\145\163\x73", "\x4f\104\x43\x20\142\141\162\165\40\142\145\162\x68\x61\163\x69\154\x20\144\x69\x74\141\x6d\142\141\150\x6b\x61\156\x21"); goto avkCy; avkCy: } public function update(Request $den9F) { goto CKIuO; CKIuO: $den9F->validate(["\151\x64\137\157\x64\143" => "\162\x65\161\x75\151\x72\x65\x64\174\151\156\164\x65\x67\145\162\x7c\145\x78\x69\x73\164\163\x3a\164\142\x6c\137\157\x64\143\x2c\x69\x64\137\x6f\x64\143", "\156\x61\x6d\x61\x5f\x6f\144\143" => "\x72\x65\x71\x75\x69\162\145\144\174\163\164\x72\x69\156\x67\174\155\x61\170\x3a\x32\65\65", "\x70\145\x72\141\156\x67\x6b\141\164\137\157\x64\x63" => "\162\x65\x71\165\151\162\145\144\174\163\x74\x72\151\x6e\x67\174\155\x61\170\72\65\60", "\x70\157\162\x74\x5f\157\144\143" => "\162\x65\x71\x75\151\162\x65\x64\174\x73\164\x72\151\156\147\x7c\155\x61\x78\72\x33\x30", "\154\157\143\x61\164\x69\x6f\x6e" => "\162\145\161\x75\151\x72\145\x64\174\x73\164\162\151\156\x67", "\x72\x65\x64\141\155\141\x6e" => "\156\x75\154\x6c\141\x62\154\145\174\163\164\162\x69\156\147\174\x6d\x61\170\x3a\65\x30", "\164\165\x62\x65" => "\156\x75\x6c\x6c\141\142\154\x65\x7c\x73\x74\x72\x69\156\x67\174\155\x61\170\x3a\x35\x30", "\x63\x6f\x72\145\x5f\x6e\x75\155\x62\145\162" => "\x6e\165\154\x6c\141\142\x6c\145\x7c\x69\x6e\x74\x65\x67\x65\162"]); goto MpVXL; jMCF2: $gydFO->update(["\156\141\x6d\141\x5f\157\144\143" => $den9F->Lj18V, "\x70\145\162\141\156\x67\x6b\141\x74\x5f\x6f\x64\143" => $den9F->R3ND2, "\x70\x6f\x72\164\137\x6f\144\x63" => $den9F->y4c5j, "\x6c\x6f\143\141\164\x69\x6f\156" => $den9F->i4HEm, "\162\x65\144\141\x6d\141\156" => $den9F->V0orf, "\164\x75\x62\x65" => $den9F->EWFmN, "\x63\x6f\162\145\137\156\165\155\142\x65\x72" => $den9F->Sb2lx]); goto ocMbq; MpVXL: $gydFO = Odc::J_IB5($den9F->devRq); goto jMCF2; ocMbq: return redirect()->gXr_2("\141\x64\155\151\x6e\56\x6f\144\143\56\x69\x6e\144\x65\x78")->QiCK_("\163\x75\143\x63\x65\163\163", "\117\104\103\40\142\x65\162\150\141\163\151\x6c\40\144\151\160\145\x72\x62\141\162\165\x69\x21"); goto Y94UL; Y94UL: } public function destroy(Request $den9F) { goto ge1w6; QRMIX: return redirect()->GxR_2("\141\144\x6d\151\x6e\x2e\157\144\143\56\x69\156\144\145\170")->qICk_("\x73\165\143\x63\145\163\x73", "\x4f\x44\103\40\x62\145\x72\150\141\163\151\x6c\x20\144\151\150\141\x70\x75\163\x21"); goto wWj71; ge1w6: $den9F->validate(["\151\144\137\157\144\143" => "\x72\x65\x71\x75\151\162\x65\x64\174\151\x6e\x74\145\147\x65\162\174\x65\x78\151\163\164\x73\72\164\x62\x6c\137\x6f\144\143\x2c\x69\x64\137\x6f\144\143"]); goto PTbEA; f6T3q: return back()->AbL7m(["\145\x72\x72\x6f\162" => "\x47\141\x67\x61\154\x20\x6d\x65\x6e\147\150\x61\x70\165\x73\x20\x4f\x44\x43\x2e\x20\115\x61\163\x69\x68\x20\x74\x65\x72\144\x61\160\x61\x74\x20" . $seYb_ . "\x20\117\104\120\40\171\141\156\x67\40\164\x65\162\150\x75\142\x75\x6e\147\40\x6b\145\x20\117\104\x43\x20\x69\x6e\151\x2e"]); goto A2JOK; PTbEA: $seYb_ = DB::k6goV("\164\x62\x6c\x5f\x6f\144\160")->gvsms("\x6f\x64\143", $den9F->devRq)->count(); goto WaZc3; NwA1z: $gydFO = Odc::j_iB5($den9F->devRq); goto l2YAs; WaZc3: if (!($seYb_ > 0)) { goto I9sJQ; } goto f6T3q; l2YAs: $gydFO->delete(); goto QRMIX; A2JOK: I9sJQ: goto NwA1z; wWj71: } public function kq5ZG() { goto s0QzJ; CyKwf: return response()->U0XQL($cSyDB); goto qSFZJ; T2Z8t: AcXuk: goto CyKwf; ukg3e: $cSyDB = []; goto EXlCk; EXlCk: foreach ($pDTa3 as $jTLz7) { goto kHKY3; OZ3xj: cad8y: goto CDZjb; SxE5f: t3zrw: goto rIENg; yO3JO: if (!(count($roSmB) == 2)) { goto cad8y; } goto Abi8g; Abi8g: $cSyDB[] = ["\151\144\137\157\x64\x63" => $jTLz7->devRq, "\156\x61\x6d\x61\x5f\x6f\x64\x63" => $jTLz7->Lj18V, "\x70\157\162\x74\x5f\157\x64\x63" => $jTLz7->y4c5j, "\160\145\162\x61\x6e\147\x6b\x61\164\137\157\x64\x63" => $jTLz7->R3ND2, "\x72\x65\144\141\x6d\141\156" => $jTLz7->V0orf ?? "\55", "\x74\x75\142\145" => $jTLz7->EWFmN ?? "\x2d", "\143\x6f\x72\145\137\x6e\x75\155\x62\x65\162" => $jTLz7->Sb2lx ?? "\55", "\154\141\x74" => floatval(trim($roSmB[0])), "\154\156\x67" => floatval(trim($roSmB[1]))]; goto OZ3xj; kHKY3: if (empty($jTLz7->i4HEm)) { goto mnfRa; } goto zywaG; zywaG: $roSmB = explode("\x2c", $jTLz7->i4HEm); goto yO3JO; CDZjb: mnfRa: goto SxE5f; rIENg: } goto T2Z8t; s0QzJ: $pDTa3 = Odc::i03h4(); goto ukg3e; qSFZJ: } }
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\Odc;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+
+class AdminOdcController extends Controller
+{
+    public function index(Request $request)
+    {
+        $odc = Odc::with(['odps.pelanggans'])->withCount('odps')->orderBy('id_odc', 'desc')->get();
+        return view('admin.odc.index', compact('odc'));
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'nama_odc' => 'required|string|max:255',
+            'perangkat_odc' => 'required|string|max:50',
+            'port_odc' => 'required|string|max:30',
+            'location' => 'required|string',
+            'redaman' => 'nullable|string|max:50',
+            'tube' => 'nullable|string|max:50',
+            'core_number' => 'nullable|integer',
+        ]);
+
+        Odc::create([
+            'nama_odc' => $request->nama_odc,
+            'perangkat_odc' => $request->perangkat_odc,
+            'port_odc' => $request->port_odc,
+            'location' => $request->location,
+            'redaman' => $request->redaman,
+            'tube' => $request->tube,
+            'core_number' => $request->core_number,
+        ]);
+
+        return redirect()->route('admin.odc.index')->with('success', 'ODC baru berhasil ditambahkan!');
+    }
+
+    public function update(Request $request)
+    {
+        $request->validate([
+            'id_odc' => 'required|integer|exists:tbl_odc,id_odc',
+            'nama_odc' => 'required|string|max:255',
+            'perangkat_odc' => 'required|string|max:50',
+            'port_odc' => 'required|string|max:30',
+            'location' => 'required|string',
+            'redaman' => 'nullable|string|max:50',
+            'tube' => 'nullable|string|max:50',
+            'core_number' => 'nullable|integer',
+        ]);
+
+        $odc = Odc::findOrFail($request->id_odc);
+        $odc->update([
+            'nama_odc' => $request->nama_odc,
+            'perangkat_odc' => $request->perangkat_odc,
+            'port_odc' => $request->port_odc,
+            'location' => $request->location,
+            'redaman' => $request->redaman,
+            'tube' => $request->tube,
+            'core_number' => $request->core_number,
+        ]);
+
+        return redirect()->route('admin.odc.index')->with('success', 'ODC berhasil diperbarui!');
+    }
+
+    public function destroy(Request $request)
+    {
+        $request->validate([
+            'id_odc' => 'required|integer|exists:tbl_odc,id_odc',
+        ]);
+
+        // Cek jika ODC masih memiliki ODP
+        $odpCount = DB::table('tbl_odp')->where('odc', $request->id_odc)->count();
+        if ($odpCount > 0) {
+            return back()->withErrors(['error' => 'Gagal menghapus ODC. Masih terdapat ' . $odpCount . ' ODP yang terhubung ke ODC ini.']);
+        }
+
+        $odc = Odc::findOrFail($request->id_odc);
+        $odc->delete();
+
+        return redirect()->route('admin.odc.index')->with('success', 'ODC berhasil dihapus!');
+    }
+
+    public function getCoordinates()
+    {
+        $odcs = Odc::all();
+        $coordinates = [];
+
+        foreach ($odcs as $row) {
+            if (!empty($row->location)) {
+                $coord_parts = explode(',', $row->location);
+                if (count($coord_parts) == 2) {
+                    $coordinates[] = [
+                        'id_odc' => $row->id_odc,
+                        'nama_odc' => $row->nama_odc,
+                        'port_odc' => $row->port_odc,
+                        'perangkat_odc' => $row->perangkat_odc,
+                        'redaman' => $row->redaman ?? '-',
+                        'tube' => $row->tube ?? '-',
+                        'core_number' => $row->core_number ?? '-',
+                        'lat' => floatval(trim($coord_parts[0])),
+                        'lng' => floatval(trim($coord_parts[1]))
+                    ];
+                }
+            }
+        }
+
+        return response()->json($coordinates);
+    }
+}

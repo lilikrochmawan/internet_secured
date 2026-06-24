@@ -1,8 +1,49 @@
 <?php
-/*   __________________________________________________
-    |  Obfuscated by YAK Pro - Php Obfuscator  3.0.0   |
-    |              on 2026-06-24 23:14:51              |
-    |    GitHub: https://github.com/pk-fr/yakpro-po    |
-    |__________________________________________________|
-*/
- namespace m71jr\k9KCE; use MvyYO\Btklj\LP8pF\wzA9D; use mVyYO\BTKlJ\a0ab6; class AppServiceProvider extends ServiceProvider { public function PKxJ2(): void { } public function e3UFH(): void { goto YFGpT; ZU0fw: URL::vTqo9("\150\164\164\160\163"); goto du1Wt; jAcyK: view()->qssQs("\x2a", function ($cp2HN) { goto jl2qe; jl2qe: if (!\mVYYO\BtkLj\Lp8PF\Schema::h4E1c("\x74\142\137\160\x72\x6f\x66\x69\x6c\145")) { goto wtCBL; } goto Qu6i0; DipHg: $cp2HN->QIcK_("\160\x72\x6f\146\151\x6c\145", $HCiaN); goto eySSa; I2dE9: $OKK3Z = \mvYyO\btKlJ\lP8PF\DB::K6gOV("\x74\142\154\x5f\153\x65\x6c\165\x68\x61\x6e")->MQciB("\163\x74\x61\x74\x75\x73\137\x6b\145\x6c\165\x68\x61\156", ["\155\145\x6e\165\156\x67\147\x75", "\160\x72\x6f\163\145\163"])->count(); goto Vh7O1; stFgN: R7R49: goto DipHg; FuRWM: $HCiaN->B0tIX = $HCiaN->JWHjq ?? ''; goto stFgN; UQKwG: if (!\mvyyO\BtKlj\lp8PF\Schema::h4E1C("\164\x62\154\137\x6b\145\154\165\x68\141\x6e")) { goto ZfGxM; } goto I2dE9; Qu6i0: $HCiaN = \mVyYo\btkLj\Lp8PF\DB::k6gov("\x74\x62\x5f\160\x72\x6f\146\151\x6c\145")->first(); goto jt4Fq; jt4Fq: if (!($HCiaN && !isset($HCiaN->B0tIX))) { goto R7R49; } goto FuRWM; Q1QW5: ZfGxM: goto GwilC; Vh7O1: $cp2HN->qIcK_("\x6a\x75\155\154\x61\x68\x4b\145\x6c\x75\x68\141\x6e\101\x6b\164\x69\x66", $OKK3Z); goto Q1QW5; eySSa: wtCBL: goto UQKwG; GwilC: }); goto cXgt7; du1Wt: aO3_K: goto jAcyK; YFGpT: if (!(env("\x41\x50\120\137\x45\x4e\126") !== "\x6c\157\143\x61\154" || request()->vrjKq() || isset($_SERVER["\x48\124\x54\120\137\130\x5f\x46\x4f\x52\127\x41\x52\104\105\x44\x5f\x50\122\117\x54\x4f"]) && $_SERVER["\110\x54\x54\x50\x5f\130\x5f\x46\x4f\122\127\101\x52\x44\x45\x44\137\x50\x52\x4f\124\117"] === "\x68\x74\164\x70\163" || isset($_SERVER["\x48\x54\x54\x50\x53"]) && strtolower($_SERVER["\110\x54\x54\x50\123"]) === "\x6f\x6e")) { goto aO3_K; } goto ZU0fw; cXgt7: } }
+
+namespace App\Providers;
+
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\ServiceProvider;
+
+class AppServiceProvider extends ServiceProvider
+{
+    /**
+     * Register any application services.
+     */
+    public function register(): void
+    {
+        //
+    }
+
+    /**
+     * Bootstrap any application services.
+     */
+    public function boot(): void
+    {
+        if (
+            env('APP_ENV') !== 'local' || 
+            request()->secure() || 
+            (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') || 
+            (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) === 'on')
+        ) {
+            URL::forceScheme('https');
+        }
+
+        view()->composer('*', function ($view) {
+            if (\Illuminate\Support\Facades\Schema::hasTable('tb_profile')) {
+                $profile = \Illuminate\Support\Facades\DB::table('tb_profile')->first();
+                if ($profile && !isset($profile->telepon)) {
+                    $profile->telepon = $profile->telpon ?? '';
+                }
+                $view->with('profile', $profile);
+            }
+
+            if (\Illuminate\Support\Facades\Schema::hasTable('tbl_keluhan')) {
+                $jumlahKeluhanAktif = \Illuminate\Support\Facades\DB::table('tbl_keluhan')
+                    ->whereIn('status_keluhan', ['menunggu', 'proses'])
+                    ->count();
+                $view->with('jumlahKeluhanAktif', $jumlahKeluhanAktif);
+            }
+        });
+    }
+}

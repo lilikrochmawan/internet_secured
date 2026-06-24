@@ -1,8 +1,291 @@
 <?php
-/*   __________________________________________________
-    |  Obfuscated by YAK Pro - Php Obfuscator  3.0.0   |
-    |              on 2026-06-24 23:14:48              |
-    |    GitHub: https://github.com/pk-fr/yakpro-po    |
-    |__________________________________________________|
-*/
- namespace m71jr\Xz1TU\Fnhff\lP2K1; use M71jR\xz1tu\FnhfF\YUfuS; use mvYYO\XZ1tU\oHHiD; use mvyyO\BTkLj\lP8pF\hKwlZ; use mVyYo\BTklJ\lP8pf\XZ1tU; use M71jr\XpACO\RfKJs; class AdminAcsController extends Controller { private function AUry2($S8XLs) { goto gAStF; ZloPT: return false; goto NjKRh; NjKRh: lAqoo: goto memJ7; gAStF: if (!empty($S8XLs)) { goto lAqoo; } goto ZloPT; memJ7: try { goto Ea2tJ; wLzw7: return $FVetC === 200 || $FVetC === 204 || $FVetC === 401; goto wuNJg; X2OcG: $FVetC = $VabCL->hMEHH(); goto wLzw7; Ea2tJ: $VabCL = Http::OtBS9(4)->IGLK6(4)->get($S8XLs); goto X2OcG; wuNJg: } catch (\Exception $qBfNK) { return false; } goto Zex2Z; Zex2Z: } private function xhkmd($v80KZ) { try { DB::delete("\x44\105\x4c\x45\124\105\40\x46\x52\x4f\x4d\x20\164\x62\x5f\x61\x63\163\x5f\x71\x75\x65\165\x65\x20\12\x20\40\x20\x20\40\40\40\x20\40\40\x20\x20\x20\x20\x20\40\127\x48\105\x52\105\40\x73\145\162\x69\141\154\137\x6e\165\x6d\x62\x65\x72\x20\75\40\77\x20\12\40\x20\x20\x20\40\x20\x20\40\x20\x20\40\40\40\40\40\x20\40\x20\x41\x4e\x44\40\x73\x74\141\164\165\163\x20\111\116\40\50\x27\x73\165\x63\x63\x65\163\x73\47\x2c\40\47\x66\141\151\x6c\x65\144\47\51\40\xa\x20\40\40\40\x20\x20\x20\x20\x20\x20\40\40\x20\40\x20\x20\x20\x20\x41\116\104\x20\151\x64\137\x63\157\x6d\155\141\x6e\144\40\116\117\x54\x20\x49\x4e\40\50\12\x20\x20\40\40\x20\x20\x20\x20\x20\x20\40\x20\40\40\x20\x20\40\40\x20\40\40\40\x53\105\114\x45\x43\x54\x20\x69\x64\x5f\x63\157\x6d\155\141\x6e\x64\40\x46\122\117\115\x20\50\xa\40\x20\x20\x20\x20\40\40\x20\x20\x20\x20\x20\40\40\40\40\x20\x20\40\40\40\x20\x20\x20\40\x20\x53\x45\x4c\x45\103\x54\40\x69\144\137\143\157\x6d\x6d\x61\156\x64\40\x46\x52\117\115\x20\164\142\137\141\143\x73\137\x71\x75\x65\x75\145\40\xa\40\x20\x20\x20\40\x20\x20\40\40\40\x20\40\40\40\40\40\x20\x20\x20\x20\x20\x20\x20\x20\40\40\x57\110\x45\122\105\x20\163\x65\162\151\141\154\x5f\156\165\155\x62\145\x72\x20\x3d\x20\x3f\x20\12\40\x20\x20\40\x20\x20\40\40\x20\x20\40\40\40\x20\40\40\40\x20\40\40\40\40\40\40\40\40\x4f\122\x44\105\x52\40\102\131\x20\x69\x64\137\x63\157\155\x6d\x61\x6e\144\40\x44\105\123\x43\x20\12\x20\x20\40\x20\x20\40\40\x20\x20\x20\x20\40\x20\40\x20\40\40\x20\x20\40\40\x20\40\x20\40\40\114\111\115\x49\124\40\x31\60\x30\12\x20\40\x20\40\40\40\40\x20\40\x20\40\40\40\x20\40\40\40\40\x20\40\40\x20\x29\40\x74\155\160\xa\x20\40\x20\x20\40\x20\40\40\x20\40\x20\x20\x20\40\40\x20\x20\x20\51", [$v80KZ, $v80KZ]); } catch (\Exception $qBfNK) { } } public function h0I_0() { goto OJjY9; Fh7Ni: return view("\x61\x64\x6d\x69\156\56\x74\x72\x30\x36\x39\56\x69\x6e\144\145\x78", compact("\143\x70\x65\x73", "\160\x65\x6c\x61\156\147\147\141\x6e")); goto TnkFg; m1man: $MQy9w = Pelanggan::YP858("\x69\x64\137\160\145\154\141\156\147\x67\x61\156", function ($dSJoX) { $dSJoX->Jegne("\151\144\x5f\x70\x65\154\141\x6e\x67\147\x61\x6e")->from("\164\142\137\143\x70\145")->dUpTm("\x69\x64\x5f\x70\x65\154\141\156\147\147\141\x6e"); })->POJJE("\x6e\x61\x6d\x61\137\160\145\154\x61\156\147\x67\x61\156")->get(); goto Fh7Ni; OJjY9: $hG_cA = DB::K6GOV("\164\142\x5f\143\160\145")->aGWFN("\164\x62\137\160\x65\x6c\141\x6e\x67\147\141\156", "\x74\142\x5f\143\160\x65\56\x69\x64\137\160\x65\x6c\x61\x6e\x67\x67\x61\156", "\75", "\x74\142\x5f\160\145\x6c\141\156\x67\x67\x61\156\x2e\x69\x64\x5f\160\145\x6c\x61\x6e\x67\147\x61\x6e")->jegne("\164\x62\x5f\x63\x70\145\56\52", "\164\142\x5f\160\145\154\x61\156\x67\147\x61\x6e\x2e\x6e\x61\155\141\137\160\x65\154\141\x6e\147\147\141\x6e")->pojjE("\x74\142\x5f\143\x70\x65\56\x6c\x61\x73\164\x5f\151\x6e\x66\157\162\x6d", "\x64\145\x73\143")->get(); goto m1man; TnkFg: } public function Rwbm6(Request $den9F) { goto iqlPo; iqlPo: $den9F->validate(["\x69\x64\137\143\160\x65" => "\x72\145\161\x75\x69\162\x65\x64\174\x69\x6e\x74\145\147\x65\162", "\151\144\137\160\145\154\x61\x6e\147\x67\x61\x6e" => "\162\145\161\165\151\162\145\144\x7c\151\156\164\x65\x67\x65\162"]); goto nTWn1; CNrmZ: return redirect()->gxR_2("\x61\144\155\151\x6e\x2e\x74\162\60\x36\71\x2e\x69\x6e\144\x65\170")->qiCK_("\163\x75\143\x63\x65\163\163", "\x42\145\162\150\x61\x73\151\x6c\x20\155\x65\x6e\147\150\x75\x62\x75\156\147\153\x61\156\x20\x43\x50\x45\40\153\145\40\x70\145\154\x61\156\x67\147\141\x6e\x2e"); goto Bj48l; nTWn1: DB::K6GOV("\164\x62\x5f\x63\x70\x65")->gvSMS("\x69\144\137\x63\x70\x65", $den9F->EQ_fc)->update(["\151\x64\137\x70\x65\x6c\x61\156\147\x67\x61\156" => $den9F->nzuo3]); goto CNrmZ; Bj48l: } public function JUxHf(Request $den9F) { goto QpK_8; TgQv6: DB::k6Gov("\x74\142\x5f\x63\x70\x65")->gVSMS("\x69\x64\x5f\x63\160\x65", $den9F->EQ_fc)->update(["\x69\x64\x5f\x70\145\154\x61\156\x67\147\x61\x6e" => null]); goto zYseE; zYseE: return redirect()->Gxr_2("\x61\144\155\x69\156\56\164\162\x30\x36\x39\x2e\x69\x6e\144\x65\170")->QicK_("\x73\x75\x63\143\x65\163\x73", "\x42\145\162\x68\x61\x73\x69\154\40\155\145\x6c\x65\x70\x61\163\40\150\x75\x62\165\x6e\147\x61\x6e\40\160\145\154\141\156\x67\x67\x61\156\x20\144\141\x72\151\40\160\x65\162\x61\156\147\153\x61\164\x20\151\156\x69\56"); goto gPqDz; QpK_8: $den9F->validate(["\151\144\137\143\x70\145" => "\162\145\161\x75\151\162\x65\x64\x7c\x69\156\x74\145\x67\145\x72"]); goto TgQv6; gPqDz: } public function pawUS($dCuFb) { goto AWk8B; df_XC: abort(404, "\x50\x65\162\141\x6e\147\153\x61\164\40\164\151\x64\x61\153\40\144\151\x74\145\155\x75\153\x61\156\x2e"); goto yUp9H; RYaAL: if (!$VnB9A->V5TMc) { goto S5m8g; } goto MXDXr; NzInN: if ($VnB9A) { goto qXatL; } goto df_XC; RL5AI: $czatB = DB::k6gOV("\164\x62\x5f\141\143\x73\x5f\161\165\x65\x75\145")->gvsMS("\163\x65\x72\151\141\154\137\x6e\165\155\142\145\162", $VnB9A->To8h0)->PkBfo("\103\101\123\x45\40\127\x48\105\116\40\163\x74\x61\164\165\x73\x20\111\116\x20\x28\x27\160\145\x6e\144\151\x6e\147\x27\x2c\40\x27\x73\145\x6e\x74\x27\x29\x20\124\x48\x45\x4e\40\x30\40\x45\x4c\123\x45\40\x31\x20\105\116\x44")->pOjJE("\151\144\x5f\143\157\x6d\155\x61\156\x64", "\144\x65\163\x63")->Pygjv(100)->get(); goto m3lMI; m3lMI: return view("\141\x64\155\151\x6e\56\x74\x72\x30\66\71\56\144\x65\x74\x61\x69\154", compact("\x63\160\x65", "\x71\x75\145\165\x65", "\x6f\x64\160\116\x61\155\x65")); goto g52Eq; OZ0OV: $cMhOs = $bg0dF->uhofv; goto hauLH; VK8q4: if (!$bg0dF) { goto oTDf7; } goto OZ0OV; hauLH: oTDf7: goto YPgHa; MXDXr: $bg0dF = DB::k6GOV("\164\x62\154\x5f\157\x64\x70")->GVsms("\x69\144\x5f\157\x64\x70", $VnB9A->V5TMc)->first(); goto VK8q4; tFna3: $cMhOs = "\55"; goto RYaAL; yUp9H: qXatL: goto tFna3; AWk8B: $VnB9A = DB::K6gOV("\x74\x62\x5f\143\x70\x65")->AgwfN("\x74\x62\137\x70\145\x6c\141\156\x67\x67\141\156", "\164\x62\137\143\160\145\x2e\151\x64\x5f\160\x65\154\141\x6e\147\x67\141\156", "\75", "\164\142\x5f\x70\x65\154\x61\156\147\x67\x61\156\x2e\151\144\x5f\160\145\154\x61\x6e\x67\x67\x61\x6e")->jeGNE("\164\142\137\x63\160\145\56\52", "\x74\x62\137\160\x65\154\x61\x6e\147\x67\141\x6e\56\x6e\141\155\141\137\160\x65\x6c\141\x6e\147\x67\x61\156", "\164\x62\x5f\160\145\x6c\x61\156\147\147\141\x6e\56\153\x6f\144\x65\137\160\145\154\x61\156\147\147\141\x6e", "\164\142\137\160\145\154\141\156\x67\x67\x61\x6e\x2e\141\154\141\x6d\141\x74", "\x74\x62\137\160\145\154\141\156\x67\147\141\x6e\x2e\x6f\x64\x70")->gvSMS("\x74\x62\x5f\x63\160\145\56\151\144\x5f\x63\x70\145", $dCuFb)->first(); goto NzInN; YPgHa: S5m8g: goto RL5AI; g52Eq: } public function RlLuI(Request $den9F) { goto jkHym; mx5pI: return redirect()->gXR_2("\x61\x64\155\x69\156\x2e\x74\x72\x30\x36\x39\x2e\x64\145\x74\141\151\x6c", $VnB9A->EQ_fc)->aBl7M(["\x65\162\x72\157\162" => "\x47\141\147\141\x6c\40\x6d\x65\156\147\x69\x72\151\x6d\x20\x43\x6f\156\x6e\x65\143\x74\151\157\x6e\x20\x52\x65\161\165\145\x73\x74\56\40\x43\x50\x45\40\155\165\x6e\x67\153\x69\x6e\x20\163\145\144\x61\x6e\x67\40\157\146\146\154\151\x6e\145\40\141\x74\x61\x75\x20\164\x69\x64\141\x6b\x20\x64\141\x70\x61\x74\40\x64\151\152\x61\156\147\x6b\141\x75\x2e"]); goto jlrOO; jkHym: $den9F->validate(["\x69\144\137\x63\160\145" => "\162\145\x71\165\x69\x72\145\144\174\151\x6e\164\x65\147\145\162"]); goto UK1ZS; UK1ZS: $VnB9A = DB::k6Gov("\164\x62\137\x63\x70\x65")->gvSmS("\151\144\137\x63\x70\145", $den9F->EQ_fc)->first(); goto XpbgW; NSB_I: return redirect()->Gxr_2("\141\x64\x6d\x69\156\56\x74\x72\60\x36\x39\56\144\x65\x74\141\x69\x6c", $VnB9A->EQ_fc)->qiCK_("\x73\165\143\143\x65\x73\163", "\x43\157\x6e\x6e\x65\x63\164\151\x6f\x6e\40\x52\x65\x71\165\145\163\164\x20\x74\145\162\153\x69\162\x69\x6d\56\40\x43\x50\105\x20\141\x6b\141\156\40\155\x65\154\141\x6b\x75\153\x61\x6e\40\111\156\x66\x6f\162\x6d\x20\163\145\163\x69\40\x73\145\x73\141\141\x74\40\154\141\x67\151\x2e"); goto xEt26; XpbgW: if ($VnB9A) { goto HHgxw; } goto QiJS3; xEt26: KkZ2l: goto mx5pI; dqRLI: if (!$sjJxH) { goto KkZ2l; } goto NSB_I; zNRDO: HHgxw: goto pEnZh; pEnZh: $sjJxH = $this->auRY2($VnB9A->SjvZx); goto dqRLI; QiJS3: return back()->aBL7M(["\145\162\x72\x6f\162" => "\120\x65\x72\141\x6e\x67\153\x61\164\40\x74\x69\x64\141\x6b\40\144\151\x74\145\155\x75\153\x61\x6e\56"]); goto zNRDO; jlrOO: } public function BO5ID(Request $den9F) { goto Lk0HU; jFOzi: $VnB9A = DB::K6GOV("\x74\x62\x5f\143\x70\x65")->GvsmS("\x69\x64\x5f\143\x70\x65", $den9F->EQ_fc)->first(); goto dJEMu; DRbjG: $this->AURy2($VnB9A->SjvZx); goto bkmG2; drqi3: return back()->aBl7M(["\x65\x72\x72\157\162" => "\x50\x65\162\x61\156\147\x6b\x61\164\x20\x74\151\144\141\x6b\x20\x64\151\164\x65\155\165\x6b\141\156\x2e"]); goto KOXkD; dJEMu: if ($VnB9A) { goto A9Tru; } goto drqi3; XHuHQ: $this->xhKMd($VnB9A->To8h0); goto DRbjG; PstJ2: DB::k6GoV("\164\142\x5f\141\143\163\137\161\165\x65\x75\x65")->insert(["\x73\145\162\151\141\154\x5f\x6e\165\155\x62\x65\162" => $VnB9A->To8h0, "\143\157\x6d\155\141\156\144\137\164\171\x70\x65" => "\122\145\142\x6f\x6f\x74", "\143\157\x6d\155\x61\x6e\144\x5f\144\x61\x74\x61" => "\x7b\175", "\x73\164\141\164\x75\163" => "\160\x65\156\x64\151\x6e\147", "\x63\x72\145\141\164\x65\x64\137\141\164" => now()]); goto XHuHQ; Lk0HU: $den9F->validate(["\151\144\137\x63\160\x65" => "\162\x65\161\165\x69\x72\x65\x64\174\151\x6e\x74\x65\147\145\162"]); goto jFOzi; KOXkD: A9Tru: goto PstJ2; bkmG2: return redirect()->gXr_2("\x61\x64\x6d\x69\156\56\164\x72\x30\66\x39\56\x64\145\x74\141\x69\x6c", $VnB9A->EQ_fc)->qiCk_("\163\165\143\143\145\163\163", "\x50\145\x72\x69\x6e\x74\x61\x68\40\x52\145\142\x6f\157\164\x20\x74\x65\154\141\150\x20\144\x69\155\x61\163\x75\x6b\x6b\141\x6e\40\153\x65\40\144\x61\x6c\x61\155\x20\141\x6e\164\162\145\141\x6e\56"); goto wXzmS; wXzmS: } public function nA6nl(Request $den9F) { goto cn0tH; ekomn: sD9YU: goto UxAj3; xbTSl: uqV1w: goto Jx_t6; B2wSJ: epywj: goto dS5Lx; GoOBx: $C0NRa["\x44\145\x76\x69\143\145\56\120\x50\x50\56\x49\156\x74\x65\162\x66\x61\143\145\56\61\56\x55\x73\145\x72\x6e\x61\x6d\x65"] = $I3JUB; goto rRu95; PUGV3: ZGVy_: goto ueZpv; l3gIl: if (!($q0lZJ !== null && $q0lZJ !== '')) { goto AFopy; } goto xkesr; LWM0q: P057z: goto O_Um_; ze_76: $I3JUB = $den9F->osRpC; goto h_NtG; o4G2N: RaB1o: goto Zjgmf; kOCjt: if (!($I3JUB !== null && $I3JUB !== '')) { goto t0_VR; } goto GoOBx; laIpQ: $znEPA = $den9F->li25l; goto aG_Vf; znFIp: $ehug7 = $den9F->qRIXg; goto CghT1; b_WOK: Hy4KT: goto zKTg2; GogA1: ALsML: goto n8rr6; VT5EF: if ($VnB9A) { goto uqV1w; } goto wvQRn; h_NtG: $Kxx3q = $den9F->Fzg3O; goto OPvCM; eoVnp: $Pn48O = trim($den9F->kOTkv); goto WqlfC; nYWQ_: iwZqT: goto NnsUM; Negpc: $C0NRa[$KRu38] = $Pn48O; goto b_WOK; SW4Y3: $C0NRa["\x49\x6e\164\x65\162\156\145\164\x47\x61\x74\x65\167\141\x79\104\x65\166\151\143\x65\x2e\x55\x73\x65\162\111\156\x74\145\162\146\x61\x63\145\x2e\120\x61\163\x73\x77\x6f\162\144"] = $ehug7; goto B2wSJ; wXUJj: $C0NRa["\111\156\164\145\162\x6e\145\164\107\141\x74\145\167\x61\x79\x44\x65\166\x69\x63\145\x2e\114\x41\x4e\x44\x65\x76\x69\x63\x65\56\61\56\x57\114\x41\116\x43\x6f\x6e\146\x69\x67\x75\x72\x61\x74\x69\157\x6e\56" . $VGlH4 . "\x2e\x53\123\111\104"] = $znEPA; goto MEK5M; xkesr: $C0NRa["\104\x65\x76\151\x63\145\x2e\127\x69\x46\x69\56\101\143\143\x65\163\163\x50\x6f\151\x6e\x74\56\61\56\x53\145\x63\x75\162\151\164\x79\56\x4b\145\171\120\x61\x73\163\160\x68\x72\x61\x73\145"] = $q0lZJ; goto wHhJX; i5fIm: qWKp3: goto LC5kO; n8rr6: if (!($Kxx3q !== null && $Kxx3q !== '')) { goto qWKp3; } goto Ack1W; WNk00: RQ83O: goto W_mYy; b8crS: mCbDG: goto CCc6b; Zjgmf: AFopy: goto kOCjt; WXISa: $I3JUB = $den9F->SPpdL; goto rbAb7; O_Um_: if ($wZRRv === "\164\162\x30\x39\70") { goto liN8g; } goto UKbRu; CCc6b: return redirect()->gxR_2("\x61\144\x6d\x69\x6e\56\x74\162\60\x36\x39\56\x64\x65\164\141\x69\154", $VnB9A->EQ_fc)->abL7M(["\145\x72\x72\x6f\x72" => "\x48\141\162\141\160\x20\155\x61\x73\x75\153\153\141\x6e\40\x6e\x69\154\141\x69\40\x70\x61\162\141\x6d\x65\164\145\162\40\x79\141\x6e\147\x20\166\141\154\x69\144\x2e"]); goto CHch5; tDg42: $C0NRa = []; goto BbKvZ; h1GC2: goto P057z; goto XT034; hptTG: if (empty($VnB9A->VBkRL)) { goto sD9YU; } goto wcYBQ; wcYBQ: $C0NRa["\111\x6e\164\x65\x72\x6e\145\x74\107\141\x74\x65\x77\x61\171\x44\145\166\x69\x63\145\x2e\x4c\101\116\x44\145\x76\x69\x63\x65\56\61\56\127\114\x41\116\x43\x6f\x6e\146\151\147\165\162\x61\x74\x69\157\156\x2e" . $VGlH4 . "\56\x50\x72\x65\123\x68\141\162\x65\x64\x4b\145\171\x2e\x31\x2e\x50\x72\145\x53\150\x61\x72\145\x64\113\x65\x79"] = $q0lZJ; goto ekomn; BbKvZ: $jhfpf = strtolower(trim($VnB9A->qRvbt)); goto eA769; s3R7q: $C0NRa["\x44\x65\166\151\x63\145\56\125\x73\145\x72\x73\56\125\x73\145\x72\x2e\61\56\120\x61\x73\163\167\157\162\144"] = $ehug7; goto Z4vUU; Yqijv: $C0NRa["\104\145\x76\x69\143\145\x2e\x57\151\x46\151\56\x53\123\x49\104\x2e\61\56\123\x53\x49\104"] = $znEPA; goto Fp6FJ; MEK5M: C1bYE: goto nsCXD; LC5kO: if (!($ehug7 !== null && $ehug7 !== '')) { goto epywj; } goto SW4Y3; Wx73y: $C0NRa["\104\x65\166\151\x63\x65\56\127\151\106\x69\56\x41\x63\x63\x65\163\x73\120\157\151\x6e\x74\x2e" . $VGlH4 . "\56\123\x65\143\165\162\151\164\x79\x2e\x4b\x65\x79\120\x61\x73\163\x70\150\162\141\163\x65"] = $q0lZJ; goto o4G2N; wvQRn: return back()->AbL7m(["\145\162\162\157\162" => "\120\x65\x72\141\x6e\147\153\141\164\40\164\151\144\141\x6b\40\x64\x69\x74\145\155\x75\x6b\141\156\x2e"]); goto xbTSl; rbAb7: $Kxx3q = $den9F->NDPAn; goto znFIp; eA769: if (!empty($VnB9A->I6BE8)) { goto YNqtq; } goto WK6YN; nsCXD: lw4C4: goto uhvV1; T3G2q: $q0lZJ = $den9F->E0NOT; goto WXISa; cn0tH: $den9F->validate(["\x69\144\137\x63\160\x65" => "\x72\145\x71\x75\x69\x72\145\144\x7c\151\x6e\x74\145\147\x65\x72", "\160\141\x72\x61\155\137\x74\171\x70\x65" => "\x72\145\161\165\x69\x72\145\x64\x7c\163\164\162\x69\x6e\147"]); goto DgJOM; TQZ0E: $C0NRa["\x44\x65\x76\x69\143\x65\x2e\x57\x69\x46\x69\x2e\x53\123\111\x44\56" . $VGlH4 . "\x2e\123\x53\111\x44"] = $znEPA; goto WNk00; Z4vUU: W6cgJ: goto HJK63; sDjP4: if (!($Kxx3q !== null && $Kxx3q !== '')) { goto iwZqT; } goto a0Mb5; a3ffC: $C0NRa["\x49\156\164\145\162\156\x65\164\x47\x61\x74\145\167\141\x79\104\145\x76\x69\x63\x65\x2e\114\101\x4e\104\x65\166\151\143\x65\56\x31\56\127\114\101\116\x43\x6f\x6e\x66\x69\x67\165\162\141\164\151\x6f\x6e\x2e\x31\x2e\120\x72\145\123\150\x61\162\145\144\113\145\x79\x2e\61\56\x50\x72\145\x53\x68\x61\x72\x65\144\113\x65\171"] = $q0lZJ; goto hptTG; aG_Vf: $q0lZJ = $den9F->TEAep; goto ze_76; X5g5X: if (!($I3JUB !== null && $I3JUB !== '')) { goto ALsML; } goto AuS5_; WK6YN: $VGlH4 = $jhfpf === "\x63\x64\164" || $jhfpf === "\x63\144\141\x74\141" || $jhfpf === "\143\55\144\141\164\x61" ? 6 : 5; goto h1GC2; W_mYy: RJH_M: goto l3gIl; zKTg2: goto JGN4r; goto ZB6gk; UKbRu: if ($wZRRv === "\x74\162\61\x38\x31") { goto ZGVy_; } goto fodig; ueZpv: $znEPA = $den9F->B7VDk; goto T3G2q; rRu95: t0_VR: goto sDjP4; DgJOM: $VnB9A = DB::k6GOv("\164\142\x5f\x63\x70\145")->gvSms("\x69\x64\137\x63\160\x65", $den9F->EQ_fc)->first(); goto VT5EF; XT034: YNqtq: goto UO5zh; wHhJX: if (empty($VnB9A->VBkRL)) { goto RaB1o; } goto Wx73y; a0Mb5: $C0NRa["\x44\x65\166\151\x63\x65\x2e\120\120\x50\x2e\x49\156\x74\x65\x72\x66\141\x63\145\56\61\x2e\120\x61\x73\x73\x77\157\x72\x64"] = $Kxx3q; goto nYWQ_; NnsUM: if (!($ehug7 !== null && $ehug7 !== '')) { goto W6cgJ; } goto s3R7q; Ack1W: $C0NRa["\x49\x6e\x74\145\x72\x6e\x65\164\x47\141\164\x65\x77\141\171\x44\145\166\x69\x63\x65\x2e\127\101\116\x44\x65\166\x69\x63\x65\56\x31\56\x57\101\116\103\157\x6e\x6e\x65\x63\x74\x69\157\x6e\x44\145\166\x69\143\x65\56\x31\56\x57\101\116\120\x50\120\103\157\x6e\156\x65\x63\164\x69\x6f\156\x2e\61\x2e\x50\141\x73\163\x77\157\x72\144"] = $Kxx3q; goto i5fIm; AuS5_: $C0NRa["\x49\156\164\145\x72\156\x65\164\107\141\x74\x65\x77\141\171\104\145\166\x69\x63\x65\x2e\x57\x41\x4e\104\x65\x76\151\143\145\56\x31\56\127\101\116\x43\157\156\x6e\x65\x63\x74\x69\x6f\x6e\104\x65\166\151\143\x65\56\x31\56\x57\x41\x4e\x50\x50\120\x43\x6f\156\156\145\143\164\x69\x6f\156\x2e\61\56\125\x73\145\162\x6e\x61\155\x65"] = $I3JUB; goto GogA1; LmsDF: $C0NRa["\x49\x6e\x74\145\162\x6e\x65\x74\x47\141\x74\x65\167\141\x79\104\x65\x76\151\143\145\x2e\114\x41\x4e\x44\x65\x76\x69\143\x65\x2e\x31\56\x57\114\101\116\x43\157\156\146\151\x67\165\x72\141\164\151\157\x6e\56\61\56\x53\x53\x49\104"] = $znEPA; goto aB51y; HJK63: JGN4r: goto bvCBJ; QMHCI: $this->xhkMd($VnB9A->To8h0); goto sq3I5; iXUj0: return redirect()->GxR_2("\141\144\x6d\151\x6e\56\x74\162\x30\66\x39\56\144\145\x74\141\151\154", $VnB9A->EQ_fc)->Qick_("\163\x75\143\x63\x65\163\163", "\x50\x65\x72\x69\x6e\164\141\150\x20\165\x62\141\x68\x20\x70\141\162\x61\155\145\x74\x65\x72\40\164\145\x6c\x61\x68\x20\144\151\x6d\x61\x73\165\153\x6b\x61\x6e\x20\153\x65\x20\144\x61\x6c\x61\x6d\40\141\156\164\x72\x65\x61\x6e\56"); goto b8crS; bI6cx: DB::K6Gov("\x74\x62\x5f\x61\143\163\x5f\x71\x75\145\x75\145")->insert(["\163\x65\x72\151\x61\x6c\x5f\156\x75\x6d\x62\145\x72" => $VnB9A->To8h0, "\143\x6f\155\155\x61\156\144\137\164\171\x70\x65" => "\x53\145\x74\x50\141\x72\x61\155\145\x74\x65\162\126\141\154\165\x65\x73", "\x63\157\155\x6d\x61\156\144\137\x64\x61\164\141" => json_encode($C0NRa), "\x73\164\x61\164\165\163" => "\160\x65\x6e\x64\151\156\x67", "\143\162\x65\x61\x74\x65\x64\137\x61\x74" => now()]); goto QMHCI; fodig: $KRu38 = trim($den9F->AWX8n); goto eoVnp; zW9mr: if (!($znEPA !== null && $znEPA !== '')) { goto lw4C4; } goto LmsDF; aB51y: if (empty($VnB9A->VBkRL)) { goto C1bYE; } goto wXUJj; bvCBJ: if (empty($C0NRa)) { goto mCbDG; } goto bI6cx; CghT1: if (!($znEPA !== null && $znEPA !== '')) { goto RJH_M; } goto Yqijv; WqlfC: if (!($KRu38 !== '')) { goto Hy4KT; } goto Negpc; UxAj3: WyKiZ: goto X5g5X; sq3I5: $this->aURY2($VnB9A->SjvZx); goto iXUj0; UO5zh: $VGlH4 = (int) $VnB9A->I6BE8; goto LWM0q; Fp6FJ: if (empty($VnB9A->VBkRL)) { goto RQ83O; } goto TQZ0E; Jx_t6: $wZRRv = $den9F->CDSXj; goto tDg42; ZB6gk: liN8g: goto laIpQ; dS5Lx: goto JGN4r; goto PUGV3; OPvCM: $ehug7 = $den9F->tQgyG; goto zW9mr; uhvV1: if (!($q0lZJ !== null && $q0lZJ !== '')) { goto WyKiZ; } goto a3ffC; CHch5: } public function destroy(Request $den9F) { goto eyaZX; C7w_s: DB::K6gOV("\164\142\137\x63\x70\x65")->GVsmS("\x69\x64\137\143\160\x65", $den9F->EQ_fc)->delete(); goto MwYFp; MwYFp: return redirect()->Gxr_2("\x61\144\x6d\151\156\56\x74\162\x30\66\x39\56\151\x6e\144\145\x78")->qiCK_("\163\x75\x63\143\145\163\x73", "\x50\145\162\141\156\147\153\x61\164\40\103\x50\105\x20\142\x65\x72\x68\x61\163\x69\x6c\x20\x64\151\150\x61\x70\165\x73\x2e"); goto X2rv1; WfleC: $VnB9A = DB::K6gOV("\x74\x62\137\143\160\x65")->gvSmS("\x69\144\x5f\x63\x70\145", $den9F->EQ_fc)->first(); goto dIQxD; n6DVv: bhxLV: goto q4Lsl; eyaZX: $den9F->validate(["\x69\x64\137\x63\x70\x65" => "\x72\145\x71\x75\151\162\x65\144\174\151\x6e\164\x65\x67\145\162"]); goto WfleC; q4Lsl: DB::K6GoV("\164\142\137\x61\x63\163\x5f\x71\x75\x65\x75\145")->GVSMs("\x73\145\x72\x69\x61\154\x5f\156\165\155\x62\x65\x72", $VnB9A->To8h0)->delete(); goto C7w_s; dIQxD: if ($VnB9A) { goto bhxLV; } goto s5gjA; s5gjA: return back()->abL7m(["\145\x72\162\157\x72" => "\x50\145\162\141\x6e\147\x6b\x61\164\40\x74\151\x64\141\x6b\x20\144\x69\164\145\x6d\165\x6b\141\156\x2e"]); goto n6DVv; X2rv1: } }
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
+use App\Models\Pelanggan;
+
+class AdminAcsController extends Controller
+{
+    private function sendConnectionRequest($url)
+    {
+        if (empty($url)) return false;
+        try {
+            // Standard response for connection request is 200 OK or 204 No Content
+            // 401 means it reached the device but requires basic authentication (still successful trigger)
+            $response = Http::timeout(4)->connectTimeout(4)->get($url);
+            $status = $response->status();
+            return ($status === 200 || $status === 204 || $status === 401);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    private function cleanOldQueue($serialNumber)
+    {
+        try {
+            DB::delete("DELETE FROM tb_acs_queue 
+                WHERE serial_number = ? 
+                  AND status IN ('success', 'failed') 
+                  AND id_command NOT IN (
+                      SELECT id_command FROM (
+                          SELECT id_command FROM tb_acs_queue 
+                          WHERE serial_number = ? 
+                          ORDER BY id_command DESC 
+                          LIMIT 100
+                      ) tmp
+                  )", [$serialNumber, $serialNumber]);
+        } catch (\Exception $e) {
+            // Suppress database deletion errors to avoid interrupting user flows
+        }
+    }
+
+    public function index()
+    {
+        $cpes = DB::table('tb_cpe')
+            ->leftJoin('tb_pelanggan', 'tb_cpe.id_pelanggan', '=', 'tb_pelanggan.id_pelanggan')
+            ->select('tb_cpe.*', 'tb_pelanggan.nama_pelanggan')
+            ->orderBy('tb_cpe.last_inform', 'desc')
+            ->get();
+
+        $pelanggan = Pelanggan::whereNotIn('id_pelanggan', function ($query) {
+            $query->select('id_pelanggan')
+                  ->from('tb_cpe')
+                  ->whereNotNull('id_pelanggan');
+        })->orderBy('nama_pelanggan')->get();
+
+        return view('admin.tr069.index', compact('cpes', 'pelanggan'));
+    }
+
+    public function linkCustomer(Request $request)
+    {
+        $request->validate([
+            'id_cpe' => 'required|integer',
+            'id_pelanggan' => 'required|integer',
+        ]);
+
+        DB::table('tb_cpe')
+            ->where('id_cpe', $request->id_cpe)
+            ->update(['id_pelanggan' => $request->id_pelanggan]);
+
+        return redirect()->route('admin.tr069.index')->with('success', 'Berhasil menghubungkan CPE ke pelanggan.');
+    }
+
+    public function unlinkCustomer(Request $request)
+    {
+        $request->validate([
+            'id_cpe' => 'required|integer',
+        ]);
+
+        DB::table('tb_cpe')
+            ->where('id_cpe', $request->id_cpe)
+            ->update(['id_pelanggan' => null]);
+
+        return redirect()->route('admin.tr069.index')->with('success', 'Berhasil melepas hubungan pelanggan dari perangkat ini.');
+    }
+
+    public function detail($id)
+    {
+        $cpe = DB::table('tb_cpe')
+            ->leftJoin('tb_pelanggan', 'tb_cpe.id_pelanggan', '=', 'tb_pelanggan.id_pelanggan')
+            ->select('tb_cpe.*', 'tb_pelanggan.nama_pelanggan', 'tb_pelanggan.kode_pelanggan', 'tb_pelanggan.alamat', 'tb_pelanggan.odp')
+            ->where('tb_cpe.id_cpe', $id)
+            ->first();
+
+        if (!$cpe) {
+            abort(404, 'Perangkat tidak ditemukan.');
+        }
+
+        $odpName = '-';
+        if ($cpe->odp) {
+            $odp = DB::table('tbl_odp')->where('id_odp', $cpe->odp)->first();
+            if ($odp) {
+                $odpName = $odp->nama_odp;
+            }
+        }
+
+        $queue = DB::table('tb_acs_queue')
+            ->where('serial_number', $cpe->serial_number)
+            ->orderByRaw("CASE WHEN status IN ('pending', 'sent') THEN 0 ELSE 1 END")
+            ->orderBy('id_command', 'desc')
+            ->limit(100)
+            ->get();
+
+        return view('admin.tr069.detail', compact('cpe', 'queue', 'odpName'));
+    }
+
+    public function triggerConnectionRequest(Request $request)
+    {
+        $request->validate([
+            'id_cpe' => 'required|integer',
+        ]);
+
+        $cpe = DB::table('tb_cpe')->where('id_cpe', $request->id_cpe)->first();
+        if (!$cpe) {
+            return back()->withErrors(['error' => 'Perangkat tidak ditemukan.']);
+        }
+
+        $success = $this->sendConnectionRequest($cpe->connection_request_url);
+        if ($success) {
+            return redirect()->route('admin.tr069.detail', $cpe->id_cpe)->with('success', 'Connection Request terkirim. CPE akan melakukan Inform sesi sesaat lagi.');
+        }
+
+        return redirect()->route('admin.tr069.detail', $cpe->id_cpe)->withErrors(['error' => 'Gagal mengirim Connection Request. CPE mungkin sedang offline atau tidak dapat dijangkau.']);
+    }
+
+    public function reboot(Request $request)
+    {
+        $request->validate([
+            'id_cpe' => 'required|integer',
+        ]);
+
+        $cpe = DB::table('tb_cpe')->where('id_cpe', $request->id_cpe)->first();
+        if (!$cpe) {
+            return back()->withErrors(['error' => 'Perangkat tidak ditemukan.']);
+        }
+
+        DB::table('tb_acs_queue')->insert([
+            'serial_number' => $cpe->serial_number,
+            'command_type' => 'Reboot',
+            'command_data' => '{}',
+            'status' => 'pending',
+            'created_at' => now(),
+        ]);
+
+        $this->cleanOldQueue($cpe->serial_number);
+
+        // Attempt to notify CPE immediately
+        $this->sendConnectionRequest($cpe->connection_request_url);
+
+        return redirect()->route('admin.tr069.detail', $cpe->id_cpe)->with('success', 'Perintah Reboot telah dimasukkan ke dalam antrean.');
+    }
+
+    public function setParameters(Request $request)
+    {
+        $request->validate([
+            'id_cpe' => 'required|integer',
+            'param_type' => 'required|string',
+        ]);
+
+        $cpe = DB::table('tb_cpe')->where('id_cpe', $request->id_cpe)->first();
+        if (!$cpe) {
+            return back()->withErrors(['error' => 'Perangkat tidak ditemukan.']);
+        }
+
+        $paramType = $request->param_type;
+        $params = [];
+
+        $mfg = strtolower(trim($cpe->manufacturer));
+        if (!empty($cpe->wifi_ssid_5_index)) {
+            $index5g = (int) $cpe->wifi_ssid_5_index;
+        } else {
+            $index5g = ($mfg === 'cdt' || $mfg === 'cdata' || $mfg === 'c-data') ? 6 : 5;
+        }
+
+        if ($paramType === 'tr098') {
+            $ssid = $request->tr098_ssid;
+            $pass = $request->tr098_password;
+            $pppUser = $request->tr098_pppoe_username;
+            $pppPass = $request->tr098_pppoe_password;
+            $adminPass = $request->tr098_admin_password;
+
+            if ($ssid !== null && $ssid !== '') {
+                $params['InternetGatewayDevice.LANDevice.1.WLANConfiguration.1.SSID'] = $ssid;
+                if (!empty($cpe->wifi_ssid_5)) {
+                    $params['InternetGatewayDevice.LANDevice.1.WLANConfiguration.' . $index5g . '.SSID'] = $ssid;
+                }
+            }
+            if ($pass !== null && $pass !== '') {
+                $params['InternetGatewayDevice.LANDevice.1.WLANConfiguration.1.PreSharedKey.1.PreSharedKey'] = $pass;
+                if (!empty($cpe->wifi_ssid_5)) {
+                    $params['InternetGatewayDevice.LANDevice.1.WLANConfiguration.' . $index5g . '.PreSharedKey.1.PreSharedKey'] = $pass;
+                }
+            }
+            if ($pppUser !== null && $pppUser !== '') {
+                $params['InternetGatewayDevice.WANDevice.1.WANConnectionDevice.1.WANPPPConnection.1.Username'] = $pppUser;
+            }
+            if ($pppPass !== null && $pppPass !== '') {
+                $params['InternetGatewayDevice.WANDevice.1.WANConnectionDevice.1.WANPPPConnection.1.Password'] = $pppPass;
+            }
+            if ($adminPass !== null && $adminPass !== '') {
+                $params['InternetGatewayDevice.UserInterface.Password'] = $adminPass;
+            }
+        } elseif ($paramType === 'tr181') {
+            $ssid = $request->tr181_ssid;
+            $pass = $request->tr181_password;
+            $pppUser = $request->tr181_pppoe_username;
+            $pppPass = $request->tr181_pppoe_password;
+            $adminPass = $request->tr181_admin_password;
+
+            if ($ssid !== null && $ssid !== '') {
+                $params['Device.WiFi.SSID.1.SSID'] = $ssid;
+                if (!empty($cpe->wifi_ssid_5)) {
+                    $params['Device.WiFi.SSID.' . $index5g . '.SSID'] = $ssid;
+                }
+            }
+            if ($pass !== null && $pass !== '') {
+                $params['Device.WiFi.AccessPoint.1.Security.KeyPassphrase'] = $pass;
+                if (!empty($cpe->wifi_ssid_5)) {
+                    $params['Device.WiFi.AccessPoint.' . $index5g . '.Security.KeyPassphrase'] = $pass;
+                }
+            }
+            if ($pppUser !== null && $pppUser !== '') {
+                $params['Device.PPP.Interface.1.Username'] = $pppUser;
+            }
+            if ($pppPass !== null && $pppPass !== '') {
+                $params['Device.PPP.Interface.1.Password'] = $pppPass;
+            }
+            if ($adminPass !== null && $adminPass !== '') {
+                $params['Device.Users.User.1.Password'] = $adminPass;
+            }
+        } else {
+            $customPath = trim($request->custom_path);
+            $customVal = trim($request->custom_value);
+            if ($customPath !== '') {
+                $params[$customPath] = $customVal;
+            }
+        }
+
+        if (!empty($params)) {
+            DB::table('tb_acs_queue')->insert([
+                'serial_number' => $cpe->serial_number,
+                'command_type' => 'SetParameterValues',
+                'command_data' => json_encode($params),
+                'status' => 'pending',
+                'created_at' => now(),
+            ]);
+
+            $this->cleanOldQueue($cpe->serial_number);
+
+            // Attempt to notify CPE immediately
+            $this->sendConnectionRequest($cpe->connection_request_url);
+
+            return redirect()->route('admin.tr069.detail', $cpe->id_cpe)->with('success', 'Perintah ubah parameter telah dimasukkan ke dalam antrean.');
+        }
+
+        return redirect()->route('admin.tr069.detail', $cpe->id_cpe)->withErrors(['error' => 'Harap masukkan nilai parameter yang valid.']);
+    }
+
+    public function destroy(Request $request)
+    {
+        $request->validate([
+            'id_cpe' => 'required|integer',
+        ]);
+
+        $cpe = DB::table('tb_cpe')->where('id_cpe', $request->id_cpe)->first();
+        if (!$cpe) {
+            return back()->withErrors(['error' => 'Perangkat tidak ditemukan.']);
+        }
+
+        // Delete from queue first
+        DB::table('tb_acs_queue')->where('serial_number', $cpe->serial_number)->delete();
+        
+        // Delete from tb_cpe
+        DB::table('tb_cpe')->where('id_cpe', $request->id_cpe)->delete();
+
+        return redirect()->route('admin.tr069.index')->with('success', 'Perangkat CPE berhasil dihapus.');
+    }
+}

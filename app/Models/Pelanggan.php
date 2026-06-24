@@ -1,8 +1,160 @@
 <?php
-/*   __________________________________________________
-    |  Obfuscated by YAK Pro - Php Obfuscator  3.0.0   |
-    |              on 2026-06-24 23:14:51              |
-    |    GitHub: https://github.com/pk-fr/yakpro-po    |
-    |__________________________________________________|
-*/
- namespace M71jr\xpACo; use m71Jr\xPaCO\ZRYSc; use MVyYo\iTUKD\RZZzy\fhYI3\rjot4; use mvYYO\Itukd\RZzzY\A8fz4; class Pelanggan extends Model { use rjOt4; protected $cBkSt = "\164\142\x5f\160\145\154\141\x6e\147\x67\141\x6e"; protected $sUoJP = "\151\144\x5f\160\x65\154\141\156\147\147\141\156"; public $RkMfz = false; protected $y22pJ = ["\151\144\x5f\x70\x65\154\x61\x6e\147\x67\x61\x6e", "\x6b\x6f\144\145\x5f\x70\x65\x6c\x61\x6e\x67\147\x61\156", "\x6e\151\x6b", "\x6e\141\x6d\141\x5f\x70\x65\154\141\156\147\x67\x61\x6e", "\x61\154\x61\155\141\x74", "\156\157\x5f\x74\145\154\160", "\160\x61\153\145\164", "\x69\160\137\x61\144\x64\x72\145\x73\x73", "\164\147\154\137\160\x65\155\x61\163\141\x6e\x67\x61\156", "\152\x61\164\165\150\x5f\164\x65\x6d\x70\x6f", "\x6c\157\x63\x61\x74\151\x6f\x6e", "\151\x64\137\160\x65\162\x61\x6e\x67\x6b\141\x74", "\x6f\144\x70", "\x69\x64\137\155\x69\x6b\x72\x6f\x74\151\153", "\151\x64\x5f\142\162\141\156\x63\x68", "\x69\x64\x5f\x73\165\x62\x5f\x62\162\141\156\x63\150"]; public function V8RJo() { return $this->K4YGC(User::class, "\151\144\x5f\x70\145\x6c\141\x6e\147\147\141\x6e", "\x69\144\x5f\x70\x65\154\141\x6e\x67\147\141\x6e"); } public function TWjiO() { return $this->k4ygC(Tagihan::class, "\151\x64\x5f\160\x65\x6c\x61\x6e\x67\x67\141\156", "\151\144\137\x70\145\154\x61\x6e\x67\147\x61\156"); } public function F4GtD() { return $this->L8q25(Paket::class, "\x70\141\153\145\x74", "\x69\144\x5f\160\141\x6b\x65\164"); } public function HBEow() { return $this->L8q25(Odp::class, "\157\x64\160", "\x69\x64\137\157\144\x70"); } public static function FyBou($pGAni) { return self::hll0w($pGAni)->first(); } public static function hLL0W($pGAni) { goto qA54c; U458i: if (str_starts_with($pGAni, "\60")) { goto kxt9y; } goto MGfsT; hoGoB: WlAcg: goto uI2b6; e2107: if (!($pGAni === '')) { goto UzWbp; } goto ryMc1; De0XC: $lRL6k[] = "\x36\62" . substr($pGAni, 1); goto hoGoB; e3ivs: if (str_starts_with($pGAni, "\66\62")) { goto qzxmc; } goto U458i; uI2b6: $dSJoX = self::MqCib("\x6e\157\137\164\x65\154\x70", $lRL6k); goto qRo3i; MGfsT: goto WlAcg; goto lGZld; GrMX3: $AYZNI = substr($pGAni, -9); goto gQ8e8; IcV2q: $lRL6k = [$pGAni]; goto e3ivs; qA54c: $pGAni = preg_replace("\57\133\136\60\x2d\x39\x5d\x2f", '', (string) $pGAni); goto e2107; nT_Lo: return $dSJoX->get(); goto Sj_3u; ryMc1: return collect(); goto K3r1V; lGZld: qzxmc: goto c89DO; qRo3i: if (!(strlen($pGAni) >= 9)) { goto NrPq6; } goto GrMX3; K3r1V: UzWbp: goto IcV2q; gQ8e8: $dSJoX->QOjKH("\156\x6f\x5f\x74\145\x6c\x70", "\x6c\x69\x6b\x65", "\45" . $AYZNI); goto cJ1EF; cJ1EF: NrPq6: goto nT_Lo; c89DO: $lRL6k[] = "\60" . substr($pGAni, 2); goto DUhHe; xpUNP: kxt9y: goto De0XC; DUhHe: goto WlAcg; goto xpUNP; Sj_3u: } public static function hEoH1(?string $eqqwq): array { return self::HlL0W($eqqwq)->yu00q("\151\x64\137\x70\x65\x6c\141\156\x67\147\x61\x6e")->Xltwb()->TJxP_()->I03H4(); } public function lQk4I() { return $this->l8q25(Branch::class, "\x69\144\137\142\x72\x61\156\x63\150", "\151\144"); } public function L23V2() { return $this->l8q25(SubBranch::class, "\x69\144\137\x73\165\x62\137\x62\162\x61\x6e\x63\150", "\151\x64"); } public function yAXAy($dSJoX, $LjaJw = null) { goto SmVnG; jWyWf: if ($LjaJw) { goto L3kPW; } goto W7Fb1; AihGv: return $dSJoX->aB5DQ("\61\75\x30"); goto FF_Rs; hHwfK: $sxOub = \MVYYO\BTKlJ\lP8Pf\DB::k6GOV("\164\x62\137\x75\x73\x65\x72\137\142\x72\141\x6e\143\150\137\141\x63\143\145\163\163")->GVsMs("\x69\144\137\x75\163\x65\162", $LjaJw->id)->get(); goto jj7kv; zKRP3: L3kPW: goto HDQkW; YPQCw: return $dSJoX->GvsMs(function ($rbP7F) use ($sxOub) { foreach ($sxOub as $VBxhu) { $rbP7F->qoJKH(function ($nYL6I) use ($VBxhu) { goto kqj89; kqj89: $nYL6I->gVSMS("\151\x64\x5f\142\x72\141\156\143\150", $VBxhu->NcH_1); goto IS4K0; IS4K0: if (is_null($VBxhu->R7_fM)) { goto tshNf; } goto FI7kQ; UFNcq: tshNf: goto O9o9u; FI7kQ: $nYL6I->gVsMS("\151\144\137\163\x75\x62\x5f\x62\x72\x61\156\143\150", $VBxhu->R7_fM); goto UFNcq; O9o9u: }); i1hne: } fSd9m: }); goto drmaC; jj7kv: if (!$sxOub->isEmpty()) { goto G9UvN; } goto AihGv; gnVfF: return $dSJoX; goto hT26n; W7Fb1: return $dSJoX->Ab5dq("\61\75\x30"); goto zKRP3; fUkQj: YVCLX: goto jWyWf; FF_Rs: G9UvN: goto YPQCw; HDQkW: if (!($LjaJw->level === "\141\144\x6d\151\x6e")) { goto Vsg2o; } goto gnVfF; hT26n: Vsg2o: goto hHwfK; M84kY: $LjaJw = auth()->Wz2Vm(); goto fUkQj; SmVnG: if ($LjaJw) { goto YVCLX; } goto M84kY; drmaC: } }
+
+namespace App\Models;
+
+use App\Models\Paket;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Pelanggan extends Model
+{
+    use HasFactory;
+
+    protected $table = 'tb_pelanggan';
+    protected $primaryKey = 'id_pelanggan';
+    public $timestamps = false;
+
+    protected $fillable = [
+        'id_pelanggan',
+        'kode_pelanggan',
+        'nik',
+        'nama_pelanggan',
+        'alamat',
+        'no_telp',
+        'paket',
+        'ip_address',
+        'tgl_pemasangan',
+        'jatuh_tempo',
+        'location',
+        'id_perangkat',
+        'odp',
+        'id_mikrotik',
+        'id_branch',
+        'id_sub_branch',
+    ];
+
+    /**
+     * Relationship: Pelanggan has many users
+     */
+    public function users()
+    {
+        return $this->hasMany(User::class, 'id_pelanggan', 'id_pelanggan');
+    }
+
+    public function tagihans()
+    {
+        return $this->hasMany(Tagihan::class, 'id_pelanggan', 'id_pelanggan');
+    }
+
+    public function paketDetail()
+    {
+        return $this->belongsTo(Paket::class, 'paket', 'id_paket');
+    }
+
+    public function odpDetail()
+    {
+        return $this->belongsTo(Odp::class, 'odp', 'id_odp');
+    }
+
+    /**
+     * Find pelanggan by phone number
+     */
+    public static function findByPhone($phone)
+    {
+        return self::getAllByPhone($phone)->first();
+    }
+
+    /**
+     * Semua pelanggan dengan nomor HP yang sama (dinormalisasi).
+     */
+    public static function getAllByPhone($phone)
+    {
+        $phone = preg_replace('/[^0-9]/', '', (string) $phone);
+
+        if ($phone === '') {
+            return collect();
+        }
+
+        // Variasi format nomor telepon yang umum disimpan
+        $variations = [$phone];
+        if (str_starts_with($phone, '62')) {
+            $variations[] = '0' . substr($phone, 2);
+        } elseif (str_starts_with($phone, '0')) {
+            $variations[] = '62' . substr($phone, 1);
+        }
+
+        $query = self::whereIn('no_telp', $variations);
+
+        // Pencarian dengan pencocokan akhiran/suffix untuk keamanan data (min 9 digit terakhir)
+        if (strlen($phone) >= 9) {
+            $suffix = substr($phone, -9);
+            $query->orWhere('no_telp', 'like', '%' . $suffix);
+        }
+
+        return $query->get();
+    }
+
+
+    public static function getIdsBySamePhone(?string $noTelp): array
+    {
+        return self::getAllByPhone($noTelp)
+            ->pluck('id_pelanggan')
+            ->unique()
+            ->values()
+            ->all();
+    }
+
+    /**
+     * Relationship: Pelanggan belongs to Branch
+     */
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class, 'id_branch', 'id');
+    }
+
+    /**
+     * Relationship: Pelanggan belongs to SubBranch
+     */
+    public function subBranch()
+    {
+        return $this->belongsTo(SubBranch::class, 'id_sub_branch', 'id');
+    }
+
+    /**
+     * Scope: filter clients based on user branch access.
+     * Admin has full access. Staff have access restricted to tb_user_branch_access values.
+     */
+    public function scopeAllowedForUser($query, $user = null)
+    {
+        if (!$user) {
+            $user = auth()->user();
+        }
+
+        if (!$user) {
+            return $query->whereRaw('1=0');
+        }
+
+        if ($user->level === 'admin') {
+            return $query;
+        }
+
+        $access = \Illuminate\Support\Facades\DB::table('tb_user_branch_access')
+            ->where('id_user', $user->id)
+            ->get();
+
+        if ($access->isEmpty()) {
+            return $query->whereRaw('1=0');
+        }
+
+        return $query->where(function ($q) use ($access) {
+            foreach ($access as $acc) {
+                $q->orWhere(function ($subQ) use ($acc) {
+                    $subQ->where('id_branch', $acc->id_branch);
+                    if (!is_null($acc->id_sub_branch)) {
+                        $subQ->where('id_sub_branch', $acc->id_sub_branch);
+                    }
+                });
+            }
+        });
+    }
+}

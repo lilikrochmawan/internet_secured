@@ -1,8 +1,157 @@
 <?php
-/*   __________________________________________________
-    |  Obfuscated by YAK Pro - Php Obfuscator  3.0.0   |
-    |              on 2026-06-24 23:14:48              |
-    |    GitHub: https://github.com/pk-fr/yakpro-po    |
-    |__________________________________________________|
-*/
- namespace M71Jr\xz1tU\fNhFF\Lp2K1; use m71jr\xZ1tu\FNHff\YUfuS; use MVyyo\Xz1tU\ohhiD; use MvyYo\bTkLJ\lp8PF\hKwlZ; class AdminCustomPesanController extends Controller { public function H0I_0() { goto HVzhY; HVzhY: $TY4L0 = DB::k6GoV("\x74\x62\154\137\156\x6f\x74\151\x66")->first(); goto AuoLD; AuoLD: $zTPfM = DB::k6Gov("\164\x62\154\x5f\x62\x6c\157\153\x69\x72")->first(); goto GF3lM; f1gLc: return view("\x61\x64\x6d\x69\156\x2e\x63\x75\x73\164\x6f\155\x2d\160\145\x73\141\x6e\x2e\151\156\144\x65\170", compact("\x6e\x6f\164\151\146", "\142\x6c\x6f\153\151\162", "\x6e\157\x74\x69\146\x62\x61\171\141\x72", "\142\165\153\x61\142\154\157\153\x69\162", "\160\x65\155\141\x73\141\156\x67\141\x6e", "\x72\145\x6d\151\x6e\144\145\x72")); goto muzLD; yJy0E: $c5dyw = DB::k6goV("\164\142\x6c\x5f\x62\x75\x6b\141\x62\x6c\157\x6b\x69\x72")->first(); goto z7mTZ; z7mTZ: $p_gou = DB::k6Gov("\x74\142\154\137\x6e\x70\145\155\x61\x73\141\156\147\x61\x6e")->first(); goto yrIn4; GF3lM: $vdavH = DB::K6gov("\164\x62\x6c\x5f\x6e\157\164\151\146\x62\x61\x79\141\162")->first(); goto yJy0E; yrIn4: $zYcGo = DB::K6GOV("\x74\x62\154\137\x6e\x6f\x74\x69\146\162\145\155\151\156\x64\145\162")->first(); goto f1gLc; muzLD: } public function Xfopd(Request $den9F) { goto xD3BX; uUKnL: DB::k6gov("\164\142\154\137\x6e\x6f\164\x69\146")->insert(["\x73\164\141\164\x75\x73\x5f\x6e\x6f\164\151\x66\151\153\141\163\x69" => $den9F->status, "\160\145\163\x61\x6e\137\156\157\164\151\146\151\x6b\141\163\x69" => $den9F->Vc308]); goto BQ5RL; BQ5RL: goto tpfTE; goto GuPR3; csWiz: return redirect()->GXr_2("\x61\144\155\151\x6e\x2e\143\x75\x73\164\x6f\155\137\x70\145\x73\141\156\56\x69\156\x64\145\x78")->QiCk_("\x73\165\x63\143\145\163\163", "\120\145\163\x61\156\x20\156\157\164\x69\146\151\x6b\x61\163\x69\x20\x74\141\x67\151\x68\x61\156\40\x62\x75\x6c\x61\x6e\x61\156\40\142\x65\x72\150\141\163\151\154\40\144\151\160\x65\162\x62\141\162\x75\151\x21"); goto l1YXP; GuPR3: KPD_4: goto HzXl0; fXAPK: $iiyKG = DB::K6gOV("\x74\x62\x6c\137\156\x6f\164\x69\146")->first(); goto djZmH; iEfTr: tpfTE: goto csWiz; djZmH: if ($iiyKG) { goto KPD_4; } goto uUKnL; HzXl0: DB::K6gOv("\164\x62\x6c\137\x6e\157\x74\x69\146")->update(["\163\164\141\x74\x75\x73\x5f\x6e\157\164\151\x66\x69\x6b\141\x73\x69" => $den9F->status, "\x70\x65\x73\141\x6e\x5f\156\157\x74\151\146\x69\x6b\x61\163\151" => $den9F->Vc308]); goto iEfTr; xD3BX: $den9F->validate(["\163\164\x61\x74\165\163" => "\162\x65\161\x75\x69\162\x65\x64\174\163\x74\x72\151\x6e\147", "\x70\145\x73\141\156\x5f\x6e\x6f\164\x69\146\151\153\x61\x73\x69" => "\x72\145\161\x75\151\x72\x65\144\174\163\x74\162\151\x6e\147"]); goto fXAPK; l1YXP: } public function tAZGI(Request $den9F) { goto w5vuB; w5vuB: $den9F->validate(["\160\x65\163\x61\x6e\137\142\x61\171\141\162" => "\162\x65\161\165\x69\x72\145\x64\174\163\164\x72\x69\156\x67"]); goto oyPHG; rNbtr: DB::k6GOv("\164\142\154\137\x6e\x6f\x74\x69\x66\142\141\x79\141\162")->update(["\160\x65\x73\141\x6e\x5f\142\x61\171\x61\162" => $den9F->eSRV6]); goto mzpfR; PCdpG: if ($iiyKG) { goto Tbj90; } goto H3FEQ; oyPHG: $iiyKG = DB::k6Gov("\164\x62\154\137\156\157\164\151\x66\142\x61\x79\x61\x72")->first(); goto PCdpG; H3FEQ: DB::k6GOV("\164\142\x6c\137\156\157\x74\151\x66\142\x61\171\x61\x72")->insert(["\x70\145\163\141\156\137\142\141\x79\x61\162" => $den9F->eSRV6]); goto g3go4; RXZhL: return redirect()->gXr_2("\141\144\155\x69\156\x2e\143\x75\x73\164\157\155\137\160\x65\163\141\x6e\x2e\x69\156\144\x65\x78")->QIcK_("\x73\165\143\x63\145\163\x73", "\120\145\x73\x61\x6e\40\142\165\x6b\x74\151\40\160\145\x6d\x62\x61\171\141\x72\141\x6e\x20\x62\145\162\150\141\163\x69\154\40\x64\x69\160\145\162\142\141\x72\165\151\x21"); goto l2U92; z8956: Tbj90: goto rNbtr; mzpfR: eQ2Ny: goto RXZhL; g3go4: goto eQ2Ny; goto z8956; l2U92: } public function o3Y1o(Request $den9F) { goto duFYq; R72Sa: PVaYp: goto gNh31; Zx7Z4: Clq5i: goto SANzX; gNh31: return redirect()->gxR_2("\x61\x64\155\x69\156\56\143\165\x73\x74\x6f\155\137\x70\145\163\141\156\x2e\x69\x6e\144\145\x78")->qICK_("\163\165\x63\x63\x65\x73\163", "\120\145\x73\x61\x6e\40\160\145\x6d\x61\163\141\156\x67\141\156\40\141\x77\x61\154\x20\142\145\x72\150\141\x73\x69\x6c\x20\x64\151\x70\x65\162\x62\141\162\165\x69\x21"); goto A7cHh; SANzX: DB::k6GoV("\x74\x62\154\137\x6e\160\x65\x6d\x61\163\x61\x6e\x67\x61\156")->update(["\163\164\141\164\x75\163\x5f\156\x6f\164\151\146" => $den9F->kkp09, "\x70\145\163\x61\x6e\137\156\157\164\151\146" => $den9F->Au3DF]); goto R72Sa; CO8uN: DB::K6gov("\x74\x62\154\137\156\x70\x65\x6d\x61\163\x61\156\x67\x61\x6e")->insert(["\x73\164\x61\164\x75\163\x5f\x6e\157\164\x69\146" => $den9F->kkp09, "\160\145\163\141\x6e\x5f\156\x6f\164\x69\146" => $den9F->Au3DF]); goto j8A0f; BR94h: $iiyKG = DB::K6GOV("\x74\x62\x6c\137\x6e\x70\x65\x6d\141\x73\x61\156\147\141\x6e")->first(); goto smxdA; j8A0f: goto PVaYp; goto Zx7Z4; duFYq: $den9F->validate(["\x73\164\141\164\165\163\137\x6e\x70\145\155\141\163\141\x6e\147\x61\x6e" => "\x72\x65\x71\x75\x69\x72\145\x64\x7c\163\164\x72\x69\x6e\x67", "\160\145\x73\x61\x6e\137\156\160\145\x6d\141\x73\141\x6e\x67\x61\156" => "\x72\x65\x71\x75\151\162\x65\x64\174\163\x74\162\x69\x6e\147"]); goto BR94h; smxdA: if ($iiyKG) { goto Clq5i; } goto CO8uN; A7cHh: } public function CPHAi(Request $den9F) { goto avGx1; HeqZc: $iiyKG = DB::k6gOv("\164\142\154\x5f\x62\x6c\157\153\x69\x72")->first(); goto QkMgz; haz1Q: H78CQ: goto FwftD; GEGRU: return redirect()->GXR_2("\x61\144\155\151\156\56\143\165\163\164\157\x6d\137\x70\145\163\141\x6e\56\x69\156\144\145\170")->QICK_("\x73\165\143\143\x65\x73\x73", "\x50\x65\x6e\x67\141\164\x75\x72\141\x6e\x20\151\x73\157\x6c\151\162\57\x62\154\x6f\153\151\162\x20\157\164\x6f\x6d\141\x74\151\163\40\x62\x65\162\150\141\163\x69\x6c\40\144\151\x70\145\162\142\141\x72\165\151\41"); goto Xqwp_; HQL26: goto XKl4G; goto haz1Q; FwftD: DB::K6gOv("\164\142\x6c\137\142\x6c\x6f\x6b\x69\162")->update($CAT70); goto aupgM; BW5p5: if ($iiyKG) { goto H78CQ; } goto oCC29; avGx1: $den9F->validate(["\163\164\141\x74\x75\163\137\142\154\157\x6b\151\162" => "\162\x65\x71\x75\151\162\x65\x64\x7c\163\x74\162\x69\x6e\x67", "\142\145\162\141\160\141" => "\x72\x65\161\x75\151\162\x65\x64\x7c\x69\x6e\164\145\x67\x65\162", "\153\x61\x70\141\156" => "\x72\x65\x71\165\x69\x72\145\144\x7c\x73\x74\x72\151\156\x67", "\160\145\x73\141\x6e\x5f\142\154\157\x6b\x69\x72" => "\162\x65\161\x75\x69\162\x65\144\x7c\x73\x74\x72\151\156\147"]); goto HeqZc; QkMgz: $CAT70 = ["\163\164\141\x74\165\x73\x5f\142\x6c\157\x6b\x69\162" => $den9F->fT8nl, "\x73\x65\x74\137\167\141\x6b\x74\x75" => $den9F->ydIY1, "\x73\x65\x74\x5f\167\x61\x6b\x74\165\x32" => $den9F->RXwwy, "\x70\145\163\x61\156\137\142\x6c\157\153\151\x72" => $den9F->Bvxrk]; goto BW5p5; oCC29: DB::k6GOv("\164\142\154\x5f\x62\154\157\153\x69\x72")->insert($CAT70); goto HQL26; aupgM: XKl4G: goto GEGRU; Xqwp_: } public function k4HCF(Request $den9F) { goto W_cSI; ZJMzZ: if ($iiyKG) { goto Hgp38; } goto O9lFN; afNN0: Hgp38: goto zZkO0; zZkO0: DB::k6GOV("\x74\142\x6c\x5f\x62\165\x6b\x61\x62\x6c\157\x6b\x69\x72")->update(["\x70\x65\x73\x61\156\137\142\165\153\141\142\154\157\x6b\x69\x72" => $den9F->bJjOF]); goto zADRz; W_cSI: $den9F->validate(["\x70\x65\163\141\156\137\x62\x75\153\141\x62\154\157\153\151\162" => "\162\x65\x71\165\151\162\145\x64\174\163\x74\x72\151\x6e\147"]); goto QYazZ; O9lFN: DB::K6Gov("\164\142\154\137\x62\165\153\141\142\x6c\x6f\153\x69\x72")->insert(["\160\x65\163\141\x6e\x5f\x62\165\153\x61\x62\x6c\x6f\x6b\x69\x72" => $den9F->bJjOF]); goto HwYuQ; LpnSO: return redirect()->gXR_2("\x61\x64\x6d\x69\x6e\x2e\x63\165\163\164\157\155\137\160\x65\163\x61\156\x2e\151\x6e\144\145\170")->qICK_("\163\165\143\143\x65\x73\163", "\x50\x65\163\141\x6e\x20\x75\156\x62\154\x6f\x63\x6b\57\142\x75\x6b\141\x20\142\x6c\x6f\153\151\162\40\x62\145\162\150\141\x73\x69\x6c\40\144\151\160\x65\162\x62\x61\x72\165\x69\x21"); goto WQsPI; HwYuQ: goto JIwXD; goto afNN0; zADRz: JIwXD: goto LpnSO; QYazZ: $iiyKG = DB::k6Gov("\x74\142\x6c\x5f\142\x75\153\141\142\x6c\x6f\x6b\151\x72")->first(); goto ZJMzZ; WQsPI: } public function MEr1C(Request $den9F) { goto z8woA; FGZTj: if ($iiyKG) { goto l37i8; } goto hd9H5; DgtHn: return redirect()->GXR_2("\x61\144\155\151\156\56\x63\x75\x73\164\157\x6d\x5f\160\145\x73\141\156\x2e\x69\156\144\145\x78")->qiCK_("\x73\x75\x63\143\145\x73\x73", "\120\145\163\141\156\40\162\145\x6d\x69\x6e\144\x65\x72\40\x74\141\147\151\150\x61\156\40\142\145\162\150\141\x73\151\154\x20\x64\x69\160\145\162\142\141\x72\165\151\x21"); goto c6PC8; fSsMX: DB::K6GoV("\x74\x62\x6c\137\156\x6f\164\x69\146\x72\145\155\151\156\144\145\x72")->update(["\x73\x74\x61\164\165\163\137\x72\x65\x6d\151\156\144\145\x72" => $den9F->vvfi5, "\160\145\163\x61\156\137\162\x65\x6d\151\156\144\145\162" => $den9F->Vc7YT]); goto R0Qow; pwAkM: goto tyJt_; goto CQVc_; R0Qow: tyJt_: goto DgtHn; hd9H5: DB::k6Gov("\x74\142\x6c\137\156\x6f\164\151\146\x72\x65\155\151\156\144\x65\x72")->insert(["\x73\x74\x61\x74\165\x73\137\162\145\155\151\x6e\x64\145\162" => $den9F->vvfi5, "\160\145\163\141\156\137\x72\145\x6d\151\x6e\144\x65\x72" => $den9F->Vc7YT]); goto pwAkM; z8woA: $den9F->validate(["\x73\x74\x61\x74\x75\x73\137\162\145\x6d\x69\156\144\x65\x72" => "\x72\145\161\165\151\x72\145\144\x7c\x73\164\x72\151\x6e\x67", "\x70\145\163\141\156\137\x72\145\155\x69\156\144\145\x72" => "\x72\x65\x71\x75\x69\x72\145\144\174\163\164\x72\x69\156\x67"]); goto rxDr8; rxDr8: $iiyKG = DB::k6gov("\x74\142\x6c\x5f\x6e\x6f\x74\151\x66\162\x65\x6d\151\x6e\x64\145\x72")->first(); goto FGZTj; CQVc_: l37i8: goto fSsMX; c6PC8: } }
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+
+class AdminCustomPesanController extends Controller
+{
+    public function index()
+    {
+        $notif = DB::table('tbl_notif')->first();
+        $blokir = DB::table('tbl_blokir')->first();
+        $notifbayar = DB::table('tbl_notifbayar')->first();
+        $bukablokir = DB::table('tbl_bukablokir')->first();
+        $pemasangan = DB::table('tbl_npemasangan')->first();
+        $reminder = DB::table('tbl_notifreminder')->first();
+
+        return view('admin.custom-pesan.index', compact('notif', 'blokir', 'notifbayar', 'bukablokir', 'pemasangan', 'reminder'));
+    }
+
+    public function updateNotif(Request $request)
+    {
+        $request->validate([
+            'status' => 'required|string',
+            'pesan_notifikasi' => 'required|string',
+        ]);
+
+        $exists = DB::table('tbl_notif')->first();
+        if ($exists) {
+            DB::table('tbl_notif')->update([
+                'status_notifikasi' => $request->status,
+                'pesan_notifikasi' => $request->pesan_notifikasi,
+            ]);
+        } else {
+            DB::table('tbl_notif')->insert([
+                'status_notifikasi' => $request->status,
+                'pesan_notifikasi' => $request->pesan_notifikasi,
+            ]);
+        }
+
+        return redirect()->route('admin.custom_pesan.index')->with('success', 'Pesan notifikasi tagihan bulanan berhasil diperbarui!');
+    }
+
+    public function updateBayar(Request $request)
+    {
+        $request->validate([
+            'pesan_bayar' => 'required|string',
+        ]);
+
+        $exists = DB::table('tbl_notifbayar')->first();
+        if ($exists) {
+            DB::table('tbl_notifbayar')->update([
+                'pesan_bayar' => $request->pesan_bayar,
+            ]);
+        } else {
+            DB::table('tbl_notifbayar')->insert([
+                'pesan_bayar' => $request->pesan_bayar,
+            ]);
+        }
+
+        return redirect()->route('admin.custom_pesan.index')->with('success', 'Pesan bukti pembayaran berhasil diperbarui!');
+    }
+
+    public function updatePemasangan(Request $request)
+    {
+        $request->validate([
+            'status_npemasangan' => 'required|string',
+            'pesan_npemasangan' => 'required|string',
+        ]);
+
+        $exists = DB::table('tbl_npemasangan')->first();
+        if ($exists) {
+            DB::table('tbl_npemasangan')->update([
+                'status_notif' => $request->status_npemasangan,
+                'pesan_notif' => $request->pesan_npemasangan,
+            ]);
+        } else {
+            DB::table('tbl_npemasangan')->insert([
+                'status_notif' => $request->status_npemasangan,
+                'pesan_notif' => $request->pesan_npemasangan,
+            ]);
+        }
+
+        return redirect()->route('admin.custom_pesan.index')->with('success', 'Pesan pemasangan awal berhasil diperbarui!');
+    }
+
+    public function updateBlokir(Request $request)
+    {
+        $request->validate([
+            'status_blokir' => 'required|string',
+            'berapa' => 'required|integer',
+            'kapan' => 'required|string',
+            'pesan_blokir' => 'required|string',
+        ]);
+
+        $exists = DB::table('tbl_blokir')->first();
+        $data = [
+            'status_blokir' => $request->status_blokir,
+            'set_waktu' => $request->berapa,
+            'set_waktu2' => $request->kapan,
+            'pesan_blokir' => $request->pesan_blokir,
+        ];
+
+        if ($exists) {
+            DB::table('tbl_blokir')->update($data);
+        } else {
+            DB::table('tbl_blokir')->insert($data);
+        }
+
+        return redirect()->route('admin.custom_pesan.index')->with('success', 'Pengaturan isolir/blokir otomatis berhasil diperbarui!');
+    }
+
+    public function updateBukaBlokir(Request $request)
+    {
+        $request->validate([
+            'pesan_bukablokir' => 'required|string',
+        ]);
+
+        $exists = DB::table('tbl_bukablokir')->first();
+        if ($exists) {
+            DB::table('tbl_bukablokir')->update([
+                'pesan_bukablokir' => $request->pesan_bukablokir,
+            ]);
+        } else {
+            DB::table('tbl_bukablokir')->insert([
+                'pesan_bukablokir' => $request->pesan_bukablokir,
+            ]);
+        }
+
+        return redirect()->route('admin.custom_pesan.index')->with('success', 'Pesan unblock/buka blokir berhasil diperbarui!');
+    }
+
+    public function updateReminder(Request $request)
+    {
+        $request->validate([
+            'status_reminder' => 'required|string',
+            'pesan_reminder' => 'required|string',
+        ]);
+
+        $exists = DB::table('tbl_notifreminder')->first();
+        if ($exists) {
+            DB::table('tbl_notifreminder')->update([
+                'status_reminder' => $request->status_reminder,
+                'pesan_reminder' => $request->pesan_reminder,
+            ]);
+        } else {
+            DB::table('tbl_notifreminder')->insert([
+                'status_reminder' => $request->status_reminder,
+                'pesan_reminder' => $request->pesan_reminder,
+            ]);
+        }
+
+        return redirect()->route('admin.custom_pesan.index')->with('success', 'Pesan reminder tagihan berhasil diperbarui!');
+    }
+}

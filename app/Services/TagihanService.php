@@ -1,8 +1,106 @@
 <?php
-/*   __________________________________________________
-    |  Obfuscated by YAK Pro - Php Obfuscator  3.0.0   |
-    |              on 2026-06-24 23:14:51              |
-    |    GitHub: https://github.com/pk-fr/yakpro-po    |
-    |__________________________________________________|
-*/
- namespace M71jR\PMQ28; use m71jr\Xpaco\RFKjs; use m71Jr\XPAco\oBL06; use mvYYo\itukd\rZzZy\ZpnJZ; use mVYyo\btKLj\SouXr; use mvYyO\bTkLj\lP8pf\hkWLZ; class TagihanService { private const vnfps = [0, "\x30", "\142\x65\x6c\165\x6d", '']; public function zENNN(?string $eqqwq): array { return Pelanggan::HeOH1($eqqwq); } public function RPUfc(Builder $dSJoX): Builder { return $dSJoX->GvsMS(function (Builder $W2bon) { $W2bon->BVuG1("\x73\x74\x61\164\x75\x73\137\x62\141\x79\x61\162")->TXs92("\163\164\141\164\165\x73\137\x62\141\x79\x61\x72", self::vnfps); }); } public function GXTfA(array $jM6T1, ?string $szWC_ = null): int { goto g3zBL; Vd5Bz: $OrHSJ = $szWC_ ?: date("\x6d\x59"); goto D92IF; D92IF: return (int) $this->RPufc(Tagihan::MQCib("\x69\144\137\x70\x65\x6c\141\x6e\x67\x67\141\156", $jM6T1)->GVsms("\x62\165\154\x61\x6e\137\x74\x61\150\165\156", $OrHSJ)->gvSmS(function (Builder $dSJoX) { $dSJoX->gVsmS("\155\x61\156\x75\x61\x6c\x5f\151\x6e\166\x6f\151\143\x65", 0)->IlnPj("\155\x61\156\x75\141\154\137\x69\x6e\x76\x6f\x69\143\145"); }))->q30OE(DB::pgsl6("\x43\117\101\114\105\123\103\x45\50\x6a\x6d\x6c\x5f\x62\141\x79\x61\x72\54\x20\60\51\x20\x2d\40\103\117\101\114\x45\x53\x43\105\50\164\145\x72\142\x61\x79\141\162\x2c\40\60\x29")); goto UXXoo; kdpKf: return 0; goto cQ5J0; cQ5J0: kbJsO: goto Vd5Bz; g3zBL: if (!($jM6T1 === [])) { goto kbJsO; } goto kdpKf; UXXoo: } public function Vp6sr(array $jM6T1): int { goto dJYWw; dJYWw: if (!($jM6T1 === [])) { goto LoWuO; } goto GGyF2; GGyF2: return 0; goto tZf6D; tZf6D: LoWuO: goto uvgqt; uvgqt: return (int) $this->RpuFc(Tagihan::mqcIB("\151\144\x5f\x70\145\154\x61\156\x67\x67\x61\x6e", $jM6T1)->gVSmS("\x6d\141\x6e\165\x61\154\x5f\x69\x6e\166\x6f\151\143\145", 1))->q30Oe(DB::pgSl6("\x43\x4f\101\114\105\123\103\x45\50\152\x6d\154\x5f\x62\141\x79\x61\162\x2c\40\60\x29\40\x2d\40\x43\117\101\114\105\123\x43\105\50\x74\x65\x72\x62\x61\x79\141\x72\x2c\x20\60\51")); goto tk10p; tk10p: } public function rtaVA(array $jM6T1, ?string $szWC_ = null): Collection { goto RAhe5; Y3zTP: return collect(); goto YrHFm; bEq8l: return $this->RPUfc(Tagihan::qICK_("\x70\145\x6c\141\156\147\147\x61\x6e")->mqciB("\151\144\137\x70\145\154\141\156\147\x67\141\x6e", $jM6T1)->gvSMs(function (Builder $dSJoX) use ($OrHSJ) { $dSJoX->GvSMS(function (Builder $rbP7F) use ($OrHSJ) { $rbP7F->GVsMs(function (Builder $QaTg2) { $QaTg2->gvSmS("\x6d\x61\x6e\x75\141\154\x5f\x69\156\x76\x6f\151\143\145", 0)->IlNpJ("\x6d\141\x6e\165\141\154\x5f\x69\x6e\166\x6f\151\x63\145"); })->gVSms("\x62\x75\x6c\141\156\x5f\x74\x61\150\165\156", $OrHSJ); })->QOJkH("\x6d\141\156\x75\x61\x6c\x5f\151\x6e\x76\x6f\x69\x63\145", 1); }))->POjJe("\151\x64\x5f\x70\145\154\141\156\x67\147\141\x6e")->POjJE("\142\165\x6c\x61\x6e\137\x74\x61\150\165\x6e")->get()->eNaaI(function (Tagihan $N86pw) { goto EjfqA; EjfqA: $eJ58O = (int) max(0, ($N86pw->dADmS ?? 0) - ($N86pw->Y1hpd ?? 0)); goto Jk5KR; xbfKt: L_d1V: goto jVQYV; jVQYV: return ["\151\144" => $N86pw->BSqmz, "\x6d\x6f\x6e\164\150\x5f\x79\145\141\x72" => $DnIRt, "\141\155\x6f\165\x6e\x74" => $eJ58O, "\151\164\x65\155" => $N86pw->YLhBx ?: "\124\141\147\151\150\141\156\x20\x49\156\164\x65\x72\156\x65\164", "\156\141\155\x61\x5f\160\145\154\x61\156\x67\x67\141\x6e" => $N86pw->UJoNp?->nama_pelanggan, "\x6d\141\156\165\x61\x6c\137\x69\156\x76\157\x69\143\145" => (bool) $N86pw->qI_4k]; goto wrIYs; Ffd3K: if (!(is_string($DnIRt) && strlen($DnIRt) === 6)) { goto L_d1V; } goto mo0u7; Jk5KR: $DnIRt = $N86pw->y4Fra; goto Ffd3K; mo0u7: $DnIRt = substr($DnIRt, 0, 2) . "\57" . substr($DnIRt, 2); goto xbfKt; wrIYs: })->filter(fn($YNpFo) => $YNpFo["\x61\155\157\165\156\164"] > 0)->tJXp_(); goto C0lxz; RAhe5: if (!($jM6T1 === [])) { goto vs3Yb; } goto Y3zTP; YrHFm: vs3Yb: goto HbpbY; HbpbY: $OrHSJ = $szWC_ ?: date("\x6d\x59"); goto bEq8l; C0lxz: } }
+
+namespace App\Services;
+
+use App\Models\Pelanggan;
+use App\Models\Tagihan;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
+
+class TagihanService
+{
+    private const UNPAID_STATUS = [0, '0', 'belum', ''];
+
+    public function getPelangganIdsByPhone(?string $noTelp): array
+    {
+        return Pelanggan::getIdsBySamePhone($noTelp);
+    }
+
+    public function applyUnpaidFilter(Builder $query): Builder
+    {
+        return $query->where(function (Builder $builder) {
+            $builder->whereNull('status_bayar')
+                ->orWhereIn('status_bayar', self::UNPAID_STATUS);
+        });
+    }
+
+    public function sumUnpaidBulanIni(array $pelangganIds, ?string $currentMonth = null): int
+    {
+        if ($pelangganIds === []) {
+            return 0;
+        }
+
+        $targetMonth = $currentMonth ?: date('mY');
+
+        return (int) $this->applyUnpaidFilter(
+            Tagihan::whereIn('id_pelanggan', $pelangganIds)
+                ->where('bulan_tahun', $targetMonth)
+                ->where(function (Builder $query) {
+                    $query->where('manual_invoice', 0)
+                        ->orWhereNull('manual_invoice');
+                })
+        )->sum(DB::raw('COALESCE(jml_bayar, 0) - COALESCE(terbayar, 0)'));
+    }
+
+    public function sumUnpaidManual(array $pelangganIds): int
+    {
+        if ($pelangganIds === []) {
+            return 0;
+        }
+
+        return (int) $this->applyUnpaidFilter(
+            Tagihan::whereIn('id_pelanggan', $pelangganIds)
+                ->where('manual_invoice', 1)
+        )->sum(DB::raw('COALESCE(jml_bayar, 0) - COALESCE(terbayar, 0)'));
+    }
+
+    public function getUnpaidInvoices(array $pelangganIds, ?string $currentMonth = null): Collection
+    {
+        if ($pelangganIds === []) {
+            return collect();
+        }
+
+        $targetMonth = $currentMonth ?: date('mY');
+
+        // Ambil tagihan reguler bulan target + semua invoice manual belum lunas
+        return $this->applyUnpaidFilter(
+            Tagihan::with('pelanggan')
+                ->whereIn('id_pelanggan', $pelangganIds)
+                ->where(function (Builder $query) use ($targetMonth) {
+                    // Tagihan reguler: hanya untuk bulan ini
+                    $query->where(function (Builder $q) use ($targetMonth) {
+                        $q->where(function (Builder $inner) {
+                            $inner->where('manual_invoice', 0)
+                                  ->orWhereNull('manual_invoice');
+                        })
+                        ->where('bulan_tahun', $targetMonth);
+                    })
+                    // Invoice manual: semua yang belum lunas
+                    ->orWhere('manual_invoice', 1);
+                })
+        )
+            ->orderBy('id_pelanggan')
+            ->orderBy('bulan_tahun')
+            ->get()
+            ->map(function (Tagihan $invoice) {
+                $amount = (int) max(0, ($invoice->jml_bayar ?? 0) - ($invoice->terbayar ?? 0));
+                $monthYear = $invoice->bulan_tahun;
+
+                if (is_string($monthYear) && strlen($monthYear) === 6) {
+                    $monthYear = substr($monthYear, 0, 2) . '/' . substr($monthYear, 2);
+                }
+
+                return [
+                    'id' => $invoice->id_tagihan,
+                    'month_year' => $monthYear,
+                    'amount' => $amount,
+                    'item' => $invoice->item_tagihan ?: 'Tagihan Internet',
+                    'nama_pelanggan' => $invoice->pelanggan?->nama_pelanggan,
+                    'manual_invoice' => (bool) $invoice->manual_invoice,
+                ];
+            })
+            ->filter(fn($item) => $item['amount'] > 0)
+            ->values();
+    }
+}

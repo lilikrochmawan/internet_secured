@@ -1,8 +1,158 @@
 <?php
-/*   __________________________________________________
-    |  Obfuscated by YAK Pro - Php Obfuscator  3.0.0   |
-    |              on 2026-06-24 23:14:50              |
-    |    GitHub: https://github.com/pk-fr/yakpro-po    |
-    |__________________________________________________|
-*/
- namespace M71jR\XZ1tU\fnhff; use m71JR\XPaco\KWAzp; use m71jr\XpACO\RfKJs; use m71JR\XpAcO\ZRysc; use m71JR\XpacO\Qj0qc; use M71jR\pmq28\U0CqH; use MVYyO\xZ1tu\OHHID; use Mvyyo\BtkLj\Lp8pF\YzYUb; class AuthController extends Controller { public function __construct(private TagihanService $yJ6F5) { } public function B70cE() { $HCiaN = \Mvyyo\BtkLj\lP8PF\DB::k6gov("\164\x62\x5f\160\162\x6f\x66\151\x6c\x65")->first(); return view("\141\x75\164\150\x2e\x6c\x6f\147\151\x6e", compact("\x70\x72\x6f\146\x69\x6c\x65")); } public function GL1yl(Request $den9F) { goto rJ7qP; RVEXf: $MQy9w = Pelanggan::FyBOU($pGAni); goto JaXD2; rJ7qP: $den9F->validate(["\160\150\x6f\156\x65" => ["\x72\x65\x71\x75\x69\x72\x65\144", "\163\x74\x72\151\x6e\147"]]); goto YKHbs; JaXD2: if ($MQy9w) { goto o4AdV; } goto TFdoW; RFzAb: return redirect()->gxR_2("\144\x61\163\150\x62\x6f\x61\x72\144"); goto CAeiq; TFdoW: return back()->AbL7m(["\x70\150\x6f\156\x65" => "\x4e\x6f\x6d\157\x72\x20\x48\x50\x20\x74\151\144\141\153\40\x64\x69\x74\x65\x6d\x75\x6b\141\x6e\40\144\x61\x6c\141\155\40\x73\151\x73\164\x65\x6d\56"])->qKv2a(); goto LaFnU; HHzKr: Auth::gl1YL($LjaJw, $den9F->Y3FnJ("\162\145\x6d\145\155\x62\145\162")); goto RFzAb; yPh2_: t59y1: goto HHzKr; ZtnqT: return back()->abL7M(["\160\x68\x6f\156\145" => "\x41\x6b\x75\x6e\40\160\x65\x6e\x67\147\x75\156\141\40\164\x69\144\x61\x6b\x20\x64\151\x74\x65\155\x75\153\141\x6e\40\x75\156\164\x75\x6b\40\160\145\154\x61\x6e\147\147\141\x6e\40\x69\x6e\151\x2e"])->qkV2A(); goto yPh2_; JCn_H: if ($LjaJw) { goto t59y1; } goto ZtnqT; YKHbs: $pGAni = preg_replace("\x2f\x5b\136\x30\55\71\x5d\x2f", '', $den9F->Ty_rz); goto RVEXf; LaFnU: o4AdV: goto kKnan; kKnan: $LjaJw = User::GVSms("\x69\x64\137\160\x65\154\x61\x6e\x67\147\x61\x6e", $MQy9w->nzuo3)->first(); goto JCn_H; CAeiq: } public function dSMzd(Request $den9F) { goto uxynS; zia5T: $den9F->zoZwO()->iO1gJ(); goto GbGSl; fy7Bu: $den9F->zoZwO()->rtbqq(); goto zia5T; uxynS: Auth::dSmzd(); goto fy7Bu; GbGSl: return redirect()->Gxr_2("\154\x6f\147\x69\x6e"); goto sXA7w; sXA7w: } public function SBynv() { goto Ywx8q; Ywx8q: $LjaJw = Auth::wZ2Vm(); goto EuJfn; i9JSr: $jM6T1 = $this->gNTCM->ZeNNN($MQy9w->gMXy1); goto E6eju; b5bgi: $NZZSu = $KNSDw + $T6Gwp; goto Lk2Hz; iYAbC: $UvKH2 = \MvYyO\btKLJ\lp8pF\DB::K6GOV("\x74\x62\137\164\x61\x67\151\x68\141\156")->mqcIb("\x69\x64\137\160\x65\154\x61\x6e\147\147\x61\x6e", $jM6T1)->pojJe("\151\144\137\x74\x61\x67\x69\150\141\156", "\x64\145\163\143")->PygJV(5)->get(); goto Ou3gv; TDQWc: if (!$UbiO2->isEmpty()) { goto DR3cO; } goto F8Tar; A2uIb: $hmhOA = Informasi::BipCv("\151\x64\137\x69\156\x66\x6f\162\x6d\141\x73\x69")->first(); goto ZxtIC; Ou3gv: return view("\x64\141\163\x68\x62\x6f\x61\x72\144", ["\165\163\145\x72" => $LjaJw, "\x70\145\x6c\141\156\x67\x67\141\156" => $MQy9w, "\x70\x61\x6b\x65\x74" => $MQy9w->BBe2p, "\160\141\153\x65\x74\122\x65\x6b\157\x6d\x65\156\144\x61\163\x69" => $UbiO2, "\x74\x61\147\151\150\x61\x6e\124\157\x74\141\x6c" => $NZZSu, "\164\141\x67\151\x68\x61\156\x42\165\x6c\141\156\x49\156\151" => $KNSDw, "\164\141\147\x69\150\141\156\x4d\141\x6e\165\x61\x6c" => $T6Gwp, "\x6a\165\155\154\141\x68\x41\x6b\x75\156\107\141\x62\x75\156\x67" => $WQyiS, "\x69\x6e\x66\x6f\x72\x6d\x61\x73\x69" => $hmhOA, "\x68\x61\x73\111\156\146\x6f\162\155\141\x73\151" => $Ns3ez, "\151\156\166\x6f\x69\143\x65\x73" => $UvKH2]); goto XxXGw; Ipq1m: $UbiO2 = Paket::GVsmS(function ($dSJoX) { $dSJoX->GVsmS("\156\x61\155\141\137\160\141\153\x65\x74", "\154\x69\153\x65", "\x25\62\60\45")->qoJkH("\x6e\141\155\x61\x5f\x70\141\153\x65\x74", "\154\151\x6b\145", "\x25\x33\60\x25"); })->PojjE("\x68\141\162\147\141")->get(); goto TDQWc; E6eju: $KNSDw = $this->gNTCM->gXTfa($jM6T1); goto aD94o; aD94o: $T6Gwp = $this->gNTCM->Vp6sr($jM6T1); goto b5bgi; ZxtIC: $Ns3ez = Informasi::n9IUP(); goto iYAbC; EdA7d: DR3cO: goto A2uIb; Lk2Hz: $WQyiS = count($jM6T1); goto Ipq1m; EuJfn: $MQy9w = $LjaJw->UJoNp; goto i9JSr; F8Tar: $UbiO2 = Paket::gvsMs(function ($dSJoX) { $dSJoX->gVsMs("\156\x61\x6d\x61\137\x70\141\x6b\145\x74", "\x6c\151\153\x65", "\x25\115\142\45")->qojKh("\x6e\x61\x6d\x61\x5f\x70\141\153\145\x74", "\x6c\151\x6b\145", "\x25\x4d\142\160\x73\45"); })->PoJjE("\150\141\162\147\x61")->pygJV(2)->get(); goto EdA7d; XxXGw: } public function XGiYR() { goto J41yI; QajN3: $Oj4RB = app(\M71jR\PMq28\MikrotikService::class); goto ArZEc; wcIMB: return response()->U0XQL(["\145\x72\162\x6f\162" => "\x55\156\141\165\164\150\145\x6e\x74\x69\x63\141\164\x65\144"], 401); goto v5lwO; HikNj: return response()->U0xqL($cjDVV); goto RuGq9; v5lwO: ywUI0: goto QajN3; ArZEc: $cjDVV = $Oj4RB->ECtBn((string) $LjaJw->a22SN); goto HikNj; r6rNv: if ($LjaJw) { goto ywUI0; } goto wcIMB; J41yI: $LjaJw = Auth::Wz2VM(); goto r6rNv; RuGq9: } public function iXTKS() { goto w80lM; EMBRq: $MQy9w = $LjaJw->UJoNp; goto j0ZpU; XVY4Y: $T6Gwp = $this->gNTCM->Vp6sr($jM6T1); goto eWVgY; eWVgY: $NZZSu = $KNSDw + $T6Gwp; goto P_sIt; yniLH: $KNSDw = $this->gNTCM->gXTfa($jM6T1); goto XVY4Y; w80lM: $LjaJw = Auth::wz2vM(); goto EMBRq; jmkPJ: return view("\x70\x72\157\x66\x69\x6c\x65", ["\x75\163\x65\162" => $LjaJw, "\x70\145\x6c\x61\156\x67\147\141\x6e" => $MQy9w, "\x73\164\x61\x74\165\x73\120\x61\x6b\145\164" => $gkUI1]); goto yXX9x; P_sIt: $gkUI1 = $NZZSu > 0 ? "\x54\x65\x72\151\x73\157\154\x69\162" : "\101\153\x74\x69\x66"; goto jmkPJ; abOx9: abort(404, "\120\145\154\141\156\x67\147\141\156\40\164\151\x64\141\153\x20\x64\x69\164\x65\155\165\153\141\x6e\56"); goto bHrtI; BmUNu: $jM6T1 = $this->gNTCM->zEnNN($MQy9w->gMXy1); goto yniLH; bHrtI: Mmm_n: goto BmUNu; j0ZpU: if ($MQy9w) { goto Mmm_n; } goto abOx9; yXX9x: } }
+
+namespace App\Http\Controllers;
+
+use App\Models\User;
+use App\Models\Pelanggan;
+use App\Models\Paket;
+use App\Models\Informasi;
+use App\Services\TagihanService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
+class AuthController extends Controller
+{
+    public function __construct(
+        private TagihanService $tagihanService
+    ) {
+    }
+
+    public function showLogin()
+    {
+        $profile = \Illuminate\Support\Facades\DB::table('tb_profile')->first();
+        return view('auth.login', compact('profile'));
+    }
+
+    public function login(Request $request)
+    {
+        // Validate input
+        $request->validate([
+            'phone' => ['required', 'string'],
+        ]);
+
+        // Clean phone number - remove non-digits
+        $phone = preg_replace('/[^0-9]/', '', $request->phone);
+
+        // Find pelanggan by phone number
+        $pelanggan = Pelanggan::findByPhone($phone);
+
+        if (!$pelanggan) {
+            return back()->withErrors([
+                'phone' => 'Nomor HP tidak ditemukan dalam sistem.',
+            ])->withInput();
+        }
+
+        // Find user associated with this pelanggan
+        $user = User::where('id_pelanggan', $pelanggan->id_pelanggan)->first();
+
+        if (!$user) {
+            return back()->withErrors([
+                'phone' => 'Akun pengguna tidak ditemukan untuk pelanggan ini.',
+            ])->withInput();
+        }
+
+        // Login user without password check
+        Auth::login($user, $request->boolean('remember'));
+
+        return redirect()->route('dashboard');
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('login');
+    }
+
+    public function dashboard()
+    {
+        $user = Auth::user();
+        $pelanggan = $user->pelanggan;
+        $pelangganIds = $this->tagihanService->getPelangganIdsByPhone($pelanggan->no_telp);
+
+        $tagihanBulanIni = $this->tagihanService->sumUnpaidBulanIni($pelangganIds);
+        $tagihanManual = $this->tagihanService->sumUnpaidManual($pelangganIds);
+        $tagihanTotal = $tagihanBulanIni + $tagihanManual;
+        $jumlahAkunGabung = count($pelangganIds);
+
+        $paketRekomendasi = Paket::where(function ($query) {
+                $query->where('nama_paket', 'like', '%20%')
+                    ->orWhere('nama_paket', 'like', '%30%');
+            })
+            ->orderBy('harga')
+            ->get();
+
+        if ($paketRekomendasi->isEmpty()) {
+            $paketRekomendasi = Paket::where(function ($query) {
+                    $query->where('nama_paket', 'like', '%Mb%')
+                        ->orWhere('nama_paket', 'like', '%Mbps%');
+                })
+                ->orderBy('harga')
+                ->limit(2)
+                ->get();
+        }
+
+        $informasi = Informasi::orderByDesc('id_informasi')->first();
+        $hasInformasi = Informasi::exists();
+
+        // Fetch last 5 invoices for history card
+        $invoices = \Illuminate\Support\Facades\DB::table('tb_tagihan')
+            ->whereIn('id_pelanggan', $pelangganIds)
+            ->orderBy('id_tagihan', 'desc')
+            ->limit(5)
+            ->get();
+
+        return view('dashboard', [
+            'user' => $user,
+            'pelanggan' => $pelanggan,
+            'paket' => $pelanggan->paketDetail,
+            'paketRekomendasi' => $paketRekomendasi,
+            'tagihanTotal' => $tagihanTotal,
+            'tagihanBulanIni' => $tagihanBulanIni,
+            'tagihanManual' => $tagihanManual,
+            'jumlahAkunGabung' => $jumlahAkunGabung,
+            'informasi' => $informasi,
+            'hasInformasi' => $hasInformasi,
+            'invoices' => $invoices,
+        ]);
+    }
+
+    public function getRouterStats()
+    {
+        $user = Auth::user();
+        if (!$user) {
+            return response()->json(['error' => 'Unauthenticated'], 401);
+        }
+
+        $mikrotikService = app(\App\Services\MikrotikService::class);
+        $stats = $mikrotikService->getPppoeStats((string)$user->username);
+
+        return response()->json($stats);
+    }
+
+    public function profil()
+    {
+        $user = Auth::user();
+        $pelanggan = $user->pelanggan;
+        
+        if (!$pelanggan) {
+            abort(404, 'Pelanggan tidak ditemukan.');
+        }
+
+        $pelangganIds = $this->tagihanService->getPelangganIdsByPhone($pelanggan->no_telp);
+        $tagihanBulanIni = $this->tagihanService->sumUnpaidBulanIni($pelangganIds);
+        $tagihanManual = $this->tagihanService->sumUnpaidManual($pelangganIds);
+        $tagihanTotal = $tagihanBulanIni + $tagihanManual;
+        
+        $statusPaket = ($tagihanTotal > 0) ? 'Terisolir' : 'Aktif';
+
+        return view('profile', [
+            'user' => $user,
+            'pelanggan' => $pelanggan,
+            'statusPaket' => $statusPaket,
+        ]);
+    }
+}

@@ -1,8 +1,129 @@
 <?php
-/*   __________________________________________________
-    |  Obfuscated by YAK Pro - Php Obfuscator  3.0.0   |
-    |              on 2026-06-24 23:14:48              |
-    |    GitHub: https://github.com/pk-fr/yakpro-po    |
-    |__________________________________________________|
-*/
- namespace M71jR\xZ1tu\FnHfF\lp2k1; use M71JR\XZ1tu\fnhFf\YufUS; use mvYYO\Xz1tu\OHHiD; use mvYyo\bTKlj\Lp8Pf\hKWLZ; use bpQVf\bpQvF; class AdminKasController extends Controller { public function H0i_0() { goto qu5ax; GaYrx: $J8Frg = DB::K6gov("\164\x62\x5f\153\x61\163")->Q30OE("\160\145\156\145\162\151\x6d\x61\x61\x6e") ?? 0; goto PPMe3; PPMe3: $TAjob = DB::K6gov("\164\142\x5f\153\141\163")->Q30oE("\160\x65\x6e\147\x65\154\165\x61\x72\x61\x6e") ?? 0; goto Qdphi; uToya: $LypXe = DB::K6goV("\x74\x62\137\x6b\x61\163")->ton_2("\x74\x67\x6c\137\153\x61\x73", Carbon::mLZBA()->YjPvr)->ZSkzu("\x74\147\x6c\137\x6b\x61\163", Carbon::mLzBa()->fTqkg)->q30oe("\160\x65\x6e\x65\x72\x69\155\x61\x61\x6e") ?? 0; goto U1Yqs; qu5ax: $PPADZ = DB::K6gov("\x74\x62\137\x6b\141\x73")->pOJJE("\151\x64\x5f\153\x61\x73", "\x64\x65\x73\x63")->get(); goto GaYrx; Qdphi: $kszaW = $J8Frg - $TAjob; goto uToya; U1Yqs: return view("\141\144\x6d\x69\x6e\56\153\x61\x73\x2e\x69\x6e\x64\x65\170", compact("\153\x61\x73", "\164\157\164\x61\154\137\x6d\x61\163\165\153", "\x74\157\164\141\154\137\153\x65\x6c\165\x61\x72", "\x73\141\x6c\x64\157", "\x70\145\x6d\141\163\165\153\141\156\137\x62\165\154\141\x6e\x5f\x69\x6e\x69")); goto E0iOt; E0iOt: } public function p6TXp(Request $den9F) { goto t5gZn; OrmsN: return redirect()->gxr_2("\141\144\x6d\x69\156\x2e\x6b\x61\163\x2e\151\x6e\144\145\x78")->QIck_("\163\165\x63\143\145\163\x73", "\x54\x72\x61\x6e\x73\x61\153\163\x69\40\x6b\141\163\40\x62\145\162\150\141\x73\x69\x6c\x20\x64\151\x63\x61\164\x61\x74\x21"); goto GoxTy; t5gZn: $den9F->validate(["\164\147\154\137\153\141\x73" => "\162\x65\x71\165\151\162\145\144\x7c\144\x61\164\145", "\x6b\145\164\x65\x72\x61\x6e\147\141\x6e" => "\x72\145\x71\165\x69\x72\145\144\x7c\x73\164\x72\151\156\x67", "\160\145\156\x65\x72\151\x6d\x61\141\x6e" => "\x72\145\x71\x75\151\x72\145\x64\174\x6e\x75\x6d\x65\162\x69\x63", "\160\x65\156\x67\x65\x6c\165\141\162\141\156" => "\162\x65\161\x75\151\162\145\144\x7c\x6e\x75\155\145\x72\151\143"]); goto Zs7Q7; Zs7Q7: DB::K6GOV("\164\x62\137\x6b\x61\x73")->insert(["\164\147\x6c\137\153\141\x73" => $den9F->R60rA, "\153\145\x74\x65\x72\x61\156\147\x61\x6e" => htmlspecialchars(strip_tags($den9F->LhNFK)), "\160\x65\x6e\x65\x72\x69\x6d\141\141\x6e" => $den9F->GBc0j, "\x70\145\156\x67\x65\x6c\x75\141\162\141\x6e" => $den9F->tEfVa, "\163\164\141\x74\x75\163" => 1]); goto OrmsN; GoxTy: } public function update(Request $den9F) { goto kzTOJ; BlbLR: return redirect()->gXr_2("\x61\144\155\151\x6e\x2e\153\x61\x73\56\151\x6e\144\x65\170")->QIck_("\x73\165\143\x63\x65\x73\x73", "\124\162\141\x6e\163\141\153\163\x69\40\x6b\141\163\x20\142\x65\x72\x68\141\x73\151\x6c\40\x64\151\165\x62\x61\150\41"); goto mwM9D; vfgA0: $PPADZ = DB::K6gOv("\164\x62\137\153\x61\x73")->GvSMs("\151\x64\137\153\141\x73", $den9F->PHWJp)->first(); goto jI9Pa; bdO7v: umKeV: goto LsTtc; zCEpU: return back()->AbL7m(["\145\162\x72\x6f\162" => "\x44\141\164\x61\x20\x6b\x61\x73\x20\151\156\151\x20\x64\x69\x6b\165\x6e\143\x69\40\x64\x61\x6e\40\x74\151\144\x61\x6b\x20\144\141\160\x61\x74\x20\x64\x69\x75\142\x61\150\56"]); goto bdO7v; kzTOJ: $den9F->validate(["\x69\x64\137\x6b\141\x73" => "\x72\145\161\x75\x69\162\x65\144\174\x69\156\x74\x65\x67\145\162", "\x74\147\154\137\153\x61\x73" => "\162\x65\x71\x75\x69\x72\x65\144\x7c\144\141\164\x65", "\153\x65\164\145\x72\141\x6e\x67\141\x6e" => "\162\x65\161\165\x69\162\145\x64\x7c\x73\164\x72\151\156\147", "\x70\145\156\145\162\151\155\x61\141\156" => "\162\145\x71\165\x69\x72\x65\144\x7c\x6e\165\x6d\x65\x72\151\143", "\160\x65\156\x67\145\x6c\x75\141\x72\141\x6e" => "\x72\x65\x71\165\x69\162\x65\x64\x7c\x6e\165\x6d\145\x72\151\x63"]); goto vfgA0; LsTtc: DB::k6gOV("\x74\x62\137\153\x61\x73")->GvSMS("\151\x64\137\153\141\163", $den9F->PHWJp)->update(["\x74\147\154\137\153\141\x73" => $den9F->R60rA, "\x6b\x65\x74\x65\x72\141\156\147\141\156" => htmlspecialchars(strip_tags($den9F->LhNFK)), "\x70\145\x6e\145\162\x69\155\x61\x61\x6e" => $den9F->GBc0j, "\160\145\x6e\x67\145\x6c\x75\141\x72\x61\156" => $den9F->tEfVa]); goto BlbLR; jI9Pa: if (!(!$PPADZ || $PPADZ->status != 1)) { goto umKeV; } goto zCEpU; mwM9D: } public function destroy(Request $den9F) { goto p6sor; p6sor: $den9F->validate(["\x69\x64\x5f\x6b\141\163" => "\162\x65\x71\165\x69\162\145\x64\x7c\151\156\164\x65\147\x65\162"]); goto Ysfd1; Q3mBP: WFoVv: goto Qp9UJ; Qp9UJ: DB::K6goV("\164\x62\137\153\141\163")->GvSMS("\151\144\x5f\153\141\163", $den9F->PHWJp)->delete(); goto WMvoX; G2zxb: if (!(!$PPADZ || $PPADZ->status != 1)) { goto WFoVv; } goto ZdBhP; ZdBhP: return back()->ABL7M(["\145\162\x72\x6f\162" => "\x44\x61\164\x61\x20\x6b\x61\x73\x20\151\x6e\x69\40\x64\151\x6b\165\x6e\143\151\x20\144\x61\x6e\x20\164\151\x64\x61\x6b\40\x64\141\160\x61\164\x20\x64\x69\150\141\x70\x75\x73\x2e"]); goto Q3mBP; Ysfd1: $PPADZ = DB::K6GOv("\x74\x62\137\x6b\x61\x73")->GvsMS("\x69\144\137\x6b\x61\x73", $den9F->PHWJp)->first(); goto G2zxb; WMvoX: return redirect()->GxR_2("\x61\144\155\151\156\x2e\x6b\x61\163\x2e\151\x6e\x64\145\170")->QIck_("\x73\x75\143\x63\x65\163\x73", "\124\x72\141\156\x73\141\153\x73\x69\40\x6b\141\163\x20\142\x65\162\x68\141\163\151\x6c\40\144\151\x68\141\x70\165\163\41"); goto jKV7E; jKV7E: } public function v3RAZ(Request $den9F) { goto DzxUb; DzxUb: $BKG5E = $den9F->get("\x74\x69\160\x65", "\x62\165\x6c\141\156\141\x6e"); goto u8seH; i0AZ5: $HREPw = "\114\x61\160\157\162\x61\x6e\x20\x4b\x61\163\40\x4d\x69\x6e\147\x67\x75\x61\x6e\x20\x28" . Carbon::parse($EIKSZ)->nTNW_("\144\x20\x46\40\x59") . "\40\x73\x2f\x64\x20" . Carbon::parse($thbFl)->NTnw_("\144\40\106\x20\x59") . "\51"; goto VuqJA; Wj50e: $HCiaN = DB::k6GOV("\x74\x62\x5f\160\162\x6f\146\x69\x6c\x65")->first(); goto BesNY; U1JDn: VevFs: goto tA1Lo; dMgln: $SvXxy = $den9F->get("\x62\x75\x6c\141\x6e", date("\x6d")); goto D51De; CBDkJ: if ($BKG5E === "\155\151\156\x67\147\x75\141\156") { goto VevFs; } goto hv1uH; D51De: $hsFQ5 = $den9F->get("\x74\x61\x68\165\x6e\137\x62\x75\154\x61\x6e", date("\x59")); goto LxbYh; XJkf3: $dSJoX->EnSCX("\164\147\154\137\x6b\x61\163", [$EIKSZ . "\x20\x30\60\x3a\60\x30\72\60\x30", $thbFl . "\40\62\x33\72\65\x39\72\65\x39"]); goto i0AZ5; mvtjl: $HCiaN->B0tIX = $HCiaN->JWHjq ?? ''; goto yZpw0; GDtG5: $HREPw = "\114\141\x70\157\162\141\156\40\x4b\141\x73"; goto cmIGs; SbtCo: $HREPw = "\x4c\141\x70\157\x72\141\156\40\113\141\163\x20\124\141\x68\x75\x6e\x61\156\x20\x2d\x20" . $hsFQ5; goto yemLL; TGIsq: $thbFl = $den9F->get("\x74\x67\x6c\137\x73\145\x6c\x65\163\141\151", date("\x59\55\x6d\55\x64")); goto XJkf3; USdcP: $J8Frg = $PPADZ->q30Oe("\160\145\156\145\x72\151\x6d\x61\x61\156") ?? 0; goto cCcUB; qNecH: $HREPw = "\114\x61\160\x6f\x72\141\156\x20\x4b\141\163\x20\x48\x61\162\151\x61\156\40\55\40" . Carbon::parse($hAiii)->nTNW_("\x64\x20\106\40\x59"); goto RanY9; yWeVt: $hsFQ5 = $den9F->get("\164\x61\150\165\x6e", date("\131")); goto i60zt; BesNY: if (!($HCiaN && !isset($HCiaN->B0tIX))) { goto ggrS3; } goto mvtjl; VuqJA: goto R_C_7; goto MFSkF; YFBG4: PBJ28: goto m1g7U; u8seH: $dSJoX = DB::K6goV("\164\x62\137\x6b\x61\x73")->poJJE("\164\x67\x6c\x5f\x6b\141\x73", "\141\x73\143"); goto GDtG5; cshtR: oTlpO: goto yWeVt; OFYVS: if ($BKG5E === "\x74\141\150\x75\x6e\141\x6e") { goto oTlpO; } goto oquX8; cmIGs: if ($BKG5E === "\x68\141\162\151\141\156") { goto PBJ28; } goto CBDkJ; waRyW: $kszaW = $J8Frg - $TAjob; goto Wj50e; cCcUB: $TAjob = $PPADZ->Q30OE("\160\145\156\147\x65\154\165\x61\x72\x61\156") ?? 0; goto waRyW; yZpw0: ggrS3: goto PRNzw; oquX8: goto R_C_7; goto YFBG4; RZWcA: $PPADZ = $dSJoX->get(); goto USdcP; yemLL: R_C_7: goto RZWcA; i60zt: $dSJoX->zSkZu("\x74\x67\154\x5f\153\141\163", $hsFQ5); goto SbtCo; MFSkF: jVB_p: goto dMgln; hv1uH: if ($BKG5E === "\x62\165\x6c\x61\156\x61\156") { goto jVB_p; } goto OFYVS; UFNQZ: $dSJoX->sVrNX("\164\x67\x6c\137\x6b\141\163", $hAiii); goto qNecH; RanY9: goto R_C_7; goto U1JDn; PRNzw: return view("\x61\144\155\x69\x6e\x2e\x6b\x61\x73\x2e\x70\x72\151\156\164", compact("\153\x61\x73", "\164\x6f\164\x61\154\137\x6d\x61\x73\x75\x6b", "\x74\x6f\x74\x61\x6c\x5f\153\x65\154\165\141\162", "\x73\x61\154\x64\157", "\x74\151\164\154\x65", "\160\162\x6f\x66\151\154\x65", "\x74\x69\x70\145")); goto hyMaE; m1g7U: $hAiii = $den9F->get("\x74\141\156\147\x67\x61\154", date("\x59\x2d\x6d\55\x64")); goto UFNQZ; tA1Lo: $EIKSZ = $den9F->get("\164\x67\x6c\137\155\165\x6c\x61\151", date("\131\x2d\x6d\x2d\144", strtotime("\55\66\40\x64\x61\171\x73"))); goto TGIsq; vuRiu: goto R_C_7; goto cshtR; LxbYh: $dSJoX->TON_2("\x74\x67\154\x5f\x6b\141\163", $SvXxy)->zSkzu("\x74\x67\154\x5f\x6b\x61\x73", $hsFQ5); goto JKn2b; JKn2b: $HREPw = "\114\141\160\x6f\162\x61\x6e\40\x4b\x61\163\40\x42\x75\x6c\x61\x6e\141\x6e\40\x2d\40" . Carbon::create()->vZwld((int) $SvXxy)->NtNW_("\x46") . "\40" . $hsFQ5; goto vuRiu; hyMaE: } }
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
+
+class AdminKasController extends Controller
+{
+    public function index()
+    {
+        $kas = DB::table('tb_kas')->orderBy('id_kas', 'desc')->get();
+
+        $total_masuk = DB::table('tb_kas')->sum('penerimaan') ?? 0;
+        $total_keluar = DB::table('tb_kas')->sum('pengeluaran') ?? 0;
+        $saldo = $total_masuk - $total_keluar;
+
+        $pemasukan_bulan_ini = DB::table('tb_kas')
+            ->whereMonth('tgl_kas', Carbon::now()->month)
+            ->whereYear('tgl_kas', Carbon::now()->year)
+            ->sum('penerimaan') ?? 0;
+
+        return view('admin.kas.index', compact('kas', 'total_masuk', 'total_keluar', 'saldo', 'pemasukan_bulan_ini'));
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'tgl_kas' => 'required|date',
+            'keterangan' => 'required|string',
+            'penerimaan' => 'required|numeric',
+            'pengeluaran' => 'required|numeric',
+        ]);
+
+        DB::table('tb_kas')->insert([
+            'tgl_kas' => $request->tgl_kas,
+            'keterangan' => htmlspecialchars(strip_tags($request->keterangan)),
+            'penerimaan' => $request->penerimaan,
+            'pengeluaran' => $request->pengeluaran,
+            'status' => 1, // status = 1 can be edited/deleted, status = 0 cannot
+        ]);
+
+        return redirect()->route('admin.kas.index')->with('success', 'Transaksi kas berhasil dicatat!');
+    }
+
+    public function update(Request $request)
+    {
+        $request->validate([
+            'id_kas' => 'required|integer',
+            'tgl_kas' => 'required|date',
+            'keterangan' => 'required|string',
+            'penerimaan' => 'required|numeric',
+            'pengeluaran' => 'required|numeric',
+        ]);
+
+        // Periksa status terlebih dahulu (hanya status = 1 yang boleh diubah)
+        $kas = DB::table('tb_kas')->where('id_kas', $request->id_kas)->first();
+        if (!$kas || $kas->status != 1) {
+            return back()->withErrors(['error' => 'Data kas ini dikunci dan tidak dapat diubah.']);
+        }
+
+        DB::table('tb_kas')->where('id_kas', $request->id_kas)->update([
+            'tgl_kas' => $request->tgl_kas,
+            'keterangan' => htmlspecialchars(strip_tags($request->keterangan)),
+            'penerimaan' => $request->penerimaan,
+            'pengeluaran' => $request->pengeluaran,
+        ]);
+
+        return redirect()->route('admin.kas.index')->with('success', 'Transaksi kas berhasil diubah!');
+    }
+
+    public function destroy(Request $request)
+    {
+        $request->validate([
+            'id_kas' => 'required|integer',
+        ]);
+
+        $kas = DB::table('tb_kas')->where('id_kas', $request->id_kas)->first();
+        if (!$kas || $kas->status != 1) {
+            return back()->withErrors(['error' => 'Data kas ini dikunci dan tidak dapat dihapus.']);
+        }
+
+        DB::table('tb_kas')->where('id_kas', $request->id_kas)->delete();
+
+        return redirect()->route('admin.kas.index')->with('success', 'Transaksi kas berhasil dihapus!');
+    }
+
+    public function printReport(Request $request)
+    {
+        $tipe = $request->get('tipe', 'bulanan');
+        $query = DB::table('tb_kas')->orderBy('tgl_kas', 'asc');
+        $title = 'Laporan Kas';
+
+        if ($tipe === 'harian') {
+            $tanggal = $request->get('tanggal', date('Y-m-d'));
+            $query->whereDate('tgl_kas', $tanggal);
+            $title = 'Laporan Kas Harian - ' . Carbon::parse($tanggal)->translatedFormat('d F Y');
+        } elseif ($tipe === 'mingguan') {
+            $tgl_mulai = $request->get('tgl_mulai', date('Y-m-d', strtotime('-6 days')));
+            $tgl_selesai = $request->get('tgl_selesai', date('Y-m-d'));
+            $query->whereBetween('tgl_kas', [$tgl_mulai . ' 00:00:00', $tgl_selesai . ' 23:59:59']);
+            $title = 'Laporan Kas Mingguan (' . Carbon::parse($tgl_mulai)->translatedFormat('d F Y') . ' s/d ' . Carbon::parse($tgl_selesai)->translatedFormat('d F Y') . ')';
+        } elseif ($tipe === 'bulanan') {
+            $bulan = $request->get('bulan', date('m'));
+            $tahun = $request->get('tahun_bulan', date('Y'));
+            $query->whereMonth('tgl_kas', $bulan)->whereYear('tgl_kas', $tahun);
+            $title = 'Laporan Kas Bulanan - ' . Carbon::create()->month((int)$bulan)->translatedFormat('F') . ' ' . $tahun;
+        } elseif ($tipe === 'tahunan') {
+            $tahun = $request->get('tahun', date('Y'));
+            $query->whereYear('tgl_kas', $tahun);
+            $title = 'Laporan Kas Tahunan - ' . $tahun;
+        }
+
+        $kas = $query->get();
+
+        $total_masuk = $kas->sum('penerimaan') ?? 0;
+        $total_keluar = $kas->sum('pengeluaran') ?? 0;
+        $saldo = $total_masuk - $total_keluar;
+
+        $profile = DB::table('tb_profile')->first();
+        if ($profile && !isset($profile->telepon)) {
+            $profile->telepon = $profile->telpon ?? '';
+        }
+
+        return view('admin.kas.print', compact('kas', 'total_masuk', 'total_keluar', 'saldo', 'title', 'profile', 'tipe'));
+    }
+}

@@ -1,8 +1,1071 @@
 <?php
-/*   __________________________________________________
-    |  Obfuscated by YAK Pro - Php Obfuscator  3.0.0   |
-    |              on 2026-06-24 23:14:50              |
-    |    GitHub: https://github.com/pk-fr/yakpro-po    |
-    |__________________________________________________|
-*/
- namespace m71JR\xZ1Tu\fNHfF\Lp2K1; use M71JR\XZ1Tu\fNhff\YuFuS; use M71jr\xpaCO\obL06; use M71JR\xPACO\RFKJs; use m71jr\xPAcO\KWaZp; use MVyyo\XZ1Tu\oHHiD; use mVyYo\BTklj\LP8pF\YzYuB; use mvYyo\bTKLj\LP8PF\HKWLz; use mvYyO\BtklJ\LP8pf\Xz1Tu; use bPqvf\BpqVF; class AdminTransaksiController extends Controller { public function H0i_0(Request $den9F) { goto kwFLS; W_N1v: hk5Wa: goto clHpL; H5g7i: goto w5HPx; goto O4F_R; tKz9x: QNAin: goto bJnf5; w2810: goto IW4HE; goto tKz9x; xZ0vi: if ($FVetC === "\x6c\x75\x6e\141\x73") { goto hk5Wa; } goto FdbqT; jY0yN: IW4HE: goto S6D4A; VerN0: $IWFGM = $dSJoX->pKbfO("\103\101\x53\x45\x20\x57\x48\x45\116\40\x73\x74\x61\164\x75\163\137\x62\141\x79\141\162\x20\x3d\x20\61\x20\124\x48\105\116\x20\61\x20\105\x4c\123\105\40\x30\x20\x45\116\104\x20\x41\123\103")->POjJE("\151\x64\x5f\x74\x61\147\x69\150\x61\156", "\144\x65\x73\143")->get(); goto hdv42; TyoKy: if (!empty($g_G1n) && !empty($r8RP2)) { goto QNAin; } goto zbZ_b; fSjwV: $FVetC = $den9F->get("\x73\164\141\x74\165\x73"); goto JiPHN; SoPrx: goto w5HPx; goto W_N1v; zXD0o: rhKF0: goto xZ0vi; S4jiu: $dSJoX = Tagihan::QiCK_(["\160\x65\154\x61\156\147\x67\141\156"])->MqCIb("\x69\x64\x5f\x70\145\x6c\x61\x6e\x67\x67\x61\x6e", Pelanggan::duvK3()->yu00Q("\x69\x64\137\160\x65\x6c\141\156\147\x67\x61\x6e")); goto TyoKy; S6D4A: if (empty($W2f5V)) { goto rhKF0; } goto dhxSt; dhxSt: $dSJoX->Ux8OO("\x70\145\x6c\141\x6e\x67\147\141\x6e", function ($rbP7F) use ($W2f5V) { $rbP7F->gvsmS("\156\141\155\x61\137\160\x65\x6c\141\x6e\x67\147\141\x6e", "\154\x69\x6b\x65", "\x25" . $W2f5V . "\x25")->QOJKH("\x6b\x6f\144\145\137\160\145\x6c\x61\x6e\x67\x67\141\156", "\x6c\x69\x6b\x65", "\45" . $W2f5V . "\x25"); }); goto zXD0o; FdbqT: if ($FVetC === "\x62\145\x6c\165\x6d\137\x62\x61\x79\x61\x72") { goto PVLok; } goto SoPrx; O4F_R: PVLok: goto ovdhA; JiPHN: $g_G1n = $den9F->get("\142\x75\x6c\141\156"); goto j1_Mb; kwFLS: $W2f5V = $den9F->get("\x73\x65\x61\x72\x63\x68"); goto fSjwV; nEJfl: $dSJoX->GvsmS(function ($rbP7F) use ($szWC_) { $rbP7F->gvsms(function ($FPCCI) use ($szWC_) { $FPCCI->GvsMS("\142\165\154\x61\156\137\164\x61\x68\x75\156", $szWC_)->GvsmS(function ($QaTg2) { $QaTg2->GVsmS("\x6d\x61\x6e\165\141\154\137\x69\156\166\x6f\x69\x63\145", 0)->iLNPj("\x6d\141\156\x75\x61\154\x5f\x69\156\166\157\x69\143\x65"); }); })->qoJkh(function ($FPCCI) { $FPCCI->GVSMs("\x6d\x61\x6e\x75\141\x6c\x5f\x69\156\x76\157\x69\x63\145", 1)->GVSMs(function ($QaTg2) { $QaTg2->BVUG1("\163\164\141\164\x75\163\137\142\x61\x79\141\x72")->TXS92("\163\164\141\164\x75\163\x5f\x62\x61\x79\x61\x72", [0, "\60", "\142\x65\x6c\165\x6d", '']); }); }); }); goto w2810; zbZ_b: $szWC_ = date("\x6d\x59"); goto nEJfl; clHpL: $dSJoX->gVSmS("\163\x74\x61\x74\165\163\137\x62\141\x79\141\x72", 1); goto H5g7i; gK0Lh: w5HPx: goto VerN0; a7w4E: return view("\x61\x64\155\x69\x6e\56\164\x72\141\156\163\x61\153\163\x69\56\151\x6e\144\x65\x78", compact("\164\141\147\151\150\x61\156", "\x73\x65\x61\x72\x63\x68", "\x73\164\x61\x74\165\163", "\160\145\x6c\x61\x6e\147\147\x61\156", "\x73\145\154\x65\143\x74\x65\144\x4d\157\156\x74\x68", "\163\x65\154\145\143\164\145\x64\131\x65\x61\x72")); goto n33nX; bJnf5: $jJEok = $g_G1n . $r8RP2; goto mpBrT; j1_Mb: $r8RP2 = $den9F->get("\164\141\x68\165\x6e"); goto S4jiu; ovdhA: $dSJoX->GVSmS(function ($rbP7F) { $rbP7F->BVUG1("\163\164\x61\x74\165\x73\137\142\141\171\x61\162")->txs92("\163\164\141\x74\165\x73\137\142\141\171\141\162", [0, "\60", "\142\145\154\x75\x6d", '']); }); goto gK0Lh; hdv42: $MQy9w = Pelanggan::qiCK_(["\160\141\153\x65\x74\x44\145\x74\141\x69\x6c"])->DUvK3()->pOJjE("\156\141\155\x61\x5f\160\145\x6c\141\x6e\x67\147\141\x6e")->get(); goto a7w4E; mpBrT: $dSJoX->GVsMs("\142\x75\154\x61\156\137\164\141\150\x75\x6e", $jJEok); goto jY0yN; n33nX: } public function CeM7V(Request $den9F) { goto yGldQ; KdQCp: Bfqx9: goto AjWXX; yGldQ: $WZ7J2 = Carbon::MLZba()->oTzvs()->U2Ymk()->format("\131\55\x6d\x2d\144\x20\x48\x3a\x69\72\163"); goto U7_CO; AjWXX: $gWndG = $dSJoX->poJjE("\167\141\x6b\164\x75\137\x62\141\x79\141\x72", "\x64\145\x73\x63")->zPSWj(10); goto GWDyW; VVMo2: $GIac6 = Pelanggan::duVk3()->Yu00Q("\151\x64\x5f\x70\x65\154\x61\x6e\147\147\x61\x6e"); goto CEzfv; CEzfv: $dSJoX = Tagihan::QICk_(["\160\145\x6c\141\x6e\147\x67\x61\156", "\160\x65\156\x65\x72\x69\x6d\x61"])->MqcIB("\x69\x64\x5f\160\145\154\x61\156\147\x67\x61\x6e", $GIac6)->GVsms("\163\164\141\164\165\x73\137\142\x61\171\x61\162", 1)->enScx("\x77\141\153\164\165\x5f\x62\141\x79\x61\162", [$WZ7J2, $nKcFP]); goto Y64rw; gAG_6: $W2f5V = $den9F->get("\x73\145\141\x72\143\x68"); goto VVMo2; cdjy8: $dSJoX->GvSms(function ($rbP7F) use ($W2f5V) { $rbP7F->UX8Oo("\x70\145\154\141\x6e\x67\x67\141\156", function ($FPCCI) use ($W2f5V) { $FPCCI->gvSmS("\156\x61\x6d\x61\x5f\x70\x65\x6c\x61\156\x67\x67\x61\x6e", "\154\x69\x6b\145", "\45" . $W2f5V . "\x25")->QoJKh("\153\x6f\x64\x65\137\160\x65\154\141\156\x67\x67\141\156", "\x6c\x69\x6b\145", "\45" . $W2f5V . "\x25"); })->bGEzf("\160\145\156\145\x72\151\x6d\x61", function ($FPCCI) use ($W2f5V) { $FPCCI->gVSMS("\x6e\141\155\141\x5f\165\x73\x65\162", "\x6c\x69\x6b\145", "\45" . $W2f5V . "\x25"); }); }); goto KdQCp; U7_CO: $nKcFP = Carbon::MLzba()->cggYU()->format("\131\55\155\55\x64\40\110\x3a\x69\x3a\163"); goto gAG_6; Y64rw: if (empty($W2f5V)) { goto Bfqx9; } goto cdjy8; GWDyW: return response()->U0xqL($gWndG); goto oy7yK; oy7yK: } public function q0TUm(Request $den9F) { goto N532o; Lg0jj: $gtvHx = $pAftS->URLPU ?? 10; goto b4p_c; L7FeX: $IWFGM = Tagihan::j_Ib5($den9F->BSqmz); goto CY4Oc; o67FW: $hm755 = (int) date("\x74", strtotime($AWfTq . "\55" . sprintf("\x25\x30\x32\x64", $numfh) . "\55\60\x31")); goto sA1mU; ZceGF: $QjQpz = "\x50\145\155\142\x61\x79\x61\x72\x61\156\x20\111\x6e\x74\145\x72\x6e\x65\x74\x20\101\x4e\x2e\40" . $MQy9w->MbKDH . "\x2c\40\120\141\x6b\145\164\x20" . $WO10T; goto wUw_n; wUw_n: DB::K6gOV("\x74\142\x5f\153\x61\x73")->insert(["\164\147\x6c\137\153\x61\163" => date("\131\x2d\x6d\55\x64"), "\x6b\x65\164\145\162\141\156\147\x61\156" => $QjQpz, "\x70\145\156\145\x72\151\155\141\x61\156" => $IWFGM->dADmS, "\x69\x64\137\164\141\x67\x69\x68\x61\x6e" => $IWFGM->BSqmz]); goto K0wJj; AYmgE: $AWfTq = (int) $lQSK3->format("\131"); goto q2zgB; niF1Y: $ro9LU = DB::k6goV("\164\x62\137\x70\x61\153\145\164")->GVSmS("\x69\x64\x5f\160\x61\153\145\x74", $MQy9w->w3H9D)->first(); goto oKDcH; N9mfc: if (!($BKG5E === "\164\x61\x6e\147\147\x61\x6c\x5f\160\141\x73\141\156\x67" && !empty($MQy9w->vGsWK))) { goto Uj1cq; } goto rChqB; D3YHc: $LhobQ = sprintf("\x25\x30\x34\x64\x2d\45\60\x32\x64\x2d\x25\x30\x32\x64\40\62\63\72\x35\x39\72\x30\60", $AWfTq, $numfh, $e_HwD); goto Ot40I; Ot40I: $MQy9w->update(["\x6a\141\164\165\150\x5f\164\x65\x6d\160\x6f" => $LhobQ]); goto eLgF9; qUOp_: $lQSK3->modify("\53\61\x20\115\x6f\156\164\150"); goto AYmgE; MYQEV: $z5vFU = date("\131\55\155\x2d\x64"); goto pCl3_; K2v8m: z5Xj5: goto qUOp_; u9Egq: if (!$MQy9w) { goto s0q0q; } goto MYQEV; TtjgA: goto z5Xj5; goto Vh4r2; BqrEf: Z_Yvu: goto D3YHc; CY4Oc: if (!($IWFGM->x1525 == 1)) { goto o32q2; } goto IHnLB; nR2io: Uj1cq: goto o67FW; YQ6yq: o32q2: goto P_3DS; tZZEB: return redirect()->gxR_2("\x61\x64\155\151\156\x2e\164\162\141\156\163\x61\153\x73\151\x2e\151\156\144\145\x78")->QICk_("\163\165\143\143\145\163\x73", "\x50\145\155\142\141\x79\x61\162\x61\156\x20\x74\x61\147\x69\150\x61\x6e\x20\x62\145\162\x68\x61\x73\151\154\40\x64\x69\143\141\164\x61\x74\x21"); goto BJDwm; K0wJj: KVvTz: goto nXoy7; Vh4r2: nLFzZ: goto SCIiz; N532o: $den9F->validate(["\151\144\137\x74\x61\147\151\x68\x61\x6e" => "\162\145\161\165\151\x72\145\x64\x7c\151\156\164\145\x67\x65\x72"]); goto L7FeX; RtSy1: $lQSK3 = new \DateTime($z5vFU); goto TtjgA; IHnLB: return redirect()->gxr_2("\141\x64\x6d\x69\x6e\x2e\164\x72\141\156\x73\141\x6b\163\x69\x2e\x69\x6e\x64\x65\x78")->QiCK_("\151\x6e\x66\x6f", "\124\141\x67\x69\150\x61\156\40\163\165\144\x61\x68\x20\154\x75\156\x61\163\x2e"); goto YQ6yq; b4p_c: $e_HwD = $gtvHx; goto N9mfc; sA1mU: if (!($e_HwD > $hm755)) { goto Z_Yvu; } goto sJD6V; P_3DS: $MQy9w = Pelanggan::mWpM_($IWFGM->nzuo3); goto ER4eJ; eLgF9: $fLrmm = DB::k6GOV("\x74\x62\x5f\153\141\163")->GvSmS("\x69\144\x5f\x74\141\147\x69\150\x61\x6e", $IWFGM->BSqmz)->n9iup(); goto CfANZ; oKDcH: $WO10T = $ro9LU ? $ro9LU->ooLqs : ''; goto ZceGF; mrAI2: if ($QpPth && $z5vFU < date("\131\x2d\155\55\144", strtotime($QpPth))) { goto nLFzZ; } goto RtSy1; nXoy7: s0q0q: goto tZZEB; q2zgB: $numfh = (int) $lQSK3->format("\155"); goto JUi7w; pCl3_: $QpPth = $MQy9w->jWCHt; goto mrAI2; ER4eJ: $IWFGM->update(["\x73\164\141\164\165\163\137\x62\141\171\141\162" => 1, "\x77\141\x6b\x74\x75\x5f\x62\141\171\141\x72" => Carbon::mLzbA()->format("\x59\55\155\55\x64\x20\x48\x3a\151\72\163"), "\165\163\145\x72\x5f\x69\x64" => Auth::P23Jm(), "\164\x65\162\x62\x61\171\x61\x72" => $IWFGM->dADmS]); goto u9Egq; SCIiz: $lQSK3 = new \DateTime($QpPth); goto K2v8m; CfANZ: if ($fLrmm) { goto KVvTz; } goto niF1Y; rChqB: $e_HwD = (int) date("\x64", strtotime($MQy9w->vGsWK)); goto nR2io; JUi7w: $pAftS = DB::k6Gov("\164\142\137\160\x72\x6f\x66\x69\154\145")->first(); goto qGNAL; sJD6V: $e_HwD = $hm755; goto BqrEf; qGNAL: $BKG5E = $pAftS->irtYZ ?? "\x74\x61\156\x67\147\x61\x6c\x5f\164\x65\164\x61\x70"; goto Lg0jj; BJDwm: } public function WdNwO(Request $den9F) { goto TSvAz; xoZ97: if (!($e_HwD > $hm755)) { goto z_zGL; } goto ZaRIP; umGq9: if (!($IWFGM->x1525 != 1)) { goto xoG01; } goto yoSDe; r4d0D: $hm755 = (int) date("\x74", strtotime($u3jh9 . "\55" . sprintf("\x25\60\62\x64", $eZ1Am) . "\55\60\61")); goto xoZ97; Jbcm9: z_zGL: goto ThGvQ; fkhV0: $IWFGM->update(["\x73\164\141\x74\165\163\137\142\x61\171\141\x72" => null, "\167\141\153\164\x75\x5f\x62\141\171\141\x72" => null, "\165\x73\145\162\137\151\x64" => null, "\x74\145\x72\x62\141\x79\x61\x72" => null]); goto P5Fw9; JHirv: $MQy9w->update(["\x6a\141\164\165\150\x5f\x74\x65\x6d\160\157" => $LhobQ]); goto iNhLc; iNhLc: r8OIH: goto U_uyM; U_uyM: DB::K6GoV("\x74\x62\137\x6b\141\163")->gvSMS("\x69\144\137\164\141\x67\151\x68\141\156", $IWFGM->BSqmz)->delete(); goto RYtKt; ThGvQ: $LhobQ = sprintf("\45\x30\64\x64\x2d\x25\x30\x32\144\55\x25\60\62\x64\40\62\x33\72\x35\71\x3a\x30\60", $u3jh9, $eZ1Am, $e_HwD); goto JHirv; RYtKt: return redirect()->Gxr_2("\141\144\155\x69\x6e\x2e\164\x72\x61\156\163\141\x6b\163\x69\56\x69\156\144\145\170")->QICk_("\x73\165\x63\143\145\163\163", "\120\145\155\142\141\x79\141\162\141\156\40\164\141\x67\151\150\141\x6e\x20\x62\145\x72\x68\x61\163\151\154\x20\144\x69\x62\x61\x74\141\154\153\x61\156\41"); goto vrsbi; TSvAz: $den9F->validate(["\151\144\x5f\x74\141\147\151\150\x61\156" => "\x72\x65\161\165\151\x72\145\x64\x7c\151\x6e\x74\x65\x67\145\x72"]); goto MqWTV; ZaRIP: $e_HwD = $hm755; goto Jbcm9; cLQiH: $e_HwD = (int) date("\144", strtotime($MQy9w->vGsWK)); goto u14fq; cRYIF: $lQSK3 = new \DateTime($MQy9w->jWCHt); goto YmU0d; jSO20: $u3jh9 = (int) $lQSK3->format("\131"); goto Pf8L2; ICYHH: $e_HwD = $gtvHx; goto aBkO1; X4lEA: $MQy9w = Pelanggan::Mwpm_($IWFGM->nzuo3); goto fkhV0; YmU0d: $lQSK3->modify("\x2d\61\x20\115\157\156\x74\x68"); goto jSO20; aBkO1: if (!($BKG5E === "\x74\x61\156\x67\x67\x61\154\137\160\141\163\x61\156\x67" && !empty($MQy9w->vGsWK))) { goto VFddQ; } goto cLQiH; MqWTV: $IWFGM = Tagihan::j_IB5($den9F->BSqmz); goto umGq9; W5y_Z: $gtvHx = $pAftS->URLPU ?? 10; goto ICYHH; yoSDe: return redirect()->gXR_2("\141\x64\155\x69\x6e\x2e\164\162\141\x6e\163\141\153\x73\151\56\151\156\x64\145\170")->Qick_("\x69\156\146\157", "\x54\141\x67\151\150\141\156\40\x62\145\x6c\165\x6d\40\154\x75\156\x61\x73\56"); goto Dt935; u14fq: VFddQ: goto r4d0D; oyFgM: $pAftS = DB::K6gOV("\164\142\137\160\x72\x6f\x66\x69\x6c\x65")->first(); goto k72mt; Pf8L2: $eZ1Am = (int) $lQSK3->format("\155"); goto oyFgM; P5Fw9: if (!($MQy9w && $MQy9w->jWCHt)) { goto r8OIH; } goto cRYIF; k72mt: $BKG5E = $pAftS->irtYZ ?? "\164\x61\156\147\147\x61\x6c\137\164\x65\x74\141\160"; goto W5y_Z; Dt935: xoG01: goto X4lEA; vrsbi: } public function JYhhF(Request $den9F) { goto skJ5R; QfpA1: return redirect()->GXR_2("\x61\144\155\151\x6e\56\164\162\141\156\163\x61\x6b\x73\x69\56\151\156\144\145\x78")->qIcK_("\x73\165\143\143\x65\x73\163", "\x50\145\x6c\141\156\147\x67\x61\156\40\142\x65\162\150\141\163\151\154\x20\144\x69\x62\x6c\x6f\153\x69\162\40\144\x69\x20\x4d\x69\153\x72\157\x74\x69\153\41"); goto nYtpq; IdzTr: foreach ($bz5lB as $lqd4N) { $yLvSk->B24Vl("\57\160\x70\x70\57\141\143\164\x69\166\x65\57\162\145\155\x6f\166\145", ["\x2e\x69\144" => $lqd4N["\56\x69\144"]]); HH1BO: } goto HrQe5; IWY0E: return back()->AbL7M(["\145\x72\x72\157\162" => "\107\x61\147\x61\x6c\40\164\145\162\150\x75\142\165\156\147\40\x6b\x65\x20\x52\157\165\164\145\162\x20\x4d\x69\x6b\162\x6f\164\x69\153\x2e\40\110\141\x72\x61\160\40\x70\145\162\151\153\x73\x61\x20\152\141\x72\151\x6e\147\x61\x6e\x20\162\157\165\164\145\x72\40\101\156\144\141\x2e"]); goto nvFCi; nYtpq: TZp4r: goto IWY0E; TybWS: if ($piOeW && $piOeW->K5uo0 == "\x73\164\x61\164\151\153") { goto JI_ja; } goto vhfg7; k14uh: $MQy9w = Pelanggan::mwpM_($IWFGM->nzuo3); goto klSjW; KxC95: bq6oS: goto a8ilb; aQF_1: $IWFGM = Tagihan::J_ib5($den9F->BSqmz); goto k14uh; V3rmx: if ($xxBKl) { goto bQWBz; } goto BQzvH; a8ilb: goto FenET; goto Dyo7G; PjWYa: $LjaJw = User::GvSms("\151\144\x5f\160\145\154\141\156\x67\147\141\x6e", $MQy9w->nzuo3)->first(); goto mc8Cv; qY47A: $bz5lB = $yLvSk->b24Vl("\x2f\160\160\160\57\141\143\164\151\x76\145\x2f\160\162\151\156\x74", ["\77\156\x61\155\145" => $LjaJw->a22SN]); goto IdzTr; AbzcX: $KS8c9 = $MQy9w->gn9pJ ?: 1; goto DALph; ut6yS: $IWFGM->update(["\x62\x6c\x6f\x6b\151\x72\x5f\163\x74\141\x74\x75\x73" => 1]); goto QfpA1; Yx6ll: return back()->ABl7m(["\145\x72\162\x6f\162" => "\x44\141\x74\141\x20\160\145\x6c\x61\156\x67\147\x61\x6e\x20\x74\151\144\x61\x6b\x20\x64\151\164\145\155\165\x6b\141\x6e\x2e"]); goto oAqjM; klSjW: if ($MQy9w) { goto J6A8V; } goto Yx6ll; HrQe5: HBn7_: goto KxC95; Dyo7G: JI_ja: goto dqbxA; vAsim: $yLvSk = new \RouterosAPI(); goto vBEpy; DALph: $xxBKl = DB::k6gOV("\x74\x62\154\137\155\151\x6b\x72\157\164\151\x6b")->gVSmS("\x69\144\137\155\x69\153\162\157\x74\151\153", $KS8c9)->first(); goto V3rmx; FD4i0: FenET: goto VMMcC; vBEpy: if (!$yLvSk->connect($xxBKl->aU6Pe, $xxBKl->a22SN, $xxBKl->hXbeJ)) { goto TZp4r; } goto TybWS; VMMcC: $yLvSk->hDC5q(); goto ut6yS; BQzvH: return back()->AbL7m(["\145\162\x72\x6f\162" => "\113\157\x6e\x65\153\x73\151\x20\162\157\x75\x74\145\162\40\x4d\151\x6b\x72\x6f\164\151\x6b\40\164\151\x64\x61\x6b\x20\x64\151\164\x65\x6d\x75\153\x61\156\56"]); goto Jd6K0; LS_NA: require_once base_path("\x69\156\143\x6c\165\144\x65\57\x72\x6f\x75\x74\145\x72\x6f\163\x5f\x61\160\x69\x2e\160\x68\160"); goto vAsim; vhfg7: if (!$LjaJw) { goto bq6oS; } goto qNeL5; qNeL5: $yLvSk->B24VL("\57\160\160\x70\57\163\145\143\x72\x65\164\x2f\x73\x65\x74", ["\156\x75\155\142\145\162\163" => $LjaJw->a22SN, "\160\162\157\x66\x69\x6c\x65" => "\x70\x70\x70\157\145\55\151\163\x6f\x6c\151\162"]); goto n6gPW; dqbxA: $yLvSk->b24VL("\x2f\151\160\x2f\x66\151\x72\145\x77\141\x6c\154\57\141\x64\x64\162\x65\163\x73\55\154\151\163\x74\57\141\x64\x64", ["\154\151\163\x74" => "\142\154\157\x63\x6b\145\144\137\x63\154\x69\x65\156\164\x73", "\x61\144\144\x72\x65\x73\x73" => $MQy9w->zqpsp, "\x63\157\155\x6d\145\x6e\164" => "\102\x6c\157\x6b\x69\162\40\x42\165\154\141\x6e\141\156\x20" . $MQy9w->zqpsp]); goto FD4i0; oAqjM: J6A8V: goto PjWYa; skJ5R: $den9F->validate(["\151\x64\x5f\164\141\x67\151\150\x61\156" => "\162\145\161\165\151\x72\145\x64\x7c\x69\x6e\x74\145\147\x65\162"]); goto aQF_1; Jd6K0: bQWBz: goto LS_NA; n6gPW: $yLvSk->B24vl("\57\x70\160\x70\57\x73\x65\x63\162\x65\164\x2f\145\x6e\x61\x62\x6c\x65", ["\156\x75\155\142\145\162\x73" => $LjaJw->a22SN]); goto qY47A; mc8Cv: $piOeW = DB::k6GOV("\x74\x62\154\137\160\145\x6e\147\147\x75\x6e\x61\155\151\x6b\162\157\x74\151\153")->first(); goto AbzcX; nvFCi: } public function aplEE(Request $den9F) { goto r1qqG; dMMxv: $bz5lB = $yLvSk->b24vL("\x2f\160\x70\x70\57\x61\x63\164\151\166\x65\57\160\162\151\156\164", ["\x3f\x6e\x61\155\x65" => $LjaJw->a22SN]); goto z7381; wcKsg: if ($MQy9w) { goto x2mzB; } goto pLR10; IODrN: if ($piOeW && $piOeW->K5uo0 == "\x73\x74\x61\164\x69\x6b") { goto rMIqC; } goto WIzPq; O96f4: dL_Hj: goto z79Jv; Wo6nw: goto x3ons; goto kHU4Y; GYk3_: if (!$yLvSk->connect($xxBKl->aU6Pe, $xxBKl->a22SN, $xxBKl->hXbeJ)) { goto p0OZV; } goto IODrN; WIzPq: if (!$LjaJw) { goto a3IAe; } goto KaS4e; z7381: foreach ($bz5lB as $lqd4N) { $yLvSk->b24vL("\57\x70\160\160\57\141\x63\x74\x69\166\145\57\162\x65\155\157\x76\145", ["\56\x69\144" => $lqd4N["\56\151\x64"]]); QF7u6: } goto vkMAB; RjzDd: p0OZV: goto S6xq_; YqWj9: if ($xxBKl) { goto s8XqX; } goto aQD71; S3GuV: $HCiaN = $ro9LU ? $ro9LU->IX1Pc : "\x64\x65\x66\141\x75\154\x74"; goto bEGJm; HcQXa: if (empty($MgCg8)) { goto dL_Hj; } goto lw7YO; CBUxT: require_once base_path("\x69\x6e\143\154\x75\144\x65\57\x72\x6f\165\x74\x65\x72\157\x73\x5f\141\160\151\56\160\150\160"); goto DfM4I; B7f76: $yLvSk->HDC5Q(); goto A0LbA; eok17: x2mzB: goto Dxo3_; TeKvn: $yLvSk->write("\77\143\157\x6d\155\145\156\164\75" . $JrcML); goto yOTQc; S6xq_: return back()->ABL7m(["\145\x72\x72\157\162" => "\x47\x61\x67\x61\154\40\x74\x65\x72\150\165\142\x75\x6e\147\x20\153\x65\40\122\x6f\x75\x74\145\x72\x20\115\x69\x6b\x72\157\x74\x69\153\56\x20\x48\141\162\x61\160\x20\x70\145\x72\151\153\163\141\x20\x6a\x61\162\151\x6e\147\141\156\40\x72\x6f\x75\x74\x65\162\x20\101\x6e\144\141\56"]); goto ap52q; ygQEU: $piOeW = DB::K6gov("\x74\x62\154\x5f\x70\145\156\147\147\x75\x6e\x61\x6d\151\153\x72\x6f\164\x69\153")->first(); goto NLdB1; Q30G2: $xxBKl = DB::K6Gov("\164\x62\154\x5f\155\151\153\x72\157\164\151\x6b")->gvsMs("\151\x64\137\155\151\x6b\162\157\164\151\153", $KS8c9)->first(); goto YqWj9; KaS4e: $ro9LU = DB::k6GOv("\164\142\137\x70\141\153\145\x74")->GVSMs("\151\x64\137\x70\141\153\x65\x74", $MQy9w->w3H9D)->first(); goto S3GuV; NthKt: $yLvSk->write("\x2f\151\x70\x2f\146\151\x72\145\167\x61\154\154\57\141\144\144\x72\145\x73\x73\x2d\154\x69\x73\164\x2f\x70\x72\x69\156\x74", false); goto TeKvn; NLdB1: $KS8c9 = $MQy9w->gn9pJ ?: 1; goto Q30G2; DfM4I: $yLvSk = new \RouterosAPI(); goto GYk3_; FzFfC: a3IAe: goto Wo6nw; pLR10: return back()->Abl7m(["\x65\x72\162\157\162" => "\104\141\164\141\x20\160\145\x6c\141\x6e\x67\147\x61\x6e\x20\164\x69\x64\x61\x6b\x20\144\x69\x74\x65\155\x75\153\x61\x6e\56"]); goto eok17; Dxo3_: $LjaJw = User::GVSMs("\x69\x64\x5f\160\x65\x6c\141\x6e\147\147\141\156", $MQy9w->nzuo3)->first(); goto ygQEU; aQD71: return back()->abL7M(["\145\162\162\x6f\x72" => "\113\157\156\x65\x6b\163\x69\40\x72\x6f\x75\164\145\162\x20\115\151\153\162\x6f\x74\x69\x6b\x20\x74\x69\144\x61\x6b\40\144\x69\164\145\x6d\x75\x6b\x61\x6e\56"]); goto HwmbH; JEW22: $JrcML = "\102\x6c\157\x6b\151\x72\40\x42\x75\x6c\x61\x6e\141\x6e\40" . $MQy9w->zqpsp; goto NthKt; vkMAB: H3k2w: goto FzFfC; A0LbA: $IWFGM->update(["\x62\154\x6f\x6b\151\x72\137\x73\x74\x61\x74\165\x73" => null]); goto GYjq9; yOTQc: $MgCg8 = $yLvSk->read(); goto HcQXa; B6eCp: $yLvSk->b24vl("\57\x70\160\160\x2f\163\145\x63\162\145\x74\x2f\145\x6e\x61\142\154\x65", ["\156\165\155\142\145\162\163" => $LjaJw->a22SN]); goto dMMxv; VxLOU: Tx19g: goto O96f4; fBDVu: $IWFGM = Tagihan::j_ib5($den9F->BSqmz); goto TqSDa; kHU4Y: rMIqC: goto JEW22; HwmbH: s8XqX: goto CBUxT; r1qqG: $den9F->validate(["\151\x64\x5f\164\x61\x67\151\150\141\156" => "\162\x65\161\165\x69\x72\x65\144\x7c\x69\x6e\164\x65\147\145\162"]); goto fBDVu; TqSDa: $MQy9w = Pelanggan::mWPM_($IWFGM->nzuo3); goto wcKsg; GYjq9: return redirect()->GXr_2("\x61\144\155\x69\x6e\x2e\164\x72\x61\x6e\163\x61\x6b\x73\151\56\x69\x6e\144\x65\170")->qIck_("\x73\x75\x63\x63\x65\163\163", "\x42\x6c\157\x6b\x69\162\x20\x70\x65\154\141\156\147\147\141\x6e\x20\142\145\162\150\141\163\x69\154\40\144\x69\x62\165\153\x61\40\x64\x69\x20\115\x69\153\x72\x6f\x74\x69\153\x21"); goto RjzDd; bEGJm: $yLvSk->B24VL("\x2f\160\x70\160\x2f\163\x65\x63\162\145\164\x2f\x73\145\164", ["\x6e\x75\x6d\142\145\162\163" => $LjaJw->a22SN, "\x70\162\x6f\146\x69\154\145" => $HCiaN]); goto B6eCp; lw7YO: foreach ($MgCg8 as $M2Tiq) { goto a0W3b; YQd9Q: JFIWn: goto gglYu; HIZpu: $yLvSk->read(); goto YQd9Q; a0W3b: $yLvSk->write("\57\151\160\x2f\146\x69\x72\145\167\x61\x6c\154\57\141\144\144\162\145\163\163\55\x6c\x69\x73\164\57\162\x65\x6d\157\166\145", false); goto zTjsL; zTjsL: $yLvSk->write("\x3d\56\151\144\75" . $M2Tiq["\x2e\x69\x64"]); goto HIZpu; gglYu: } goto VxLOU; z79Jv: x3ons: goto B7f76; ap52q: } public function ZODzL(Request $den9F) { goto qXoxE; FVPe3: if (!(!$lqnNI || empty($lqnNI->yOwGQ))) { goto kC2KG; } goto wUN7q; Bw1vp: if (!($VabCL->BFgkA() && isset($WFRth["\163\164\x61\164\165\x73"]) && $WFRth["\x73\x74\141\164\x75\163"] === true)) { goto zpDDA; } goto jzdId; oSa4b: $VabCL = Http::riu_X(["\101\x75\164\150\157\162\x69\172\141\164\x69\x6f\156" => $lqnNI->yOwGQ])->lxS1a()->EZaQ4("\x68\164\164\x70\x73\72\x2f\57\141\160\x69\x2e\x66\x6f\156\156\x74\145\x2e\143\157\x6d\x2f\x73\x65\x6e\144", ["\164\141\x72\x67\x65\164" => $MQy9w->gMXy1, "\155\145\x73\x73\141\x67\145" => $diyMY, "\143\157\x75\156\164\162\171\x43\157\144\x65" => "\x36\62"]); goto ilKnA; E3FHK: $diyMY = str_replace("\x24\x74\x61\147\x69\x68\x61\x6e", number_format($IWFGM->dADmS, 0, "\x2c", "\x2e"), $diyMY); goto fensf; nBpnX: $diyMY = $qRsNP->Vc308; goto CS6CQ; XC1KE: $MQy9w = Pelanggan::MwpM_($IWFGM->nzuo3); goto IOPhu; m5smo: $lqnNI = DB::k6gOV("\x74\142\154\x5f\164\x6f\153\145\x6e")->GvSmS("\x69\144\x5f\164\157\153\x65\156", 1)->first(); goto FVPe3; qXoxE: $den9F->validate(["\x69\x64\x5f\x74\x61\147\151\x68\141\156" => "\162\x65\161\165\151\x72\x65\144\174\151\x6e\164\145\x67\145\162"]); goto GG4QI; wUN7q: return back()->ABL7m(["\x65\x72\162\157\162" => "\x54\x6f\x6b\x65\156\40\127\150\x61\x74\x73\x41\x70\x70\x20\106\157\x6e\x6e\x74\x65\x20\x62\x65\x6c\x75\x6d\40\144\x69\153\157\x6e\146\151\147\x75\x72\141\163\x69\56"]); goto VMIoi; KCXi8: return back()->abL7m(["\145\x72\162\157\x72" => "\104\x61\164\141\x20\160\x65\154\x61\x6e\147\147\141\156\x20\164\151\144\x61\153\x20\x64\151\x74\145\155\165\x6b\141\x6e\x2e"]); goto q15em; a_fv2: return back()->aBL7M(["\145\162\162\x6f\162" => "\107\141\147\x61\x6c\x20\155\x65\156\147\x69\x72\x69\x6d\x20\160\145\x73\x61\156\40\127\x68\x61\x74\x73\x41\160\x70\56\x20\x46\x6f\156\156\164\x65\x20\x52\145\163\160\157\156\x73\145\x3a\x20" . $WGeD0]); goto lIu9M; mVc2s: return redirect()->Gxr_2("\141\144\x6d\151\156\x2e\x74\x72\141\156\163\x61\x6b\x73\x69\56\151\x6e\144\x65\x78")->QiCK_("\163\x75\x63\143\145\x73\x73", "\116\157\x74\x69\146\151\153\x61\163\x69\x20\x70\145\156\x61\x67\x69\150\141\x6e\x20\x57\150\x61\164\x73\x41\x70\x70\40\142\x65\x72\150\141\x73\151\154\40\144\151\x6b\x69\162\x69\x6d\40\153\145\40" . $MQy9w->MbKDH . "\41"); goto trjQx; n93nn: $qRsNP = DB::k6Gov("\164\142\x6c\137\x6e\157\164\x69\146")->first(); goto btAOo; jzdId: $IWFGM->update(["\164\x65\162\153\x69\162\151\155" => "\164\x65\162\153\151\162\151\x6d"]); goto mVc2s; DTL11: $diyMY = str_replace("\x24\x6a\x61\x74\x75\150\x5f\164\x65\155\x70\x6f", \bpqVf\Carbon::parse($IWFGM->jWCHt ?? $MQy9w->jWCHt)->Ntnw_("\144\x20\106\40\x59"), $diyMY); goto E3FHK; trjQx: zpDDA: goto oRL1q; gjtVs: $diyMY = str_replace("\44\156\x6f\x5f\x74\145\154\x70", $MQy9w->gMXy1, $diyMY); goto DTL11; oRL1q: $WGeD0 = $WFRth["\x72\x65\x61\163\157\x6e"] ?? $WFRth["\155\145\163\x73\141\147\x65"] ?? "\104\145\x76\151\x63\145\40\106\157\156\156\x74\145\40\x74\151\x64\141\x6b\x20\x74\145\x72\150\165\142\165\x6e\x67\x20\x61\x74\x61\x75\x20\164\157\x6b\145\x6e\x20\164\x69\x64\x61\x6b\x20\x76\141\154\x69\144\x2e"; goto a_fv2; dNxRw: L4v_Z: goto m5smo; ilKnA: $WFRth = $VabCL->u0xQL(); goto Bw1vp; GG4QI: $IWFGM = Tagihan::j_IB5($den9F->BSqmz); goto XC1KE; IOPhu: if ($MQy9w) { goto V5SAU; } goto KCXi8; eY87V: return back()->aBl7M(["\x65\x72\162\x6f\162" => "\106\x69\164\165\162\x20\156\157\x74\151\x66\151\x6b\x61\x73\151\x20\127\150\141\x74\x73\x41\160\160\x20\x62\145\x6c\x75\155\x20\x64\x69\141\x6b\164\151\146\153\141\x6e\x20\x64\x69\x20\x70\145\x6e\x67\141\164\165\162\141\156\56"]); goto dNxRw; CS6CQ: $diyMY = str_replace("\x24\x6e\x61\x6d\x61", $MQy9w->MbKDH, $diyMY); goto gjtVs; fensf: $diyMY = str_replace("\x24\150\141\x72\151\137\151\156\x69", \BPQvf\Carbon::MLZBa()->NTnW_("\144\40\106\x20\x59"), $diyMY); goto oSa4b; q15em: V5SAU: goto n93nn; btAOo: if (!(!$qRsNP || $qRsNP->cbnl6 !== "\141\x6b\164\x69\146")) { goto L4v_Z; } goto eY87V; VMIoi: kC2KG: goto nBpnX; lIu9M: } public function I8AU5(Request $den9F) { goto U_wAU; C6ejN: $MQy9w = Pelanggan::qIck_("\160\x61\x6b\145\x74\104\x65\164\141\151\x6c")->DuVk3()->EedR8(function ($dSJoX) use ($jJEok) { $dSJoX->JeGnE(DB::PgSL6(1))->from("\164\x62\x5f\164\141\147\x69\x68\x61\156")->H_wZ8("\x74\142\137\x74\x61\147\x69\x68\x61\156\56\151\144\x5f\160\145\x6c\141\x6e\147\x67\141\x6e", "\164\x62\137\x70\x65\x6c\141\x6e\147\147\141\156\x2e\x69\144\x5f\160\x65\x6c\141\x6e\147\x67\141\x6e")->GvSms("\x74\x62\137\x74\x61\147\x69\x68\x61\x6e\x2e\x62\165\154\141\x6e\x5f\164\x61\150\x75\x6e", $jJEok); })->get(); goto de9Xg; vRA1a: nbLtx: goto C6ejN; de9Xg: return view("\141\144\155\x69\156\x2e\164\x72\x61\156\x73\x61\x6b\x73\151\56\x67\145\156\145\162\141\164\x65", compact("\160\145\154\141\156\147\x67\141\156", "\x62\165\154\141\x6e", "\164\x61\150\165\x6e", "\142\x75\x6c\141\156\164\x61\150\x75\156", "\160\160\156\137\141\x6b\x74\151\146")); goto Aoj27; Vryk3: if (!($R8Khp && isset($R8Khp->lgzNg) && $R8Khp->lgzNg === "\x61\153\x74\151\x66")) { goto nbLtx; } goto AsF1R; gCT7y: $KEn7u = false; goto I7b5o; TJvEX: $hsFQ5 = $den9F->get("\x74\141\x68\165\x6e", date("\x59")); goto BLDFs; AsF1R: $KEn7u = true; goto vRA1a; I7b5o: $R8Khp = DB::K6GoV("\164\x62\154\137\x70\x61\153\x65\x74\155\x69\x6b\x72\157\164\x69\x6b")->first(); goto Vryk3; U_wAU: $SvXxy = $den9F->get("\142\x75\x6c\141\156", date("\155")); goto TJvEX; BLDFs: $jJEok = $SvXxy . $hsFQ5; goto gCT7y; Aoj27: } public function generate(Request $den9F) { goto wdV86; jJFP5: Vj3K2: goto md89A; MVQXq: $iFp_f = DB::K6GOv("\164\x62\x5f\160\145\154\x61\156\147\147\141\156")->GVsMs("\151\144\137\x70\145\x6c\x61\x6e\147\147\x61\156", $Bn4JO[$Uw56p])->first(); goto Z1_7x; IRFDA: if (!($e_HwD > $hm755)) { goto zM52Q; } goto N1woC; IO4JB: DB::K6gov("\x74\x62\x5f\164\141\147\x69\150\x61\x6e")->insert(["\151\x64\x5f\x70\145\154\x61\156\x67\147\141\156" => $Bn4JO[$Uw56p], "\x62\165\154\x61\x6e\x5f\x74\x61\x68\x75\156" => $wJYGp[$Uw56p], "\152\155\154\137\x62\141\171\141\x72" => $XxlBZ, "\x74\x65\x72\x62\x61\171\141\x72" => null, "\163\164\141\164\x75\x73\x5f\x62\x61\x79\x61\162" => null, "\155\141\156\x75\141\x6c\137\x69\156\x76\157\151\143\x65" => 0, "\x6a\141\164\165\150\137\x74\x65\155\160\157" => $LhobQ]); goto QmUyo; Z1_7x: $nkFkS = substr($wJYGp[$Uw56p], 2, 4); goto TgyOD; md89A: $hm755 = (int) date("\x74", strtotime($Rc0OM . "\x2d" . sprintf("\45\60\x32\x64", $bKnqW) . "\55\x30\x31")); goto IRFDA; th2nr: $gtvHx = $pAftS->URLPU ?? 10; goto A0uBE; aox7H: $Uw56p = 0; goto tVCEC; A0uBE: $DvR9a = $pAftS->JzTzC ?? "\x70\162\141\x62\x61\x79\141\162"; goto aox7H; L3jpn: if (!($Uw56p < $iOo91)) { goto Wp06f; } goto bjEtQ; q6v_0: $Uw56p++; goto Ip1fR; P0GBH: $M85cA = DB::K6Gov("\x74\142\x5f\164\x61\x67\151\150\x61\x6e")->gvsMS("\x69\144\137\x70\x65\x6c\x61\156\147\147\x61\x6e", $Bn4JO[$Uw56p])->gVsmS("\142\x75\x6c\x61\156\x5f\x74\x61\150\165\x6e", $wJYGp[$Uw56p])->first(); goto xoiC2; oALrH: ip_QS: goto lm2mZ; bjhok: $BKG5E = $pAftS->irtYZ ?? "\164\x61\156\x67\147\141\x6c\x5f\x74\145\164\141\160"; goto th2nr; lm2mZ: zl2kx: goto q6v_0; MvqZW: $LhobQ = sprintf("\45\60\x34\144\55\x25\60\x32\x64\x2d\45\x30\x32\x64\40\62\x33\x3a\65\71\x3a\60\x30", $Rc0OM, $bKnqW, $e_HwD); goto IO4JB; S4aFB: if (!($DvR9a === "\160\141\x73\x63\x61\x62\141\171\x61\x72")) { goto M4sGx; } goto vR9mo; R8HKf: $bKnqW = $HpVIG->YjPvr; goto i3WBo; qY3s2: if (!($BKG5E === "\164\141\x6e\x67\147\141\154\x5f\160\x61\x73\x61\x6e\x67" && $iFp_f && !empty($iFp_f->vGsWK))) { goto Vj3K2; } goto OOGsE; RaiAg: $JDroQ = $den9F->Wf_fi; goto VxBPu; Ip1fR: goto Dx9f3; goto Seqcu; i3WBo: $e_HwD = $gtvHx; goto qY3s2; G6qOU: M4sGx: goto BExvL; m47BZ: zM52Q: goto gv4eW; xAh97: $pAftS = DB::K6GoV("\164\x62\x5f\160\162\157\146\x69\154\145")->first(); goto bjhok; wdV86: $den9F->validate(["\x69\144\137\x70\145\154\x61\156\x67\x67\x61\156" => "\162\145\x71\x75\151\162\145\x64\x7c\141\162\x72\141\171", "\142\x75\x6c\141\156\62" => "\162\145\161\165\151\x72\x65\x64\x7c\x61\x72\162\x61\171", "\x68\141\x72\147\141" => "\x72\x65\x71\165\151\162\x65\144\x7c\x61\x72\x72\x61\x79"]); goto PoiXG; BExvL: $Rc0OM = $HpVIG->fTqkg; goto R8HKf; Seqcu: Wp06f: goto WP8AS; PoiXG: $Bn4JO = $den9F->nzuo3; goto prd3m; WP8AS: return redirect()->GXR_2("\141\144\x6d\x69\x6e\x2e\x74\162\141\156\x73\141\153\163\x69\56\x69\x6e\144\x65\x78")->QIck_("\163\x75\143\x63\x65\163\x73", $fzT_S . "\x20\164\141\x67\x69\150\141\156\40\142\141\x72\x75\x20\x62\145\162\150\141\163\151\x6c\x20\144\x69\x67\x65\156\145\x72\x61\x74\x65\x20\165\x6e\x74\165\x6b\40\160\x65\x72\151\x6f\x64\x65\40\x74\x65\x72\x73\145\142\165\164\56"); goto cj02y; OOGsE: $e_HwD = (int) date("\x64", strtotime($iFp_f->vGsWK)); goto jJFP5; QmUyo: DB::K6GoV("\x74\142\137\160\145\154\x61\156\x67\x67\x61\156")->GvSmS("\151\x64\137\160\x65\154\141\x6e\x67\147\x61\x6e", $Bn4JO[$Uw56p])->update(["\152\x61\x74\165\x68\137\x74\145\x6d\160\157" => $LhobQ]); goto FVrCc; iens5: $HpVIG = \bpqVF\Carbon::create((int) $nkFkS, (int) $x8rr7, 1); goto S4aFB; xoiC2: if ($M85cA) { goto ip_QS; } goto MVQXq; prd3m: $wJYGp = $den9F->IZnjG; goto RaiAg; tVCEC: Dx9f3: goto L3jpn; bjEtQ: $XxlBZ = str_replace("\56", '', $JDroQ[$Uw56p]); goto P0GBH; extXk: $fzT_S = 0; goto xAh97; FVrCc: $fzT_S++; goto oALrH; gv4eW: $g_e1M = str_pad($e_HwD, 2, "\x30", STR_PAD_LEFT); goto MvqZW; VxBPu: $iOo91 = count($JDroQ); goto extXk; TgyOD: $x8rr7 = substr($wJYGp[$Uw56p], 0, 2); goto iens5; vR9mo: $HpVIG->SjsX1(); goto G6qOU; N1woC: $e_HwD = $hm755; goto m47BZ; cj02y: } public function cuMcC(Request $den9F) { goto T5ICn; YsBUc: if (!$M85cA) { goto ZhuLc; } goto DYvh6; d6qMx: Tagihan::create(["\x69\x64\x5f\x70\145\154\141\156\x67\147\x61\156" => $den9F->nzuo3, "\x62\165\x6c\141\x6e\x5f\164\x61\150\165\156" => $jJEok, "\x6a\155\x6c\137\142\141\x79\141\162" => $den9F->dADmS, "\163\x74\x61\x74\165\x73\x5f\142\x61\171\141\162" => null, "\155\x61\x6e\165\x61\154\x5f\151\156\x76\x6f\x69\143\x65" => 1, "\151\x74\145\155\x5f\x74\141\x67\151\150\x61\x6e" => $den9F->YLhBx, "\x6a\x61\164\x75\x68\137\x74\145\155\160\157" => $den9F->jWCHt . "\x20\x32\63\72\x35\71\72\x30\x30"]); goto U2ogy; gXp5w: ZhuLc: goto d6qMx; U2ogy: return redirect()->gXr_2("\141\144\x6d\151\156\56\164\x72\141\x6e\163\141\x6b\x73\151\56\151\x6e\144\145\x78")->qICK_("\163\x75\x63\x63\145\x73\163", "\x49\x6e\x76\x6f\151\143\145\x20\x6d\x61\156\165\x61\154\x20\x62\145\162\x68\x61\x73\151\x6c\40\x64\x69\x62\165\x61\164\x21"); goto fSHwZ; hsgBM: $M85cA = Tagihan::GVsMS("\x69\x64\137\160\145\x6c\141\156\147\x67\x61\x6e", $den9F->nzuo3)->Gvsms("\x62\165\x6c\141\x6e\137\x74\141\150\x75\x6e", $jJEok)->gvSms("\152\x6d\154\137\142\x61\x79\141\162", $den9F->dADmS)->gvsMS("\151\164\145\x6d\x5f\x74\141\x67\x69\150\x61\x6e", $den9F->YLhBx)->gvsMS("\155\x61\x6e\x75\141\154\137\151\156\x76\157\x69\143\x65", 1)->first(); goto YsBUc; DYvh6: return back()->AbL7M(["\x65\x72\x72\157\x72" => "\x49\x6e\166\157\x69\x63\x65\40\155\x61\156\x75\x61\154\x20\x79\141\156\x67\x20\x69\x64\145\156\164\x69\153\x20\165\156\x74\165\x6b\40\x70\x65\162\151\157\x64\x65\x20\x74\x65\162\163\145\x62\x75\164\x20\x73\x75\x64\141\150\40\141\144\141\x2e"]); goto gXp5w; tZdoU: $jJEok = $den9F->wqq2b . $den9F->L3phZ; goto hsgBM; T5ICn: $den9F->validate(["\151\144\137\160\x65\154\141\156\147\147\x61\x6e" => "\x72\x65\161\165\x69\x72\145\x64\174\151\156\164\x65\147\145\x72", "\142\165\154\141\156" => "\162\145\161\x75\151\162\145\x64\174\163\x74\x72\x69\156\x67\174\x73\151\172\145\72\62", "\x74\141\x68\x75\x6e" => "\162\145\x71\165\x69\162\x65\144\x7c\163\164\162\151\156\x67\x7c\163\151\x7a\x65\x3a\x34", "\152\155\154\x5f\x62\141\x79\141\162" => "\162\x65\161\x75\151\162\x65\144\x7c\156\x75\x6d\145\x72\x69\143", "\151\x74\145\155\137\164\141\147\x69\x68\141\x6e" => "\156\165\x6c\154\141\142\154\145\x7c\x73\x74\x72\x69\156\x67", "\152\x61\164\x75\150\137\164\x65\155\x70\157" => "\162\x65\x71\x75\151\162\145\144\x7c\x64\141\164\x65"]); goto tZdoU; fSHwZ: } public function tm7BP(Request $den9F) { goto FEjCc; MuDq1: NVLoA: goto kM3zk; u8BaV: $diyMY = str_replace("\44\x6e\x61\155\141", $MQy9w->MbKDH, $diyMY); goto adb_g; MK6jl: $diyMY = str_replace("\44\x6a\141\x74\165\150\137\x74\x65\155\160\x6f", Carbon::parse($IWFGM->jWCHt)->NtnW_("\144\40\x46\x20\131") ?? $MQy9w->jWCHt, $diyMY); goto Kcpf4; JPlJB: if (!($VabCL->bfGKA() && isset($WFRth["\x73\164\141\x74\165\163"]) && $WFRth["\x73\x74\x61\164\165\163"] === true)) { goto NVLoA; } goto N1jCu; kM3zk: $WGeD0 = $WFRth["\x72\x65\141\x73\157\x6e"] ?? $WFRth["\155\145\x73\163\141\x67\145"] ?? "\104\x65\x76\x69\143\x65\40\x46\x6f\x6e\156\164\145\40\x74\151\x64\141\153\x20\x74\145\162\150\x75\x62\x75\156\147\40\141\x74\141\x75\40\x74\x6f\153\145\x6e\40\164\151\x64\141\x6b\40\166\x61\x6c\151\x64\56"; goto mDTkY; mDTkY: return back()->AbL7M(["\145\x72\162\157\x72" => "\x47\x61\x67\x61\x6c\x20\155\x65\x6e\147\151\x72\151\155\x20\x72\145\155\151\x6e\144\x65\x72\x20\127\x68\x61\x74\163\x41\x70\x70\x2e\x20\106\157\x6e\156\164\x65\40\x52\x65\x73\x70\157\x6e\x73\145\72\x20" . $WGeD0]); goto FIdkj; Kcpf4: $diyMY = str_replace("\x24\163\x65\x6b\141\162\x61\156\x67\x5f\146\157\x72\x6d\x61\164", Carbon::Mlzba()->NtNw_("\144\40\x46\x20\131\x20\110\x3a\151") . "\40\127\111\102", $diyMY); goto ViYfA; zsege: s6X3c: goto xWbFI; L0B4s: return back()->abL7M(["\x65\x72\162\157\x72" => "\106\151\164\x75\x72\x20\x72\145\x6d\151\x6e\x64\145\x72\40\x74\141\x67\x69\150\x61\156\x20\142\145\154\165\155\40\144\151\141\x6b\x74\x69\146\153\141\156\40\x64\x69\x20\160\145\x6e\x67\141\164\165\x72\x61\156\x20\143\x75\x73\164\x6f\155\40\x70\145\x73\141\156\x2e"]); goto gIuRb; N1jCu: return redirect()->Gxr_2("\141\144\155\x69\156\x2e\164\162\x61\x6e\x73\141\153\x73\x69\x2e\151\x6e\x64\x65\170")->qiCK_("\163\x75\143\143\x65\163\163", "\122\145\155\x69\156\x64\x65\x72\40\x70\x65\156\x61\147\x69\150\141\156\40\127\150\141\164\x73\x41\160\160\x20\142\145\x72\150\141\163\x69\x6c\x20\x64\151\x6b\151\x72\151\155\x20\153\145\40" . $MQy9w->MbKDH . "\41"); goto MuDq1; B51d2: $IWFGM = Tagihan::J_ib5($den9F->BSqmz); goto ALoUj; gIuRb: cQd25: goto xqlp8; adb_g: $diyMY = str_replace("\x24\x6e\x6f\x5f\164\145\154\160", $MQy9w->gMXy1, $diyMY); goto acwE3; I40VL: if (!(!$lqnNI || empty($lqnNI->yOwGQ))) { goto vtf6F; } goto LnZVP; yGRT6: return back()->abL7M(["\x65\x72\x72\x6f\162" => "\x44\x61\x74\141\x20\x70\145\154\141\156\x67\147\x61\x6e\x20\164\151\x64\141\x6b\40\x64\x69\x74\x65\x6d\165\x6b\141\156\56"]); goto zsege; Gq48E: if (!(!$jRGle || $jRGle->vvfi5 !== "\141\153\x74\151\x66")) { goto cQd25; } goto L0B4s; J1dCz: $WFRth = $VabCL->u0Xql(); goto JPlJB; xWbFI: $jRGle = DB::k6GOv("\x74\142\154\x5f\156\157\164\x69\146\x72\145\x6d\151\x6e\144\145\x72")->first(); goto Gq48E; FEjCc: $den9F->validate(["\x69\x64\137\164\x61\x67\x69\x68\141\156" => "\x72\x65\161\165\x69\x72\145\x64\174\151\x6e\x74\x65\x67\x65\162"]); goto B51d2; ALoUj: $MQy9w = Pelanggan::MwPM_($IWFGM->nzuo3); goto RQb0S; KEw4X: $diyMY = $jRGle->Vc7YT; goto u8BaV; RQb0S: if ($MQy9w) { goto s6X3c; } goto yGRT6; xqlp8: $lqnNI = DB::k6GOV("\164\142\154\137\164\x6f\x6b\145\x6e")->gvSmS("\151\x64\x5f\164\x6f\x6b\145\x6e", 1)->first(); goto I40VL; ViYfA: $VabCL = Http::riU_x(["\101\x75\x74\150\x6f\162\151\172\141\164\x69\157\x6e" => $lqnNI->yOwGQ])->lxs1a()->ezAq4("\x68\x74\164\160\163\72\57\x2f\x61\x70\x69\x2e\x66\x6f\x6e\x6e\x74\x65\56\143\x6f\x6d\57\x73\145\x6e\x64", ["\164\141\162\147\145\164" => $MQy9w->gMXy1, "\155\145\163\x73\141\147\x65" => $diyMY, "\x63\x6f\x75\x6e\x74\x72\x79\x43\x6f\x64\x65" => "\66\x32"]); goto J1dCz; acwE3: $diyMY = str_replace("\x24\x74\x61\147\151\150\x61\156", number_format($IWFGM->dADmS, 0, "\54", "\x2e"), $diyMY); goto MK6jl; NHQpI: vtf6F: goto KEw4X; LnZVP: return back()->aBL7M(["\145\162\x72\157\x72" => "\x54\157\x6b\x65\x6e\x20\127\150\141\164\163\x41\x70\x70\x20\x46\x6f\x6e\x6e\x74\x65\x20\142\x65\x6c\165\x6d\40\x64\x69\x6b\157\x6e\x66\x69\x67\x75\162\x61\163\151\x2e"]); goto NHQpI; FIdkj: } public function m6n5H(Request $den9F) { goto m2gU6; fm3IH: if (!(!$qRsNP || $qRsNP->cbnl6 !== "\141\x6b\164\x69\146")) { goto k1HVn; } goto SoQnh; gqYsL: return response()->u0xql(["\x73\165\x63\x63\145\163\x73" => false, "\155\145\163\x73\141\147\x65" => "\x54\157\153\145\x6e\x20\x57\x68\141\x74\x73\x41\x70\x70\x20\x46\x6f\x6e\156\164\145\40\x62\145\x6c\165\155\x20\144\x69\153\157\x6e\x66\151\147\165\x72\141\x73\x69\56"], 400); goto sl5ci; XxC16: return response()->u0XQl(["\x73\x75\x63\143\x65\163\163" => true, "\x72\145\x73\165\x6c\x74\x73" => [], "\142\145\162\150\141\163\x69\x6c" => 0, "\x67\x61\147\141\x6c" => 0, "\155\145\163\x73\141\147\145" => "\x54\151\144\141\153\40\141\144\x61\40\x74\x61\147\151\x68\x61\x6e\x20\142\145\154\x75\x6d\x20\x6c\165\x6e\141\x73\x20\x75\x6e\164\x75\x6b\x20\144\151\x62\162\157\141\x64\143\x61\x73\x74\56"]); goto oQevA; SSTeC: if (!$Bf6YM->isEmpty()) { goto oa9G9; } goto XxC16; sElZX: k1HVn: goto iOJaV; JtLin: $qRsNP = DB::k6gOV("\x74\x62\154\137\x6e\x6f\x74\x69\x66")->first(); goto fm3IH; SoQnh: return response()->u0XQl(["\x73\x75\143\143\x65\163\x73" => false, "\x6d\x65\163\163\x61\147\145" => "\106\x69\164\165\x72\40\x6e\x6f\164\x69\146\151\x6b\141\163\151\40\127\x68\141\164\x73\x41\x70\x70\40\142\145\154\x75\x6d\x20\x64\x69\x61\153\164\x69\x66\x6b\141\156\40\x64\x69\x20\x70\145\x6e\x67\x61\164\x75\162\x61\x6e\x20\143\x75\x73\x74\x6f\x6d\x20\x70\x65\163\x61\x6e\x2e"], 400); goto sElZX; sl5ci: a0FFu: goto VdiTg; RXogp: return response()->U0xQl(["\x73\x75\143\x63\145\163\x73" => true, "\162\145\x73\x75\x6c\164\x73" => $nWGJV, "\x62\x65\162\150\x61\163\151\154" => $qUh99, "\x67\x61\x67\141\x6c" => $Y57C3]); goto DABjo; keHsF: $Y57C3 = 0; goto FA08d; FA08d: $nWGJV = []; goto nlkFN; VdiTg: $qUh99 = 0; goto keHsF; Ei2i2: if (!(!$lqnNI || empty($lqnNI->yOwGQ))) { goto a0FFu; } goto gqYsL; iOJaV: $lqnNI = DB::K6goV("\164\x62\x6c\137\164\x6f\153\145\x6e")->gVSMS("\151\x64\x5f\x74\x6f\x6b\145\156", 1)->first(); goto Ei2i2; m2gU6: set_time_limit(1800); goto c_8bM; c_8bM: $Bf6YM = Tagihan::Qick_("\x70\x65\x6c\141\x6e\147\147\x61\x6e")->bvuG1("\163\164\x61\164\x75\163\x5f\142\141\171\141\x72")->MqCiB("\151\144\137\x70\x65\154\x61\156\147\147\x61\x6e", Pelanggan::Duvk3()->yu00q("\151\144\x5f\160\x65\154\141\156\147\x67\x61\x6e"))->get(); goto SSTeC; oQevA: oa9G9: goto JtLin; bNo76: NOO1c: goto RXogp; nlkFN: foreach ($Bf6YM as $TYJL8 => $XlfUi) { goto DkGEI; aUdeg: FNX0A: goto WpvdZ; DBsls: $diyMY = str_replace("\x24\x68\141\x72\151\x5f\151\x6e\x69", Carbon::mLzbA()->NTNw_("\144\x20\106\40\131"), $diyMY); goto zJIko; zJIko: try { goto ja4ip; iwHH5: $WFRth = $VabCL->u0XQL(); goto gr3Xf; ja4ip: $VabCL = Http::oTBs9(10)->rIu_X(["\101\x75\x74\x68\x6f\162\151\x7a\141\164\x69\157\156" => $lqnNI->yOwGQ])->LxS1A()->Ezaq4("\150\164\164\x70\x73\72\x2f\x2f\x61\x70\x69\56\146\x6f\x6e\156\x74\x65\x2e\143\157\155\x2f\x73\145\156\144", ["\164\141\x72\147\145\x74" => $MQy9w->gMXy1, "\155\x65\x73\x73\141\147\x65" => $diyMY, "\x63\157\165\x6e\164\162\x79\103\157\x64\145" => "\x36\x32"]); goto iwHH5; UHKMr: $Y57C3++; goto fS7kU; Eqw3O: $nWGJV[] = ["\163\x74\141\x74\165\x73" => true, "\156\x61\155\x61" => $MQy9w->MbKDH, "\x6e\157\137\164\x65\154\160" => $MQy9w->gMXy1, "\155\145\163\163\141\147\x65" => "\124\145\162\153\x69\162\151\x6d"]; goto Po3rJ; KoB2E: $qUh99++; goto Eqw3O; fS7kU: $WGeD0 = $WFRth["\x72\145\141\x73\x6f\156"] ?? $WFRth["\155\x65\163\163\141\x67\145"] ?? "\107\141\147\x61\154\x20\x6d\145\156\147\151\x72\151\x6d\40\50\x48\x54\124\x50\40" . $VabCL->hmEHh() . "\51"; goto kM34P; Po3rJ: lvUxK: goto k3lXB; kM34P: $nWGJV[] = ["\x73\x74\x61\x74\165\x73" => false, "\x6e\141\155\x61" => $MQy9w->MbKDH, "\156\157\x5f\x74\x65\154\x70" => $MQy9w->gMXy1, "\x6d\x65\x73\x73\141\x67\145" => $WGeD0]; goto OYeN7; OYeN7: goto lvUxK; goto b8OPF; gr3Xf: if ($VabCL->BFgKA() && isset($WFRth["\163\164\141\164\x75\x73"]) && $WFRth["\163\x74\x61\x74\x75\163"] === true) { goto KsFtj; } goto UHKMr; b8OPF: KsFtj: goto o0Sxr; o0Sxr: $XlfUi->update(["\164\145\x72\153\151\162\x69\x6d" => "\x74\145\162\153\x69\162\x69\x6d"]); goto KoB2E; k3lXB: } catch (\Exception $qBfNK) { $Y57C3++; $nWGJV[] = ["\163\x74\x61\164\165\163" => false, "\156\141\155\x61" => $MQy9w->MbKDH, "\x6e\x6f\x5f\164\x65\x6c\160" => $MQy9w->gMXy1, "\x6d\145\x73\163\141\147\x65" => $qBfNK->getMessage()]; } goto zXjCq; n_8Hr: goto hhEtR; goto aUdeg; f_CBa: if (!(!$MQy9w || empty($MQy9w->gMXy1))) { goto FNX0A; } goto hgZza; poPJY: $Y57C3++; goto n_8Hr; DkGEI: $MQy9w = $XlfUi->UJoNp; goto f_CBa; zXjCq: hhEtR: goto K3T9z; yqu65: $diyMY = str_replace("\44\164\141\x67\x69\x68\141\x6e", number_format($XlfUi->dADmS, 0, "\54", "\x2e"), $diyMY); goto DBsls; tPrtC: $diyMY = str_replace("\x24\156\x6f\137\x74\x65\x6c\x70", $MQy9w->gMXy1, $diyMY); goto SSXOr; cGYPj: $diyMY = $qRsNP->Vc308; goto D_GXY; SSXOr: $diyMY = str_replace("\x24\152\141\x74\165\150\x5f\164\x65\x6d\x70\157", Carbon::parse($XlfUi->jWCHt)->nTnw_("\144\40\x46\x20\x59") ?? $MQy9w->jWCHt, $diyMY); goto yqu65; D_GXY: $diyMY = str_replace("\44\156\141\155\141", $MQy9w->MbKDH, $diyMY); goto tPrtC; hgZza: $nWGJV[] = ["\x73\x74\x61\x74\x75\x73" => false, "\x6e\141\x6d\x61" => $MQy9w->MbKDH ?? "\116\57\101", "\156\x6f\137\x74\x65\x6c\160" => $MQy9w->gMXy1 ?? "\x2d", "\x6d\x65\x73\163\x61\x67\145" => "\116\157\x6d\x6f\x72\x20\x48\x50\x20\164\151\x64\141\x6b\x20\166\141\x6c\x69\x64\57\153\x6f\x73\x6f\156\147\56"]; goto poPJY; WpvdZ: if (!($TYJL8 > 0)) { goto tbkyc; } goto b7Og1; hpFLp: tbkyc: goto cGYPj; b7Og1: sleep(10); goto hpFLp; K3T9z: } goto bNo76; DABjo: } public function CF29V(Request $den9F) { goto kIpqZ; Wriuq: $nWGJV = []; goto oJf_2; cFHoK: return response()->U0Xql(["\x73\165\x63\x63\x65\x73\x73" => false, "\x6d\x65\x73\x73\x61\147\x65" => "\x46\x69\x74\x75\162\x20\162\145\x6d\x69\x6e\x64\145\162\x20\x74\x61\147\x69\150\x61\x6e\40\142\x65\154\x75\155\40\x64\151\141\x6b\x74\151\146\153\141\156\x20\144\x69\40\x70\x65\x6e\147\141\x74\x75\162\141\156\40\143\165\163\x74\157\155\40\160\x65\x73\141\x6e\x2e"], 400); goto Y0bjb; s5xoF: if (!$Bf6YM->isEmpty()) { goto U6o1K; } goto nQs49; RkHO1: $lqnNI = DB::K6GOv("\164\142\x6c\x5f\x74\x6f\153\145\156")->GVSmS("\x69\144\137\x74\157\153\x65\156", 1)->first(); goto y1Qut; y1Qut: if (!(!$lqnNI || empty($lqnNI->yOwGQ))) { goto Qva41; } goto JmO3R; iz1Kh: if (!(!$jRGle || $jRGle->vvfi5 !== "\x61\153\x74\x69\x66")) { goto NyHtv; } goto cFHoK; h9dqg: $jRGle = DB::k6gOv("\164\142\x6c\x5f\x6e\x6f\x74\151\146\162\145\x6d\x69\x6e\144\x65\162")->first(); goto iz1Kh; vDUuI: Qva41: goto cRVQn; aYNNK: RmHfj: goto rDtvx; JmO3R: return response()->U0XQl(["\x73\x75\x63\143\145\x73\163" => false, "\x6d\x65\163\163\x61\147\x65" => "\124\x6f\x6b\x65\156\40\x57\150\141\x74\x73\101\x70\x70\x20\x46\x6f\x6e\x6e\x74\145\x20\x62\x65\154\x75\x6d\40\x64\x69\x6b\x6f\156\x66\x69\147\165\162\141\163\x69\56"], 400); goto vDUuI; oJf_2: foreach ($Bf6YM as $TYJL8 => $XlfUi) { goto SpVgK; kmxvH: $diyMY = $jRGle->Vc7YT; goto ygkgy; aGZG2: try { goto AP0fE; AP0fE: $VabCL = Http::OTbs9(10)->riU_X(["\101\165\164\150\157\x72\151\x7a\x61\164\x69\x6f\x6e" => $lqnNI->yOwGQ])->lXs1A()->EZAq4("\x68\x74\164\160\x73\x3a\x2f\57\141\160\x69\x2e\146\157\156\156\x74\145\x2e\143\157\x6d\57\x73\145\156\144", ["\x74\x61\162\x67\145\x74" => $MQy9w->gMXy1, "\x6d\x65\x73\163\141\x67\x65" => $diyMY, "\143\157\x75\156\x74\x72\x79\103\157\144\145" => "\x36\x32"]); goto t7k2K; WEPUd: $nWGJV[] = ["\x73\x74\141\x74\x75\163" => true, "\156\141\x6d\x61" => $MQy9w->MbKDH, "\156\x6f\137\x74\145\x6c\160" => $MQy9w->gMXy1, "\x6d\x65\x73\163\141\147\x65" => "\124\145\162\x6b\151\x72\151\x6d"]; goto f1LvD; QJ7aZ: $Y57C3++; goto KtyEn; hCYZ5: goto Gro9Z; goto K2wqF; KtyEn: $WGeD0 = $WFRth["\x72\145\x61\163\157\x6e"] ?? $WFRth["\155\x65\163\x73\141\x67\x65"] ?? "\107\x61\147\x61\x6c\x20\155\x65\156\x67\x69\x72\151\x6d\40\50\110\124\x54\x50\40" . $VabCL->HmEHH() . "\51"; goto ARhhM; v7FE5: if ($VabCL->bfgKA() && isset($WFRth["\x73\x74\141\x74\165\x73"]) && $WFRth["\x73\x74\x61\164\165\x73"] === true) { goto KftLX; } goto QJ7aZ; ARhhM: $nWGJV[] = ["\163\x74\141\164\x75\163" => false, "\x6e\x61\155\x61" => $MQy9w->MbKDH, "\156\157\x5f\164\x65\x6c\160" => $MQy9w->gMXy1, "\x6d\145\x73\163\x61\x67\145" => $WGeD0]; goto hCYZ5; t7k2K: $WFRth = $VabCL->u0xQl(); goto v7FE5; f1LvD: Gro9Z: goto cr1Uk; uc5l7: $qUh99++; goto WEPUd; K2wqF: KftLX: goto uc5l7; cr1Uk: } catch (\Exception $qBfNK) { $Y57C3++; $nWGJV[] = ["\163\164\x61\164\165\x73" => false, "\x6e\141\155\141" => $MQy9w->MbKDH, "\156\x6f\x5f\164\145\x6c\x70" => $MQy9w->gMXy1, "\155\145\163\x73\141\x67\145" => $qBfNK->getMessage()]; } goto G_czi; MS06n: sleep(10); goto tJJR8; BMvFA: $diyMY = str_replace("\44\x6e\157\x5f\164\x65\x6c\x70", $MQy9w->gMXy1, $diyMY); goto AAWvO; AAWvO: $diyMY = str_replace("\x24\164\x61\x67\x69\x68\x61\156", number_format($XlfUi->dADmS, 0, "\x2c", "\x2e"), $diyMY); goto JkeXC; T50UI: $nWGJV[] = ["\x73\164\141\x74\165\163" => false, "\x6e\x61\x6d\x61" => $MQy9w->MbKDH ?? "\x4e\x2f\101", "\x6e\157\137\164\x65\x6c\x70" => $MQy9w->gMXy1 ?? "\x2d", "\x6d\x65\163\163\x61\x67\145" => "\116\x6f\155\157\x72\40\110\120\40\x74\151\144\141\x6b\40\166\x61\154\151\x64\57\153\x6f\x73\x6f\156\x67\56"]; goto dP4ox; SpVgK: $MQy9w = $XlfUi->UJoNp; goto LV1gY; PFQjr: beqvK: goto QHDph; mo6Cb: $diyMY = str_replace("\x24\x73\145\x6b\x61\x72\x61\156\147\137\x66\157\162\x6d\x61\x74", Carbon::mLZBA()->NtNw_("\x64\x20\106\x20\131\40\110\72\151") . "\x20\x57\111\102", $diyMY); goto aGZG2; tJJR8: mlHgu: goto kmxvH; dP4ox: $Y57C3++; goto ZjQDM; JkeXC: $diyMY = str_replace("\44\152\x61\x74\165\x68\x5f\164\145\x6d\x70\157", Carbon::parse($XlfUi->jWCHt)->NTnW_("\x64\40\106\x20\131") ?? $MQy9w->jWCHt, $diyMY); goto mo6Cb; ygkgy: $diyMY = str_replace("\44\x6e\x61\x6d\141", $MQy9w->MbKDH, $diyMY); goto BMvFA; LV1gY: if (!(!$MQy9w || empty($MQy9w->gMXy1))) { goto beqvK; } goto T50UI; QHDph: if (!($TYJL8 > 0)) { goto mlHgu; } goto MS06n; G_czi: pypOI: goto piAyp; ZjQDM: goto pypOI; goto PFQjr; piAyp: } goto aYNNK; qv6Fz: $Bf6YM = Tagihan::qIcK_("\160\145\154\x61\x6e\x67\x67\x61\156")->BVUG1("\163\x74\141\164\x75\163\x5f\142\x61\x79\141\x72")->mqCib("\151\144\x5f\160\x65\154\x61\156\147\x67\141\156", Pelanggan::duvK3()->YU00Q("\x69\x64\x5f\160\145\x6c\141\156\x67\x67\x61\156"))->get(); goto s5xoF; nxNEQ: $Y57C3 = 0; goto Wriuq; cRVQn: $qUh99 = 0; goto nxNEQ; rDtvx: return response()->u0xQl(["\163\165\x63\x63\x65\x73\163" => true, "\x72\x65\x73\165\x6c\x74\x73" => $nWGJV, "\142\145\162\x68\141\163\x69\154" => $qUh99, "\147\141\x67\141\154" => $Y57C3]); goto RWc2S; Y0bjb: NyHtv: goto RkHO1; nQs49: return response()->U0xQL(["\x73\165\143\143\145\163\163" => true, "\162\145\163\x75\154\164\163" => [], "\142\x65\x72\x68\141\163\x69\x6c" => 0, "\x67\x61\147\x61\154" => 0, "\155\145\163\163\x61\x67\145" => "\x54\x69\144\141\x6b\40\x61\x64\141\x20\164\x61\147\x69\150\x61\x6e\x20\x62\145\154\x75\155\40\154\165\156\141\x73\x20\x75\156\x74\x75\153\40\144\151\162\145\155\151\156\144\145\162\56"]); goto oNxxD; oNxxD: U6o1K: goto h9dqg; kIpqZ: set_time_limit(1800); goto qv6Fz; RWc2S: } public function PZnrE(Request $den9F) { goto MzcCq; SBZdn: if (!$Bf6YM->isEmpty()) { goto aTZqI; } goto Ugm9Q; s454M: $lqnNI = DB::k6gOv("\164\142\x6c\x5f\x74\157\x6b\145\x6e")->GVsms("\151\144\137\x74\157\x6b\x65\x6e", 1)->first(); goto zX_Dt; IQN35: foreach ($Bf6YM as $XlfUi) { goto PMahM; Hsa4B: goto l6PR5; goto y45CQ; reNFH: l6PR5: goto blWob; qHXEP: goto dOTEX; goto mQL1w; JaFOQ: if ($xxBKl) { goto TaQqU; } goto VRubp; OJTh8: $tFPVM = true; goto ExbFF; WHDcN: goto Tracu; goto Gr0Ka; ExbFF: Tracu: goto bkUzu; fnEXT: if ($yLvSk->connect($xxBKl->aU6Pe, $xxBKl->a22SN, $xxBKl->hXbeJ)) { goto vyvOJ; } goto gJXg9; jrGAy: if ($MQy9w) { goto hk9Cc; } goto bSvP2; ekGet: if ($piOeW && $piOeW->K5uo0 == "\163\164\141\164\151\x6b") { goto RYCJo; } goto h_MC4; blWob: if (!$tFPVM) { goto Y9HR_; } goto WqEYg; D10pn: $diyMY = str_replace("\44\156\x61\155\x61", $MQy9w->MbKDH, $diyMY); goto lOnum; FHunn: MAz72: goto h6XS6; X9sDS: goto dOTEX; goto iMNwG; bSvP2: $nWGJV[] = ["\x73\164\x61\x74\165\163" => false, "\x6e\141\x6d\x61" => "\x4e\57\101", "\156\x6f\x5f\164\x65\154\x70" => "\55", "\155\x65\163\x73\141\147\x65" => "\x44\x61\164\141\40\160\x65\x6c\141\x6e\x67\147\141\x6e\40\x74\x69\x64\141\153\x20\144\x69\164\x65\x6d\x75\153\141\156\x2e"]; goto nGwAk; uE_N5: $yLvSk->HDc5Q(); goto qHXEP; iMNwG: hk9Cc: goto SdYQk; mhzu7: $Y57C3++; goto vqEAb; x7JLS: dOTEX: goto EiD9E; w0ZRa: $Y57C3++; goto uE_N5; fLeyz: $bz5lB = $yLvSk->b24vl("\57\160\x70\160\57\141\143\x74\x69\x76\145\57\160\162\151\156\x74", ["\77\x6e\x61\x6d\145" => $LjaJw->a22SN]); goto PRO2_; viLXp: $b2Wim = false; goto n6HHm; d2yU6: xaS4R: goto WHDcN; SdYQk: $KS8c9 = $MQy9w->gn9pJ ?: 1; goto TLWPz; V3EqT: Pshzn: goto GcCae; kMyB5: $yLvSk->B24Vl("\57\160\160\160\57\x73\145\x63\x72\x65\x74\57\x73\145\164", ["\x6e\165\x6d\142\x65\x72\x73" => $LjaJw->a22SN, "\x70\x72\x6f\146\151\154\x65" => "\160\x70\x70\x6f\145\x2d\x69\163\x6f\154\151\162"]); goto piEW8; VRubp: $nWGJV[] = ["\x73\164\141\164\x75\163" => false, "\156\x61\x6d\x61" => $MQy9w->MbKDH, "\156\157\x5f\x74\145\154\x70" => $MQy9w->gMXy1 ?? "\x2d", "\x6d\x65\163\163\141\147\x65" => "\113\x6f\156\145\153\x73\151\40\x72\157\x75\x74\x65\x72\x20\115\151\153\x72\x6f\164\x69\153\x20\164\x69\x64\141\x6b\40\x64\x69\x74\145\155\x75\153\x61\156\x2e"]; goto mhzu7; h_MC4: if ($LjaJw) { goto eVtAv; } goto TYvZ4; PRO2_: foreach ($bz5lB as $lqd4N) { $yLvSk->b24vl("\x2f\x70\x70\160\57\141\x63\x74\151\x76\x65\x2f\x72\x65\x6d\x6f\x76\145", ["\56\151\x64" => $lqd4N["\x2e\x69\x64"]]); Q9DRE: } goto axgPG; JX6CJ: $tFPVM = false; goto fnEXT; WqEYg: $XlfUi->update(["\142\x6c\157\153\151\162\x5f\x73\164\141\x74\165\x73" => 1]); goto viLXp; axgPG: uE2TR: goto zVpya; mQL1w: goto xaS4R; goto CGZaU; vqEAb: goto dOTEX; goto sb3RY; lOnum: $diyMY = str_replace("\x24\164\141\147\x69\150\x61\156", number_format($XlfUi->dADmS, 0, "\54", "\56"), $diyMY); goto CDLWn; Gr0Ka: RYCJo: goto YPo7X; CGZaU: eVtAv: goto kMyB5; vWyzK: $Y57C3++; goto rVFy8; h6XS6: $diyMY = $yTkDH->Bvxrk; goto D10pn; piEW8: $yLvSk->b24vl("\x2f\x70\x70\x70\57\163\145\143\162\145\164\x2f\x65\x6e\141\142\154\x65", ["\156\165\x6d\142\x65\162\163" => $LjaJw->a22SN]); goto fLeyz; maDgp: $qUh99++; goto dUbnf; sb3RY: TaQqU: goto aWO4a; CDLWn: try { goto B6iqq; B6iqq: $VabCL = Http::oTbs9(10)->rIU_X(["\x41\x75\x74\x68\x6f\162\151\172\141\164\x69\x6f\x6e" => $lqnNI->yOwGQ])->lxS1a()->Ezaq4("\x68\164\164\x70\163\x3a\x2f\x2f\141\x70\151\x2e\x66\x6f\x6e\x6e\x74\145\56\x63\157\155\57\x73\x65\156\x64", ["\164\x61\162\147\145\x74" => $MQy9w->gMXy1, "\155\x65\163\163\141\147\145" => $diyMY, "\x63\x6f\165\x6e\x74\162\171\103\x6f\x64\145" => "\x36\62"]); goto aHclt; dH4jU: vpTYy: goto XrGUz; aHclt: $WFRth = $VabCL->u0XQL(); goto E0liQ; fX24d: $WGeD0 = $WFRth["\162\x65\x61\163\x6f\x6e"] ?? $WFRth["\x6d\145\x73\x73\141\147\x65"] ?? "\104\145\166\x69\143\145\x20\106\x6f\156\x6e\x74\145\x20\164\x69\144\141\x6b\40\141\x6b\x74\x69\146\56"; goto jW5yi; E0liQ: if ($VabCL->bfGka() && isset($WFRth["\163\164\141\x74\x75\163"]) && $WFRth["\x73\x74\141\164\165\163"] === true) { goto vpTYy; } goto fX24d; pZdTf: sMljG: goto U9Wo9; jW5yi: $sVQ2C = "\124\x65\x72\x62\154\157\x6b\151\162\40\46\40\x47\141\147\141\x6c\x20\113\151\x72\x69\155\40\127\x41\72\40" . $WGeD0; goto InONZ; cslog: $sVQ2C = "\x54\x65\162\x62\154\x6f\153\x69\x72\40\46\x20\116\x6f\x74\151\x66\x69\153\141\x73\151\40\127\101\40\x54\145\x72\x6b\x69\x72\151\155"; goto pZdTf; XrGUz: $b2Wim = true; goto cslog; InONZ: goto sMljG; goto dH4jU; U9Wo9: } catch (\Exception $qBfNK) { $sVQ2C = "\124\145\162\142\154\x6f\153\x69\x72\x20\46\40\x47\141\147\x61\x6c\40\113\x69\162\151\155\x20\127\101\72\40" . $qBfNK->getMessage(); } goto V3EqT; n6HHm: $sVQ2C = "\x54\x65\x72\142\x6c\x6f\153\151\162\40\x64\x69\x20\x4d\151\x6b\162\157\164\151\x6b\40\x28\x57\101\x20\x74\x69\x64\x61\153\40\x61\x6b\164\x69\x66\57\x74\157\153\145\156\40\x6b\157\163\157\156\147\51"; goto bsFqJ; gJXg9: $nWGJV[] = ["\x73\x74\x61\164\x75\163" => false, "\x6e\141\x6d\x61" => $MQy9w->MbKDH, "\x6e\x6f\137\164\145\x6c\160" => $MQy9w->gMXy1 ?? "\55", "\x6d\x65\163\163\141\x67\145" => "\x47\141\x67\x61\154\40\x74\145\162\x68\165\142\x75\x6e\147\40\153\x65\x20\x52\157\x75\164\x65\162\x20\x4d\x69\153\162\x6f\x74\x69\x6b\56"]; goto vWyzK; TYvZ4: $nWGJV[] = ["\x73\164\141\164\165\x73" => false, "\156\x61\x6d\x61" => $MQy9w->MbKDH, "\x6e\x6f\x5f\164\x65\154\160" => $MQy9w->gMXy1 ?? "\55", "\155\x65\x73\163\141\147\145" => "\x41\x6b\165\156\x20\120\120\x50\x6f\x45\x20\50\165\163\145\x72\x29\40\x74\x69\x64\141\x6b\x20\144\x69\164\145\155\165\x6b\x61\x6e\40\144\151\40\144\141\x74\141\142\x61\x73\x65\x2e"]; goto w0ZRa; rVFy8: goto dOTEX; goto Hsa4B; YPo7X: $yLvSk->B24vL("\57\151\160\x2f\146\151\x72\x65\167\141\154\154\x2f\141\x64\144\162\x65\x73\163\x2d\154\x69\x73\164\57\x61\144\x64", ["\154\x69\163\164" => "\x62\154\157\143\153\145\144\x5f\143\154\151\145\x6e\x74\163", "\x61\x64\144\x72\x65\163\163" => $MQy9w->zqpsp, "\x63\x6f\155\155\x65\156\x74" => "\x42\x6c\x6f\x6b\x69\162\x20\102\x75\154\141\x6e\x61\x6e\x20" . $MQy9w->zqpsp]); goto OJTh8; dUbnf: Y9HR_: goto x7JLS; HllEg: sleep(10); goto FHunn; bkUzu: $yLvSk->hdC5q(); goto reNFH; aWO4a: $LjaJw = User::GVsMS("\151\x64\x5f\x70\145\x6c\141\x6e\x67\147\x61\156", $MQy9w->nzuo3)->first(); goto Z4XKt; bsFqJ: if (!($yTkDH && $yTkDH->fT8nl === "\141\153\164\x69\146" && $lqnNI && !empty($lqnNI->yOwGQ) && !empty($MQy9w->gMXy1))) { goto Pshzn; } goto nKotJ; y45CQ: vyvOJ: goto ekGet; Z4XKt: $yLvSk = new \RouterosAPI(); goto JX6CJ; zVpya: $tFPVM = true; goto d2yU6; nGwAk: $Y57C3++; goto X9sDS; GcCae: $nWGJV[] = ["\x73\x74\x61\x74\x75\163" => true, "\156\141\155\141" => $MQy9w->MbKDH, "\x6e\x6f\137\x74\145\x6c\160" => $MQy9w->gMXy1 ?? "\x2d", "\155\x65\163\x73\x61\147\x65" => $sVQ2C]; goto maDgp; nKotJ: if (!($qUh99 > 0)) { goto MAz72; } goto HllEg; PMahM: $MQy9w = $XlfUi->UJoNp; goto jrGAy; TLWPz: $xxBKl = DB::k6gOv("\x74\x62\154\x5f\155\151\x6b\x72\157\x74\x69\153")->gVsms("\x69\144\x5f\x6d\x69\x6b\x72\x6f\x74\x69\x6b", $KS8c9)->first(); goto JaFOQ; EiD9E: } goto LetRi; MzcCq: set_time_limit(1800); goto lNmi4; Ugm9Q: return response()->u0XQl(["\x73\x75\x63\x63\145\163\x73" => true, "\162\145\x73\x75\x6c\164\x73" => [], "\142\x65\x72\150\141\163\x69\154" => 0, "\147\x61\147\x61\x6c" => 0, "\155\x65\163\x73\x61\147\x65" => "\124\151\x64\141\x6b\x20\x61\144\x61\x20\164\x61\147\151\x68\141\156\x20\x62\145\154\x75\x6d\x20\154\x75\156\x61\x73\40\46\40\142\x65\154\x75\155\x20\164\145\x72\142\154\x6f\x6b\151\162\x20\165\x6e\x74\165\x6b\x20\x64\151\x70\x72\x6f\x73\x65\163\56"]); goto Plpye; ST_Xz: $qUh99 = 0; goto YledK; lNmi4: $Bf6YM = Tagihan::qick_(["\x70\145\x6c\x61\x6e\x67\x67\141\156"])->gvsms("\x62\x75\x6c\141\x6e\137\164\x61\150\x75\156", date("\155\x59"))->GvSMS(function ($rbP7F) { $rbP7F->BVug1("\x73\x74\141\x74\165\163\x5f\x62\x61\x79\x61\162")->TxS92("\x73\164\141\x74\x75\x73\137\142\141\171\141\162", [0, "\x30", "\x62\x65\154\165\x6d", '']); })->gvsMS(function ($rbP7F) { $rbP7F->BVUG1("\142\x6c\157\153\151\x72\137\x73\x74\141\164\165\x73")->qOJkH("\x62\x6c\x6f\x6b\151\x72\137\x73\x74\141\x74\165\163", "\41\x3d", 1); })->get(); goto SBZdn; qfnPt: $yTkDH = DB::k6Gov("\164\142\x6c\x5f\142\x6c\157\x6b\x69\162")->first(); goto s454M; zX_Dt: $piOeW = DB::k6Gov("\164\142\154\x5f\x70\x65\x6e\x67\x67\x75\x6e\x61\x6d\151\x6b\x72\x6f\x74\x69\153")->first(); goto RLfS0; LetRi: vVuHy: goto BXwUX; NRm3s: $nWGJV = []; goto IQN35; BXwUX: return response()->u0XQL(["\x73\x75\143\143\145\x73\163" => true, "\162\x65\163\165\154\x74\163" => $nWGJV, "\142\x65\162\150\141\163\x69\x6c" => $qUh99, "\147\141\x67\x61\x6c" => $Y57C3]); goto LUByE; YledK: $Y57C3 = 0; goto NRm3s; Plpye: aTZqI: goto qfnPt; RLfS0: require_once base_path("\151\x6e\x63\154\x75\x64\x65\57\162\157\x75\164\x65\x72\x6f\163\x5f\x61\x70\151\56\160\x68\160"); goto ST_Xz; LUByE: } public function L_IWR($dCuFb) { goto JbLc0; Aq4dO: $IWFGM->POe0I = "\x49\116\x56\x2f" . $IWFGM->y4Fra . "\57" . str_pad($IWFGM->BSqmz, 4, "\60", STR_PAD_LEFT); goto hmLvr; Ji6mb: if (!($HCiaN && !isset($HCiaN->B0tIX))) { goto RbR4_; } goto mLV14; JbLc0: $IWFGM = Tagihan::QICk_(["\x70\x65\x6c\141\x6e\147\x67\x61\156\x2e\160\141\153\145\164\104\x65\164\141\x69\154"])->J_iB5($dCuFb); goto fvQKF; fvQKF: $HCiaN = DB::K6GOv("\164\x62\137\160\162\157\x66\151\154\x65")->first(); goto Ji6mb; hmLvr: wi427: goto ot9Um; ot9Um: return view("\x61\144\155\151\156\x2e\164\x72\141\x6e\163\141\153\x73\151\56\160\162\151\x6e\x74\137\151\x6e\166\x6f\151\143\x65", compact("\164\141\x67\151\150\x61\156", "\x70\x72\157\x66\x69\x6c\145")); goto m_LGB; ALebb: RbR4_: goto E4A9_; E4A9_: if (!empty($IWFGM->POe0I)) { goto wi427; } goto Aq4dO; mLV14: $HCiaN->B0tIX = $HCiaN->JWHjq ?? ''; goto ALebb; m_LGB: } public function sI0iS($dCuFb) { goto Fa_kf; VKJeM: if (!($IWFGM->x1525 != 1)) { goto cphm7; } goto gXiZV; VNvZN: $IWFGM->POe0I = "\x49\x4e\126\x2f" . $IWFGM->y4Fra . "\57" . str_pad($IWFGM->BSqmz, 4, "\60", STR_PAD_LEFT); goto vcryj; n1ZXH: if (!($HCiaN && !isset($HCiaN->B0tIX))) { goto oYVeE; } goto qAQAV; uhmcO: oYVeE: goto uAFcj; vcryj: mvPoa: goto osxHR; V3i_i: cphm7: goto BYhcL; osxHR: return view("\141\144\155\x69\x6e\56\164\x72\141\x6e\163\x61\x6b\x73\x69\x2e\x70\x72\x69\156\x74\x5f\162\145\143\145\x69\160\x74", compact("\164\141\x67\x69\x68\141\156", "\160\162\157\146\151\154\145")); goto W83ro; gXiZV: return back()->aBl7M(["\x65\162\x72\x6f\162" => "\x42\165\153\164\x69\40\x62\141\171\x61\162\x20\x68\141\156\x79\x61\40\x64\141\x70\141\x74\40\x64\151\143\145\164\141\x6b\x20\x75\156\x74\165\153\x20\164\141\x67\x69\150\141\156\40\171\x61\x6e\x67\x20\x73\165\144\141\x68\40\x6c\x75\x6e\x61\163\x2e"]); goto V3i_i; BYhcL: $HCiaN = DB::k6GOV("\164\142\x5f\x70\162\x6f\146\x69\x6c\145")->first(); goto n1ZXH; Fa_kf: $IWFGM = Tagihan::QICk_(["\x70\145\x6c\x61\156\147\147\x61\x6e\x2e\160\141\153\x65\164\104\145\x74\141\x69\154", "\160\145\156\145\x72\151\155\141"])->J_iB5($dCuFb); goto VKJeM; qAQAV: $HCiaN->B0tIX = $HCiaN->JWHjq ?? ''; goto uhmcO; uAFcj: if (!empty($IWFGM->POe0I)) { goto mvPoa; } goto VNvZN; W83ro: } }
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\Tagihan;
+use App\Models\Pelanggan;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
+use Carbon\Carbon;
+
+class AdminTransaksiController extends Controller
+{
+    public function index(Request $request)
+    {
+        $search = $request->get('search');
+        $status = $request->get('status'); // 'lunas', 'belum_bayar'
+        $selectedMonth = $request->get('bulan');
+        $selectedYear = $request->get('tahun');
+
+        $query = Tagihan::with(['pelanggan'])->whereIn('id_pelanggan', Pelanggan::allowedForUser()->pluck('id_pelanggan'));
+
+        if (!empty($selectedMonth) && !empty($selectedYear)) {
+            $bulantahun = $selectedMonth . $selectedYear;
+            $query->where('bulan_tahun', $bulantahun);
+        } else {
+            $currentMonth = date('mY');
+
+            $query->where(function ($q) use ($currentMonth) {
+                // 1. Regular bills of this month (both paid and unpaid)
+                $q->where(function ($sub) use ($currentMonth) {
+                    $sub->where('bulan_tahun', $currentMonth)
+                        ->where(function ($inner) {
+                            $inner->where('manual_invoice', 0)
+                                  ->orWhereNull('manual_invoice');
+                        });
+                })
+                // 2. Unpaid manual invoices of any period (including this month and older)
+                ->orWhere(function ($sub) {
+                    $sub->where('manual_invoice', 1)
+                        ->where(function ($inner) {
+                            $inner->whereNull('status_bayar')
+                                  ->orWhereIn('status_bayar', [0, '0', 'belum', '']);
+                        });
+                });
+            });
+        }
+
+        if (!empty($search)) {
+            $query->whereHas('pelanggan', function ($q) use ($search) {
+                $q->where('nama_pelanggan', 'like', '%' . $search . '%')
+                  ->orWhere('kode_pelanggan', 'like', '%' . $search . '%');
+            });
+        }
+
+        if ($status === 'lunas') {
+            $query->where('status_bayar', 1);
+        } elseif ($status === 'belum_bayar') {
+            $query->where(function ($q) {
+                $q->whereNull('status_bayar')
+                  ->orWhereIn('status_bayar', [0, '0', 'belum', '']);
+            });
+        }
+
+        $tagihan = $query->orderByRaw('CASE WHEN status_bayar = 1 THEN 1 ELSE 0 END ASC')
+            ->orderBy('id_tagihan', 'desc')
+            ->get();
+        $pelanggan = Pelanggan::with(['paketDetail'])->allowedForUser()->orderBy('nama_pelanggan')->get();
+
+        return view('admin.transaksi.index', compact('tagihan', 'search', 'status', 'pelanggan', 'selectedMonth', 'selectedYear'));
+    }
+
+    public function pembayaranJson(Request $request)
+    {
+        $startDate = Carbon::now()->subMonth()->startOfMonth()->format('Y-m-d H:i:s');
+        $endDate = Carbon::now()->endOfMonth()->format('Y-m-d H:i:s');
+        $search = $request->get('search');
+
+        $allowedPelangganIds = Pelanggan::allowedForUser()->pluck('id_pelanggan');
+
+        $query = Tagihan::with(['pelanggan', 'penerima'])
+            ->whereIn('id_pelanggan', $allowedPelangganIds)
+            ->where('status_bayar', 1)
+            ->whereBetween('waktu_bayar', [$startDate, $endDate]);
+
+        if (!empty($search)) {
+            $query->where(function ($q) use ($search) {
+                $q->whereHas('pelanggan', function ($sub) use ($search) {
+                    $sub->where('nama_pelanggan', 'like', '%' . $search . '%')
+                        ->orWhere('kode_pelanggan', 'like', '%' . $search . '%');
+                })
+                ->orWhereHas('penerima', function ($sub) use ($search) {
+                    $sub->where('nama_user', 'like', '%' . $search . '%');
+                });
+            });
+        }
+
+        $transactions = $query->orderBy('waktu_bayar', 'desc')
+            ->paginate(10);
+
+        return response()->json($transactions);
+    }
+
+    public function bayar(Request $request)
+    {
+        $request->validate([
+            'id_tagihan' => 'required|integer',
+        ]);
+
+        $tagihan = Tagihan::findOrFail($request->id_tagihan);
+        
+        if ($tagihan->status_bayar == 1) {
+            return redirect()->route('admin.transaksi.index')->with('info', 'Tagihan sudah lunas.');
+        }
+
+        $pelanggan = Pelanggan::find($tagihan->id_pelanggan);
+
+        // Catat pembayaran manual oleh staff
+        $tagihan->update([
+            'status_bayar' => 1,
+            'waktu_bayar' => Carbon::now()->format('Y-m-d H:i:s'),
+            'user_id' => Auth::id(), // ID staff yang menerima pembayaran
+            'terbayar' => $tagihan->jml_bayar, // Set terbayar to jml_bayar
+        ]);
+
+        if ($pelanggan) {
+            $tanggal_sekarang = date('Y-m-d');
+            $jatuh_tempo = $pelanggan->jatuh_tempo;
+
+            if ($jatuh_tempo && $tanggal_sekarang < date('Y-m-d', strtotime($jatuh_tempo))) {
+                $jatuh_tempo_obj = new \DateTime($jatuh_tempo);
+            } else {
+                $jatuh_tempo_obj = new \DateTime($tanggal_sekarang);
+            }
+            $jatuh_tempo_obj->modify('+1 Month');
+            $next_year = (int)$jatuh_tempo_obj->format('Y');
+            $next_month = (int)$jatuh_tempo_obj->format('m');
+
+            // Ambil pengaturan jatuh tempo global
+            $settings = DB::table('tb_profile')->first();
+            $tipe = $settings->tipe_jatuh_tempo ?? 'tanggal_tetap';
+            $default_hari = $settings->hari_jatuh_tempo ?? 10;
+
+            $due_day = $default_hari;
+            if ($tipe === 'tanggal_pasang' && !empty($pelanggan->tgl_pemasangan)) {
+                $due_day = (int) date('d', strtotime($pelanggan->tgl_pemasangan));
+            }
+
+            // Cari jumlah hari maksimum di bulan target
+            $days_in_month = (int) date('t', strtotime($next_year . '-' . sprintf('%02d', $next_month) . '-01'));
+            if ($due_day > $days_in_month) {
+                $due_day = $days_in_month;
+            }
+
+            $tgl_jatuh_tempo = sprintf('%04d-%02d-%02d 23:59:00', $next_year, $next_month, $due_day);
+
+            // Update jatuh tempo pelanggan
+            $pelanggan->update([
+                'jatuh_tempo' => $tgl_jatuh_tempo
+            ]);
+            
+            // Catat di tb_kas jika belum ada
+            $existsInKas = DB::table('tb_kas')->where('id_tagihan', $tagihan->id_tagihan)->exists();
+            if (!$existsInKas) {
+                $paket = DB::table('tb_paket')->where('id_paket', $pelanggan->paket)->first();
+                $nama_paket = $paket ? $paket->nama_paket : '';
+                $ket = "Pembayaran Internet AN. " . $pelanggan->nama_pelanggan . ", Paket " . $nama_paket;
+                DB::table('tb_kas')->insert([
+                    'tgl_kas' => date('Y-m-d'),
+                    'keterangan' => $ket,
+                    'penerimaan' => $tagihan->jml_bayar,
+                    'id_tagihan' => $tagihan->id_tagihan
+                ]);
+            }
+        }
+
+        return redirect()->route('admin.transaksi.index')->with('success', 'Pembayaran tagihan berhasil dicatat!');
+    }
+
+    public function batal(Request $request)
+    {
+        $request->validate([
+            'id_tagihan' => 'required|integer',
+        ]);
+
+        $tagihan = Tagihan::findOrFail($request->id_tagihan);
+        
+        if ($tagihan->status_bayar != 1) {
+            return redirect()->route('admin.transaksi.index')->with('info', 'Tagihan belum lunas.');
+        }
+
+        $pelanggan = Pelanggan::find($tagihan->id_pelanggan);
+
+        // Batalkan pembayaran
+        $tagihan->update([
+            'status_bayar' => null,
+            'waktu_bayar' => null,
+            'user_id' => null,
+            'terbayar' => null,
+        ]);
+
+        if ($pelanggan && $pelanggan->jatuh_tempo) {
+            $jatuh_tempo_obj = new \DateTime($pelanggan->jatuh_tempo);
+            $jatuh_tempo_obj->modify('-1 Month');
+            $prev_year = (int)$jatuh_tempo_obj->format('Y');
+            $prev_month = (int)$jatuh_tempo_obj->format('m');
+
+            // Ambil pengaturan jatuh tempo global
+            $settings = DB::table('tb_profile')->first();
+            $tipe = $settings->tipe_jatuh_tempo ?? 'tanggal_tetap';
+            $default_hari = $settings->hari_jatuh_tempo ?? 10;
+
+            $due_day = $default_hari;
+            if ($tipe === 'tanggal_pasang' && !empty($pelanggan->tgl_pemasangan)) {
+                $due_day = (int) date('d', strtotime($pelanggan->tgl_pemasangan));
+            }
+
+            // Cari jumlah hari maksimum di bulan target
+            $days_in_month = (int) date('t', strtotime($prev_year . '-' . sprintf('%02d', $prev_month) . '-01'));
+            if ($due_day > $days_in_month) {
+                $due_day = $days_in_month;
+            }
+
+            $tgl_jatuh_tempo = sprintf('%04d-%02d-%02d 23:59:00', $prev_year, $prev_month, $due_day);
+
+            // Update jatuh tempo pelanggan
+            $pelanggan->update([
+                'jatuh_tempo' => $tgl_jatuh_tempo
+            ]);
+        }
+
+        // Hapus dari tb_kas
+        DB::table('tb_kas')->where('id_tagihan', $tagihan->id_tagihan)->delete();
+
+        return redirect()->route('admin.transaksi.index')->with('success', 'Pembayaran tagihan berhasil dibatalkan!');
+    }
+
+    public function blokir(Request $request)
+    {
+        $request->validate([
+            'id_tagihan' => 'required|integer',
+        ]);
+
+        $tagihan = Tagihan::findOrFail($request->id_tagihan);
+        $pelanggan = Pelanggan::find($tagihan->id_pelanggan);
+        if (!$pelanggan) {
+            return back()->withErrors(['error' => 'Data pelanggan tidak ditemukan.']);
+        }
+
+        $user = User::where('id_pelanggan', $pelanggan->id_pelanggan)->first();
+
+        $checkUser = DB::table('tbl_penggunamikrotik')->first();
+        $id_mikrotik = $pelanggan->id_mikrotik ?: 1;
+
+        $mikrotik = DB::table('tbl_mikrotik')->where('id_mikrotik', $id_mikrotik)->first();
+        if (!$mikrotik) {
+            return back()->withErrors(['error' => 'Koneksi router Mikrotik tidak ditemukan.']);
+        }
+
+        require_once base_path('include/routeros_api.php');
+        $API = new \RouterosAPI();
+
+        if ($API->connect($mikrotik->ip, $mikrotik->username, $mikrotik->password)) {
+            if ($checkUser && $checkUser->ippelanggan == 'statik') {
+                // Blokir Statik: Tambah IP ke Address-List
+                $API->comm("/ip/firewall/address-list/add", [
+                    "list"     => "blocked_clients",
+                    "address"  => $pelanggan->ip_address,
+                    "comment"  => "Blokir Bulanan " . $pelanggan->ip_address
+                ]);
+            } else {
+                // Blokir PPPOE: Disable Secret & Disconnect Active Connection
+                if ($user) {
+                    $API->comm("/ppp/secret/set", [
+                        "numbers" => $user->username,
+                        "profile" => "pppoe-isolir",
+                    ]);
+                    $API->comm("/ppp/secret/enable", [
+                        "numbers" => $user->username,
+                    ]);
+
+                    // Cari koneksi pppoe aktif
+                    $activeConnections = $API->comm("/ppp/active/print", [
+                        "?name" => $user->username,
+                    ]);
+
+                    foreach ($activeConnections as $conn) {
+                        $API->comm("/ppp/active/remove", [
+                            ".id" => $conn['.id'],
+                        ]);
+                    }
+                }
+            }
+            $API->disconnect();
+            
+            // Simpan status blokir di database
+            $tagihan->update(['blokir_status' => 1]);
+
+            return redirect()->route('admin.transaksi.index')->with('success', 'Pelanggan berhasil diblokir di Mikrotik!');
+        }
+
+        return back()->withErrors(['error' => 'Gagal terhubung ke Router Mikrotik. Harap periksa jaringan router Anda.']);
+    }
+
+    public function unblokir(Request $request)
+    {
+        $request->validate([
+            'id_tagihan' => 'required|integer',
+        ]);
+
+        $tagihan = Tagihan::findOrFail($request->id_tagihan);
+        $pelanggan = Pelanggan::find($tagihan->id_pelanggan);
+        if (!$pelanggan) {
+            return back()->withErrors(['error' => 'Data pelanggan tidak ditemukan.']);
+        }
+
+        $user = User::where('id_pelanggan', $pelanggan->id_pelanggan)->first();
+
+        $checkUser = DB::table('tbl_penggunamikrotik')->first();
+        $id_mikrotik = $pelanggan->id_mikrotik ?: 1;
+
+        $mikrotik = DB::table('tbl_mikrotik')->where('id_mikrotik', $id_mikrotik)->first();
+        if (!$mikrotik) {
+            return back()->withErrors(['error' => 'Koneksi router Mikrotik tidak ditemukan.']);
+        }
+
+        require_once base_path('include/routeros_api.php');
+        $API = new \RouterosAPI();
+
+        if ($API->connect($mikrotik->ip, $mikrotik->username, $mikrotik->password)) {
+            if ($checkUser && $checkUser->ippelanggan == 'statik') {
+                // Buka Blokir Statik: Hapus IP dari firewall Address-List
+                $commentToSearch = "Blokir Bulanan " . $pelanggan->ip_address;
+                $API->write('/ip/firewall/address-list/print', false);
+                $API->write('?comment=' . $commentToSearch);
+                $ips = $API->read();
+
+                if (!empty($ips)) {
+                    foreach ($ips as $ip_data) {
+                        $API->write('/ip/firewall/address-list/remove', false);
+                        $API->write('=.id=' . $ip_data['.id']);
+                        $API->read();
+                    }
+                }
+            } else {
+                // Buka Blokir PPPOE: Restore Profile & Enable Secret
+                if ($user) {
+                    $paket = DB::table('tb_paket')->where('id_paket', $pelanggan->paket)->first();
+                    $profile = $paket ? $paket->id_pmikrotik : 'default';
+
+                    $API->comm("/ppp/secret/set", [
+                        "numbers" => $user->username,
+                        "profile" => $profile,
+                    ]);
+                    $API->comm("/ppp/secret/enable", [
+                        "numbers" => $user->username,
+                    ]);
+
+                    // Putuskan koneksi aktif agar langsung dial ulang dengan profile baru
+                    $activeConnections = $API->comm("/ppp/active/print", [
+                        "?name" => $user->username,
+                    ]);
+                    foreach ($activeConnections as $conn) {
+                        $API->comm("/ppp/active/remove", [
+                            ".id" => $conn['.id'],
+                        ]);
+                    }
+                }
+            }
+            $API->disconnect();
+            
+            // Update status blokir di database
+            $tagihan->update(['blokir_status' => null]);
+
+            return redirect()->route('admin.transaksi.index')->with('success', 'Blokir pelanggan berhasil dibuka di Mikrotik!');
+        }
+
+        return back()->withErrors(['error' => 'Gagal terhubung ke Router Mikrotik. Harap periksa jaringan router Anda.']);
+    }
+
+    public function sendNotif(Request $request)
+    {
+        $request->validate([
+            'id_tagihan' => 'required|integer',
+        ]);
+
+        $tagihan = Tagihan::findOrFail($request->id_tagihan);
+        $pelanggan = Pelanggan::find($tagihan->id_pelanggan);
+        if (!$pelanggan) {
+            return back()->withErrors(['error' => 'Data pelanggan tidak ditemukan.']);
+        }
+
+        $notifSetting = DB::table('tbl_notif')->first();
+        if (!$notifSetting || $notifSetting->status_notifikasi !== 'aktif') {
+            return back()->withErrors(['error' => 'Fitur notifikasi WhatsApp belum diaktifkan di pengaturan.']);
+        }
+
+        $tokenInfo = DB::table('tbl_token')->where('id_token', 1)->first();
+        if (!$tokenInfo || empty($tokenInfo->token)) {
+            return back()->withErrors(['error' => 'Token WhatsApp Fonnte belum dikonfigurasi.']);
+        }
+
+        // Siapkan pesan notifikasi
+        $pesan = $notifSetting->pesan_notifikasi;
+        $pesan = str_replace('$nama', $pelanggan->nama_pelanggan, $pesan);
+        $pesan = str_replace('$no_telp', $pelanggan->no_telp, $pesan);
+        $pesan = str_replace('$jatuh_tempo', \Carbon\Carbon::parse($tagihan->jatuh_tempo ?? $pelanggan->jatuh_tempo)->translatedFormat('d F Y'), $pesan);
+        $pesan = str_replace('$tagihan', number_format($tagihan->jml_bayar, 0, ',', '.'), $pesan);
+        $pesan = str_replace('$hari_ini', \Carbon\Carbon::now()->translatedFormat('d F Y'), $pesan);
+
+        // Kirim via Fonnte API
+        $response = Http::withHeaders([
+            'Authorization' => $tokenInfo->token
+        ])->asForm()->post('https://api.fonnte.com/send', [
+            'target' => $pelanggan->no_telp,
+            'message' => $pesan,
+            'countryCode' => '62'
+        ]);
+
+        $resData = $response->json();
+        if ($response->successful() && isset($resData['status']) && $resData['status'] === true) {
+            $tagihan->update(['terkirim' => 'terkirim']);
+            return redirect()->route('admin.transaksi.index')->with('success', 'Notifikasi penagihan WhatsApp berhasil dikirim ke ' . $pelanggan->nama_pelanggan . '!');
+        }
+
+        $reason = $resData['reason'] ?? $resData['message'] ?? 'Device Fonnte tidak terhubung atau token tidak valid.';
+        return back()->withErrors(['error' => 'Gagal mengirim pesan WhatsApp. Fonnte Response: ' . $reason]);
+    }
+
+    public function showGenerate(Request $request)
+    {
+        $bulan = $request->get('bulan', date('m'));
+        $tahun = $request->get('tahun', date('Y'));
+        $bulantahun = $bulan . $tahun;
+
+        // Cek apakah PPN aktif
+        $ppn_aktif = false;
+        $paketSettings = DB::table('tbl_paketmikrotik')->first();
+        if ($paketSettings && isset($paketSettings->ppn) && $paketSettings->ppn === 'aktif') {
+            $ppn_aktif = true;
+        }
+
+        // Cari pelanggan yang belum memiliki tagihan pada bulan & tahun tersebut
+        $pelanggan = Pelanggan::with('paketDetail')
+            ->allowedForUser()
+            ->whereNotExists(function ($query) use ($bulantahun) {
+                $query->select(DB::raw(1))
+                    ->from('tb_tagihan')
+                    ->whereColumn('tb_tagihan.id_pelanggan', 'tb_pelanggan.id_pelanggan')
+                    ->where('tb_tagihan.bulan_tahun', $bulantahun);
+            })
+            ->get();
+
+        return view('admin.transaksi.generate', compact('pelanggan', 'bulan', 'tahun', 'bulantahun', 'ppn_aktif'));
+    }
+
+    public function generate(Request $request)
+    {
+        $request->validate([
+            'id_pelanggan' => 'required|array',
+            'bulan2' => 'required|array',
+            'harga' => 'required|array',
+        ]);
+
+        $id_pelanggan = $request->id_pelanggan;
+        $bulan2 = $request->bulan2;
+        $harga = $request->harga;
+        $count = count($harga);
+        $generated = 0;
+
+        // Ambil pengaturan jatuh tempo global
+        $settings = DB::table('tb_profile')->first();
+        $tipe = $settings->tipe_jatuh_tempo ?? 'tanggal_tetap';
+        $default_hari = $settings->hari_jatuh_tempo ?? 10;
+        $sistem = $settings->sistem_billing ?? 'prabayar';
+
+        for ($i = 0; $i < $count; $i++) {
+            $harga_oke = str_replace('.', '', $harga[$i]);
+            
+            // Check if exists
+            $check = DB::table('tb_tagihan')
+                ->where('id_pelanggan', $id_pelanggan[$i])
+                ->where('bulan_tahun', $bulan2[$i])
+                ->first();
+
+            if (!$check) {
+                $pelanggan_data = DB::table('tb_pelanggan')->where('id_pelanggan', $id_pelanggan[$i])->first();
+                $target_year = substr($bulan2[$i], 2, 4);
+                $target_month = substr($bulan2[$i], 0, 2);
+
+                // Buat Carbon instance untuk bulan/tahun tagihan dasar
+                $target_date = \Carbon\Carbon::create((int)$target_year, (int)$target_month, 1);
+                
+                // Jika pascabayar, jatuh tempo adalah di bulan selanjutnya (+1 bulan)
+                if ($sistem === 'pascabayar') {
+                    $target_date->addMonth();
+                }
+
+                $due_year = $target_date->year;
+                $due_month = $target_date->month;
+
+                $due_day = $default_hari;
+                if ($tipe === 'tanggal_pasang' && $pelanggan_data && !empty($pelanggan_data->tgl_pemasangan)) {
+                    $due_day = (int) date('d', strtotime($pelanggan_data->tgl_pemasangan));
+                }
+
+                // Cari jumlah hari maksimum di bulan target
+                $days_in_month = (int) date('t', strtotime($due_year . '-' . sprintf('%02d', $due_month) . '-01'));
+                if ($due_day > $days_in_month) {
+                    $due_day = $days_in_month;
+                }
+
+                $due_day_str = str_pad($due_day, 2, '0', STR_PAD_LEFT);
+                $tgl_jatuh_tempo = sprintf('%04d-%02d-%02d 23:59:00', $due_year, $due_month, $due_day);
+
+                // Buat tagihan baru
+                DB::table('tb_tagihan')->insert([
+                    'id_pelanggan' => $id_pelanggan[$i],
+                    'bulan_tahun' => $bulan2[$i],
+                    'jml_bayar' => $harga_oke,
+                    'terbayar' => null,
+                    'status_bayar' => null,
+                    'manual_invoice' => 0,
+                    'jatuh_tempo' => $tgl_jatuh_tempo
+                ]);
+
+                // Update tanggal jatuh tempo pelanggan
+                DB::table('tb_pelanggan')
+                    ->where('id_pelanggan', $id_pelanggan[$i])
+                    ->update(['jatuh_tempo' => $tgl_jatuh_tempo]);
+
+                $generated++;
+            }
+        }
+
+        return redirect()->route('admin.transaksi.index')->with('success', $generated . ' tagihan baru berhasil digenerate untuk periode tersebut.');
+    }
+
+    public function storeManual(Request $request)
+    {
+        $request->validate([
+            'id_pelanggan' => 'required|integer',
+            'bulan' => 'required|string|size:2',
+            'tahun' => 'required|string|size:4',
+            'jml_bayar' => 'required|numeric',
+            'item_tagihan' => 'nullable|string',
+            'jatuh_tempo' => 'required|date',
+        ]);
+
+        $bulantahun = $request->bulan . $request->tahun;
+
+        // Check if identical manual invoice already exists to prevent duplicate submissions
+        $check = Tagihan::where('id_pelanggan', $request->id_pelanggan)
+            ->where('bulan_tahun', $bulantahun)
+            ->where('jml_bayar', $request->jml_bayar)
+            ->where('item_tagihan', $request->item_tagihan)
+            ->where('manual_invoice', 1)
+            ->first();
+
+        if ($check) {
+            return back()->withErrors(['error' => 'Invoice manual yang identik untuk periode tersebut sudah ada.']);
+        }
+
+        Tagihan::create([
+            'id_pelanggan' => $request->id_pelanggan,
+            'bulan_tahun' => $bulantahun,
+            'jml_bayar' => $request->jml_bayar,
+            'status_bayar' => null,
+            'manual_invoice' => 1,
+            'item_tagihan' => $request->item_tagihan,
+            'jatuh_tempo' => $request->jatuh_tempo . ' 23:59:00',
+        ]);
+
+        return redirect()->route('admin.transaksi.index')->with('success', 'Invoice manual berhasil dibuat!');
+    }
+
+    public function sendReminder(Request $request)
+    {
+        $request->validate([
+            'id_tagihan' => 'required|integer',
+        ]);
+
+        $tagihan = Tagihan::findOrFail($request->id_tagihan);
+        $pelanggan = Pelanggan::find($tagihan->id_pelanggan);
+        if (!$pelanggan) {
+            return back()->withErrors(['error' => 'Data pelanggan tidak ditemukan.']);
+        }
+
+        $reminderSetting = DB::table('tbl_notifreminder')->first();
+        if (!$reminderSetting || $reminderSetting->status_reminder !== 'aktif') {
+            return back()->withErrors(['error' => 'Fitur reminder tagihan belum diaktifkan di pengaturan custom pesan.']);
+        }
+
+        $tokenInfo = DB::table('tbl_token')->where('id_token', 1)->first();
+        if (!$tokenInfo || empty($tokenInfo->token)) {
+            return back()->withErrors(['error' => 'Token WhatsApp Fonnte belum dikonfigurasi.']);
+        }
+
+        // Siapkan pesan reminder menggunakan format reminder (pesan_reminder)
+        $pesan = $reminderSetting->pesan_reminder;
+        $pesan = str_replace('$nama', $pelanggan->nama_pelanggan, $pesan);
+        $pesan = str_replace('$no_telp', $pelanggan->no_telp, $pesan);
+        $pesan = str_replace('$tagihan', number_format($tagihan->jml_bayar, 0, ',', '.'), $pesan);
+        $pesan = str_replace('$jatuh_tempo', Carbon::parse($tagihan->jatuh_tempo)->translatedFormat('d F Y') ?? $pelanggan->jatuh_tempo, $pesan);
+        $pesan = str_replace('$sekarang_format', Carbon::now()->translatedFormat('d F Y H:i') . ' WIB', $pesan);
+
+        // Kirim via Fonnte API
+        $response = Http::withHeaders([
+            'Authorization' => $tokenInfo->token
+        ])->asForm()->post('https://api.fonnte.com/send', [
+            'target' => $pelanggan->no_telp,
+            'message' => $pesan,
+            'countryCode' => '62'
+        ]);
+
+        $resData = $response->json();
+        if ($response->successful() && isset($resData['status']) && $resData['status'] === true) {
+            return redirect()->route('admin.transaksi.index')->with('success', 'Reminder penagihan WhatsApp berhasil dikirim ke ' . $pelanggan->nama_pelanggan . '!');
+        }
+
+        $reason = $resData['reason'] ?? $resData['message'] ?? 'Device Fonnte tidak terhubung atau token tidak valid.';
+        return back()->withErrors(['error' => 'Gagal mengirim reminder WhatsApp. Fonnte Response: ' . $reason]);
+    }
+
+    public function broadcast(Request $request)
+    {
+        set_time_limit(1800); // Jeda 8 detik per pengiriman membutuhkan waktu eksekusi yang lebih lama
+
+        // Ambil semua tagihan yang belum lunas (scoped by branch access)
+        $tagihanUnpaid = Tagihan::with('pelanggan')
+            ->whereNull('status_bayar')
+            ->whereIn('id_pelanggan', Pelanggan::allowedForUser()->pluck('id_pelanggan'))
+            ->get();
+        
+        if ($tagihanUnpaid->isEmpty()) {
+            return response()->json([
+                'success' => true,
+                'results' => [],
+                'berhasil' => 0,
+                'gagal' => 0,
+                'message' => 'Tidak ada tagihan belum lunas untuk dibroadcast.'
+            ]);
+        }
+
+        $notifSetting = DB::table('tbl_notif')->first();
+        if (!$notifSetting || $notifSetting->status_notifikasi !== 'aktif') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Fitur notifikasi WhatsApp belum diaktifkan di pengaturan custom pesan.'
+            ], 400);
+        }
+
+        $tokenInfo = DB::table('tbl_token')->where('id_token', 1)->first();
+        if (!$tokenInfo || empty($tokenInfo->token)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Token WhatsApp Fonnte belum dikonfigurasi.'
+            ], 400);
+        }
+
+        $successCount = 0;
+        $failCount = 0;
+        $results = [];
+
+        foreach ($tagihanUnpaid as $index => $tx) {
+            $pelanggan = $tx->pelanggan;
+            if (!$pelanggan || empty($pelanggan->no_telp)) {
+                $results[] = [
+                    'status' => false,
+                    'nama' => $pelanggan->nama_pelanggan ?? 'N/A',
+                    'no_telp' => $pelanggan->no_telp ?? '-',
+                    'message' => 'Nomor HP tidak valid/kosong.'
+                ];
+                $failCount++;
+                continue;
+            }
+
+            // Jeda 10 detik untuk mencegah rate limit/spam block (kecuali indeks pertama)
+            if ($index > 0) {
+                sleep(10);
+            }
+
+            $pesan = $notifSetting->pesan_notifikasi;
+            $pesan = str_replace('$nama', $pelanggan->nama_pelanggan, $pesan);
+            $pesan = str_replace('$no_telp', $pelanggan->no_telp, $pesan);
+            $pesan = str_replace('$jatuh_tempo', Carbon::parse($tx->jatuh_tempo)->translatedFormat('d F Y') ?? $pelanggan->jatuh_tempo, $pesan);
+            $pesan = str_replace('$tagihan', number_format($tx->jml_bayar, 0, ',', '.'), $pesan);
+            $pesan = str_replace('$hari_ini', Carbon::now()->translatedFormat('d F Y'), $pesan);
+
+            try {
+                $response = Http::timeout(10)->withHeaders([
+                    'Authorization' => $tokenInfo->token
+                ])->asForm()->post('https://api.fonnte.com/send', [
+                    'target' => $pelanggan->no_telp,
+                    'message' => $pesan,
+                    'countryCode' => '62'
+                ]);
+
+                $resData = $response->json();
+                if ($response->successful() && isset($resData['status']) && $resData['status'] === true) {
+                    $tx->update(['terkirim' => 'terkirim']);
+                    $successCount++;
+                    $results[] = [
+                        'status' => true,
+                        'nama' => $pelanggan->nama_pelanggan,
+                        'no_telp' => $pelanggan->no_telp,
+                        'message' => 'Terkirim'
+                    ];
+                } else {
+                    $failCount++;
+                    $reason = $resData['reason'] ?? $resData['message'] ?? 'Gagal mengirim (HTTP ' . $response->status() . ')';
+                    $results[] = [
+                        'status' => false,
+                        'nama' => $pelanggan->nama_pelanggan,
+                        'no_telp' => $pelanggan->no_telp,
+                        'message' => $reason
+                    ];
+                }
+            } catch (\Exception $e) {
+                $failCount++;
+                $results[] = [
+                    'status' => false,
+                    'nama' => $pelanggan->nama_pelanggan,
+                    'no_telp' => $pelanggan->no_telp,
+                    'message' => $e->getMessage()
+                ];
+            }
+        }
+
+        return response()->json([
+            'success' => true,
+            'results' => $results,
+            'berhasil' => $successCount,
+            'gagal' => $failCount
+        ]);
+    }
+
+    public function reminder(Request $request)
+    {
+        set_time_limit(1800); // Jeda 8 detik per pengiriman membutuhkan waktu eksekusi yang lebih lama
+
+        // Ambil semua tagihan yang belum lunas (scoped by branch access)
+        $tagihanUnpaid = Tagihan::with('pelanggan')
+            ->whereNull('status_bayar')
+            ->whereIn('id_pelanggan', Pelanggan::allowedForUser()->pluck('id_pelanggan'))
+            ->get();
+        
+        if ($tagihanUnpaid->isEmpty()) {
+            return response()->json([
+                'success' => true,
+                'results' => [],
+                'berhasil' => 0,
+                'gagal' => 0,
+                'message' => 'Tidak ada tagihan belum lunas untuk direminder.'
+            ]);
+        }
+
+        $reminderSetting = DB::table('tbl_notifreminder')->first();
+        if (!$reminderSetting || $reminderSetting->status_reminder !== 'aktif') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Fitur reminder tagihan belum diaktifkan di pengaturan custom pesan.'
+            ], 400);
+        }
+
+        $tokenInfo = DB::table('tbl_token')->where('id_token', 1)->first();
+        if (!$tokenInfo || empty($tokenInfo->token)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Token WhatsApp Fonnte belum dikonfigurasi.'
+            ], 400);
+        }
+
+        $successCount = 0;
+        $failCount = 0;
+        $results = [];
+
+        foreach ($tagihanUnpaid as $index => $tx) {
+            $pelanggan = $tx->pelanggan;
+            if (!$pelanggan || empty($pelanggan->no_telp)) {
+                $results[] = [
+                    'status' => false,
+                    'nama' => $pelanggan->nama_pelanggan ?? 'N/A',
+                    'no_telp' => $pelanggan->no_telp ?? '-',
+                    'message' => 'Nomor HP tidak valid/kosong.'
+                ];
+                $failCount++;
+                continue;
+            }
+
+            // Jeda 10 detik untuk mencegah rate limit/spam block (kecuali indeks pertama)
+            if ($index > 0) {
+                sleep(10);
+            }
+
+            $pesan = $reminderSetting->pesan_reminder;
+            $pesan = str_replace('$nama', $pelanggan->nama_pelanggan, $pesan);
+            $pesan = str_replace('$no_telp', $pelanggan->no_telp, $pesan);
+            $pesan = str_replace('$tagihan', number_format($tx->jml_bayar, 0, ',', '.'), $pesan);
+            $pesan = str_replace('$jatuh_tempo', Carbon::parse($tx->jatuh_tempo)->translatedFormat('d F Y') ?? $pelanggan->jatuh_tempo, $pesan);
+            $pesan = str_replace('$sekarang_format', Carbon::now()->translatedFormat('d F Y H:i') . ' WIB', $pesan);
+
+            try {
+                $response = Http::timeout(10)->withHeaders([
+                    'Authorization' => $tokenInfo->token
+                ])->asForm()->post('https://api.fonnte.com/send', [
+                    'target' => $pelanggan->no_telp,
+                    'message' => $pesan,
+                    'countryCode' => '62'
+                ]);
+
+                $resData = $response->json();
+                if ($response->successful() && isset($resData['status']) && $resData['status'] === true) {
+                    $successCount++;
+                    $results[] = [
+                        'status' => true,
+                        'nama' => $pelanggan->nama_pelanggan,
+                        'no_telp' => $pelanggan->no_telp,
+                        'message' => 'Terkirim'
+                    ];
+                } else {
+                    $failCount++;
+                    $reason = $resData['reason'] ?? $resData['message'] ?? 'Gagal mengirim (HTTP ' . $response->status() . ')';
+                    $results[] = [
+                        'status' => false,
+                        'nama' => $pelanggan->nama_pelanggan,
+                        'no_telp' => $pelanggan->no_telp,
+                        'message' => $reason
+                    ];
+                }
+            } catch (\Exception $e) {
+                $failCount++;
+                $results[] = [
+                    'status' => false,
+                    'nama' => $pelanggan->nama_pelanggan,
+                    'no_telp' => $pelanggan->no_telp,
+                    'message' => $e->getMessage()
+                ];
+            }
+        }
+
+        return response()->json([
+            'success' => true,
+            'results' => $results,
+            'berhasil' => $successCount,
+            'gagal' => $failCount
+        ]);
+    }
+
+    public function bulkBlokir(Request $request)
+    {
+        set_time_limit(1800); // 30 minutes execution limit
+
+        // Ambil semua tagihan yang belum lunas bulan ini dan belum diblokir
+        $tagihanUnpaid = Tagihan::with(['pelanggan'])
+            ->where('bulan_tahun', date('mY'))
+            ->where(function ($q) {
+                $q->whereNull('status_bayar')
+                  ->orWhereIn('status_bayar', [0, '0', 'belum', '']);
+            })
+            ->where(function ($q) {
+                $q->whereNull('blokir_status')
+                  ->orWhere('blokir_status', '!=', 1);
+            })
+            ->get();
+
+        if ($tagihanUnpaid->isEmpty()) {
+            return response()->json([
+                'success' => true,
+                'results' => [],
+                'berhasil' => 0,
+                'gagal' => 0,
+                'message' => 'Tidak ada tagihan belum lunas & belum terblokir untuk diproses.'
+            ]);
+        }
+
+        $blokirSetting = DB::table('tbl_blokir')->first();
+        $tokenInfo = DB::table('tbl_token')->where('id_token', 1)->first();
+        $checkUser = DB::table('tbl_penggunamikrotik')->first();
+
+        require_once base_path('include/routeros_api.php');
+
+        $successCount = 0;
+        $failCount = 0;
+        $results = [];
+
+        foreach ($tagihanUnpaid as $tx) {
+            $pelanggan = $tx->pelanggan;
+            if (!$pelanggan) {
+                $results[] = [
+                    'status' => false,
+                    'nama' => 'N/A',
+                    'no_telp' => '-',
+                    'message' => 'Data pelanggan tidak ditemukan.'
+                ];
+                $failCount++;
+                continue;
+            }
+
+            // Hubungkan ke Mikrotik sesuai dengan router pelanggan
+            $id_mikrotik = $pelanggan->id_mikrotik ?: 1;
+            $mikrotik = DB::table('tbl_mikrotik')->where('id_mikrotik', $id_mikrotik)->first();
+
+            if (!$mikrotik) {
+                $results[] = [
+                    'status' => false,
+                    'nama' => $pelanggan->nama_pelanggan,
+                    'no_telp' => $pelanggan->no_telp ?? '-',
+                    'message' => 'Koneksi router Mikrotik tidak ditemukan.'
+                ];
+                $failCount++;
+                continue;
+            }
+
+            $user = User::where('id_pelanggan', $pelanggan->id_pelanggan)->first();
+            $API = new \RouterosAPI();
+
+            $blockedOnMikrotik = false;
+            if ($API->connect($mikrotik->ip, $mikrotik->username, $mikrotik->password)) {
+                if ($checkUser && $checkUser->ippelanggan == 'statik') {
+                    // Blokir Statik: Tambah IP ke Address-List
+                    $API->comm("/ip/firewall/address-list/add", [
+                        "list"     => "blocked_clients",
+                        "address"  => $pelanggan->ip_address,
+                        "comment"  => "Blokir Bulanan " . $pelanggan->ip_address
+                    ]);
+                    $blockedOnMikrotik = true;
+                } else {
+                    // Blokir PPPOE: Set profile to pppoe-isolir & enable secret
+                    if ($user) {
+                        $API->comm("/ppp/secret/set", [
+                            "numbers" => $user->username,
+                            "profile" => "pppoe-isolir",
+                        ]);
+                        $API->comm("/ppp/secret/enable", [
+                            "numbers" => $user->username,
+                        ]);
+
+                        // Cari koneksi pppoe aktif
+                        $activeConnections = $API->comm("/ppp/active/print", [
+                            "?name" => $user->username,
+                        ]);
+
+                        foreach ($activeConnections as $conn) {
+                            $API->comm("/ppp/active/remove", [
+                                ".id" => $conn['.id'],
+                            ]);
+                        }
+                        $blockedOnMikrotik = true;
+                    } else {
+                        $results[] = [
+                            'status' => false,
+                            'nama' => $pelanggan->nama_pelanggan,
+                            'no_telp' => $pelanggan->no_telp ?? '-',
+                            'message' => 'Akun PPPoE (user) tidak ditemukan di database.'
+                        ];
+                        $failCount++;
+                        $API->disconnect();
+                        continue;
+                    }
+                }
+                $API->disconnect();
+            } else {
+                $results[] = [
+                    'status' => false,
+                    'nama' => $pelanggan->nama_pelanggan,
+                    'no_telp' => $pelanggan->no_telp ?? '-',
+                    'message' => 'Gagal terhubung ke Router Mikrotik.'
+                ];
+                $failCount++;
+                continue;
+            }
+
+            if ($blockedOnMikrotik) {
+                // Update status blokir di database
+                $tx->update(['blokir_status' => 1]);
+
+                // Kirim notifikasi WhatsApp jika fitur aktif dan token tersedia
+                $waSent = false;
+                $waMessage = 'Terblokir di Mikrotik (WA tidak aktif/token kosong)';
+
+                if ($blokirSetting && $blokirSetting->status_blokir === 'aktif' && $tokenInfo && !empty($tokenInfo->token) && !empty($pelanggan->no_telp)) {
+                    // Jeda 10 detik jika ini bukan pengiriman pertama
+                    if ($successCount > 0) {
+                        sleep(10);
+                    }
+
+                    $pesan = $blokirSetting->pesan_blokir;
+                    $pesan = str_replace('$nama', $pelanggan->nama_pelanggan, $pesan);
+                    $pesan = str_replace('$tagihan', number_format($tx->jml_bayar, 0, ',', '.'), $pesan);
+
+                    try {
+                        $response = Http::timeout(10)->withHeaders([
+                            'Authorization' => $tokenInfo->token
+                        ])->asForm()->post('https://api.fonnte.com/send', [
+                            'target' => $pelanggan->no_telp,
+                            'message' => $pesan,
+                            'countryCode' => '62'
+                        ]);
+
+                        $resData = $response->json();
+                        if ($response->successful() && isset($resData['status']) && $resData['status'] === true) {
+                            $waSent = true;
+                            $waMessage = 'Terblokir & Notifikasi WA Terkirim';
+                        } else {
+                            $reason = $resData['reason'] ?? $resData['message'] ?? 'Device Fonnte tidak aktif.';
+                            $waMessage = 'Terblokir & Gagal Kirim WA: ' . $reason;
+                        }
+                    } catch (\Exception $e) {
+                        $waMessage = 'Terblokir & Gagal Kirim WA: ' . $e->getMessage();
+                    }
+                }
+
+                $results[] = [
+                    'status' => true,
+                    'nama' => $pelanggan->nama_pelanggan,
+                    'no_telp' => $pelanggan->no_telp ?? '-',
+                    'message' => $waMessage
+                ];
+                $successCount++;
+            }
+        }
+
+        return response()->json([
+            'success' => true,
+            'results' => $results,
+            'berhasil' => $successCount,
+            'gagal' => $failCount
+        ]);
+    }
+
+    public function printInvoice($id)
+    {
+        $tagihan = Tagihan::with(['pelanggan.paketDetail'])->findOrFail($id);
+        
+        $profile = DB::table('tb_profile')->first();
+        if ($profile && !isset($profile->telepon)) {
+            $profile->telepon = $profile->telpon ?? '';
+        }
+
+        if (empty($tagihan->no_invoice)) {
+            $tagihan->no_invoice = 'INV/' . $tagihan->bulan_tahun . '/' . str_pad($tagihan->id_tagihan, 4, '0', STR_PAD_LEFT);
+        }
+
+        return view('admin.transaksi.print_invoice', compact('tagihan', 'profile'));
+    }
+
+    public function printReceipt($id)
+    {
+        $tagihan = Tagihan::with(['pelanggan.paketDetail', 'penerima'])->findOrFail($id);
+        
+        if ($tagihan->status_bayar != 1) {
+            return back()->withErrors(['error' => 'Bukti bayar hanya dapat dicetak untuk tagihan yang sudah lunas.']);
+        }
+
+        $profile = DB::table('tb_profile')->first();
+        if ($profile && !isset($profile->telepon)) {
+            $profile->telepon = $profile->telpon ?? '';
+        }
+
+        if (empty($tagihan->no_invoice)) {
+            $tagihan->no_invoice = 'INV/' . $tagihan->bulan_tahun . '/' . str_pad($tagihan->id_tagihan, 4, '0', STR_PAD_LEFT);
+        }
+
+        return view('admin.transaksi.print_receipt', compact('tagihan', 'profile'));
+    }
+}
+

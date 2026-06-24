@@ -1,8 +1,130 @@
 <?php
-/*   __________________________________________________
-    |  Obfuscated by YAK Pro - Php Obfuscator  3.0.0   |
-    |              on 2026-06-24 23:14:51              |
-    |    GitHub: https://github.com/pk-fr/yakpro-po    |
-    |__________________________________________________|
-*/
- namespace m71jr\xPacO; use mVYyo\ItuKD\rZZzY\FhYI3\rjot4; use MVYYO\EdEjm\yZYuB\KWAzp as Authenticatable; use mVYYo\hrMA0\xdeHV; class User extends Authenticatable { use rjot4, XDEhv; protected $cBkSt = "\x74\x62\137\165\x73\145\x72"; protected $sUoJP = "\x69\x64"; public $RkMfz = false; protected $y22pJ = ["\x75\x73\145\x72\156\x61\x6d\145", "\156\141\155\141\x5f\165\x73\145\x72", "\160\x61\x73\x73\x77\157\162\x64", "\154\x65\x76\x65\x6c", "\146\157\x74\157", "\x69\x64\137\160\x65\154\141\156\147\x67\141\x6e", "\160\150\157\156\x65\137\156\x75\155\x62\x65\x72"]; protected $D992U = ["\x70\141\x73\163\167\x6f\162\x64"]; protected function yV2iO(): array { return ["\x70\x61\163\x73\167\157\x72\144" => "\x68\x61\x73\x68\145\144"]; } public function Zy2ar() { return $this->L8Q25(Pelanggan::class, "\151\144\x5f\x70\145\154\141\156\147\x67\141\156", "\151\144\137\160\145\x6c\141\x6e\x67\x67\x61\x6e"); } public function DIKnk() { return $this->hYR3c(); } public function cGssz() { return $this->YMBZt(); } public function sgOm9() { return $this->hXbeJ; } public function VKdY1() { return in_array($this->level, ["\x61\144\155\151\156", "\x6b\141\163\151\162", "\164\x65\153\156\x69\163\151", "\163\141\x6c\145\163", "\x6d\151\x74\162\x61"]); } public function m0f9i() { return \MVYYo\bTklJ\LP8PF\DB::k6GOv("\x74\142\x5f\165\163\145\162\137\142\162\141\x6e\143\150\137\141\143\x63\145\x73\163")->GvSMS("\151\x64\137\165\x73\x65\162", $this->id)->get(); } public function svHLE($lX0A1) { goto Zqkrr; Depr3: return true; goto EPgo7; Zqkrr: if (!($this->level === "\141\144\155\151\156")) { goto UqsQ8; } goto Depr3; X1xV9: return \mVyYo\btKlJ\LP8pf\DB::k6Gov("\164\142\137\x75\163\145\162\137\155\x65\x6e\x75\137\141\x63\x63\145\163\163")->GVsms("\x69\x64\x5f\165\163\x65\x72", $this->id)->gVSms("\155\x65\156\x75\137\x6b\145\x79", $lX0A1)->N9IUP(); goto yuwnE; EPgo7: UqsQ8: goto X1xV9; yuwnE: } public function B7H2E() { return \mVYYo\BTkLj\lp8pf\DB::k6GoV("\164\142\137\165\x73\145\162\x5f\155\145\x6e\165\137\x61\x63\x63\145\163\x73")->gvsMS("\151\144\x5f\165\163\x65\162", $this->id)->yu00q("\x6d\145\x6e\165\137\x6b\x65\171")->toArray(); } }
+
+namespace App\Models;
+
+// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+
+class User extends Authenticatable
+{
+    use HasFactory, Notifiable;
+
+    protected $table = 'tb_user';
+    protected $primaryKey = 'id';
+    public $timestamps = false;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var list<string>
+     */
+    protected $fillable = [
+        'username',
+        'nama_user',
+        'password',
+        'level',
+        'foto',
+        'id_pelanggan',
+        'phone_number',
+    ];
+
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var list<string>
+     */
+    protected $hidden = [
+        'password',
+    ];
+
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'password' => 'hashed',
+        ];
+    }
+
+    /**
+     * Relationship: User belongs to Pelanggan
+     */
+    public function pelanggan()
+    {
+        return $this->belongsTo(Pelanggan::class, 'id_pelanggan', 'id_pelanggan');
+    }
+
+    /**
+     * Get the name of the unique identifier for the user.
+     */
+    public function getAuthIdentifierName()
+    {
+        return $this->getKeyName();
+    }
+
+    /**
+     * Get the unique identifier for the user.
+     */
+    public function getAuthIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    /**
+     * Get the password for the user.
+     */
+    public function getAuthPassword()
+    {
+        return $this->password;
+    }
+
+    /**
+     * Check if user is staff (admin, kasir, teknisi, sales, mitra)
+     */
+    public function isStaff()
+    {
+        return in_array($this->level, ['admin', 'kasir', 'teknisi', 'sales', 'mitra']);
+    }
+
+    /**
+     * Get branch access configurations for this user
+     */
+    public function getBranchAccess()
+    {
+        return \Illuminate\Support\Facades\DB::table('tb_user_branch_access')
+            ->where('id_user', $this->id)
+            ->get();
+    }
+
+    /**
+     * Check if user has access to a specific sidebar menu
+     */
+    public function hasMenuAccess($menuKey)
+    {
+        // Admin always has access to all menus
+        if ($this->level === 'admin') {
+            return true;
+        }
+
+        return \Illuminate\Support\Facades\DB::table('tb_user_menu_access')
+            ->where('id_user', $this->id)
+            ->where('menu_key', $menuKey)
+            ->exists();
+    }
+
+    /**
+     * Get menu access list for this user
+     */
+    public function getMenuAccess()
+    {
+        return \Illuminate\Support\Facades\DB::table('tb_user_menu_access')
+            ->where('id_user', $this->id)
+            ->pluck('menu_key')
+            ->toArray();
+    }
+}

@@ -1,8 +1,142 @@
 <?php
-/*   __________________________________________________
-    |  Obfuscated by YAK Pro - Php Obfuscator  3.0.0   |
-    |              on 2026-06-24 23:14:50              |
-    |    GitHub: https://github.com/pk-fr/yakpro-po    |
-    |__________________________________________________|
-*/
- namespace M71jR\xz1tu\FNHFF; use M71Jr\xPaCo\oVYbr; use m71JR\xPacO\RfKJS; use M71JR\pMq28\ELs5o; use MVYyO\xz1tu\Ohhid; use mvyYO\BTklJ\lp8pf\YzyUb; use mVYYo\BtKLJ\pXAyD; class KeluhanController extends Controller { public function __construct(private FonnteWhatsAppService $PSxdI) { } public function H0I_0() { goto OD5pV; zJEwX: return view("\x6b\x65\154\x75\x68\x61\156\x2e\x69\x6e\144\145\x78", ["\153\145\x6c\165\150\141\x6e\114\151\163\164" => $WubJ1]); goto KUdXa; V72Xs: if ($MQy9w) { goto IpLSW; } goto Enf1r; OD5pV: $MQy9w = Auth::Wz2vm()->UJoNp; goto V72Xs; i0zvj: $WubJ1 = Keluhan::GvSMS("\151\x64\x5f\x70\145\154\141\x6e\147\x67\x61\x6e", $MQy9w->nzuo3)->bIPCv("\x74\x61\156\147\x67\x61\154")->get(); goto zJEwX; Enf1r: abort(404, "\120\x65\154\x61\156\147\x67\x61\156\x20\x74\151\144\x61\x6b\x20\144\x69\x74\145\155\x75\x6b\141\156\x2e"); goto ZVW_C; ZVW_C: IpLSW: goto i0zvj; KUdXa: } public function create() { return view("\x6b\145\x6c\x75\x68\141\156\56\143\x72\x65\141\164\x65"); } public function P6Txp(Request $den9F) { goto pBnZi; MUWLB: NsLTB: goto Wedqy; f2RVm: $oxiZi = $den9F->file("\x67\x61\x6d\142\x61\162"); goto GD8Cj; LCTgu: $Wyf01 = $this->vQCld(); goto f2RVm; M0Ttv: $Q7YT9 = $ZXKo3 ? "\114\141\x70\157\x72\x61\156\40\x62\x65\x72\x68\x61\x73\x69\x6c\x20\x64\x69\x6b\x69\x72\151\155\x2e\x20\x4e\157\164\x69\146\151\153\x61\163\151\x20\x57\x68\141\164\163\101\160\160\40\164\x65\154\141\150\40\x64\x69\x6b\x69\162\x69\155\x20\153\145\x20\x6e\x6f\155\x6f\162\x20\101\156\144\x61\x2e" : "\x4c\141\x70\157\162\141\156\40\x62\145\x72\x68\x61\163\x69\154\40\x64\151\153\x69\x72\151\155\x2e\x20\116\x6f\164\151\146\151\x6b\141\163\x69\40\x57\150\x61\x74\163\x41\x70\x70\40\147\x61\x67\141\154\40\x64\151\x6b\151\162\151\x6d\x2c\40\163\x69\154\x61\153\x61\156\x20\x68\165\142\x75\x6e\147\151\40\141\144\155\x69\x6e\40\x6a\x69\153\x61\x20\x64\151\x70\145\162\154\x75\x6b\141\x6e\56"; goto MZ2dh; QXig5: Keluhan::create(["\151\144\137\160\145\x6c\x61\x6e\147\x67\141\x6e" => $MQy9w->nzuo3, "\x6a\165\x64\165\154\137\x6b\x65\x6c\165\150\141\156" => $den9F->IRCJs, "\x6e\157\x6d\157\x72\x5f\164\151\x6b\145\x74" => $jZHuP, "\151\163\x69\137\x6b\145\x6c\165\150\141\x6e" => $den9F->HKAib, "\147\x61\155\x62\141\x72" => $e0mQ4, "\156\157\x5f\x77\141" => preg_replace("\x2f\x5b\136\60\x2d\71\x5d\57", '', $MQy9w->gMXy1 ?? ''), "\x73\x74\x61\x74\x75\163\137\x6b\145\x6c\165\x68\141\156" => "\x6d\x65\156\x75\x6e\147\x67\x75", "\x74\x61\x6e\x67\x67\x61\x6c" => now()->format("\131\55\x6d\55\x64\40\x48\x3a\151\72\x73"), "\x75\163\145\x72\x5f\151\144" => $LjaJw->id]); goto RpZA2; ozYqU: if ($MQy9w) { goto NsLTB; } goto us1VI; vQhd3: JhJ3w: goto Ut9Vn; EjdWz: $MQy9w = $LjaJw->UJoNp; goto ozYqU; Zhccr: return back()->qKV2A()->abl7m(["\152\165\144\x75\x6c\137\x6b\x65\154\165\x68\x61\x6e" => "\115\x61\163\x69\150\40\141\144\141\40\154\141\x70\157\x72\x61\x6e\x20\x79\141\156\x67\40\155\x65\156\165\x6e\x67\147\x75\x20\141\x74\141\165\40\x73\145\144\141\156\x67\x20\144\151\160\x72\157\x73\145\x73\x2e\40\110\141\162\x61\160\x20\164\x75\x6e\147\x67\165\x20\x68\151\x6e\x67\x67\141\x20\x73\145\x6c\x65\163\x61\x69\56"]); goto vQhd3; Ut9Vn: $e0mQ4 = ''; goto AJeUt; us1VI: abort(404, "\x50\x65\x6c\141\x6e\147\x67\141\x6e\40\164\151\144\x61\x6b\x20\x64\x69\164\x65\155\x75\153\x61\156\56"); goto MUWLB; Wedqy: $den9F->validate(["\x6a\165\144\165\x6c\x5f\153\x65\x6c\165\150\x61\156" => ["\162\x65\x71\165\x69\162\145\144", "\163\164\x72\151\156\x67", "\155\x61\x78\x3a\x35\60"], "\151\x73\x69\137\153\145\154\165\x68\x61\156" => ["\x72\x65\161\x75\x69\x72\145\144", "\x73\164\x72\151\156\147"], "\x67\x61\x6d\142\x61\x72" => ["\156\x75\x6c\x6c\x61\x62\154\145", "\151\x6d\x61\147\145", "\x6d\151\x6d\145\x73\x3a\152\160\145\x67\54\152\x70\147\54\160\156\147\x2c\147\x69\x66\54\x77\145\142\x70", "\x6d\x61\x78\72\x35\x31\x32\x30"]], ["\x6a\x75\x64\165\x6c\x5f\153\x65\154\165\150\x61\x6e\56\x72\x65\161\x75\x69\x72\145\144" => "\x4b\x65\154\x75\150\141\156\40\x77\141\152\x69\x62\x20\x64\x69\x69\x73\x69\56", "\x6a\x75\144\165\x6c\x5f\x6b\145\x6c\x75\150\141\156\56\155\141\x78" => "\113\145\154\x75\x68\141\x6e\x20\155\x61\x6b\x73\x69\155\141\154\x20\x35\x30\x20\x6b\141\x72\141\x6b\164\x65\x72\x2e", "\x69\x73\x69\x5f\153\145\x6c\x75\150\141\156\x2e\162\x65\161\165\151\162\x65\144" => "\104\x65\x74\x61\x69\x6c\40\153\x65\x6c\165\150\141\156\x20\x77\x61\152\x69\142\40\144\x69\151\163\151\56", "\x67\x61\x6d\x62\141\162\x2e\151\x6d\141\147\145" => "\x46\151\x6c\x65\x20\x68\141\162\x75\163\40\x62\145\162\165\x70\141\40\x67\141\x6d\142\x61\x72\56", "\147\141\155\x62\x61\x72\x2e\x6d\141\x78" => "\x55\x6b\165\x72\x61\156\40\147\x61\155\x62\141\162\x20\155\x61\x6b\x73\151\x6d\x61\x6c\x20\65\x20\115\102\56"]); goto xp9wT; AJeUt: if (!$den9F->Gjf_q("\147\141\155\142\141\x72")) { goto Ty5PD; } goto LCTgu; GD8Cj: $e0mQ4 = uniqid() . "\x5f" . Str::ZCWKk(pathinfo($oxiZi->UD51d(), PATHINFO_FILENAME)) . "\56" . $oxiZi->tBGJh(); goto Ni15a; Ni15a: $oxiZi->H2NNc($Wyf01, $e0mQ4); goto v6D6a; MZ2dh: return redirect()->GXR_2("\x64\141\163\x68\x62\157\141\x72\144")->qicK_("\x73\x75\x63\x63\145\x73\163", $Q7YT9); goto cwUky; pBnZi: $LjaJw = Auth::wZ2Vm(); goto EjdWz; xp9wT: $hVra6 = Keluhan::GVsMS("\x69\x64\137\x70\x65\x6c\x61\156\x67\x67\141\x6e", $MQy9w->nzuo3)->mqCiB("\163\164\x61\164\x75\x73\137\x6b\145\x6c\x75\150\x61\156", ["\155\145\156\165\156\x67\x67\x75", "\x70\162\157\163\145\x73"])->bIPcv("\x74\x61\156\147\147\x61\154")->N9IUp(); goto LHjh6; v6D6a: Ty5PD: goto z_x0T; z_x0T: $jZHuP = $this->txOzg(); goto QXig5; RpZA2: $ZXKo3 = $this->Z8Dc3->send($MQy9w->gMXy1 ?? '', $this->r2OIb($MQy9w, $jZHuP)); goto M0Ttv; LHjh6: if (!$hVra6) { goto JhJ3w; } goto Zhccr; cwUky: } private function vqClD(): string { goto x2g3i; Q19lX: mkdir($tMmNE, 0755, true); goto RhrlO; CobIG: if (is_dir($tMmNE)) { goto jcD2K; } goto Q19lX; fLfzN: return $tMmNE; goto tPAv3; x2g3i: $tMmNE = base_path("\x61\144\155\x69\156\151\x73\164\x72\x61\164\x6f\162\x2f\x70\141\x67\x65\57\153\x65\154\165\x68\x61\156\57\151\x6d\141\x67\145\163"); goto CobIG; RhrlO: jcD2K: goto fLfzN; tPAv3: } private function tXOZg(): string { goto LC0VN; p1qNk: return "\160\145\156\x67\x61\x64\x75\141\x6e\55" . sprintf("\45\x30\x33\x64", $QynEK + 1); goto JbymA; MLvLN: if ($EKkBn) { goto hh8_L; } goto myHTi; k8NeH: $QynEK = (int) substr($EKkBn, strrpos($EKkBn, "\x2d") + 1); goto p1qNk; myHTi: return "\160\145\156\x67\x61\144\x75\141\x6e\55\60\x30\61"; goto Mcqkj; LC0VN: $EKkBn = Keluhan::max("\156\157\x6d\157\x72\x5f\164\x69\153\x65\x74"); goto MLvLN; Mcqkj: hh8_L: goto k8NeH; JbymA: } private function R2OIb(Pelanggan $MQy9w, string $jZHuP): string { return "\x48\x61\x69\x20\120\145\x6c\141\156\x67\x67\141\156\x20{$MQy9w->MbKDH}\12" . "\116\x6f\155\x6f\x72\x20\x70\x65\156\147\x61\144\165\141\156\40\141\x6e\x64\141\x20\x73\165\144\x61\150\40\144\x69\142\165\141\x74\40\x64\x65\156\x67\x61\156\40\156\157\x6d\157\x72\40\x74\x69\143\153\x65\x74\x20{$jZHuP}\40\x6d\157\x68\x6f\156\40\155\x65\x6e\165\156\147\147\165\40\x61\144\155\x69\156\40\x61\153\x61\156\40\x6d\145\x6d\142\141\x6c\x61\163\40\163\145\143\x65\x70\x61\x74\156\x79\141\56\x20\x4d\x6f\150\x6f\156\40\165\x6e\164\165\x6b\40\164\165\x6e\147\x67\165\x20\x69\156\x66\157\162\155\141\x73\x69\x20\x6c\x65\142\151\150\x20\154\141\x6e\x6a\165\x74\54\40\124\x65\x72\x69\x6d\141\x20\x4b\x61\163\x69\150\x2e\xa\xa" . "\112\x61\156\147\x61\x6e\x20\x42\x61\x6c\141\163\x20\x50\x65\163\x61\156\40\x49\156\151\x20\120\x65\x73\x61\x6e\x20\117\164\157\x6d\x61\164\x69\x73"; } }
+
+namespace App\Http\Controllers;
+
+use App\Models\Keluhan;
+use App\Models\Pelanggan;
+use App\Services\FonnteWhatsAppService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
+
+class KeluhanController extends Controller
+{
+    public function __construct(
+        private FonnteWhatsAppService $fonnteWhatsApp
+    ) {
+    }
+    public function index()
+    {
+        $pelanggan = Auth::user()->pelanggan;
+
+        if (!$pelanggan) {
+            abort(404, 'Pelanggan tidak ditemukan.');
+        }
+
+        $keluhanList = Keluhan::where('id_pelanggan', $pelanggan->id_pelanggan)
+            ->orderByDesc('tanggal')
+            ->get();
+
+        return view('keluhan.index', [
+            'keluhanList' => $keluhanList,
+        ]);
+    }
+
+    public function create()
+    {
+        return view('keluhan.create');
+    }
+
+    public function store(Request $request)
+    {
+        $user = Auth::user();
+        $pelanggan = $user->pelanggan;
+
+        if (!$pelanggan) {
+            abort(404, 'Pelanggan tidak ditemukan.');
+        }
+
+        $request->validate([
+            'judul_keluhan' => ['required', 'string', 'max:50'],
+            'isi_keluhan' => ['required', 'string'],
+            'gambar' => ['nullable', 'image', 'mimes:jpeg,jpg,png,gif,webp', 'max:5120'],
+        ], [
+            'judul_keluhan.required' => 'Keluhan wajib diisi.',
+            'judul_keluhan.max' => 'Keluhan maksimal 50 karakter.',
+            'isi_keluhan.required' => 'Detail keluhan wajib diisi.',
+            'gambar.image' => 'File harus berupa gambar.',
+            'gambar.max' => 'Ukuran gambar maksimal 5 MB.',
+        ]);
+
+        $keluhanAktif = Keluhan::where('id_pelanggan', $pelanggan->id_pelanggan)
+            ->whereIn('status_keluhan', ['menunggu', 'proses'])
+            ->orderByDesc('tanggal')
+            ->exists();
+
+        if ($keluhanAktif) {
+            return back()
+                ->withInput()
+                ->withErrors([
+                    'judul_keluhan' => 'Masih ada laporan yang menunggu atau sedang diproses. Harap tunggu hingga selesai.',
+                ]);
+        }
+
+        $gambarName = '';
+        if ($request->hasFile('gambar')) {
+            $uploadDir = $this->keluhanImageDirectory();
+            $file = $request->file('gambar');
+            $gambarName = uniqid() . '_' . Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) . '.' . $file->getClientOriginalExtension();
+            $file->move($uploadDir, $gambarName);
+        }
+
+        $nomorTiket = $this->generateNomorTiket();
+
+        Keluhan::create([
+            'id_pelanggan' => $pelanggan->id_pelanggan,
+            'judul_keluhan' => $request->judul_keluhan,
+            'nomor_tiket' => $nomorTiket,
+            'isi_keluhan' => $request->isi_keluhan,
+            'gambar' => $gambarName,
+            'no_wa' => preg_replace('/[^0-9]/', '', $pelanggan->no_telp ?? ''),
+            'status_keluhan' => 'menunggu',
+            'tanggal' => now()->format('Y-m-d H:i:s'),
+            'user_id' => $user->id,
+        ]);
+
+        $waTerkirim = $this->fonnteWhatsApp->send(
+            $pelanggan->no_telp ?? '',
+            $this->buildPelangganWhatsAppMessage($pelanggan, $nomorTiket)
+        );
+
+        $successMessage = $waTerkirim
+            ? 'Laporan berhasil dikirim. Notifikasi WhatsApp telah dikirim ke nomor Anda.'
+            : 'Laporan berhasil dikirim. Notifikasi WhatsApp gagal dikirim, silakan hubungi admin jika diperlukan.';
+
+        return redirect()
+            ->route('dashboard')
+            ->with('success', $successMessage);
+    }
+
+    private function keluhanImageDirectory(): string
+    {
+        // Gambar disimpan di administrator/page/keluhan/images
+        // agar bisa ditampilkan langsung oleh panel administrator
+        $path = base_path('administrator/page/keluhan/images');
+
+        if (!is_dir($path)) {
+            mkdir($path, 0755, true);
+        }
+
+        return $path;
+    }
+
+    private function generateNomorTiket(): string
+    {
+        $lastTicket = Keluhan::max('nomor_tiket');
+
+        if (!$lastTicket) {
+            return 'pengaduan-001';
+        }
+
+        $lastNumber = (int) substr($lastTicket, strrpos($lastTicket, '-') + 1);
+
+        return 'pengaduan-' . sprintf('%03d', $lastNumber + 1);
+    }
+
+    private function buildPelangganWhatsAppMessage(Pelanggan $pelanggan, string $nomorTiket): string
+    {
+        return "Hai Pelanggan {$pelanggan->nama_pelanggan}\n"
+            . "Nomor pengaduan anda sudah dibuat dengan nomor ticket {$nomorTiket} mohon menunggu admin akan membalas secepatnya. Mohon untuk tunggu informasi lebih lanjut, Terima Kasih.\n\n"
+            . 'Jangan Balas Pesan Ini Pesan Otomatis';
+    }
+}

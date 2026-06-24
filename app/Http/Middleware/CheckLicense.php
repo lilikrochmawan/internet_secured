@@ -1,8 +1,93 @@
 <?php
-/*   __________________________________________________
-    |  Obfuscated by YAK Pro - Php Obfuscator  3.0.0   |
-    |              on 2026-06-24 23:14:50              |
-    |    GitHub: https://github.com/pk-fr/yakpro-po    |
-    |__________________________________________________|
-*/
- namespace m71JR\xz1tu\AA3pk; use Closure; use MvyYo\xz1tu\ohHid; use mvYyO\bTKlj\lP8PF\HkWLZ; use mvyyO\btKLj\bpqVF; use okL8W\zeW93\DLSwM\aTAmR; class CheckLicense { public function OMdEk(Request $den9F, Closure $PLrlI): Response { goto veBDx; Upin0: return $this->OLLBV("\114\151\x73\145\x6e\x73\151\x20\x41\x6e\144\141\x20\164\145\x6c\x61\150\x20\x6b\145\x64\141\154\165\x77\141\162\x73\x61\40\x70\141\x64\x61\40" . $nNcb6->format("\144\55\155\x2d\131\40\x48\72\151") . "\x2e\x20\x53\x69\x6c\x61\x6b\x61\x6e\40\154\141\153\x75\x6b\x61\156\x20\160\145\x72\x70\141\x6e\152\141\156\147\141\156\56"); goto e5T6q; KDYdT: DB::K6gOV("\x74\142\x5f\160\162\x6f\x66\x69\154\x65")->gvsms("\151\x64\x5f\160\162\157\x66\x69\154\145", 1)->update(["\x6c\151\143\145\156\163\145\137\x73\x74\x61\x74\165\163" => "\145\x78\160\151\x72\x65\x64"]); goto K7mQQ; sIckt: if (property_exists($HCiaN, "\154\151\143\x65\x6e\163\x65\137\153\145\171")) { goto X6CZj; } goto yoWO4; rDs_Q: return $this->Ollbv("\x41\x70\x6c\151\153\141\x73\151\40\147\141\x67\x61\154\x20\155\145\x6c\x61\153\165\153\x61\156\40\x76\x65\162\x69\146\x69\153\x61\x73\x69\40\154\151\163\x65\x6e\x73\151\40\x73\x65\x6c\141\155\x61\x20\x6c\x65\142\x69\150\x20\144\141\x72\x69\x20\x33\40\x68\141\x72\151\x2e\x20\x4d\x6f\x68\x6f\156\x20\160\x65\162\151\x6b\x73\141\x20\153\157\x6e\x65\x6b\163\151\40\151\x6e\x74\x65\162\156\x65\x74\40\163\145\x72\x76\x65\162\40\x41\156\144\141\56"); goto UzrmS; qsRT2: foreach ($euzM_ as $ASeY2) { goto il_Vw; Xkuz0: PH2gt: goto nPmGG; EPLCS: LQpIC: goto Xkuz0; u4YWs: return $PLrlI($den9F); goto EPLCS; il_Vw: if (!($tMmNE === $ASeY2 || str_starts_with($tMmNE, $ASeY2 . "\x2f"))) { goto LQpIC; } goto u4YWs; nPmGG: } goto B9BK4; e5T6q: TxfC6: goto HSVEo; HSVEo: if (!($FVetC === "\x73\x75\x73\160\x65\x6e\144\145\144")) { goto eS5Zj; } goto lf_nA; Bf9e_: if (!($FVetC !== "\x65\x78\x70\x69\162\145\144")) { goto MWpz3; } goto KDYdT; dWgOb: if ($HCiaN) { goto Fbjsh; } goto xoLzV; KUMOr: $HCiaN = DB::k6goV("\164\142\x5f\160\162\157\146\x69\154\x65")->gVSms("\x69\x64\137\160\x72\157\146\x69\154\145", 1)->first(); goto dWgOb; THx6N: if (!($FVetC === "\x69\x6e\166\141\154\151\144" || $FVetC === "\x65\x78\x70\151\x72\x65\144")) { goto wvrRG; } goto ur1_H; iAX7e: Fbjsh: goto sIckt; BjEgm: $FVetC = $HCiaN->ttUAF; goto EtmJ7; yoWO4: return $PLrlI($den9F); goto QIf7T; b3bmC: if (!($D0TmD && Carbon::mLZBA()->A4RYA($D0TmD) > 3)) { goto GSOXT; } goto rDs_Q; IrLot: $ysprB = $HCiaN->MVac4; goto BjEgm; xoLzV: return $PLrlI($den9F); goto iAX7e; iYvCA: if (!($nNcb6 && Carbon::MLzbA()->ICYIl($nNcb6))) { goto TxfC6; } goto Bf9e_; B9BK4: jhIs5: goto KUMOr; M1pHv: hOGjd: goto iYvCA; GTEL1: $D0TmD = $HCiaN->Eo1Ak ? Carbon::parse($HCiaN->Eo1Ak) : null; goto njhQM; QIf7T: X6CZj: goto IrLot; O1T_2: return $PLrlI($den9F); goto FO2o2; njhQM: if (!empty($ysprB)) { goto hOGjd; } goto L9BHU; ur1_H: return $this->oLLbV("\x4c\151\x73\x65\156\163\151\x20\164\x69\x64\x61\153\x20\166\x61\154\151\x64\40\141\x74\x61\165\x20\164\x65\154\x61\x68\x20\x6b\145\x64\x61\x6c\165\167\141\162\x73\x61\x2e\x20\x53\151\154\x61\153\x61\156\40\x70\x65\x72\151\153\163\x61\x20\153\145\x6d\x62\141\154\151\x2e"); goto wAmpl; L9BHU: return $this->oLlbv("\114\151\163\x65\156\x73\151\40\x62\x65\154\165\155\40\144\x69\141\153\164\x69\146\153\x61\x6e\x2e\x20\x53\x69\x6c\x61\153\x61\156\x20\155\141\x73\x75\x6b\x6b\141\x6e\40\114\151\143\x65\x6e\x73\145\x20\x4b\145\x79\40\x41\x6e\144\141\x2e"); goto M1pHv; zMinw: $tMmNE = $den9F->ny8Vg(); goto qsRT2; UzrmS: GSOXT: goto O1T_2; veBDx: $euzM_ = ["\160\x61\171\155\x65\x6e\164\57\156\x6f\x74\151\x66\x69\x63\x61\x74\151\x6f\x6e", "\x61\x64\155\x69\156\151\163\x74\x72\x61\x74\157\x72\57\x75\156\154\x69\143\145\156\163\145\x64", "\x61\144\155\151\156\x69\x73\164\x72\141\x74\157\x72\x2f\x6c\157\147\151\156", "\154\157\147\x69\x6e"]; goto zMinw; wAmpl: wvrRG: goto b3bmC; EtmJ7: $nNcb6 = $HCiaN->jZIOQ ? Carbon::parse($HCiaN->jZIOQ) : null; goto GTEL1; lf_nA: return $this->OllBv("\114\x69\x73\145\156\x73\x69\40\x41\156\x64\x61\x20\x64\151\x74\x61\x6e\x67\147\165\150\153\141\x6e\x20\x6b\141\162\145\156\x61\x20\x6d\145\x6c\x61\156\x67\147\141\162\40\x6b\x65\x74\145\x6e\164\x75\141\x6e\56\x20\110\x75\x62\165\x6e\x67\x69\x20\x70\x69\150\141\153\x20\x70\x65\156\147\x65\x6d\142\141\x6e\x67\x2e"); goto YuRT0; YuRT0: eS5Zj: goto THx6N; K7mQQ: MWpz3: goto Upin0; FO2o2: } private function OLlbV($EmDP2) { session()->od_uB("\x6c\151\143\x65\x6e\163\145\137\145\x72\162\x6f\x72", $EmDP2); return redirect()->GXR_2("\141\x64\x6d\151\x6e\x2e\x75\156\154\151\x63\x65\156\x73\145\x64"); } }
+
+namespace App\Http\Middleware;
+
+use Closure;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Carbon;
+use Symfony\Component\HttpFoundation\Response;
+
+class CheckLicense
+{
+    /**
+     * Handle an incoming request.
+     */
+    public function handle(Request $request, Closure $next): Response
+    {
+        // 1. Definisikan rute-rute yang dikecualikan dari pemeriksaan lisensi
+        $excludedRoutes = [
+            'payment/notification', // Penting agar callback Midtrans tetap masuk
+            'administrator/unlicensed', // Halaman input lisensi baru
+            'administrator/login', // Halaman login admin
+            'login', // Halaman login client
+        ];
+
+        $path = $request->path();
+        foreach ($excludedRoutes as $route) {
+            if ($path === $route || str_starts_with($path, $route . '/')) {
+                return $next($request);
+            }
+        }
+
+        // 2. Baca konfigurasi lisensi dari database lokal
+        $profile = DB::table('tb_profile')->where('id_profile', 1)->first();
+
+        // Jika data profil belum di-seed, lewati dahulu (mencegah error saat setup awal)
+        if (!$profile) {
+            return $next($request);
+        }
+
+        // Mencegah error jika migrasi belum dijalankan di server live
+        if (!property_exists($profile, 'license_key')) {
+            return $next($request);
+        }
+
+        $licenseKey = $profile->license_key;
+        $status = $profile->license_status;
+        $expiresAt = $profile->license_expires_at ? Carbon::parse($profile->license_expires_at) : null;
+        $lastChecked = $profile->license_last_checked ? Carbon::parse($profile->license_last_checked) : null;
+
+        // 3. Jika Lisensi belum pernah dimasukkan
+        if (empty($licenseKey)) {
+            return $this->lockApplication('Lisensi belum diaktifkan. Silakan masukkan License Key Anda.');
+        }
+
+        // 4. Periksa status kedaluwarsa secara lokal
+        if ($expiresAt && Carbon::now()->greaterThan($expiresAt)) {
+            if ($status !== 'expired') {
+                DB::table('tb_profile')->where('id_profile', 1)->update([
+                    'license_status' => 'expired'
+                ]);
+            }
+            return $this->lockApplication('Lisensi Anda telah kedaluwarsa pada ' . $expiresAt->format('d-m-Y H:i') . '. Silakan lakukan perpanjangan.');
+        }
+
+        // 5. Periksa status penangguhan atau ketidakvalidan
+        if ($status === 'suspended') {
+            return $this->lockApplication('Lisensi Anda ditangguhkan karena melanggar ketentuan. Hubungi pihak pengembang.');
+        }
+
+        if ($status === 'invalid' || $status === 'expired') {
+            return $this->lockApplication('Lisensi tidak valid atau telah kedaluwarsa. Silakan periksa kembali.');
+        }
+
+        // 6. Grace Period (Proteksi Offline 3 Hari)
+        // Jika server lisensi offline selama lebih dari 3 hari berturut-turut, kunci aplikasi
+        if ($lastChecked && Carbon::now()->diffInDays($lastChecked) > 3) {
+            return $this->lockApplication('Aplikasi gagal melakukan verifikasi lisensi selama lebih dari 3 hari. Mohon periksa koneksi internet server Anda.');
+        }
+
+        return $next($request);
+    }
+
+    /**
+     * Redirect to unlicensed page with lock message.
+     */
+    private function lockApplication($message)
+    {
+        // Menyimpan pesan error ke session untuk ditampilkan di halaman unlicensed
+        session()->flash('license_error', $message);
+        return redirect()->route('admin.unlicensed');
+    }
+}

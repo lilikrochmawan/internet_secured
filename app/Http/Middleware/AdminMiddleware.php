@@ -1,8 +1,95 @@
 <?php
-/*   __________________________________________________
-    |  Obfuscated by YAK Pro - Php Obfuscator  3.0.0   |
-    |              on 2026-06-24 23:14:50              |
-    |    GitHub: https://github.com/pk-fr/yakpro-po    |
-    |__________________________________________________|
-*/
- namespace M71Jr\xz1Tu\aa3pK; use Closure; use mvYYo\Xz1Tu\OhhiD; use MVyYo\BTkLj\lp8pF\yzyub; use oKl8W\ZEw93\Dlswm\ATAMr; class AdminMiddleware { public function oMdek(Request $den9F, Closure $PLrlI): Response { goto KAIQa; SGxef: LYOP1: goto Mrcs7; dXxfX: goto TpjCD; goto jE13z; VT53N: goto TpjCD; goto yzcEu; iHD9k: if (preg_match("\57\136\x63\x75\x73\164\x6f\155\55\x70\x65\x73\x61\x6e\x2f", $zXc9Q)) { goto J4huA; } goto tyd5w; yP7Md: IulNH: goto w134c; VCpUf: return redirect()->gXR_2("\x61\144\155\151\x6e\x2e\154\x6f\x67\151\156"); goto PAWPc; DrU5R: x1RLQ: goto Xe22E; bxSSk: Auth::dsMzd(); goto sLkop; L3SsC: goto TpjCD; goto kGczw; WraOP: if (!($LjaJw->level !== "\141\144\x6d\151\156")) { goto RiutF; } goto q0IDh; Hs3xX: goto TpjCD; goto Sc20A; i1LxT: if (in_array($LjaJw->level, ["\x61\144\x6d\x69\156", "\x6b\x61\x73\151\162", "\x74\x65\x6b\156\151\163\151", "\163\x61\154\x65\163", "\x6d\x69\x74\x72\141"])) { goto VIj3K; } goto bxSSk; bhLML: goto TpjCD; goto AfM1g; cAPU7: dXzCl: goto SkzUu; UzULO: if (preg_match("\57\136\x74\162\x30\x36\71\57", $zXc9Q)) { goto X3Uhh; } goto Ud525; tyd5w: if (preg_match("\57\x5e\x62\162\x6f\141\144\x63\x61\163\164\57", $zXc9Q)) { goto IulNH; } goto DvUZa; CF0KB: return abort(403, "\125\156\141\165\164\x68\157\x72\151\172\145\x64\x20\x61\143\164\151\157\x6e\56"); goto H3rTd; f5ua6: $lX0A1 = "\164\x72\60\x36\71"; goto VT6M_; oJpVe: if ($zXc9Q === '' || $zXc9Q === "\144\x61\x73\150\142\x6f\141\x72\x64") { goto lQBgb; } goto PX0Tb; sh7yC: Je171: goto Nkdag; Ryqlb: if (preg_match("\x2f\x5e\x6d\x61\160\160\151\x6e\147\57", $zXc9Q)) { goto LYOP1; } goto iHD9k; IwGWG: VIj3K: goto Kf5bo; PhgPq: e__3O: goto rs2Jf; z6cSn: $lX0A1 = null; goto oJpVe; Kf5bo: $tMmNE = $den9F->Ny8Vg(); goto BB68M; P7qRJ: RiutF: goto rFkyS; DvUZa: if (preg_match("\x2f\136\160\145\x6c\x61\x6e\x67\x67\x61\x6e\x2f", $zXc9Q)) { goto dXzCl; } goto In38a; CNFGZ: $lX0A1 = "\160\x61\153\145\164"; goto RS1kP; O1NK6: if (preg_match("\x2f\x5e\164\162\x61\156\x73\141\x6b\x73\x69\57", $zXc9Q)) { goto y4IDc; } goto fWNf8; rs2Jf: $lX0A1 = "\x6f\162\144\x65\162\x5f\160\x65\x6d\x61\x73\x61\x6e\x67\141\156"; goto Hs3xX; BMCgg: $lX0A1 = "\x6f\x6e\x74"; goto scjPv; ftJkT: EqZD5: goto wIAQl; yNMg8: WoxdP: goto BMCgg; idVgj: goto TpjCD; goto Wn4BT; bcZno: $lX0A1 = "\x6b\x65\x6c\165\x68\x61\x6e"; goto svZde; NtUnD: $LjaJw = Auth::Wz2VM(); goto i1LxT; kLLlM: if (preg_match("\x2f\x5e\160\145\156\x67\141\x74\x75\162\141\156\x2d\143\x6c\151\x65\x6e\164\57", $zXc9Q) || preg_match("\57\136\x62\x72\141\x6e\143\x68\57", $zXc9Q) || preg_match("\57\136\163\x75\142\55\x62\162\141\x6e\143\150\x2f", $zXc9Q) || preg_match("\57\136\x61\143\x63\145\x73\x73\57", $zXc9Q)) { goto BKZCf; } goto NafmG; svZde: goto TpjCD; goto ftJkT; Ybk03: goto TpjCD; goto AzTWv; AzTWv: bFtvj: goto m6RGp; kYXAF: goto TpjCD; goto SGxef; A0YFW: $lX0A1 = "\x6f\144\143"; goto dXxfX; In38a: if (preg_match("\x2f\x5e\x70\x61\x6b\x65\164\57", $zXc9Q)) { goto gziLr; } goto OE1Qk; yzcEu: Ev8tj: goto i3voS; jE13z: z0FzJ: goto bRGqh; xR7LR: return abort(403, "\x55\156\x61\x75\164\150\x6f\162\x69\172\145\x64\x20\x61\143\164\x69\x6f\156\x2e"); goto ltfD5; iOP4e: pmkVI: goto bcZno; P1STB: goto TpjCD; goto ZXV5Z; kGczw: BKZCf: goto iM6Bd; Nkdag: if (in_array($LjaJw->level, ["\141\x64\155\151\156", "\x74\145\153\x6e\151\x73\x69"])) { goto Ieu8g; } goto xR7LR; bzAbz: goto TpjCD; goto ILy2I; v9zTn: if (preg_match("\57\136\157\x64\x70\x2f", $zXc9Q)) { goto z0FzJ; } goto Ryqlb; OE1Qk: if (preg_match("\x2f\x5e\157\x6e\x74\57", $zXc9Q)) { goto WoxdP; } goto O1NK6; i3voS: $lX0A1 = "\x6d\157\156\x69\164\157\162\x69\156\147"; goto ZzCKg; NafmG: if (preg_match("\57\136\160\x65\156\x67\x61\164\165\162\x61\x6e\57", $zXc9Q)) { goto PKgL7; } goto BtZbA; BtZbA: if (preg_match("\57\136\x74\x65\x6b\x6e\151\x73\x69\x5c\x2f\x63\154\x69\x65\x6e\164\x73\57", $zXc9Q)) { goto Je171; } goto bzAbz; OAJpN: ohgTQ: goto A0YFW; iM6Bd: if (!($LjaJw->level !== "\141\x64\x6d\x69\156")) { goto gYykn; } goto CF0KB; Xe22E: return $PLrlI($den9F); goto j2yw0; fWNf8: if (preg_match("\57\136\153\x61\x73\x2f", $zXc9Q)) { goto bFtvj; } goto BAZWK; TKuvi: goto TpjCD; goto iOP4e; rFkyS: goto TpjCD; goto sh7yC; BB68M: $zXc9Q = preg_replace("\x2f\x5e\141\x64\155\x69\156\x69\x73\164\162\141\164\x6f\162\134\x2f\77\57", '', $tMmNE); goto z6cSn; q0IDh: return abort(403, "\125\x6e\141\165\x74\x68\157\162\151\x7a\x65\144\40\141\143\164\x69\x6f\x6e\56"); goto P7qRJ; m6RGp: $lX0A1 = "\x6b\141\x73"; goto TKuvi; CJwLh: $lX0A1 = "\144\141\163\150\142\157\x61\162\144"; goto VT53N; AfM1g: J4huA: goto Vwg5K; SkzUu: $lX0A1 = "\x70\145\x6c\141\x6e\147\x67\141\x6e"; goto idVgj; zJ_p1: if (preg_match("\57\x5e\x70\145\x6e\147\147\x75\x6e\141\x2f", $zXc9Q)) { goto EqZD5; } goto kLLlM; WSg_B: goto TpjCD; goto yP7Md; bRGqh: $lX0A1 = "\157\x64\x70"; goto kYXAF; PX0Tb: if (preg_match("\57\x5e\155\157\156\151\x74\157\x72\x69\156\147\x2f", $zXc9Q)) { goto Ev8tj; } goto v21ao; Mrcs7: $lX0A1 = "\x6d\x61\160\160\x69\x6e\147"; goto bhLML; WZTy1: TpjCD: goto iIrEF; sLkop: return redirect()->gxR_2("\141\x64\155\151\156\56\154\x6f\147\x69\156")->aBl7m(["\x75\163\145\162\156\141\x6d\145" => "\x41\x6e\x64\x61\40\164\x69\144\x61\x6b\40\x6d\145\155\x69\154\151\153\x69\x20\150\x61\153\40\x61\153\x73\x65\x73\x20\x75\x6e\x74\x75\153\40\155\141\x73\165\153\x20\153\145\x20\x68\x61\x6c\141\x6d\141\156\x20\141\x64\x6d\151\156\151\x73\x74\162\141\164\x6f\x72\x2e"]); goto IwGWG; ILy2I: lQBgb: goto CJwLh; BAZWK: if (preg_match("\57\x5e\x6b\145\154\165\x68\x61\156\x2f", $zXc9Q)) { goto pmkVI; } goto zJ_p1; Vwg5K: $lX0A1 = "\x63\x75\163\x74\157\x6d\x5f\160\145\x73\141\156"; goto WSg_B; tQeSQ: return abort(403, "\x41\156\x64\141\40\164\x69\x64\141\153\40\155\x65\155\x69\154\151\x6b\x69\x20\x68\x61\153\40\141\x6b\x73\145\x73\40\165\x6e\x74\x75\153\x20\155\x65\156\165\x20\151\156\151\x2e"); goto DrU5R; wIAQl: $lX0A1 = "\160\x65\156\147\x67\x75\156\x61"; goto L3SsC; scjPv: goto TpjCD; goto Q3H43; ZzCKg: goto TpjCD; goto PhgPq; Q3H43: y4IDc: goto yKdd8; PAWPc: NJLt3: goto NtUnD; KAIQa: if (Auth::SXvUB()) { goto NJLt3; } goto VCpUf; v21ao: if (preg_match("\57\x5e\x6f\162\144\145\162\55\160\x65\155\x61\163\141\156\x67\141\x6e\57", $zXc9Q)) { goto e__3O; } goto UzULO; ltfD5: Ieu8g: goto WZTy1; w134c: $lX0A1 = "\142\x72\157\x61\144\143\141\163\x74"; goto YBOkI; iIrEF: if (!($lX0A1 && !$LjaJw->SVhlE($lX0A1))) { goto x1RLQ; } goto tQeSQ; H3rTd: gYykn: goto P1STB; Ud525: if (preg_match("\57\x5e\x6f\144\143\x2f", $zXc9Q)) { goto ohgTQ; } goto v9zTn; YBOkI: goto TpjCD; goto cAPU7; VT6M_: goto TpjCD; goto OAJpN; Wn4BT: gziLr: goto CNFGZ; yKdd8: $lX0A1 = "\164\162\141\156\x73\x61\x6b\x73\151"; goto Ybk03; Sc20A: X3Uhh: goto f5ua6; RS1kP: goto TpjCD; goto yNMg8; ZXV5Z: PKgL7: goto WraOP; j2yw0: } }
+
+namespace App\Http\Middleware;
+
+use Closure;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\Response;
+
+class AdminMiddleware
+{
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     */
+    public function handle(Request $request, Closure $next): Response
+    {
+        if (!Auth::check()) {
+            return redirect()->route('admin.login');
+        }
+
+        $user = Auth::user();
+        
+        // Periksa apakah user memiliki hak akses administrator/staff
+        if (!in_array($user->level, ['admin', 'kasir', 'teknisi', 'sales', 'mitra'])) {
+            Auth::logout();
+            return redirect()->route('admin.login')->withErrors([
+                'username' => 'Anda tidak memiliki hak akses untuk masuk ke halaman administrator.',
+            ]);
+        }
+
+        // Map routes or paths to menu keys
+        $path = $request->path(); // e.g. "administrator/monitoring/active" or "administrator/monitoring"
+        // remove "administrator" prefix
+        $subPath = preg_replace('/^administrator\/?/', '', $path);
+        
+        // Find which menu it belongs to
+        $menuKey = null;
+        if ($subPath === '' || $subPath === 'dashboard') {
+            $menuKey = 'dashboard';
+        } elseif (preg_match('/^monitoring/', $subPath)) {
+            $menuKey = 'monitoring';
+        } elseif (preg_match('/^order-pemasangan/', $subPath)) {
+            $menuKey = 'order_pemasangan';
+        } elseif (preg_match('/^tr069/', $subPath)) {
+            $menuKey = 'tr069';
+        } elseif (preg_match('/^odc/', $subPath)) {
+            $menuKey = 'odc';
+        } elseif (preg_match('/^odp/', $subPath)) {
+            $menuKey = 'odp';
+        } elseif (preg_match('/^mapping/', $subPath)) {
+            $menuKey = 'mapping';
+        } elseif (preg_match('/^custom-pesan/', $subPath)) {
+            $menuKey = 'custom_pesan';
+        } elseif (preg_match('/^broadcast/', $subPath)) {
+            $menuKey = 'broadcast';
+        } elseif (preg_match('/^pelanggan/', $subPath)) {
+            $menuKey = 'pelanggan';
+        } elseif (preg_match('/^paket/', $subPath)) {
+            $menuKey = 'paket';
+        } elseif (preg_match('/^ont/', $subPath)) {
+            $menuKey = 'ont';
+        } elseif (preg_match('/^transaksi/', $subPath)) {
+            $menuKey = 'transaksi';
+        } elseif (preg_match('/^kas/', $subPath)) {
+            $menuKey = 'kas';
+        } elseif (preg_match('/^keluhan/', $subPath)) {
+            $menuKey = 'keluhan';
+        } elseif (preg_match('/^pengguna/', $subPath)) {
+            $menuKey = 'pengguna';
+        } elseif (preg_match('/^pengaturan-client/', $subPath) || preg_match('/^branch/', $subPath) || preg_match('/^sub-branch/', $subPath) || preg_match('/^access/', $subPath)) {
+            // Pengaturan Client page is admin-only
+            if ($user->level !== 'admin') {
+                return abort(403, 'Unauthorized action.');
+            }
+        } elseif (preg_match('/^pengaturan/', $subPath)) {
+            // General Pengaturan page is admin-only
+            if ($user->level !== 'admin') {
+                return abort(403, 'Unauthorized action.');
+            }
+        } elseif (preg_match('/^teknisi\/clients/', $subPath)) {
+            // Dapatkan akses untuk admin dan teknisi
+            if (!in_array($user->level, ['admin', 'teknisi'])) {
+                return abort(403, 'Unauthorized action.');
+            }
+        }
+
+        if ($menuKey && !$user->hasMenuAccess($menuKey)) {
+            return abort(403, 'Anda tidak memiliki hak akses untuk menu ini.');
+        }
+
+        return $next($request);
+    }
+}

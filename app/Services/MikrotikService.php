@@ -1,8 +1,243 @@
 <?php
-/*   __________________________________________________
-    |  Obfuscated by YAK Pro - Php Obfuscator  3.0.0   |
-    |              on 2026-06-24 23:14:51              |
-    |    GitHub: https://github.com/pk-fr/yakpro-po    |
-    |__________________________________________________|
-*/
- namespace m71jr\PMq28; use m71jR\xPACo\zAh7w; use Mvyyo\btklJ\Lp8PF\Log; class MikrotikService { public function yUbXu(string $kq1Wn, ?string $WlgS5 = null): array { goto E1uvi; q6WtA: t6c6G: goto YM9tV; m5bNb: $NB549->rt60f = (int) ($xxBKl->Cmd2m ?: 8728); goto JgeWm; fvMBI: Log::aFqP_("\x4d\151\x6b\162\157\x74\x69\153\72\x20\147\x61\147\x61\x6c\40\x6b\x6f\x6e\145\x6b\x73\151\56", ["\145\162\x72\157\x72\137\156\157" => $NB549->bQjlj, "\x65\162\x72\x6f\162\x5f\163\x74\x72" => $NB549->leUeT]); goto CQ972; K7Et0: wg4Jk: goto i9X80; iy4Fz: return $this->PsWPi("\125\x73\145\x72\x6e\141\155\145\40\120\x50\x50\x4f\x45\x20\164\151\x64\141\x6b\40\164\x65\162\163\x65\x64\x69\141\x20\160\141\144\x61\x20\x61\153\165\156\40\101\x6e\x64\141\56"); goto q6WtA; ihyjz: $NB549 = new \RouterosAPI(); goto m5bNb; Weg1Z: return $this->PSWPI("\x4b\x6f\x6e\x66\x69\x67\x75\162\x61\x73\151\x20\115\151\153\162\x6f\164\151\x6b\40\x74\x69\x64\141\x6b\40\144\x69\x74\x65\x6d\165\x6b\x61\156\x2e"); goto K7Et0; j9KC2: $NB549->WmSah = 2; goto DuJUo; pcfsB: try { goto iIQAB; JuZy_: LX22D: goto iYv3Q; cBtSj: WKNK6: goto Pn1Of; iYv3Q: $BFlGV = $RABRw[0]; goto D3bbo; LBT4C: $kWSlm = $this->kxhFu($NB549, $WlgS5); goto fFVrx; YDsSE: $n0KIj = !empty($bz5lB); goto CYSNY; fFVrx: $z02FZ = ($BFlGV["\x70\162\x6f\146\151\154\145"] ?? '') === "\160\x70\160\157\x65\55\x69\x73\157\x6c\x69\x72"; goto r8J11; D3bbo: $ThDug = ($BFlGV["\144\x69\163\141\142\x6c\145\144"] ?? "\x66\141\x6c\x73\x65") === "\164\162\x75\145"; goto LBT4C; slUVU: if (!empty($RABRw)) { goto LX22D; } goto ZTQL2; r8J11: if (!($ThDug || $kWSlm || $z02FZ)) { goto WKNK6; } goto TpTB9; TpTB9: return ["\x73\164\141\x74\165\x73" => "\164\x65\x72\142\x6c\x6f\153\151\x72", "\x6c\x61\x62\145\154" => "\x54\x65\x72\142\154\x6f\x6b\x69\x72", "\157\x6e\154\x69\156\x65" => false, "\x70\160\160\137\x75\163\145\x72\x6e\141\155\x65" => $kq1Wn, "\155\x65\163\163\x61\x67\x65" => $ThDug ? "\114\x61\x79\x61\x6e\x61\156\40\x69\156\164\x65\162\x6e\145\x74\x20\141\x6e\144\141\x20\144\151\156\157\156\141\153\x74\x69\x66\x6b\x61\156" : "\114\141\171\141\156\x61\156\40\x69\x6e\x74\x65\162\156\145\x74\40\163\x65\144\x61\x6e\147\40\144\151\x62\x6c\157\x6b\151\162\40\50\151\163\157\x6c\151\162\51\x2e"]; goto cBtSj; ZTQL2: return $this->pswPI("\101\153\165\x6e\x20\120\x50\x50\x4f\x45\x20\x74\x69\x64\x61\153\x20\x64\x69\x74\x65\x6d\165\153\x61\156\40\x64\151\x20\115\151\x6b\x72\157\x74\151\x6b\x2e"); goto JuZy_; iIQAB: $RABRw = $NB549->B24Vl("\x2f\160\x70\160\57\x73\145\143\162\x65\x74\x2f\x70\x72\151\x6e\164", ["\x3f\x6e\141\x6d\145" => $kq1Wn]); goto slUVU; CYSNY: return ["\163\164\141\164\x75\x73" => "\x61\153\x74\x69\146", "\x6c\141\142\145\154" => "\101\x6b\164\x69\146", "\x6f\x6e\154\x69\156\x65" => $n0KIj, "\160\160\160\137\165\x73\145\162\156\x61\155\x65" => $kq1Wn, "\155\145\163\163\141\x67\x65" => $n0KIj ? "\113\x6f\156\145\153\163\151\x20\x41\x6e\x64\141\40\x4f\x6e\154\x69\156\145\56" : "\x4c\141\x79\x61\x6e\141\156\40\141\153\x74\x69\x66\54\x20\156\x61\x6d\x75\x6e\40\163\x61\141\164\40\x69\156\x69\x20\164\151\144\141\153\x20\x74\x65\162\x68\x75\x62\165\156\147\x2e"]; goto nj0Mb; Pn1Of: $bz5lB = $NB549->b24vL("\x2f\160\160\x70\x2f\141\143\164\151\x76\145\x2f\x70\x72\x69\x6e\164", ["\77\156\x61\x6d\145" => $kq1Wn]); goto YDsSE; nj0Mb: } catch (\Throwable $OIsML) { Log::bmEM8("\115\151\x6b\x72\x6f\x74\x69\153\72\x20" . $OIsML->getMessage()); return $this->PSWPI("\107\x61\147\141\154\x20\x6d\145\155\x62\x61\x63\141\40\163\164\x61\164\x75\x73\x20\x50\x50\x50\x4f\105\x2e"); } finally { if (!$NB549->CJ06G) { goto b7C2r; } $NB549->hDC5q(); b7C2r: } goto qrJZK; E5S1s: fwDKZ: goto pcfsB; i9X80: if (!($kq1Wn === '')) { goto t6c6G; } goto iy4Fz; E1uvi: $xxBKl = Mikrotik::mWpM_(1); goto k6mF8; k6mF8: if ($xxBKl) { goto wg4Jk; } goto Weg1Z; DuJUo: $NB549->harX7 = 1; goto EHj6f; EHj6f: if ($NB549->connect($xxBKl->aU6Pe, $xxBKl->a22SN, $xxBKl->hXbeJ)) { goto fwDKZ; } goto fvMBI; YM9tV: require_once base_path("\57\151\156\x63\154\165\144\145\57\162\x6f\165\x74\145\162\x6f\x73\x5f\x61\160\x69\x2e\160\x68\160"); goto ihyjz; JgeWm: $NB549->pSFwA = 5; goto j9KC2; CQ972: return $this->psWpi("\124\x69\144\x61\153\40\144\141\x70\x61\164\x20\x74\x65\162\150\x75\x62\x75\156\x67\x20\x6b\145\40\163\x65\x72\166\x65\x72\x20\x6a\141\x72\151\x6e\147\141\x6e\56"); goto E5S1s; qrJZK: } private function KXHfu(\RouterosAPI $NB549, ?string $WlgS5): bool { goto VmTmX; dfoTF: return false; goto YaOZS; VmTmX: if (!empty($WlgS5)) { goto m1aqN; } goto dfoTF; SS0cY: $spbYz = $NB549->B24VL("\57\x69\160\x2f\x66\151\x72\145\167\x61\x6c\x6c\x2f\141\144\144\162\145\163\x73\55\154\x69\x73\x74\57\160\162\151\x6e\x74", ["\x3f\x63\x6f\x6d\x6d\145\x6e\164" => "\102\154\157\x6b\x69\162\x20\102\165\x6c\x61\x6e\x61\x6e\x20" . $WlgS5]) ?: []; goto vFPG8; vFPG8: return !empty($spbYz); goto YKfqG; YaOZS: m1aqN: goto SS0cY; YKfqG: } public function ECTBn(string $kq1Wn): array { goto vrjdI; dNi_0: AM58C: goto nbMCd; niK4d: return ["\x6f\x6e\154\151\156\145" => false, "\x70\162\x6f\x66\151\x6c\x65" => '', "\x75\x70\x74\151\155\x65" => "\60\x73", "\142\x79\x74\x65\x73\137\x69\156" => 0, "\142\x79\x74\145\x73\x5f\x6f\x75\164" => 0, "\163\164\141\164\x75\163" => "\157\x66\146\154\x69\x6e\145", "\163\164\141\x74\x75\163\x5f\154\x61\x62\x65\154" => "\x4b\x6f\156\x65\153\x73\x69\x20\124\x65\x72\160\x75\164\165\x73", "\163\x74\141\164\165\163\x5f\143\x6f\154\157\162" => "\167\x61\x72\x6e\151\156\x67"]; goto utumW; vrjdI: $xxBKl = Mikrotik::MWPm_(1); goto QRLgb; BtS5W: if ($NB549->connect($xxBKl->aU6Pe, $xxBKl->a22SN, $xxBKl->hXbeJ)) { goto N3Qm7; } goto niK4d; yKKPd: $NB549->pSFwA = 3; goto T3pk_; Dnmlz: $NB549 = new \RouterosAPI(); goto bOd8F; utumW: N3Qm7: goto XzpcT; XzpcT: try { goto vA0TA; iG6R7: if (!($HCiaN === "\160\x70\x70\157\145\x2d\x69\x73\157\x6c\x69\162")) { goto LyE0q; } goto zSqAi; Rxmi7: return ["\x6f\x6e\x6c\151\156\x65" => false, "\160\162\x6f\146\151\x6c\145" => $HCiaN, "\x75\x70\x74\x69\155\x65" => $B_p3K, "\142\x79\x74\145\163\x5f\151\x6e" => $b9o07, "\142\171\164\x65\163\137\x6f\x75\x74" => $AKxtu, "\x73\164\x61\164\x75\x73" => "\x61\x6b\164\x69\146\x5f\x74\x69\144\141\153\137\164\145\x72\x68\x75\142\165\x6e\147", "\x73\164\141\164\165\x73\137\x6c\141\142\x65\154" => "\111\x6e\164\x65\162\156\x65\164\40\101\x6b\x74\x69\x66", "\163\x74\141\x74\x75\163\x5f\x63\x6f\x6c\157\x72" => "\x73\165\143\x63\145\163\163"]; goto OYrlh; uNh1S: if (!$q3Emq) { goto MUwTR; } goto it63E; t3B2C: $AKxtu = $yvSsr ? (int) ($yvSsr["\x62\x79\164\145\x73\55\x6f\165\x74"] ?? 0) : 0; goto gWsHx; qDc42: if (empty($RABRw)) { goto D43xV; } goto CB1sU; nvVdZ: $q3Emq = !empty($bz5lB); goto xEQec; ourog: LyE0q: goto uNh1S; gAK3a: $HCiaN = ''; goto qDc42; tznBd: D43xV: goto haqSA; zSqAi: return ["\157\156\154\151\x6e\x65" => false, "\x70\x72\157\x66\151\154\x65" => $HCiaN, "\165\160\164\151\x6d\145" => $B_p3K, "\x62\171\x74\x65\x73\x5f\x69\156" => $b9o07, "\142\171\164\145\x73\137\x6f\x75\164" => $AKxtu, "\163\164\141\x74\x75\x73" => "\x74\145\162\x69\x73\157\x6c\x69\162", "\163\x74\x61\164\x75\x73\137\x6c\x61\142\x65\x6c" => "\x49\x6e\164\x65\162\156\145\164\40\124\x65\162\x69\x73\157\x6c\151\162", "\x73\x74\x61\164\165\163\137\x63\157\x6c\x6f\162" => "\x64\x61\x6e\147\x65\162"]; goto ourog; haqSA: $bz5lB = $NB549->b24VL("\57\160\x70\160\57\x61\143\x74\x69\x76\x65\x2f\160\162\x69\x6e\164", ["\77\x6e\141\155\145" => $kq1Wn]); goto nvVdZ; xEQec: $yvSsr = $q3Emq ? $bz5lB[0] : null; goto uZfI8; CB1sU: $HCiaN = $RABRw[0]["\160\x72\157\x66\x69\154\x65"] ?? ''; goto tznBd; uZfI8: $B_p3K = $yvSsr ? $yvSsr["\165\x70\x74\151\x6d\145"] ?? "\x30\x73" : "\60\x73"; goto nET64; vA0TA: $RABRw = $NB549->B24VL("\57\x70\x70\x70\x2f\x73\x65\x63\x72\145\164\57\x70\162\151\x6e\164", ["\77\x6e\141\155\x65" => $kq1Wn]); goto gAK3a; it63E: return ["\x6f\156\154\151\156\145" => true, "\x70\162\157\146\x69\154\145" => $HCiaN, "\x75\x70\164\151\x6d\145" => $B_p3K, "\142\x79\164\x65\x73\137\x69\x6e" => $b9o07, "\x62\x79\x74\145\x73\137\x6f\x75\x74" => $AKxtu, "\x73\164\x61\164\165\x73" => "\x61\153\x74\x69\x66", "\x73\x74\141\164\165\x73\x5f\154\141\x62\x65\154" => "\111\x6e\164\x65\x72\x6e\145\x74\40\x41\153\x74\x69\x66", "\163\164\x61\x74\x75\x73\137\143\x6f\154\x6f\x72" => "\x73\x75\143\x63\145\163\x73"]; goto CBH7d; gWsHx: try { goto e4Qy9; KgI8n: $aUhOS = $NB549->B24vL("\x2f\151\x6e\164\145\x72\x66\141\143\145\57\160\x72\x69\x6e\164", ["\x3f\x6e\x61\155\145" => $yWSQB]); goto bK45y; e4Qy9: $yWSQB = "\x3c\x70\x70\x70\x6f\x65\55" . $kq1Wn . "\76"; goto KgI8n; mhv_g: ZMsoL: goto dgPa6; JuQdB: $AKxtu = isset($NsNpy["\x74\170\x2d\142\171\x74\145"]) ? (int) $NsNpy["\164\170\55\x62\171\164\145"] : $AKxtu; goto mhv_g; bK45y: if (empty($aUhOS)) { goto ZMsoL; } goto Y_z0R; TR82r: $b9o07 = isset($NsNpy["\x72\x78\x2d\x62\171\x74\145"]) ? (int) $NsNpy["\162\x78\55\x62\x79\x74\x65"] : $b9o07; goto JuQdB; Y_z0R: $NsNpy = $aUhOS[0]; goto TR82r; dgPa6: } catch (\Exception $TiYDB) { Log::AfQP_("\x47\141\147\141\x6c\x20\x6d\x65\x6e\x67\141\155\x62\151\x6c\x20\x62\x79\164\145\163\x20\x64\x61\162\151\40\x69\x6e\164\145\162\146\141\x63\x65\x20{$yWSQB}\x3a\x20" . $TiYDB->getMessage()); } goto iG6R7; nET64: $b9o07 = $yvSsr ? (int) ($yvSsr["\142\x79\164\145\x73\x2d\x69\x6e"] ?? 0) : 0; goto t3B2C; CBH7d: MUwTR: goto Rxmi7; OYrlh: } catch (\Exception $qBfNK) { return ["\x6f\x6e\x6c\x69\x6e\145" => false, "\x70\x72\x6f\146\151\x6c\x65" => '', "\165\x70\164\151\x6d\145" => "\60\x73", "\x62\171\164\x65\163\137\x69\x6e" => 0, "\142\171\x74\145\163\x5f\x6f\165\164" => 0, "\x73\x74\141\x74\x75\x73" => "\145\x72\x72\x6f\x72", "\163\164\141\x74\165\163\x5f\154\141\x62\x65\154" => "\105\x72\x72\x6f\162\40\113\157\156\145\x6b\x73\151", "\163\x74\141\164\x75\x73\137\143\157\154\x6f\x72" => "\167\x61\x72\156\x69\x6e\147"]; } finally { if (!$NB549->CJ06G) { goto W8J31; } $NB549->HDC5q(); W8J31: } goto i62mV; QRLgb: if (!(!$xxBKl || $kq1Wn === '')) { goto AM58C; } goto lUyfZ; T3pk_: $NB549->WmSah = 1; goto ZlxQE; ZlxQE: $NB549->harX7 = 0; goto BtS5W; bOd8F: $NB549->rt60f = (int) ($xxBKl->Cmd2m ?: 8728); goto yKKPd; lUyfZ: return ["\x6f\x6e\154\x69\156\145" => false, "\160\162\157\146\x69\154\145" => '', "\165\160\164\151\155\145" => "\60\x73", "\142\171\x74\x65\163\137\151\156" => 0, "\x62\171\x74\145\163\x5f\x6f\165\164" => 0, "\x73\164\x61\x74\x75\163" => "\x6f\x66\x66\154\151\156\x65", "\163\x74\141\164\165\163\137\x6c\141\142\x65\154" => "\x4b\157\156\145\x6b\163\x69\40\x54\x65\162\160\x75\164\165\163", "\163\164\141\164\x75\163\137\143\157\154\x6f\x72" => "\167\141\162\x6e\151\156\147"]; goto dNi_0; nbMCd: require_once base_path("\57\x69\x6e\x63\x6c\x75\x64\x65\x2f\162\157\x75\x74\145\x72\157\163\x5f\x61\x70\x69\56\x70\150\160"); goto Dnmlz; i62mV: } private function PSwPi(string $EmDP2): array { return ["\163\x74\x61\164\165\163" => "\165\x6e\x6b\156\x6f\167\x6e", "\154\141\142\145\154" => "\124\x69\x64\x61\153\40\124\145\x72\163\145\144\x69\x61", "\157\156\154\x69\156\x65" => false, "\x70\x70\160\137\x75\x73\145\162\156\141\x6d\x65" => null, "\x6d\x65\163\163\141\x67\145" => $EmDP2]; } }
+
+namespace App\Services;
+
+use App\Models\Mikrotik;
+use Illuminate\Support\Facades\Log;
+
+class MikrotikService
+{
+    public function getPppoeStatus(string $pppUsername, ?string $pelangganIp = null): array
+    {
+        $mikrotik = Mikrotik::find(1);
+
+        if (!$mikrotik) {
+            return $this->unavailableResult('Konfigurasi Mikrotik tidak ditemukan.');
+        }
+
+        if ($pppUsername === '') {
+            return $this->unavailableResult('Username PPPOE tidak tersedia pada akun Anda.');
+        }
+
+        require_once base_path('/include/routeros_api.php');
+
+        $api = new \RouterosAPI();
+        $api->port = (int) ($mikrotik->port_mikrotik ?: 8728);
+        $api->timeout = 5;
+        $api->attempts = 2;
+        $api->delay = 1;
+
+        if (!$api->connect($mikrotik->ip, $mikrotik->username, $mikrotik->password)) {
+            Log::warning('Mikrotik: gagal koneksi.', [
+                'error_no' => $api->error_no,
+                'error_str' => $api->error_str,
+            ]);
+
+            return $this->unavailableResult('Tidak dapat terhubung ke server jaringan.');
+        }
+
+        try {
+            $secrets = $api->comm('/ppp/secret/print', [
+                '?name' => $pppUsername,
+            ]);
+
+            if (empty($secrets)) {
+                return $this->unavailableResult('Akun PPPOE tidak ditemukan di Mikrotik.');
+            }
+
+            $secret = $secrets[0];
+            $disabled = ($secret['disabled'] ?? 'false') === 'true';
+            $isIsolir = $this->isIpIsolir($api, $pelangganIp);
+            $hasIsolirProfile = ($secret['profile'] ?? '') === 'pppoe-isolir';
+
+            if ($disabled || $isIsolir || $hasIsolirProfile) {
+                return [
+                    'status' => 'terblokir',
+                    'label' => 'Terblokir',
+                    'online' => false,
+                    'ppp_username' => $pppUsername,
+                    'message' => $disabled
+                        ? 'Layanan internet anda dinonaktifkan'
+                        : 'Layanan internet sedang diblokir (isolir).',
+                ];
+            }
+
+            $activeConnections = $api->comm('/ppp/active/print', [
+                '?name' => $pppUsername,
+            ]);
+            $online = !empty($activeConnections);
+
+            return [
+                'status' => 'aktif',
+                'label' => 'Aktif',
+                'online' => $online,
+                'ppp_username' => $pppUsername,
+                'message' => $online
+                    ? 'Koneksi Anda Online.'
+                    : 'Layanan aktif, namun saat ini tidak terhubung.',
+            ];
+        } catch (\Throwable $exception) {
+            Log::error('Mikrotik: ' . $exception->getMessage());
+
+            return $this->unavailableResult('Gagal membaca status PPPOE.');
+        } finally {
+            if ($api->connected) {
+                $api->disconnect();
+            }
+        }
+    }
+
+    private function isIpIsolir(\RouterosAPI $api, ?string $pelangganIp): bool
+    {
+        if (empty($pelangganIp)) {
+            return false;
+        }
+
+        $addressLists = $api->comm('/ip/firewall/address-list/print', [
+            '?comment' => 'Blokir Bulanan ' . $pelangganIp
+        ]) ?: [];
+
+        return !empty($addressLists);
+    }
+
+    public function getPppoeStats(string $pppUsername): array
+    {
+        $mikrotik = Mikrotik::find(1);
+        if (!$mikrotik || $pppUsername === '') {
+            return [
+                'online' => false,
+                'profile' => '',
+                'uptime' => '0s',
+                'bytes_in' => 0,
+                'bytes_out' => 0,
+                'status' => 'offline',
+                'status_label' => 'Koneksi Terputus',
+                'status_color' => 'warning'
+            ];
+        }
+
+        require_once base_path('/include/routeros_api.php');
+        $api = new \RouterosAPI();
+        $api->port = (int) ($mikrotik->port_mikrotik ?: 8728);
+        $api->timeout = 3; // Short timeout for AJAX
+        $api->attempts = 1;
+        $api->delay = 0;
+
+        if (!$api->connect($mikrotik->ip, $mikrotik->username, $mikrotik->password)) {
+            return [
+                'online' => false,
+                'profile' => '',
+                'uptime' => '0s',
+                'bytes_in' => 0,
+                'bytes_out' => 0,
+                'status' => 'offline',
+                'status_label' => 'Koneksi Terputus',
+                'status_color' => 'warning'
+            ];
+        }
+
+        try {
+            // Check PPPOE Secret Profile
+            $secrets = $api->comm('/ppp/secret/print', [
+                '?name' => $pppUsername,
+            ]);
+
+            $profile = '';
+            if (!empty($secrets)) {
+                $profile = $secrets[0]['profile'] ?? '';
+            }
+
+            // Check Active Connection
+            $activeConnections = $api->comm('/ppp/active/print', [
+                '?name' => $pppUsername,
+            ]);
+
+            $hasActive = !empty($activeConnections);
+            $ac = $hasActive ? $activeConnections[0] : null;
+
+            $uptime = $ac ? ($ac['uptime'] ?? '0s') : '0s';
+            $bytesIn = $ac ? (int)($ac['bytes-in'] ?? 0) : 0;
+            $bytesOut = $ac ? (int)($ac['bytes-out'] ?? 0) : 0;
+
+            // Retrieve data from interface `<pppoe-username>` as requested
+            try {
+                $interfaceName = '<pppoe-' . $pppUsername . '>';
+                $interfaces = $api->comm('/interface/print', [
+                    '?name' => $interfaceName,
+                ]);
+                if (!empty($interfaces)) {
+                    $intf = $interfaces[0];
+                    // Rx on Mikrotik PPPoE interface is client Upload (bytes_in)
+                    $bytesIn = isset($intf['rx-byte']) ? (int)$intf['rx-byte'] : $bytesIn;
+                    // Tx on Mikrotik PPPoE interface is client Download (bytes_out)
+                    $bytesOut = isset($intf['tx-byte']) ? (int)$intf['tx-byte'] : $bytesOut;
+                }
+            } catch (\Exception $ex) {
+                Log::warning("Gagal mengambil bytes dari interface $interfaceName: " . $ex->getMessage());
+            }
+
+            if ($profile === 'pppoe-isolir') {
+                return [
+                    'online' => false,
+                    'profile' => $profile,
+                    'uptime' => $uptime,
+                    'bytes_in' => $bytesIn,
+                    'bytes_out' => $bytesOut,
+                    'status' => 'terisolir',
+                    'status_label' => 'Internet Terisolir',
+                    'status_color' => 'danger' // Merah
+                ];
+            }
+
+            if ($hasActive) {
+                return [
+                    'online' => true,
+                    'profile' => $profile,
+                    'uptime' => $uptime,
+                    'bytes_in' => $bytesIn,
+                    'bytes_out' => $bytesOut,
+                    'status' => 'aktif',
+                    'status_label' => 'Internet Aktif',
+                    'status_color' => 'success' // Hijau
+                ];
+            }
+
+            return [
+                'online' => false,
+                'profile' => $profile,
+                'uptime' => $uptime,
+                'bytes_in' => $bytesIn,
+                'bytes_out' => $bytesOut,
+                'status' => 'aktif_tidak_terhubung',
+                'status_label' => 'Internet Aktif',
+                'status_color' => 'success' // Hijau
+            ];
+        } catch (\Exception $e) {
+            return [
+                'online' => false,
+                'profile' => '',
+                'uptime' => '0s',
+                'bytes_in' => 0,
+                'bytes_out' => 0,
+                'status' => 'error',
+                'status_label' => 'Error Koneksi',
+                'status_color' => 'warning'
+            ];
+        } finally {
+            if ($api->connected) {
+                $api->disconnect();
+            }
+        }
+    }
+
+    private function unavailableResult(string $message): array
+    {
+        return [
+            'status' => 'unknown',
+            'label' => 'Tidak Tersedia',
+            'online' => false,
+            'ppp_username' => null,
+            'message' => $message,
+        ];
+    }
+}

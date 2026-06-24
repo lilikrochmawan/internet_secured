@@ -1,8 +1,65 @@
 <?php
-/*   __________________________________________________
-    |  Obfuscated by YAK Pro - Php Obfuscator  3.0.0   |
-    |              on 2026-06-24 23:14:48              |
-    |    GitHub: https://github.com/pk-fr/yakpro-po    |
-    |__________________________________________________|
-*/
- namespace M71JR\XZ1tu\fNHfF\lP2K1; use M71jR\Xz1TU\fNhff\YuFus; use M71Jr\xpaCo\kwAZP; use MvYyO\Xz1tU\oHHId; use mvyyO\btklJ\Lp8PF\YzyUB; use mvyyO\Btklj\Lp8PF\Hash; class AdminAuthController extends Controller { public function b70ce() { goto mIwit; u8nqZ: $HCiaN = \MvYYO\BTKLj\lp8pf\DB::k6GOv("\164\x62\137\160\x72\157\146\x69\x6c\x65")->first(); goto g2HRz; T24PY: return redirect()->GXR_2("\141\x64\x6d\151\156\x2e\144\x61\163\150\x62\157\141\x72\144"); goto Zwq3c; g2HRz: return view("\x61\144\x6d\x69\x6e\x2e\x61\165\x74\x68\56\154\157\147\x69\156", compact("\x70\x72\157\146\x69\x6c\x65")); goto lGtoY; mIwit: if (!(Auth::SxVUB() && in_array(Auth::WZ2vM()->level, ["\x61\x64\x6d\151\x6e", "\153\141\x73\151\x72", "\x74\x65\x6b\156\x69\x73\x69", "\x73\x61\x6c\x65\x73", "\155\151\x74\162\141"]))) { goto T0mjz; } goto T24PY; Zwq3c: T0mjz: goto u8nqZ; lGtoY: } public function gl1YL(Request $den9F) { goto zwq5s; Uxlop: ZAUzZ: goto GBTyy; QCb_3: return redirect()->gxR_2("\141\144\155\x69\x6e\56\144\x61\163\150\142\x6f\141\x72\144"); goto j8ZMt; i1XcW: TCo9s: goto NWM58; Sf62Q: return back()->ABL7M(["\x75\x73\145\x72\156\x61\x6d\145" => "\101\156\144\x61\40\x74\151\144\x61\x6b\40\155\145\155\151\154\151\x6b\151\40\150\141\153\40\x61\153\x73\x65\x73\x20\x61\144\155\151\x6e\151\163\164\x72\x61\x74\x6f\162\56"])->QKv2a($den9F->ZQHuq("\165\163\145\x72\156\x61\x6d\145")); goto i1XcW; GBTyy: if (in_array($LjaJw->level, ["\x61\x64\x6d\151\156", "\153\x61\163\151\x72", "\x74\145\153\x6e\x69\x73\x69", "\x73\141\x6c\x65\163", "\x6d\x69\164\162\x61"])) { goto TCo9s; } goto Sf62Q; zwq5s: $den9F->validate(["\165\163\145\x72\156\141\x6d\x65" => ["\162\x65\161\165\151\x72\x65\x64", "\163\x74\162\x69\x6e\147"], "\160\x61\163\163\167\x6f\x72\x64" => ["\162\x65\161\x75\x69\162\x65\144", "\x73\x74\162\x69\x6e\147"]]); goto obAIX; obAIX: $LjaJw = User::GVSMs("\x75\x73\145\162\156\141\155\x65", $den9F->a22SN)->first(); goto LCN1n; NWM58: Auth::gl1YL($LjaJw, $den9F->y3fnJ("\x72\x65\155\145\x6d\x62\145\162")); goto jGnut; jGnut: $den9F->zoZwO()->Suttd(); goto QCb_3; LCN1n: if (!(!$LjaJw || !Hash::SXVub($den9F->hXbeJ, $LjaJw->hXbeJ))) { goto ZAUzZ; } goto VWpDJ; VWpDJ: return back()->ABL7m(["\165\x73\145\x72\x6e\x61\x6d\145" => "\125\163\145\162\156\x61\155\145\40\141\164\x61\x75\40\120\141\x73\x73\x77\x6f\162\x64\40\x73\x61\x6c\141\x68\x2e"])->qKv2a($den9F->zQhuQ("\x75\163\x65\162\x6e\141\x6d\145")); goto Uxlop; j8ZMt: } public function dSmZD(Request $den9F) { goto u9AuN; u9AuN: Auth::DSMzD(); goto S2VSY; v8kao: return redirect()->gXR_2("\x61\x64\155\x69\x6e\56\x6c\157\x67\151\156")->QiCK_("\x73\165\143\143\145\x73\x73", "\101\x6e\x64\x61\x20\x62\145\162\x68\141\163\x69\154\x20\153\145\x6c\x75\141\162\56"); goto j1Y6x; S2VSY: $den9F->ZoZWo()->rTbqQ(); goto wWYcW; wWYcW: $den9F->zozwO()->iO1GJ(); goto v8kao; j1Y6x: } }
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+
+class AdminAuthController extends Controller
+{
+    public function showLogin()
+    {
+        // Jika sudah login dan memiliki level staff, langsung arahkan ke dashboard admin
+        if (Auth::check() && in_array(Auth::user()->level, ['admin', 'kasir', 'teknisi', 'sales', 'mitra'])) {
+            return redirect()->route('admin.dashboard');
+        }
+
+        $profile = \Illuminate\Support\Facades\DB::table('tb_profile')->first();
+        return view('admin.auth.login', compact('profile'));
+    }
+
+    public function login(Request $request)
+    {
+        $request->validate([
+            'username' => ['required', 'string'],
+            'password' => ['required', 'string'],
+        ]);
+
+        // Cari user berdasarkan username di tb_user
+        $user = User::where('username', $request->username)->first();
+
+        // Verifikasi keberadaan user dan kecocokan password secara aman
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            return back()->withErrors([
+                'username' => 'Username atau Password salah.',
+            ])->withInput($request->only('username'));
+        }
+
+        // Cek apakah user memiliki hak akses administrator
+        if (!in_array($user->level, ['admin', 'kasir', 'teknisi', 'sales', 'mitra'])) {
+            return back()->withErrors([
+                'username' => 'Anda tidak memiliki hak akses administrator.',
+            ])->withInput($request->only('username'));
+        }
+
+        // Log in user ke session
+        Auth::login($user, $request->boolean('remember'));
+
+        $request->session()->regenerate();
+
+        return redirect()->route('admin.dashboard');
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('admin.login')->with('success', 'Anda berhasil keluar.');
+    }
+}
