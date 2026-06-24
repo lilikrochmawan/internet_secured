@@ -1,0 +1,11 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Bridge Midtrans notifications directly to the bridge script
+    RewriteRule ^payment/notification/?$ payment_notification_bridge.php [L]
+
+    # Rewrite all other requests to the public directory
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>

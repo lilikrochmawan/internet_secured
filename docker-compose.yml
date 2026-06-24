@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: internet-app:latest
+    container_name: internet_app
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html:cached
+      - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini:ro
+    environment:
+      APP_ENV: local
+      APP_DEBUG: 'true'
+      APP_URL: https://localhost
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_DATABASE: internet
+      DB_USERNAME: root
+      DB_PASSWORD: root
+    depends_on:
+      - db
+
+  nginx:
+    image: nginx:stable-alpine
+    container_name: internet_nginx
+    restart: unless-stopped
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - ./:/var/www/html:ro
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./certs:/etc/nginx/certs
+    depends_on:
+      - app
+    entrypoint: ["sh", "-c", "mkdir -p /etc/nginx/certs; if [ ! -f /etc/nginx/certs/server.key ] || [ ! -f /etc/nginx/certs/server.crt ]; then openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/nginx/certs/server.key -out /etc/nginx/certs/server.crt -subj '/CN=localhost'; fi; nginx -g 'daemon off;'" ]
+
+  db:
+    image: mysql:8.0
+    container_name: internet_db
+    restart: unless-stopped
+    ports:
+      - '3306:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: internet
+      MYSQL_USER: internet
+      MYSQL_PASSWORD: secret
+    volumes:
+      - dbdata:/var/lib/mysql
+
+volumes:
+  dbdata:

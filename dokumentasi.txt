@@ -1,0 +1,32 @@
+* script auto blokir *
+Pilihan A: Jika Server Anda Menggunakan Windows (XAMPP)
+Gunakan Task Scheduler bawaan Windows:
+
+Buka Task Scheduler di Windows (cari via Start Menu).
+Di panel kanan, klik Create Basic Task...
+Beri nama tugas, misalnya: Laravel Auto Block. Klik Next.
+Pilih Daily (Harian). Klik Next.
+Atur waktu mulai (biarkan default). Klik Next.
+Pilih Start a program. Klik Next.
+Isi konfigurasi program berikut:
+Program/script: Arahkan ke file eksekusi PHP XAMPP Anda. Contoh: C:\xampp\php\php.exe
+Add arguments (optional): Isi dengan artisan schedule:run
+Start in (optional): Isi dengan path folder project Anda. Contoh: C:\xampp\htdocs\internet
+Klik Next lalu Finish.
+Penting: Klik kanan pada tugas yang baru Anda buat tadi di daftar Task Scheduler, lalu pilih Properties.
+Masuk ke tab Triggers, klik trigger harian tersebut, lalu klik Edit.
+Centang opsi Repeat task every: dan atur ke 1 minute (1 menit) dengan durasi (for a duration of:) Indefinitely (Selamanya). Klik OK.
+Pilihan B: Jika Server Anda Menggunakan Linux (VPS / cPanel)
+Jika project ini dideploy di server Linux, buka terminal server Anda lalu ketik:
+
+bash
+
+
+crontab -e
+Kemudian tambahkan baris berikut di bagian paling bawah file:
+
+cron
+
+
+* * * * * cd /path-ke-folder-project-anda && php artisan schedule:run >> /dev/null 2>&1
+(Ganti /path-ke-folder-project-anda dengan path folder project internet Anda di server).
