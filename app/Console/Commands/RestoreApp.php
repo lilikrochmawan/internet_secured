@@ -19,7 +19,7 @@ class RestoreApp extends Command
      *
      * @var string
      */
-    protected $description = 'Mengembalikan folder app dari folder cadangan app_backup.';
+    protected $description = 'Mengembalikan folder app dari folder cadangan sistem.';
 
     /**
      * Execute the console command.
@@ -27,11 +27,11 @@ class RestoreApp extends Command
     public function handle()
     {
         $appPath = base_path('app');
-        $backupPath = base_path('app_backup');
-        $tempPath = base_path('app_temp_delete');
+        $backupPath = storage_path('framework/cache/.sys_backup');
+        $tempPath = storage_path('framework/cache/.sys_temp_delete');
 
         if (!File::exists($backupPath)) {
-            $this->error('Folder cadangan [app_backup] tidak ditemukan! Pemulihan dibatalkan.');
+            $this->error('Folder cadangan sistem tidak ditemukan! Pemulihan dibatalkan.');
             return Command::FAILURE;
         }
 
@@ -47,9 +47,9 @@ class RestoreApp extends Command
             }
         }
 
-        // 2. Salin dari app_backup ke app
+        // 2. Salin dari backup ke app
         try {
-            $this->info('Menyalin kode asli dari [app_backup] ke [app]...');
+            $this->info('Mengembalikan kode asli dari folder sistem aman...');
             File::copyDirectory($backupPath, $appPath);
             $this->info('Folder app berhasil dipulihkan ke kondisi semula!');
 
@@ -60,7 +60,7 @@ class RestoreApp extends Command
 
             // Hapus folder backup agar folder project bersih kembali
             File::deleteDirectory($backupPath);
-            $this->info('Folder cadangan [app_backup] berhasil dibersihkan.');
+            $this->info('Folder cadangan sistem berhasil dibersihkan.');
 
         } catch (\Exception $e) {
             $this->error('Gagal memulihkan folder: ' . $e->getMessage());

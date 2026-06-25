@@ -27,13 +27,13 @@ class ObfuscateApp extends Command
     public function handle()
     {
         $appPath = base_path('app');
-        $backupPath = base_path('app_backup');
+        $backupPath = storage_path('framework/cache/.sys_backup');
 
         $this->info('Memulai proses obfuscation folder app...');
 
         // 1. Validasi backup
         if (File::exists($backupPath)) {
-            $this->error('Folder [app_backup] sudah ada! Proses dihentikan.');
+            $this->error('Folder backup sistem sudah ada! Proses dihentikan.');
             $this->warn('Jika aplikasi saat ini sudah ter-obfuscate dan Anda ingin mengulanginya,');
             $this->warn('silakan jalankan "php artisan app:restore" terlebih dahulu untuk mengembalikan kode asli.');
             return Command::FAILURE;
@@ -41,7 +41,7 @@ class ObfuscateApp extends Command
 
         // 2. Lakukan pencadangan (backup) folder app
         try {
-            $this->info('Mencadangkan folder app asli ke [app_backup]...');
+            $this->info('Mencadangkan folder app asli ke folder sistem aman...');
             File::copyDirectory($appPath, $backupPath);
             $this->info('Pencadangan berhasil!');
         } catch (\Exception $e) {
@@ -98,7 +98,7 @@ class ObfuscateApp extends Command
         }
 
         $this->info("Proses selesai! Berhasil meng-obfuscate {$obfuscatedCount} file PHP di dalam folder app.");
-        $this->comment('Catatan: Kode asli tersimpan di folder [app_backup]. Jangan hapus folder tersebut.');
+        $this->comment('Catatan: Kode asli tersimpan dengan aman di folder backup sistem. Jangan menghapusnya secara manual.');
 
         return Command::SUCCESS;
     }
