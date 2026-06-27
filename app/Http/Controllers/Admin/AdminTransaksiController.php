@@ -145,7 +145,9 @@ class AdminTransaksiController extends Controller
             $default_hari = $settings->hari_jatuh_tempo ?? 10;
 
             $due_day = $default_hari;
-            if ($tipe === 'tanggal_pasang' && !empty($pelanggan->tgl_pemasangan)) {
+            if ($pelanggan->jatuh_tempo) {
+                $due_day = (int) date('d', strtotime($pelanggan->jatuh_tempo));
+            } elseif ($tipe === 'tanggal_pasang' && !empty($pelanggan->tgl_pemasangan)) {
                 $due_day = (int) date('d', strtotime($pelanggan->tgl_pemasangan));
             }
 
@@ -214,7 +216,9 @@ class AdminTransaksiController extends Controller
             $default_hari = $settings->hari_jatuh_tempo ?? 10;
 
             $due_day = $default_hari;
-            if ($tipe === 'tanggal_pasang' && !empty($pelanggan->tgl_pemasangan)) {
+            if ($pelanggan->jatuh_tempo) {
+                $due_day = (int) date('d', strtotime($pelanggan->jatuh_tempo));
+            } elseif ($tipe === 'tanggal_pasang' && !empty($pelanggan->tgl_pemasangan)) {
                 $due_day = (int) date('d', strtotime($pelanggan->tgl_pemasangan));
             }
 
@@ -503,7 +507,9 @@ class AdminTransaksiController extends Controller
                 $due_month = $target_date->month;
 
                 $due_day = $default_hari;
-                if ($tipe === 'tanggal_pasang' && $pelanggan_data && !empty($pelanggan_data->tgl_pemasangan)) {
+                if ($pelanggan_data && !empty($pelanggan_data->jatuh_tempo)) {
+                    $due_day = (int) date('d', strtotime($pelanggan_data->jatuh_tempo));
+                } elseif ($tipe === 'tanggal_pasang' && $pelanggan_data && !empty($pelanggan_data->tgl_pemasangan)) {
                     $due_day = (int) date('d', strtotime($pelanggan_data->tgl_pemasangan));
                 }
 

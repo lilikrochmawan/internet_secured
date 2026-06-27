@@ -13,7 +13,7 @@ class AdminAuthController extends Controller
     public function showLogin()
     {
         // Jika sudah login dan memiliki level staff, langsung arahkan ke dashboard admin
-        if (Auth::check() && in_array(Auth::user()->level, ['admin', 'kasir', 'teknisi', 'sales', 'mitra'])) {
+        if (Auth::check() && in_array(Auth::user()->level, ['admin', 'kasir', 'teknisi', 'sales', 'mitra', 'noc'])) {
             return redirect()->route('admin.dashboard');
         }
 
@@ -39,7 +39,7 @@ class AdminAuthController extends Controller
         }
 
         // Cek apakah user memiliki hak akses administrator
-        if (!in_array($user->level, ['admin', 'kasir', 'teknisi', 'sales', 'mitra'])) {
+        if (!in_array($user->level, ['admin', 'kasir', 'teknisi', 'sales', 'mitra', 'noc'])) {
             return back()->withErrors([
                 'username' => 'Anda tidak memiliki hak akses administrator.',
             ])->withInput($request->only('username'));

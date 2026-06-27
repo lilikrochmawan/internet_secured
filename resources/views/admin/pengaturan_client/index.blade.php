@@ -146,6 +146,7 @@
     .role-teknisi { background-color: #eff6ff; color: #1e40af; }
     .role-sales { background-color: #fffbeb; color: #b45309; }
     .role-mitra { background-color: #faf5ff; color: #6b21a8; }
+    .role-noc { background-color: #ecfeff; color: #0891b2; }
 
     /* Modals styling */
     .modal-backdrop {
@@ -400,6 +401,7 @@
                                 @php
                                     $roleClass = 'role-mitra';
                                     if ($u->level == 'admin') $roleClass = 'role-admin';
+                                    elseif ($u->level == 'noc') $roleClass = 'role-noc';
                                     elseif ($u->level == 'kasir') $roleClass = 'role-kasir';
                                     elseif ($u->level == 'teknisi') $roleClass = 'role-teknisi';
                                     elseif ($u->level == 'sales') $roleClass = 'role-sales';
@@ -668,6 +670,7 @@
                     <label for="access_level">Level / Jabatan Staff *</label>
                     <select name="level" id="access_level" class="form-control" style="background-color: white;" onchange="toggleAccessSectionByRole(this.value)">
                         <option value="admin">Administrator (Semua Area)</option>
+                        <option value="noc">NOC</option>
                         <option value="kasir">Kasir</option>
                         <option value="teknisi">Teknisi Lapangan</option>
                         <option value="sales">Sales</option>

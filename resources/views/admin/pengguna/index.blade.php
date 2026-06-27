@@ -446,6 +446,7 @@
                     <label for="level">Level Otoritas Hak Akses *</label>
                     <select id="level" name="level" class="form-control" required>
                         <option value="admin">Administrator (Akses Penuh)</option>
+                        <option value="noc">NOC</option>
                         <option value="kasir">Kasir (Kelola Transaksi & Keuangan)</option>
                         <option value="teknisi">Teknisi Lapangan (Kelola Gangguan & Mikrotik)</option>
                         <option value="sales">Sales</option>
@@ -493,6 +494,7 @@
                     <label for="edit_level">Level Otoritas Hak Akses *</label>
                     <select id="edit_level" name="level" class="form-control" required>
                         <option value="admin">Administrator</option>
+                        <option value="noc">NOC</option>
                         <option value="kasir">Kasir</option>
                         <option value="teknisi">Teknisi Lapangan</option>
                         <option value="sales">Sales</option>

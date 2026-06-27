@@ -182,11 +182,13 @@ Route::prefix('administrator')->group(function () {
         Route::post('/custom-pesan/bukablokir', [AdminCustomPesanController::class, 'updateBukaBlokir'])->name('admin.custom_pesan.bukablokir');
         Route::post('/custom-pesan/reminder', [AdminCustomPesanController::class, 'updateReminder'])->name('admin.custom_pesan.reminder');
 
-        // Broadcast Notifikasi & ODP Maintenance
+        // Broadcast Notifikasi & ODP/ODC Maintenance
         Route::get('/broadcast', [AdminNotificationController::class, 'index'])->name('admin.broadcast.index');
         Route::get('/broadcast/odp-clients/{id}', [AdminNotificationController::class, 'getOdpClients'])->name('admin.broadcast.odp_clients');
+        Route::get('/broadcast/odc-clients/{id}', [AdminNotificationController::class, 'getOdcClients'])->name('admin.broadcast.odc_clients');
         Route::post('/broadcast/general', [AdminNotificationController::class, 'sendGeneral'])->name('admin.broadcast.general');
         Route::post('/broadcast/odp', [AdminNotificationController::class, 'sendOdp'])->name('admin.broadcast.odp');
+        Route::post('/broadcast/odc', [AdminNotificationController::class, 'sendOdc'])->name('admin.broadcast.odc');
         Route::post('/broadcast/delete-announcement/{id}', [AdminNotificationController::class, 'deleteAnnouncement'])->name('admin.broadcast.delete_announcement');
         Route::get('/notifications/fetch', [AdminNotificationController::class, 'fetchNotifications'])->name('admin.notifications.fetch');
 

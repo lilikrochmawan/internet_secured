@@ -16,14 +16,34 @@ class AdminNotificationController extends Controller
     public function index()
     {
         $odps = Odp::orderBy('nama_odp', 'asc')->get();
+        $odcs = DB::table('tbl_odc')->orderBy('nama_odc', 'asc')->get();
         $announcements = Informasi::orderBy('id_informasi', 'desc')->take(5)->get();
-        return view('admin.notification.index', compact('odps', 'announcements'));
+        return view('admin.notification.index', compact('odps', 'announcements', 'odcs'));
     }
 
     public function getOdpClients($id)
     {
         $clients = Pelanggan::where('odp', $id)->get(['id_pelanggan', 'kode_pelanggan', 'nama_pelanggan', 'no_telp']);
         return response()->json($clients);
+    }
+
+    public function getOdcClients($id)
+    {
+        $odpIds = Odp::where('odc', $id)->pluck('id_odp');
+        $clients = Pelanggan::with('odpDetail')
+            ->whereIn('odp', $odpIds)
+            ->get(['id_pelanggan', 'kode_pelanggan', 'nama_pelanggan', 'no_telp', 'odp']);
+        
+        $formattedClients = $clients->map(function($client) {
+            return [
+                'id_pelanggan' => $client->id_pelanggan,
+                'kode_pelanggan' => $client->kode_pelanggan,
+                'nama_pelanggan' => $client->nama_pelanggan,
+                'no_telp' => $client->no_telp,
+                'nama_odp' => $client->odpDetail->nama_odp ?? 'N/A'
+            ];
+        });
+        return response()->json($formattedClients);
     }
 
     public function sendGeneral(Request $request)
@@ -243,6 +263,116 @@ class AdminNotificationController extends Controller
             'berhasil' => $berhasil,
             'gagal' => $gagal,
             'message' => 'Pengiriman notifikasi ODP selesai.'
+        ]);
+    }
+
+    public function sendOdc(Request $request)
+    {
+        $request->validate([
+            'id_odc' => 'required|integer',
+            'pesan' => 'required|string',
+            'client_ids' => 'required|array',
+        ]);
+
+        set_time_limit(1800);
+
+        $id_odc = $request->input('id_odc');
+        $pesan = $request->input('pesan');
+        $client_ids = $request->input('client_ids');
+
+        $odc = DB::table('tbl_odc')->where('id_odc', $id_odc)->first();
+        if (!$odc) {
+            return response()->json([
+                'success' => false,
+                'message' => 'ODC tidak ditemukan.'
+            ], 404);
+        }
+
+        $tokenInfo = DB::table('tbl_token')->where('id_token', 1)->first();
+        if (!$tokenInfo || empty($tokenInfo->token)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Token WhatsApp Fonnte belum dikonfigurasi di pengaturan.'
+            ], 400);
+        }
+
+        $pelangganList = Pelanggan::with('odpDetail')
+            ->whereIn('id_pelanggan', $client_ids)
+            ->whereNotNull('no_telp')
+            ->where('no_telp', '!=', '')
+            ->get();
+
+        if ($pelangganList->isEmpty()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Tidak ada pelanggan terpilih yang memiliki nomor telepon aktif.'
+            ], 400);
+        }
+
+        $results = [];
+        $berhasil = 0;
+        $gagal = 0;
+
+        foreach ($pelangganList as $index => $pelanggan) {
+            // Jeda pengiriman 10 detik (kecuali pesan pertama)
+            if ($index > 0) {
+                sleep(10);
+            }
+
+            // Format dinamis
+            $odpName = $pelanggan->odpDetail->nama_odp ?? 'N/A';
+            $customPesan = str_replace(
+                ['$nama', '$pelanggan', '$odp', '$odc'],
+                [$pelanggan->nama_pelanggan, $pelanggan->nama_pelanggan, $odpName, $odc->nama_odc],
+                $pesan
+            );
+
+            try {
+                $response = Http::timeout(10)->withHeaders([
+                    'Authorization' => $tokenInfo->token
+                ])->asForm()->post('https://api.fonnte.com/send', [
+                    'target' => $pelanggan->no_telp,
+                    'message' => $customPesan,
+                    'countryCode' => '62'
+                ]);
+
+                $resData = $response->json();
+                if ($response->successful() && isset($resData['status']) && $resData['status'] === true) {
+                    $berhasil++;
+                    $results[] = [
+                        'status' => true,
+                        'nama' => $pelanggan->nama_pelanggan,
+                        'no_telp' => $pelanggan->no_telp,
+                        'message' => 'Terkirim'
+                    ];
+                } else {
+                    $gagal++;
+                    $reason = $resData['reason'] ?? $resData['message'] ?? 'Fonnte error atau device offline.';
+                    $results[] = [
+                        'status' => false,
+                        'nama' => $pelanggan->nama_pelanggan,
+                        'no_telp' => $pelanggan->no_telp,
+                        'message' => $reason
+                    ];
+                }
+            } catch (\Exception $e) {
+                $gagal++;
+                Log::error("Broadcast WA ODC error to {$pelanggan->nama_pelanggan}: " . $e->getMessage());
+                $results[] = [
+                    'status' => false,
+                    'nama' => $pelanggan->nama_pelanggan,
+                    'no_telp' => $pelanggan->no_telp,
+                    'message' => 'Koneksi API Gagal: ' . $e->getMessage()
+                ];
+            }
+        }
+
+        return response()->json([
+            'success' => true,
+            'results' => $results,
+            'berhasil' => $berhasil,
+            'gagal' => $gagal,
+            'message' => 'Pengiriman notifikasi ODC selesai.'
         ]);
     }
 

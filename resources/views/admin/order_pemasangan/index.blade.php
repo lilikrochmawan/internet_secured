@@ -472,8 +472,8 @@
                             </td>
                             <td>
                                 <div style="display: flex; flex-direction: column; gap: 6px;">
-                                    <!-- Admin Actions -->
-                                    @if(Auth::user()->level === 'admin')
+                                    <!-- Admin / NOC Actions -->
+                                    @if(Auth::user()->level === 'admin' || Auth::user()->level === 'noc')
                                         @if($row->status === 'pending')
                                             @if(is_null($row->id_teknisi))
                                                 <button class="btn btn-primary" style="padding: 6px 12px; font-size: 0.8rem; border-radius: 8px; width: 100%; justify-content: center; opacity: 0.5; cursor: not-allowed;" disabled title="Wajib menugaskan teknisi terlebih dahulu sebelum melakukan ACC">
@@ -519,11 +519,18 @@
                                                      <i class="fa-solid fa-camera"></i> Selesai Pasang
                                                  </button>
                                              @endif
-                                         @endif
+                                          @endif
+                                      @endif
+                                     
+                                     <!-- NOC Selesai Pasang Action -->
+                                     @if(Auth::user()->level === 'noc' && $row->status === 'approved')
+                                         <button type="button" class="btn btn-success" style="padding: 6px 12px; font-size: 0.8rem; border-radius: 8px; width: 100%; justify-content: center;" onclick="openCompleteModal('{{ $row->id }}')">
+                                             <i class="fa-solid fa-camera"></i> Selesai Pasang
+                                         </button>
                                      @endif
  
-                                     <!-- Admin Verification Completion (ACC Selesai) -->
-                                     @if(Auth::user()->level === 'admin' && $row->status === 'installed')
+                                     <!-- Admin/NOC Verification Completion (ACC Selesai) -->
+                                     @if((Auth::user()->level === 'admin' || Auth::user()->level === 'noc') && $row->status === 'installed')
                                          <form action="{{ route('admin.order_pemasangan.confirm') }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin mengonfirmasi selesai pemasangan untuk pelanggan ini? Pastikan perangkat benar-benar hidup dan normal.')">
                                              @csrf
                                              <input type="hidden" name="id_order" value="{{ $row->id }}">

@@ -970,7 +970,7 @@
                                 </a>
                             </li>
                         @endif
-                        @if(Auth::user()->level == 'admin' || Auth::user()->level == 'teknisi')
+                        @if(Auth::user()->level == 'admin' || Auth::user()->level == 'teknisi' || Auth::user()->level == 'noc')
                             <li class="submenu-item {{ $currRoute == 'admin.teknisi.clients' ? 'active' : '' }}">
                                 <a href="{{ route('admin.teknisi.clients') }}">
                                     <i class="fa-solid fa-user-slash"></i>
@@ -987,7 +987,7 @@
                     $orderNotificationCount = 0;
                     if (Auth::check()) {
                         $user = Auth::user();
-                        if ($user->level === 'admin') {
+                        if ($user->level === 'admin' || $user->level === 'noc') {
                             $orderNotificationCount = \App\Models\OrderPemasangan::where('status', 'pending')->count();
                         } elseif ($user->level === 'teknisi') {
                             $orderNotificationCount = \App\Models\OrderPemasangan::whereIn('id_teknisi', [$user->id, 0])

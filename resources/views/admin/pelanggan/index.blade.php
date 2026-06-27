@@ -610,6 +610,11 @@
                     <input type="text" id="edit_ip_address" name="ip_address" class="form-control">
                 </div>
 
+                <div class="form-group">
+                    <label for="edit_jatuh_tempo">Tanggal Jatuh Tempo *</label>
+                    <input type="date" id="edit_jatuh_tempo" name="jatuh_tempo" class="form-control" required>
+                </div>
+
                 <div class="form-row-2">
                     <div class="form-group">
                         <label for="edit_branch">Branch *</label>
@@ -765,6 +770,7 @@
         document.getElementById('edit_odp').value = pelanggan.odp || 'NULL';
         document.getElementById('edit_id_mikrotik').value = pelanggan.id_mikrotik || 1;
         document.getElementById('edit_mapping').value = pelanggan.location || '';
+        document.getElementById('edit_jatuh_tempo').value = pelanggan.jatuh_tempo ? pelanggan.jatuh_tempo.substring(0, 10) : '';
         
         // Set branch & sub-branch values
         document.getElementById('edit_branch').value = pelanggan.id_branch || '';

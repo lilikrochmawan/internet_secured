@@ -29,7 +29,7 @@ class AdminOrderPemasanganController extends Controller
         $teknisis = [];
         $topTeknisi = [];
 
-        if ($user->level === 'admin') {
+        if ($user->level === 'admin' || $user->level === 'noc') {
             $mikrotiks = DB::table('tbl_mikrotik')->get();
             $odps = Odp::withCount('pelanggans')->get();
             $branches = DB::table('tb_branch')->get();

@@ -23,7 +23,7 @@ class AdminMiddleware
         $user = Auth::user();
         
         // Periksa apakah user memiliki hak akses administrator/staff
-        if (!in_array($user->level, ['admin', 'kasir', 'teknisi', 'sales', 'mitra'])) {
+        if (!in_array($user->level, ['admin', 'kasir', 'teknisi', 'sales', 'mitra', 'noc'])) {
             Auth::logout();
             return redirect()->route('admin.login')->withErrors([
                 'username' => 'Anda tidak memiliki hak akses untuk masuk ke halaman administrator.',

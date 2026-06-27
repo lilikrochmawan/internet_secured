@@ -367,6 +367,7 @@
     var pelangganCoordinates = []; // List of {nama_pelanggan, lat, lng, odp_name}
 
     var odcMap = {}; // name -> [lat, lng]
+    var odcIdMap = {}; // id -> [lat, lng]
     var odpMap = {}; // name -> [lat, lng]
 
     function initMasterMap() {
@@ -431,8 +432,12 @@
             div.innerHTML = `
                 <h4 style="font-family:'Outfit',sans-serif; margin: 0 0 8px 0; font-size:0.9rem; color:var(--text-dark); border-bottom:1px solid #e2e8f0; padding-bottom:4px;">Legenda Peta</h4>
                 <div class="legend-item">
+                    <span class="legend-color" style="background-color:#ef4444;"></span>
+                    <span>ODC Utama</span>
+                </div>
+                <div class="legend-item">
                     <span class="legend-color" style="background-color:#2563eb;"></span>
-                    <span>Cabinet ODC</span>
+                    <span>ODC Distribusi</span>
                 </div>
                 <div class="legend-item">
                     <span class="legend-color" style="background-color:#10b981;"></span>
@@ -443,8 +448,12 @@
                     <span>Pelanggan (Client)</span>
                 </div>
                 <div class="legend-item">
+                    <span class="legend-line" style="border-top:3px dashed #e11d48; margin-top:2px;"></span>
+                    <span>Koneksi ODC Utama &rarr; Distribusi</span>
+                </div>
+                <div class="legend-item">
                     <span class="legend-line" style="border-top:2.5px dashed #4f46e5; margin-top:2px;"></span>
-                    <span>Koneksi ODC &rarr; ODP</span>
+                    <span>Koneksi ODC Distribusi &rarr; ODP</span>
                 </div>
                 <div class="legend-item">
                     <span class="legend-line" style="border-top:2px solid #10b981; margin-top:2px;"></span>
@@ -464,6 +473,7 @@
                 odcCoordinates = odcs;
                 odcs.forEach(o => {
                     odcMap[o.nama_odc] = [o.lat, o.lng];
+                    odcIdMap[o.id_odc] = [o.lat, o.lng];
                 });
 
                 // Step 2: Load ODP
@@ -498,12 +508,14 @@
 
         var bounds = [];
 
-        // 1. Plot ODC (Blue)
+        // 1. Plot ODC (Red for Utama, Blue for Distribusi)
         if (document.getElementById('chk-odc').checked) {
             odcCoordinates.forEach(o => {
+                var markerColor = o.jenis_odc === 'utama' ? 'red' : 'blue';
+                var typeLabel = o.jenis_odc === 'utama' ? 'Utama (Main)' : 'Distribusi';
                 var marker = L.marker([o.lat, o.lng], {
                     icon: L.icon({
-                        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+                        iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-${markerColor}.png`,
                         shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
                         iconSize: [25, 41],
                         iconAnchor: [12, 41],
@@ -513,6 +525,7 @@
                 }).bindPopup(`
                     <div style="font-family:'Inter',sans-serif; font-size:0.85rem; line-height:1.4;">
                         <h4 style="font-family:'Outfit',sans-serif; margin:0 0 6px 0; color:#2563eb; font-size:0.95rem;">[ODC] ${o.nama_odc}</h4>
+                        <strong>Jenis ODC:</strong> <span style="font-weight:700;">${typeLabel}</span><br>
                         <strong>Perangkat:</strong> ${o.perangkat_odc}<br>
                         <strong>Kapasitas Port:</strong> ${o.port_odc} Port<br>
                         <strong>Redaman:</strong> <span style="color:#ea580c; font-weight:600;">${o.redaman || '-'}</span><br>
@@ -608,6 +621,22 @@
 
         // 4. Draw Lines (Topology)
         if (document.getElementById('chk-topology').checked) {
+            // Draw ODC Utama -> ODC Distribusi lines
+            odcCoordinates.forEach(o => {
+                if (o.jenis_odc === 'distribusi' && o.parent_id) {
+                    var parentCoord = odcIdMap[o.parent_id];
+                    if (parentCoord && document.getElementById('chk-odc').checked) {
+                        var polyline = L.polyline([[o.lat, o.lng], parentCoord], {
+                            color: '#e11d48', // Rose color for ODC Utama -> Distribusi connection line
+                            weight: 3,
+                            opacity: 0.85,
+                            dashArray: '4, 4'
+                        });
+                        lineLayerGroup.addLayer(polyline);
+                    }
+                }
+            });
+
             // Draw ODC -> ODP lines (Solid Purple/Indigo Line)
             odpCoordinates.forEach(odp => {
                 var odcCoord = odcMap[odp.nama_odc];

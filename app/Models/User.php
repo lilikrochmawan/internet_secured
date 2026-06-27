@@ -88,7 +88,7 @@ class User extends Authenticatable
      */
     public function isStaff()
     {
-        return in_array($this->level, ['admin', 'kasir', 'teknisi', 'sales', 'mitra']);
+        return in_array($this->level, ['admin', 'kasir', 'teknisi', 'sales', 'mitra', 'noc']);
     }
 
     /**

@@ -21,7 +21,19 @@ class Odc extends Model
         'redaman',
         'tube',
         'core_number',
+        'jenis_odc',
+        'parent_id',
     ];
+
+    public function parentOdc()
+    {
+        return $this->belongsTo(Odc::class, 'parent_id', 'id_odc');
+    }
+
+    public function subOdcs()
+    {
+        return $this->hasMany(Odc::class, 'parent_id', 'id_odc');
+    }
 
     public function odps()
     {

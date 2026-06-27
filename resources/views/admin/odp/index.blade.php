@@ -360,8 +360,13 @@
 
                 <div class="form-group">
                     <label for="location">Koordinat Lokasi (Lat, Lng) *</label>
-                    <input type="text" id="location" name="location" class="form-control" required placeholder="Contoh: -6.200000,106.816666">
-                    <small style="color:var(--text-gray);">Isi manual atau klik langsung pada peta sebelah kanan.</small>
+                    <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+                        <input type="text" id="location" name="location" class="form-control" required placeholder="Contoh: -6.200000,106.816666">
+                        <button type="button" class="btn btn-info" id="btn-gps-add" style="padding: 10px; border-radius: 12px;" title="Ambil GPS HP"><i class="fa-solid fa-location-crosshairs"></i></button>
+                        <button type="button" class="btn btn-primary" id="btn-map-add-toggle" style="padding: 10px; border-radius: 12px; background: var(--primary-gradient);" title="Pilih dari Peta"><i class="fa-solid fa-map-location-dot"></i></button>
+                    </div>
+                    <div id="map-add-picker" style="height: 200px; border-radius: 12px; border: 1px solid var(--border-color); display: none; z-index: 1; margin-bottom: 8px;"></div>
+                    <small style="color:var(--text-gray);">Isi manual, klik tombol GPS, atau klik tombol peta untuk memilih titik.</small>
                 </div>
 
                 <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
@@ -412,8 +417,13 @@
 
                 <div class="form-group">
                     <label for="edit_location">Koordinat Lokasi (Lat, Lng) *</label>
-                    <input type="text" id="edit_location" name="location" class="form-control" required>
-                    <small style="color:var(--text-gray);">Ubah manual atau klik pada peta sebelah kanan untuk memperbarui titik.</small>
+                    <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+                        <input type="text" id="edit_location" name="location" class="form-control" required>
+                        <button type="button" class="btn btn-info" id="btn-gps-edit" style="padding: 10px; border-radius: 12px;" title="Ambil GPS HP"><i class="fa-solid fa-location-crosshairs"></i></button>
+                        <button type="button" class="btn btn-primary" id="btn-map-edit-toggle" style="padding: 10px; border-radius: 12px; background: var(--primary-gradient);" title="Pilih dari Peta"><i class="fa-solid fa-map-location-dot"></i></button>
+                    </div>
+                    <div id="map-edit-picker" style="height: 200px; border-radius: 12px; border: 1px solid var(--border-color); display: none; z-index: 1; margin-bottom: 8px;"></div>
+                    <small style="color:var(--text-gray);">Ubah manual, klik tombol GPS, atau klik tombol peta untuk memilih titik.</small>
                 </div>
 
                 <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
@@ -486,14 +496,153 @@
 <!-- Leaflet JS -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script>
+    var mapAddPicker = null, mapEditPicker = null;
+    var markerAddPicker = null, markerEditPicker = null;
+
     document.addEventListener("DOMContentLoaded", function () {
         setupTablePagination("#odpTable", "#odpPagination", "#tableLimit", "#tableSearch");
         initMap();
+
+        // Add Modal Picker
+        document.getElementById('btn-map-add-toggle').addEventListener('click', function() {
+            var mapContainer = document.getElementById('map-add-picker');
+            if (mapContainer.style.display === 'none') {
+                mapContainer.style.display = 'block';
+                if (!mapAddPicker) {
+                    mapAddPicker = L.map('map-add-picker').setView([-6.200000, 106.816666], 13);
+                    L.tileLayer('https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+                        subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+                        attribution: '&copy; Google Maps'
+                    }).addTo(mapAddPicker);
+
+                    mapAddPicker.on('click', function(e) {
+                        var lat = e.latlng.lat.toFixed(6);
+                        var lng = e.latlng.lng.toFixed(6);
+                        document.getElementById('location').value = lat + ',' + lng;
+
+                        if (markerAddPicker) {
+                            mapAddPicker.removeLayer(markerAddPicker);
+                        }
+                        markerAddPicker = L.marker(e.latlng).addTo(mapAddPicker).bindPopup("Titik Terpilih").openPopup();
+                    });
+                }
+                setTimeout(function() {
+                    mapAddPicker.invalidateSize();
+                    var val = document.getElementById('location').value;
+                    if (val) {
+                        var parts = val.split(',');
+                        if (parts.length === 2) {
+                            var lat = parseFloat(parts[0]);
+                            var lng = parseFloat(parts[1]);
+                            mapAddPicker.setView([lat, lng], 15);
+                            if (markerAddPicker) mapAddPicker.removeLayer(markerAddPicker);
+                            markerAddPicker = L.marker([lat, lng]).addTo(mapAddPicker).bindPopup("Titik Terpilih").openPopup();
+                        }
+                    }
+                }, 200);
+            } else {
+                mapContainer.style.display = 'none';
+            }
+        });
+
+        document.getElementById('btn-gps-add').addEventListener('click', function() {
+            if ('geolocation' in navigator) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    var lat = position.coords.latitude.toFixed(6);
+                    var lng = position.coords.longitude.toFixed(6);
+                    document.getElementById('location').value = lat + ',' + lng;
+                    alert("GPS berhasil diambil: " + lat + "," + lng);
+
+                    if (mapAddPicker && document.getElementById('map-add-picker').style.display === 'block') {
+                        var latlng = [parseFloat(lat), parseFloat(lng)];
+                        mapAddPicker.setView(latlng, 15);
+                        if (markerAddPicker) mapAddPicker.removeLayer(markerAddPicker);
+                        markerAddPicker = L.marker(latlng).addTo(mapAddPicker).bindPopup("Titik GPS").openPopup();
+                    }
+                }, function(err) {
+                    var errMsg = err.message;
+                    if (window.location.protocol !== 'https:' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+                        errMsg = "Only secure origins are allowed. Halaman ini diakses melalui HTTP biasa, sedangkan Google Chrome hanya mengizinkan akses GPS pada koneksi aman (HTTPS). Silakan akses website via HTTPS atau pilih lokasi secara manual di peta.";
+                    }
+                    alert("Gagal mengambil GPS: " + errMsg);
+                }, { enableHighAccuracy: true });
+            } else {
+                alert("Geolocation tidak didukung browser ini.");
+            }
+        });
+
+        // Edit Modal Picker
+        document.getElementById('btn-map-edit-toggle').addEventListener('click', function() {
+            var mapContainer = document.getElementById('map-edit-picker');
+            if (mapContainer.style.display === 'none') {
+                mapContainer.style.display = 'block';
+                if (!mapEditPicker) {
+                    mapEditPicker = L.map('map-edit-picker').setView([-6.200000, 106.816666], 13);
+                    L.tileLayer('https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+                        subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+                        attribution: '&copy; Google Maps'
+                    }).addTo(mapEditPicker);
+
+                    mapEditPicker.on('click', function(e) {
+                        var lat = e.latlng.lat.toFixed(6);
+                        var lng = e.latlng.lng.toFixed(6);
+                        document.getElementById('edit_location').value = lat + ',' + lng;
+
+                        if (markerEditPicker) {
+                            mapEditPicker.removeLayer(markerEditPicker);
+                        }
+                        markerEditPicker = L.marker(e.latlng).addTo(mapEditPicker).bindPopup("Titik Terpilih").openPopup();
+                    });
+                }
+                setTimeout(function() {
+                    mapEditPicker.invalidateSize();
+                    var val = document.getElementById('edit_location').value;
+                    if (val) {
+                        var parts = val.split(',');
+                        if (parts.length === 2) {
+                            var lat = parseFloat(parts[0]);
+                            var lng = parseFloat(parts[1]);
+                            mapEditPicker.setView([lat, lng], 15);
+                            if (markerEditPicker) mapEditPicker.removeLayer(markerEditPicker);
+                            markerEditPicker = L.marker([lat, lng]).addTo(mapEditPicker).bindPopup("Titik Terpilih").openPopup();
+                        }
+                    }
+                }, 200);
+            } else {
+                mapContainer.style.display = 'none';
+            }
+        });
+
+        document.getElementById('btn-gps-edit').addEventListener('click', function() {
+            if ('geolocation' in navigator) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    var lat = position.coords.latitude.toFixed(6);
+                    var lng = position.coords.longitude.toFixed(6);
+                    document.getElementById('edit_location').value = lat + ',' + lng;
+                    alert("GPS berhasil diambil: " + lat + "," + lng);
+
+                    if (mapEditPicker && document.getElementById('map-edit-picker').style.display === 'block') {
+                        var latlng = [parseFloat(lat), parseFloat(lng)];
+                        mapEditPicker.setView(latlng, 15);
+                        if (markerEditPicker) mapEditPicker.removeLayer(markerEditPicker);
+                        markerEditPicker = L.marker(latlng).addTo(mapEditPicker).bindPopup("Titik GPS").openPopup();
+                    }
+                }, function(err) {
+                    var errMsg = err.message;
+                    if (window.location.protocol !== 'https:' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+                        errMsg = "Only secure origins are allowed. Halaman ini diakses melalui HTTP biasa, sedangkan Google Chrome hanya mengizinkan akses GPS pada koneksi aman (HTTPS). Silakan akses website via HTTPS atau pilih lokasi secara manual di peta.";
+                    }
+                    alert("Gagal mengambil GPS: " + errMsg);
+                }, { enableHighAccuracy: true });
+            } else {
+                alert("Geolocation tidak didukung browser ini.");
+            }
+        });
     });
 
-    // Modal Handlers
     function openAddModal() {
         document.getElementById('addModal').classList.add('active');
+        document.getElementById('map-add-picker').style.display = 'none';
         if (clickMarker) {
             map.removeLayer(clickMarker);
             clickMarker = null;
@@ -511,6 +660,7 @@
         document.getElementById('edit_redaman').value = odp.redaman || '';
         document.getElementById('edit_location').value = odp.location;
         document.getElementById('editModal').classList.add('active');
+        document.getElementById('map-edit-picker').style.display = 'none';
         
         // Show current edit marker as a preview
         if (odp.location) {

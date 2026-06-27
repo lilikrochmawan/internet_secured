@@ -11,8 +11,9 @@ class AdminOdcController extends Controller
 {
     public function index(Request $request)
     {
-        $odc = Odc::with(['odps.pelanggans'])->withCount('odps')->orderBy('id_odc', 'desc')->get();
-        return view('admin.odc.index', compact('odc'));
+        $odc = Odc::with(['odps.pelanggans', 'parentOdc'])->withCount('odps')->orderBy('id_odc', 'desc')->get();
+        $mainOdcs = Odc::where('jenis_odc', 'utama')->orderBy('nama_odc', 'asc')->get();
+        return view('admin.odc.index', compact('odc', 'mainOdcs'));
     }
 
     public function store(Request $request)
@@ -25,6 +26,8 @@ class AdminOdcController extends Controller
             'redaman' => 'nullable|string|max:50',
             'tube' => 'nullable|string|max:50',
             'core_number' => 'nullable|integer',
+            'jenis_odc' => 'required|string|in:utama,distribusi',
+            'parent_id' => 'nullable|integer|exists:tbl_odc,id_odc',
         ]);
 
         Odc::create([
@@ -35,6 +38,8 @@ class AdminOdcController extends Controller
             'redaman' => $request->redaman,
             'tube' => $request->tube,
             'core_number' => $request->core_number,
+            'jenis_odc' => $request->jenis_odc,
+            'parent_id' => $request->jenis_odc === 'distribusi' ? $request->parent_id : null,
         ]);
 
         return redirect()->route('admin.odc.index')->with('success', 'ODC baru berhasil ditambahkan!');
@@ -51,6 +56,8 @@ class AdminOdcController extends Controller
             'redaman' => 'nullable|string|max:50',
             'tube' => 'nullable|string|max:50',
             'core_number' => 'nullable|integer',
+            'jenis_odc' => 'required|string|in:utama,distribusi',
+            'parent_id' => 'nullable|integer|exists:tbl_odc,id_odc',
         ]);
 
         $odc = Odc::findOrFail($request->id_odc);
@@ -62,6 +69,8 @@ class AdminOdcController extends Controller
             'redaman' => $request->redaman,
             'tube' => $request->tube,
             'core_number' => $request->core_number,
+            'jenis_odc' => $request->jenis_odc,
+            'parent_id' => $request->jenis_odc === 'distribusi' ? $request->parent_id : null,
         ]);
 
         return redirect()->route('admin.odc.index')->with('success', 'ODC berhasil diperbarui!');
@@ -103,7 +112,9 @@ class AdminOdcController extends Controller
                         'tube' => $row->tube ?? '-',
                         'core_number' => $row->core_number ?? '-',
                         'lat' => floatval(trim($coord_parts[0])),
-                        'lng' => floatval(trim($coord_parts[1]))
+                        'lng' => floatval(trim($coord_parts[1])),
+                        'jenis_odc' => $row->jenis_odc,
+                        'parent_id' => $row->parent_id,
                     ];
                 }
             }

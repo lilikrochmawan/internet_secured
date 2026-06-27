@@ -18,7 +18,7 @@ class AdminPengaturanClientController extends Controller
         $branches = Branch::with('subBranches')->orderBy('id', 'desc')->get();
         
         // Fetch all staff users (excluding normal customers)
-        $users = User::whereIn('level', ['admin', 'kasir', 'teknisi', 'sales', 'mitra'])
+        $users = User::whereIn('level', ['admin', 'kasir', 'teknisi', 'sales', 'mitra', 'noc'])
             ->where('id_pelanggan', 0)
             ->orderBy('id', 'desc')
             ->get();
@@ -141,7 +141,7 @@ class AdminPengaturanClientController extends Controller
     {
         $request->validate([
             'id_user' => 'required|integer',
-            'level' => 'required|string|in:admin,kasir,teknisi,sales,mitra',
+            'level' => 'required|string|in:admin,kasir,teknisi,sales,mitra,noc',
             'branches' => 'nullable|array',
             'sub_branches' => 'nullable|array',
             'menus' => 'nullable|array',

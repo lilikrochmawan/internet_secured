@@ -263,6 +263,10 @@
         <i class="fa-solid fa-network-wired"></i>
         <span>Gangguan / Pemeliharaan ODP</span>
     </div>
+    <div class="monitoring-tab" onclick="switchTab('tab-odc')" id="btn-tab-odc">
+        <i class="fa-solid fa-circle-nodes"></i>
+        <span>Gangguan / Pemeliharaan ODC</span>
+    </div>
 </div>
 
 <!-- Tab CONTENT 1: Notifikasi Umum -->
@@ -424,6 +428,78 @@
     </div>
 </div>
 
+<!-- Tab CONTENT 3: Notifikasi Per ODC -->
+<div class="tab-content" id="tab-odc">
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title">
+                <i class="fa-solid fa-circle-nodes"></i>
+                <span>Broadcast WA Pemeliharaan/Gangguan per ODC</span>
+            </div>
+        </div>
+        <form action="{{ route('admin.broadcast.odc') }}" method="POST" id="form_odc">
+            @csrf
+            <div class="form-row-2" style="align-items: flex-start;">
+                <!-- Left Form Inputs -->
+                <div>
+                    <div class="form-group">
+                        <label for="select_odc">Pilih Perangkat ODC *</label>
+                        <select name="id_odc" id="select_odc" class="form-control" style="padding: 10px 14px; height: 44px; border-radius: 12px;">
+                            <option value="" selected disabled>-- Pilih ODC --</option>
+                            @foreach($odcs as $odc)
+                                <option value="{{ $odc->id_odc }}">{{ $odc->nama_odc }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <label for="odc_message_template">Pesan Gangguan/Maintenance *</label>
+                            <div style="display: flex; gap: 6px;">
+                                <span class="var-badge" onclick="insertVar('odc_message_template', '$nama')">+ Nama</span>
+                                <span class="var-badge" onclick="insertVar('odc_message_template', '$odp')">+ ODP</span>
+                                <span class="var-badge" onclick="insertVar('odc_message_template', '$odc')">+ ODC</span>
+                            </div>
+                        </div>
+                        <textarea name="pesan" id="odc_message_template" rows="8" class="form-control" placeholder="Tulis isi pesan gangguan/maintenance..." required style="resize: vertical; font-family: inherit; line-height: 1.5;"></textarea>
+                        <small style="color:var(--text-gray); font-style:italic;">Variabel `$nama`, `$odp`, dan `$odc` akan digantikan secara otomatis pada pesan tujuan.</small>
+                    </div>
+                </div>
+
+                <!-- Right Target Client List -->
+                <div id="odc_clients_container" style="display: none; width: 100%;">
+                    <label style="font-size: 0.88rem; font-weight: 600; color: #334155; display:block; margin-bottom:8px;">Klien Terkoneksi Pada ODC (Melalui ODP Terkait)</label>
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th width="8%" style="text-align: center;"><input type="checkbox" id="check_all_odc_clients" checked></th>
+                                    <th width="20%">Kode Klien</th>
+                                    <th>Nama Pelanggan</th>
+                                    <th width="20%">ODP</th>
+                                    <th width="25%">No. WhatsApp</th>
+                                </tr>
+                            </thead>
+                            <tbody id="odc_clients_tbody">
+                                <!-- Loaded via AJAX -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div style="margin-top: 16px; font-size:0.8rem; color:var(--text-gray);">
+                        * Hanya pelanggan yang dicentang yang akan menerima pesan siaran/broadcast WhatsApp ini.
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; margin-top: 24px; border-top: 1px solid var(--border-color); padding-top:16px;">
+                <button type="submit" class="btn btn-primary" id="btn_send_odc" disabled style="padding: 12px 24px;">
+                    <i class="fa-solid fa-bullhorn"></i> Kirim Broadcast ODC
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <!-- Modal Progress Broadcast WhatsApp -->
 <div class="modal" id="broadcastProgressModal">
     <div class="modal-content" style="width: min(600px, 100%);">
@@ -472,9 +548,12 @@
         if (tabId === 'tab-general') {
             document.getElementById('btn-tab-general').classList.add('active');
             document.getElementById('tab-general').classList.add('active');
-        } else {
+        } else if (tabId === 'tab-odp') {
             document.getElementById('btn-tab-odp').classList.add('active');
             document.getElementById('tab-odp').classList.add('active');
+        } else {
+            document.getElementById('btn-tab-odc').classList.add('active');
+            document.getElementById('tab-odc').classList.add('active');
         }
     }
 
@@ -621,6 +700,93 @@
                 };
 
                 triggerBroadcastAjax('{{ route("admin.broadcast.odp") }}', data, 'ODP Maintenance Broadcast');
+            });
+        }
+
+        // ODC dropdown trigger to load clients via AJAX
+        const selectOdc = document.getElementById('select_odc');
+        if (selectOdc) {
+            selectOdc.addEventListener('change', function() {
+                const id = this.value;
+                if (!id) {
+                    document.getElementById('odc_clients_container').style.display = 'none';
+                    return;
+                }
+                
+                // Show loading placeholder
+                const tbody = document.getElementById('odc_clients_tbody');
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:20px; color:var(--text-gray);"><i class="fa-solid fa-circle-notch fa-spin"></i> Memuat data pelanggan...</td></tr>`;
+                document.getElementById('odc_clients_container').style.display = 'block';
+
+                fetch(`{{ url('administrator/broadcast/odc-clients') }}/${id}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        tbody.innerHTML = '';
+                        if (data.length === 0) {
+                            tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-gray); padding:20px; font-style:italic;">Tidak ada pelanggan yang terhubung ke ODC ini.</td></tr>`;
+                            document.getElementById('btn_send_odc').disabled = true;
+                            return;
+                        }
+                        
+                        document.getElementById('btn_send_odc').disabled = false;
+                        data.forEach((client) => {
+                            const tr = document.createElement('tr');
+                            tr.innerHTML = `
+                                <td align="center"><input type="checkbox" name="client_ids[]" value="${client.id_pelanggan}" class="odc-client-checkbox" checked></td>
+                                <td>${client.kode_pelanggan}</td>
+                                <td><strong>${client.nama_pelanggan}</strong></td>
+                                <td><span class="badge" style="background-color: #f1f5f9; color: #475569; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem;">${client.nama_odp}</span></td>
+                                <td>${client.no_telp || '-'}</td>
+                            `;
+                            tbody.appendChild(tr);
+                        });
+
+                        // Prefill text template
+                        const odcName = selectOdc.options[selectOdc.selectedIndex].text;
+                        document.getElementById('odc_message_template').value = `Pemberitahuan: Yhat. pelanggan Bapak/Ibu $nama. Terkait adanya perbaikan/pemeliharaan jaringan pada perangkat utama ODC ${odcName}, saat ini koneksi internet Anda melalui ODP $odp mengalami gangguan sementara. Petugas kami sedang berupaya melakukan perbaikan secepatnya. Mohon maaf atas ketidaknyamanannya.`;
+                    })
+                    .catch(err => {
+                        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#dc2626; padding:20px;">Gagal memuat data pelanggan: ${err.message}</td></tr>`;
+                    });
+            });
+        }
+
+        // ODC Table select all trigger
+        const checkAllOdc = document.getElementById('check_all_odc_clients');
+        if (checkAllOdc) {
+            checkAllOdc.addEventListener('change', function() {
+                const checked = this.checked;
+                document.querySelectorAll('.odc-client-checkbox').forEach(cb => {
+                    cb.checked = checked;
+                });
+            });
+        }
+
+        // ODC submit intercept
+        const formOdc = document.getElementById('form_odc');
+        if (formOdc) {
+            formOdc.addEventListener('submit', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                const clientIds = Array.from(document.querySelectorAll('.odc-client-checkbox:checked')).map(el => el.value);
+                if (clientIds.length === 0) {
+                    alert('Silakan pilih setidaknya satu pelanggan.');
+                    return;
+                }
+
+                if (!confirm('Kirim broadcast maintenance ke pelanggan ODC terpilih via WhatsApp?')) return;
+
+                const idOdc = document.getElementById('select_odc').value;
+                const pesan = document.getElementById('odc_message_template').value;
+
+                const data = {
+                    id_odc: idOdc,
+                    pesan: pesan,
+                    client_ids: clientIds
+                };
+
+                triggerBroadcastAjax('{{ route("admin.broadcast.odc") }}', data, 'ODC Maintenance Broadcast');
             });
         }
     });

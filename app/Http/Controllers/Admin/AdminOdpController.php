@@ -13,7 +13,7 @@ class AdminOdpController extends Controller
     public function index(Request $request)
     {
         $odp = Odp::with(['odcDetail', 'pelanggans.paketDetail'])->withCount('pelanggans')->orderBy('id_odp', 'desc')->get();
-        $odc = Odc::orderBy('nama_odc')->get();
+        $odc = Odc::where('jenis_odc', 'distribusi')->orderBy('nama_odc')->get();
         return view('admin.odp.index', compact('odp', 'odc'));
     }
 
@@ -26,6 +26,11 @@ class AdminOdpController extends Controller
             'odc' => 'required|integer|exists:tbl_odc,id_odc',
             'redaman' => 'nullable|string|max:50',
         ]);
+
+        $odcCheck = Odc::where('id_odc', $request->odc)->first();
+        if (!$odcCheck || $odcCheck->jenis_odc !== 'distribusi') {
+            return back()->withErrors(['odc' => 'ODP hanya dapat dihubungkan ke ODC jenis Distribusi.'])->withInput();
+        }
 
         Odp::create([
             'nama_odp' => $request->nama_odp,
@@ -48,6 +53,11 @@ class AdminOdpController extends Controller
             'odc' => 'required|integer|exists:tbl_odc,id_odc',
             'redaman' => 'nullable|string|max:50',
         ]);
+
+        $odcCheck = Odc::where('id_odc', $request->odc)->first();
+        if (!$odcCheck || $odcCheck->jenis_odc !== 'distribusi') {
+            return back()->withErrors(['odc' => 'ODP hanya dapat dihubungkan ke ODC jenis Distribusi.'])->withInput();
+        }
 
         $odp = Odp::findOrFail($request->id_odp);
         $odp->update([

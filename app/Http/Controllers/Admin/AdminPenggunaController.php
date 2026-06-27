@@ -12,10 +12,10 @@ class AdminPenggunaController extends Controller
     public function index()
     {
         // Tampilkan akun staff dan administrator
-        $users = User::whereIn('level', ['admin', 'kasir', 'teknisi', 'sales', 'mitra'])->orderBy('id', 'desc')->get();
+        $users = User::whereIn('level', ['admin', 'kasir', 'teknisi', 'sales', 'mitra', 'noc'])->orderBy('id', 'desc')->get();
         // Tampilkan akun pelanggan (eager load pelanggan dan paket detail)
         $customerUsers = User::with('pelanggan.paketDetail')
-            ->whereNotIn('level', ['admin', 'kasir', 'teknisi', 'sales', 'mitra'])
+            ->whereNotIn('level', ['admin', 'kasir', 'teknisi', 'sales', 'mitra', 'noc'])
             ->orderBy('id', 'desc')
             ->get();
         return view('admin.pengguna.index', compact('users', 'customerUsers'));
@@ -27,10 +27,10 @@ class AdminPenggunaController extends Controller
             'username' => 'required|string|unique:tb_user,username',
             'nama_user' => 'required|string',
             'password' => 'required|string',
-            'level' => 'required|string|in:admin,kasir,teknisi,sales,mitra',
+            'level' => 'required|string|in:admin,kasir,teknisi,sales,mitra,noc',
         ]);
 
-        User::create([
+        $user = User::create([
             'username' => htmlspecialchars(strip_tags($request->username)),
             'nama_user' => htmlspecialchars(strip_tags($request->nama_user)),
             'password' => $request->password, // Automatically hashed via model cast
@@ -38,6 +38,17 @@ class AdminPenggunaController extends Controller
             'foto' => 'admin.png',
             'id_pelanggan' => 0, // 0 menandakan staff bukan client
         ]);
+
+        // If NOC, insert default menu permissions
+        if ($request->level === 'noc') {
+            $nocMenus = ['dashboard', 'monitoring', 'order_pemasangan', 'tr069', 'odp', 'odc', 'mapping', 'pelanggan'];
+            foreach ($nocMenus as $menuKey) {
+                DB::table('tb_user_menu_access')->insert([
+                    'id_user' => $user->id,
+                    'menu_key' => $menuKey,
+                ]);
+            }
+        }
 
         return redirect()->route('admin.pengguna.index')->with('success', 'Akun staff berhasil ditambahkan!');
     }
@@ -49,7 +60,7 @@ class AdminPenggunaController extends Controller
             'username' => 'required|string|unique:tb_user,username,' . $request->id,
             'nama_user' => 'required|string',
             'password' => 'nullable|string',
-            'level' => 'required|string|in:admin,kasir,teknisi,sales,mitra,user',
+            'level' => 'required|string|in:admin,kasir,teknisi,sales,mitra,noc,user',
         ]);
 
         $user = User::findOrFail($request->id);

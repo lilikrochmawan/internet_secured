@@ -335,6 +335,7 @@ class AdminPelangganController extends Controller
             'id_mikrotik' => 'required|integer',
             'id_branch' => 'nullable|integer',
             'id_sub_branch' => 'nullable|integer',
+            'jatuh_tempo' => 'required|date',
         ]);
 
         $id = $request->id_pelanggan;
@@ -352,6 +353,7 @@ class AdminPelangganController extends Controller
         $mapping = $request->mapping;
         $id_branch = $request->id_branch ? intval($request->id_branch) : null;
         $id_sub_branch = $request->id_sub_branch ? intval($request->id_sub_branch) : null;
+        $new_jatuh_tempo = $request->jatuh_tempo . ' 23:59:00';
 
         // Update tb_pelanggan
         DB::table('tb_pelanggan')->where('id_pelanggan', $id)->update([
@@ -367,7 +369,33 @@ class AdminPelangganController extends Controller
             'id_mikrotik' => $id_mikrotik,
             'id_branch' => $id_branch,
             'id_sub_branch' => $id_sub_branch,
+            'jatuh_tempo' => $new_jatuh_tempo,
         ]);
+
+        // Update unpaid bills' due dates to match the new due day
+        $unpaidBills = DB::table('tb_tagihan')
+            ->where('id_pelanggan', $id)
+            ->whereNull('status_bayar')
+            ->get();
+
+        $new_due_day = (int) date('d', strtotime($new_jatuh_tempo));
+
+        foreach ($unpaidBills as $bill) {
+            if ($bill->jatuh_tempo) {
+                $bill_date = new \DateTime($bill->jatuh_tempo);
+                $bill_year = $bill_date->format('Y');
+                $bill_month = $bill_date->format('m');
+                
+                $days_in_month = (int) date('t', strtotime($bill_year . '-' . $bill_month . '-01'));
+                $adjusted_day = ($new_due_day > $days_in_month) ? $days_in_month : $new_due_day;
+                
+                $new_bill_due = sprintf('%04d-%02d-%02d 23:59:00', $bill_year, $bill_month, $adjusted_day);
+                
+                DB::table('tb_tagihan')
+                    ->where('id_tagihan', $bill->id_tagihan)
+                    ->update(['jatuh_tempo' => $new_bill_due]);
+            }
+        }
 
         // Update tb_user name associated
         DB::table('tb_user')->where('id_pelanggan', $id)->update([
