@@ -3,10 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Pelanggan</title>
+    <title>Dashboard Pelanggan - {{ $profile->nama_sekolah ?? 'Indotel Billing' }}</title>
     <!-- Favicon -->
-    <link rel="shortcut icon" href="{{ asset('favicon.ico?v=3') }}" type="image/x-icon">
-    <link rel="icon" type="image/png" href="{{ asset('favicon.png?v=3') }}">
+    @if(!empty($profile->foto) && file_exists(public_path('images/' . $profile->foto)))
+        <link rel="shortcut icon" href="{{ asset('images/' . $profile->foto) }}" type="image/x-icon">
+        <link rel="icon" type="image/png" href="{{ asset('images/' . $profile->foto) }}">
+    @else
+        <link rel="shortcut icon" href="{{ asset('favicon.ico?v=3') }}" type="image/x-icon">
+        <link rel="icon" type="image/png" href="{{ asset('favicon.png?v=3') }}">
+    @endif
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
     <!-- FontAwesome Icons -->
@@ -782,15 +787,6 @@
                 </div>
                 <div style="display: flex; flex-direction: column; min-width: 0;">
                     <span class="brand-name" style="font-size: 1.1rem; line-height: 1.2;">{{ $profile->nama_sekolah ?? 'LOTUS COMPUTAMA TEKNIK' }}</span>
-                    @if(!empty($profile->license_key))
-                        <span class="badge-license" style="font-size: 0.65rem; background: rgba(255,255,255,0.2); color: #ffffff; padding: 2px 6px; border-radius: 4px; display: inline-block; width: max-content; margin-top: 4px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; line-height: 1; border: 1px solid rgba(255,255,255,0.15); -webkit-text-fill-color: initial; font-family: 'Outfit', sans-serif;">
-                            (License: {{ $profile->license_plan_name ?? 'Lite' }})
-                        </span>
-                    @else
-                        <span class="badge-license" style="font-size: 0.65rem; background: rgba(239, 68, 68, 0.2); color: #fca5a5; padding: 2px 6px; border-radius: 4px; display: inline-block; width: max-content; margin-top: 4px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; line-height: 1; -webkit-text-fill-color: initial; font-family: 'Outfit', sans-serif;">
-                            No License
-                        </span>
-                    @endif
                 </div>
             </a>
 

@@ -70,6 +70,17 @@ class AutoBlockPelanggan extends Command
                 continue;
             }
 
+            // Cek apakah tagihan terbaru pelanggan ini sudah lunas. Jika lunas, abaikan blokir untuk tagihan lama.
+            $latestBill = Tagihan::where('id_pelanggan', $pelanggan->id_pelanggan)
+                ->orderBy('id_tagihan', 'desc')
+                ->first();
+
+            if ($latestBill && $latestBill->status_bayar == 1) {
+                $this->info("Pelanggan {$pelanggan->nama_pelanggan} memiliki tagihan menunggak (ID {$tx->id_tagihan}), tetapi tagihan terbaru sudah lunas. Lewati blokir.");
+                Log::info("AutoBlockPelanggan: Pelanggan {$pelanggan->nama_pelanggan} memiliki tagihan menunggak (ID {$tx->id_tagihan}), tetapi tagihan terbaru sudah lunas. Lewati blokir.");
+                continue;
+            }
+
             $id_mikrotik = $pelanggan->id_mikrotik ?: 1;
             $user = User::where('id_pelanggan', $pelanggan->id_pelanggan)->first();
 

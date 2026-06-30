@@ -239,43 +239,44 @@ class AdminPengaturanController extends Controller
 
             // Sinkronisasi jatuh_tempo pelanggan dan tagihan yang belum lunas
             $pelanggans = DB::table('tb_pelanggan')->get();
-            $current_month_code = date('mY'); // format 'mY' e.g. '062026'
 
             foreach ($pelanggans as $pelanggan) {
-                // Cari apakah ada tagihan belum dibayar
-                $unpaidBill = DB::table('tb_tagihan')
+                // Cari tagihan terbaru (berdasarkan id_tagihan desc)
+                $latestBill = DB::table('tb_tagihan')
                     ->where('id_pelanggan', $pelanggan->id_pelanggan)
-                    ->whereNull('status_bayar')
                     ->orderBy('id_tagihan', 'desc')
                     ->first();
 
-                if ($unpaidBill) {
-                    // Ada tagihan belum dibayar. Hitung jatuh tempo berdasarkan bulan_tahun tagihan tersebut.
-                    $bulan_tahun = $unpaidBill->bulan_tahun;
+                if ($latestBill) {
+                    $bulan_tahun = $latestBill->bulan_tahun;
                     if (is_string($bulan_tahun) && strlen($bulan_tahun) === 6) {
                         $target_month = (int) substr($bulan_tahun, 0, 2);
                         $target_year = (int) substr($bulan_tahun, 2, 4);
                     } else {
-                        // Fallback jika format salah
                         $target_month = (int) date('m');
                         $target_year = (int) date('Y');
                     }
 
-                    // Tentukan bulan berdasarkan prabayar/pascabayar
                     $date = \Carbon\Carbon::create($target_year, $target_month, 1);
+                    
+                    // Jika tagihan terbaru sudah lunas, jatuh tempo pelanggan ada di bulan berikutnya
+                    if ($latestBill->status_bayar == 1) {
+                        $date->addMonth();
+                    }
+                    
                     if ($sistem === 'pascabayar') {
                         $date->addMonth();
                     }
                     $year = $date->year;
                     $month = $date->month;
                 } else {
-                    // Tidak ada tagihan belum dibayar. Maka jatuh tempo berikutnya di bulan depan.
+                    // Tidak ada tagihan sama sekali. Maka jatuh tempo berikutnya di bulan depan.
                     $date = \Carbon\Carbon::now()->addMonth();
                     $year = $date->year;
                     $month = $date->month;
                 }
 
-                // Hitung hari jatuh tempo
+                // Hitung hari jatuh tempo untuk pelanggan
                 $due_day = $default_hari;
                 if ($tipe === 'tanggal_pasang' && !empty($pelanggan->tgl_pemasangan)) {
                     $due_day = (int) date('d', strtotime($pelanggan->tgl_pemasangan));
@@ -295,11 +296,44 @@ class AdminPengaturanController extends Controller
                     ->where('id_pelanggan', $pelanggan->id_pelanggan)
                     ->update(['jatuh_tempo' => $new_jatuh_tempo]);
 
-                // Update data tagihan yang belum dibayar
-                DB::table('tb_tagihan')
+                // Update data tagihan yang belum dibayar secara individu sesuai bulan/tahun masing-masing
+                $unpaidBills = DB::table('tb_tagihan')
                     ->where('id_pelanggan', $pelanggan->id_pelanggan)
                     ->whereNull('status_bayar')
-                    ->update(['jatuh_tempo' => $new_jatuh_tempo]);
+                    ->get();
+
+                foreach ($unpaidBills as $bill) {
+                    $bill_bulan_tahun = $bill->bulan_tahun;
+                    if (is_string($bill_bulan_tahun) && strlen($bill_bulan_tahun) === 6) {
+                        $bill_month = (int) substr($bill_bulan_tahun, 0, 2);
+                        $bill_year = (int) substr($bill_bulan_tahun, 2, 4);
+                    } else {
+                        continue;
+                    }
+
+                    $bill_date = \Carbon\Carbon::create($bill_year, $bill_month, 1);
+                    if ($sistem === 'pascabayar') {
+                        $bill_date->addMonth();
+                    }
+                    
+                    $b_year = $bill_date->year;
+                    $b_month = $bill_date->month;
+                    $b_day = $default_hari;
+                    if ($tipe === 'tanggal_pasang' && !empty($pelanggan->tgl_pemasangan)) {
+                        $b_day = (int) date('d', strtotime($pelanggan->tgl_pemasangan));
+                    }
+
+                    $days_in_bill_month = (int) date('t', strtotime($b_year . '-' . sprintf('%02d', $b_month) . '-01'));
+                    if ($b_day > $days_in_bill_month) {
+                        $b_day = $days_in_bill_month;
+                    }
+
+                    $bill_new_due = sprintf('%04d-%02d-%02d 23:59:00', $b_year, $b_month, $b_day);
+
+                    DB::table('tb_tagihan')
+                        ->where('id_tagihan', $bill->id_tagihan)
+                        ->update(['jatuh_tempo' => $bill_new_due]);
+                }
             }
 
             DB::commit();

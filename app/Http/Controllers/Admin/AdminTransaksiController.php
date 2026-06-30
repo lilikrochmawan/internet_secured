@@ -124,6 +124,7 @@ class AdminTransaksiController extends Controller
             'waktu_bayar' => Carbon::now()->format('Y-m-d H:i:s'),
             'user_id' => Auth::id(), // ID staff yang menerima pembayaran
             'terbayar' => $tagihan->jml_bayar, // Set terbayar to jml_bayar
+            'blokir_status' => null, // Bersihkan status blokir karena sudah dibayar
         ]);
 
         if ($pelanggan) {
@@ -163,6 +164,71 @@ class AdminTransaksiController extends Controller
             $pelanggan->update([
                 'jatuh_tempo' => $tgl_jatuh_tempo
             ]);
+
+            // Otomatis unblock Mikrotik jika tagihan terbaru lunas
+            $latestBill = DB::table('tb_tagihan')
+                ->where('id_pelanggan', $pelanggan->id_pelanggan)
+                ->orderBy('id_tagihan', 'desc')
+                ->first();
+
+            if ($latestBill && $latestBill->status_bayar == 1) {
+                try {
+                    $user = User::where('id_pelanggan', $pelanggan->id_pelanggan)->first();
+                    $checkUser = DB::table('tbl_penggunamikrotik')->first();
+                    $id_mikrotik = $pelanggan->id_mikrotik ?: 1;
+                    $mikrotik = DB::table('tbl_mikrotik')->where('id_mikrotik', $id_mikrotik)->first();
+
+                    $ip_address = ($checkUser && ($checkUser->status == 'ya' || $checkUser->ippelanggan == 'dynamic'))
+                        ? ($user ? $user->username : null)
+                        : $pelanggan->ip_address;
+
+                    if ($mikrotik && $ip_address) {
+                        require_once base_path('include/routeros_api.php');
+                        $API = new \RouterosAPI();
+
+                        if ($API->connect($mikrotik->ip, $mikrotik->username, $mikrotik->password)) {
+                            if ($checkUser && $checkUser->ippelanggan == 'statik') {
+                                $commentToSearch = "Blokir Bulanan " . $ip_address;
+                                $API->write('/ip/firewall/address-list/print', false);
+                                $API->write('?comment=' . $commentToSearch);
+                                $ips = $API->read();
+
+                                if (!empty($ips)) {
+                                    foreach ($ips as $ip_data) {
+                                        $API->write('/ip/firewall/address-list/remove', false);
+                                        $API->write('=.id=' . $ip_data['.id']);
+                                        $API->read();
+                                    }
+                                }
+                            } else {
+                                if ($user) {
+                                    $paket = DB::table('tb_paket')->where('id_paket', $pelanggan->paket)->first();
+                                    $profile = $paket ? $paket->id_pmikrotik : 'default';
+
+                                    $API->comm('/ppp/secret/set', [
+                                        'numbers' => $ip_address,
+                                        'profile' => $profile
+                                    ]);
+                                    $API->comm('/ppp/secret/enable', ['numbers' => $ip_address]);
+
+                                    // Putuskan koneksi aktif agar langsung dial ulang dengan profile baru
+                                    $activeConnections = $API->comm('/ppp/active/print', [
+                                        '?name' => $ip_address,
+                                    ]);
+                                    foreach ($activeConnections as $conn) {
+                                        $API->comm('/ppp/active/remove', [
+                                            '.id' => $conn['.id'],
+                                        ]);
+                                    }
+                                }
+                            }
+                            $API->disconnect();
+                        }
+                    }
+                } catch (\Exception $e) {
+                    \Log::error('Manual Payment Mikrotik Unblock Error: ' . $e->getMessage());
+                }
+            }
             
             // Catat di tb_kas jika belum ada
             $existsInKas = DB::table('tb_kas')->where('id_tagihan', $tagihan->id_tagihan)->exists();
