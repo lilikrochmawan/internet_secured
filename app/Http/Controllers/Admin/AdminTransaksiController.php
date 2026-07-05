@@ -185,6 +185,9 @@ class AdminTransaksiController extends Controller
                     if ($mikrotik && $ip_address) {
                         require_once base_path('include/routeros_api.php');
                         $API = new \RouterosAPI();
+                        $API->timeout = 2;
+                        $API->attempts = 1;
+                        $API->delay = 1;
 
                         if ($API->connect($mikrotik->ip, $mikrotik->username, $mikrotik->password)) {
                             if ($checkUser && $checkUser->ippelanggan == 'statik') {
@@ -242,6 +245,31 @@ class AdminTransaksiController extends Controller
                     'penerimaan' => $tagihan->jml_bayar,
                     'id_tagihan' => $tagihan->id_tagihan
                 ]);
+            }
+
+            // Kirim Notifikasi WhatsApp Pembayaran Sukses
+            try {
+                $row_token = DB::table('tbl_token')->where('id_token', 1)->first();
+                $bayar = DB::table('tbl_notifbayar')->first();
+
+                if ($row_token && !empty($row_token->token) && $bayar && !empty($bayar->pesan_bayar) && !empty($pelanggan->no_telp)) {
+                    $sekarangs = date('d F Y H:i:s');
+                    $pesanBayar = $bayar->pesan_bayar;
+                    $pesanBayar = str_replace('$nama', $pelanggan->nama_pelanggan, $pesanBayar);
+                    $pesanBayar = str_replace('$tagihan', number_format($tagihan->jml_bayar, 0, ',', '.'), $pesanBayar);
+                    $pesanBayar = str_replace('$harinin', $sekarangs, $pesanBayar);
+                    $pesanBayar = str_replace('$no_telp', $pelanggan->no_telp, $pesanBayar);
+
+                    Http::timeout(10)->withHeaders([
+                        'Authorization' => $row_token->token
+                    ])->asForm()->post('https://api.fonnte.com/send', [
+                        'target' => $pelanggan->no_telp,
+                        'message' => $pesanBayar,
+                        'countryCode' => '62'
+                    ]);
+                }
+            } catch (\Exception $e) {
+                \Log::error('Manual Payment WhatsApp Notification Error: ' . $e->getMessage());
             }
         }
 
@@ -332,6 +360,9 @@ class AdminTransaksiController extends Controller
 
         require_once base_path('include/routeros_api.php');
         $API = new \RouterosAPI();
+        $API->timeout = 2;
+        $API->attempts = 1;
+        $API->delay = 1;
 
         if ($API->connect($mikrotik->ip, $mikrotik->username, $mikrotik->password)) {
             if ($checkUser && $checkUser->ippelanggan == 'statik') {
@@ -399,6 +430,9 @@ class AdminTransaksiController extends Controller
 
         require_once base_path('include/routeros_api.php');
         $API = new \RouterosAPI();
+        $API->timeout = 2;
+        $API->attempts = 1;
+        $API->delay = 1;
 
         if ($API->connect($mikrotik->ip, $mikrotik->username, $mikrotik->password)) {
             if ($checkUser && $checkUser->ippelanggan == 'statik') {
@@ -482,7 +516,7 @@ class AdminTransaksiController extends Controller
         $pesan = str_replace('$hari_ini', \Carbon\Carbon::now()->translatedFormat('d F Y'), $pesan);
 
         // Kirim via Fonnte API
-        $response = Http::withHeaders([
+        $response = Http::timeout(10)->withHeaders([
             'Authorization' => $tokenInfo->token
         ])->asForm()->post('https://api.fonnte.com/send', [
             'target' => $pelanggan->no_telp,
@@ -680,7 +714,7 @@ class AdminTransaksiController extends Controller
         $pesan = str_replace('$sekarang_format', Carbon::now()->translatedFormat('d F Y H:i') . ' WIB', $pesan);
 
         // Kirim via Fonnte API
-        $response = Http::withHeaders([
+        $response = Http::timeout(10)->withHeaders([
             'Authorization' => $tokenInfo->token
         ])->asForm()->post('https://api.fonnte.com/send', [
             'target' => $pelanggan->no_telp,
@@ -989,6 +1023,9 @@ class AdminTransaksiController extends Controller
 
             $user = User::where('id_pelanggan', $pelanggan->id_pelanggan)->first();
             $API = new \RouterosAPI();
+            $API->timeout = 2;
+            $API->attempts = 1;
+            $API->delay = 1;
 
             $blockedOnMikrotik = false;
             if ($API->connect($mikrotik->ip, $mikrotik->username, $mikrotik->password)) {
