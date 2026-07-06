@@ -208,20 +208,36 @@ class AdminTransaksiController extends Controller
                                     $paket = DB::table('tb_paket')->where('id_paket', $pelanggan->paket)->first();
                                     $profile = $paket ? $paket->id_pmikrotik : 'default';
 
-                                    $API->comm('/ppp/secret/set', [
-                                        'numbers' => $ip_address,
-                                        'profile' => $profile
-                                    ]);
-                                    $API->comm('/ppp/secret/enable', ['numbers' => $ip_address]);
-
-                                    // Putuskan koneksi aktif agar langsung dial ulang dengan profile baru
-                                    $activeConnections = $API->comm('/ppp/active/print', [
+                                    $secrets = $API->comm('/ppp/secret/print', [
                                         '?name' => $ip_address,
                                     ]);
-                                    foreach ($activeConnections as $conn) {
-                                        $API->comm('/ppp/active/remove', [
-                                            '.id' => $conn['.id'],
+
+                                    $isCurrentlyBlocked = false;
+                                    if (!empty($secrets)) {
+                                        $secret = $secrets[0];
+                                        $currentProfile = $secret['profile'] ?? '';
+                                        $isDisabled = ($secret['disabled'] ?? 'false') === 'true';
+                                        if ($currentProfile === 'pppoe-isolir' || $isDisabled) {
+                                            $isCurrentlyBlocked = true;
+                                        }
+                                    }
+
+                                    if ($isCurrentlyBlocked) {
+                                        $API->comm('/ppp/secret/set', [
+                                            'numbers' => $ip_address,
+                                            'profile' => $profile
                                         ]);
+                                        $API->comm('/ppp/secret/enable', ['numbers' => $ip_address]);
+
+                                        // Putuskan koneksi aktif agar langsung dial ulang dengan profile baru
+                                        $activeConnections = $API->comm('/ppp/active/print', [
+                                            '?name' => $ip_address,
+                                        ]);
+                                        foreach ($activeConnections as $conn) {
+                                            $API->comm('/ppp/active/remove', [
+                                                '.id' => $conn['.id'],
+                                            ]);
+                                        }
                                     }
                                 }
                             }
@@ -455,22 +471,38 @@ class AdminTransaksiController extends Controller
                     $paket = DB::table('tb_paket')->where('id_paket', $pelanggan->paket)->first();
                     $profile = $paket ? $paket->id_pmikrotik : 'default';
 
-                    $API->comm("/ppp/secret/set", [
-                        "numbers" => $user->username,
-                        "profile" => $profile,
-                    ]);
-                    $API->comm("/ppp/secret/enable", [
-                        "numbers" => $user->username,
+                    $secrets = $API->comm('/ppp/secret/print', [
+                        '?name' => $user->username,
                     ]);
 
-                    // Putuskan koneksi aktif agar langsung dial ulang dengan profile baru
-                    $activeConnections = $API->comm("/ppp/active/print", [
-                        "?name" => $user->username,
-                    ]);
-                    foreach ($activeConnections as $conn) {
-                        $API->comm("/ppp/active/remove", [
-                            ".id" => $conn['.id'],
+                    $isCurrentlyBlocked = false;
+                    if (!empty($secrets)) {
+                        $secret = $secrets[0];
+                        $currentProfile = $secret['profile'] ?? '';
+                        $isDisabled = ($secret['disabled'] ?? 'false') === 'true';
+                        if ($currentProfile === 'pppoe-isolir' || $isDisabled) {
+                            $isCurrentlyBlocked = true;
+                        }
+                    }
+
+                    if ($isCurrentlyBlocked) {
+                        $API->comm("/ppp/secret/set", [
+                            "numbers" => $user->username,
+                            "profile" => $profile,
                         ]);
+                        $API->comm("/ppp/secret/enable", [
+                            "numbers" => $user->username,
+                        ]);
+
+                        // Putuskan koneksi aktif agar langsung dial ulang dengan profile baru
+                        $activeConnections = $API->comm("/ppp/active/print", [
+                            "?name" => $user->username,
+                        ]);
+                        foreach ($activeConnections as $conn) {
+                            $API->comm("/ppp/active/remove", [
+                                ".id" => $conn['.id'],
+                            ]);
+                        }
                     }
                 }
             }
