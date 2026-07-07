@@ -318,7 +318,15 @@
                 @forelse($kas as $index => $k)
                     <tr>
                         <td class="text-center">{{ $index + 1 }}</td>
-                        <td>{{ \Carbon\Carbon::parse($k->tgl_kas)->translatedFormat('d M Y') }}</td>
+                        <td>
+                            {{ \Carbon\Carbon::parse($k->tgl_kas)->translatedFormat('d M Y') }}
+                            @if(!empty($k->waktu_bayar))
+                                <br>
+                                <small style="color: #64748b; font-size: 0.75rem;">
+                                    {{ \Carbon\Carbon::parse($k->waktu_bayar)->format('H:i') }}
+                                </small>
+                            @endif
+                        </td>
                         <td>{{ html_entity_decode($k->keterangan) }}</td>
                         <td class="text-right text-success" style="font-weight: 500;">
                             {{ $k->penerimaan > 0 ? 'Rp ' . number_format($k->penerimaan, 0, ',', '.') : '-' }}

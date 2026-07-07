@@ -464,6 +464,13 @@
                         <td>
                             <strong>{{ $tx->pelanggan->nama_pelanggan ?? 'N/A' }}</strong><br>
                             <small style="color:var(--text-gray); font-family: monospace;">{{ $tx->pelanggan->kode_pelanggan ?? '-' }}</small>
+                            @if(!empty($tx->pelanggan->alamat))
+                                <br>
+                                <span style="font-size: 0.8rem; color: var(--text-gray); display: inline-flex; align-items: center; gap: 4px; margin-top: 2px;">
+                                    <i class="fa-solid fa-location-dot" style="color: #64748b;"></i>
+                                    {{ $tx->pelanggan->alamat }}
+                                </span>
+                            @endif
                             @if($tx->manual_invoice == 1)
                                 <br>
                                 <span class="badge badge-info" style="font-size: 0.65rem; padding: 2px 6px; margin-top: 4px; display: inline-block;">Manual Invoice</span>
@@ -1109,11 +1116,19 @@
                     }">${cashier}</span>`;
 
                     const tr = document.createElement('tr');
+                    const customerAddress = tx.pelanggan && tx.pelanggan.alamat ? tx.pelanggan.alamat : '';
+                    const addressHtml = customerAddress 
+                        ? `<br><span style="font-size: 0.8rem; color: var(--text-gray); display: inline-flex; align-items: center; gap: 4px; margin-top: 2px;">
+                            <i class="fa-solid fa-location-dot" style="color: #64748b;"></i>
+                            ${customerAddress}
+                           </span>` 
+                        : '';
                     tr.innerHTML = `
                         <td>${rowNo}</td>
                         <td>
                             <strong>${customerName}</strong><br>
                             <small style="color:var(--text-gray); font-family: monospace;">${customerCode}</small>
+                            ${addressHtml}
                         </td>
                         <td>${period}</td>
                         <td><strong>${amount}</strong></td>

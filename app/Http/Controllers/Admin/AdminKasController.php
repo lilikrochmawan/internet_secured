@@ -11,7 +11,11 @@ class AdminKasController extends Controller
 {
     public function index()
     {
-        $kas = DB::table('tb_kas')->orderBy('id_kas', 'desc')->get();
+        $kas = DB::table('tb_kas')
+            ->leftJoin('tb_tagihan', 'tb_tagihan.id_tagihan', '=', 'tb_kas.id_tagihan')
+            ->select('tb_kas.*', 'tb_tagihan.waktu_bayar')
+            ->orderBy('tb_kas.id_kas', 'desc')
+            ->get();
 
         $total_masuk = DB::table('tb_kas')->sum('penerimaan') ?? 0;
         $total_keluar = DB::table('tb_kas')->sum('pengeluaran') ?? 0;
@@ -90,7 +94,10 @@ class AdminKasController extends Controller
     public function printReport(Request $request)
     {
         $tipe = $request->get('tipe', 'bulanan');
-        $query = DB::table('tb_kas')->orderBy('tgl_kas', 'asc');
+        $query = DB::table('tb_kas')
+            ->leftJoin('tb_tagihan', 'tb_tagihan.id_tagihan', '=', 'tb_kas.id_tagihan')
+            ->select('tb_kas.*', 'tb_tagihan.waktu_bayar')
+            ->orderBy('tb_kas.tgl_kas', 'asc');
         $title = 'Laporan Kas';
 
         if ($tipe === 'harian') {

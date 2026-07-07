@@ -400,7 +400,16 @@
                 @forelse($kas as $index => $k)
                     <tr>
                         <td>{{ $index + 1 }}</td>
-                        <td>{{ Carbon\Carbon::parse($k->tgl_kas)->translatedFormat('d F Y') }}</td>
+                        <td>
+                            {{ Carbon\Carbon::parse($k->tgl_kas)->translatedFormat('d F Y') }}
+                            @if(!empty($k->waktu_bayar))
+                                <br>
+                                <span style="color:var(--text-gray); font-size: 0.8rem; display: inline-flex; align-items: center; gap: 4px; margin-top: 2px;">
+                                    <i class="fa-regular fa-clock"></i>
+                                    {{ Carbon\Carbon::parse($k->waktu_bayar)->format('H:i') }}
+                                </span>
+                            @endif
+                        </td>
                         <td><strong>{{ html_entity_decode($k->keterangan) }}</strong></td>
                         <td style="color:#16a34a; font-weight:600;">{{ $k->penerimaan > 0 ? 'Rp ' . number_format($k->penerimaan, 0, ',', '.') : '-' }}</td>
                         <td style="color:#dc2626; font-weight:600;">{{ $k->pengeluaran > 0 ? 'Rp ' . number_format($k->pengeluaran, 0, ',', '.') : '-' }}</td>
