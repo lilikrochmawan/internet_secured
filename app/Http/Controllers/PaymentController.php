@@ -31,7 +31,39 @@ class PaymentController extends Controller
         $jumlahAkunGabung = count($pelangganIds);
 
         $subtotal = $invoices->sum('amount');
-        $adminFee = (int) round($subtotal * 0.007);
+        
+        $profile = DB::table('tb_profile')->where('id_profile', 1)->first();
+        $feeType = $profile->admin_fee_type ?? 'flat';
+
+        if ($feeType === 'flat') {
+            $adminFee = (int) ($profile->admin_fee_flat ?? 2000);
+        } else {
+            // Sesuai metode pembayaran - default ke metode pertama yang aktif
+            $defaultMethod = 'qris';
+            if (($profile->admin_fee_qris_status ?? 1) == 0) {
+                if (($profile->admin_fee_va_status ?? 1) == 1) {
+                    $defaultMethod = 'va';
+                } elseif (($profile->admin_fee_retail_status ?? 1) == 1) {
+                    $defaultMethod = 'retail';
+                } else {
+                    $defaultMethod = 'none';
+                }
+            }
+
+            if ($defaultMethod === 'qris') {
+                if (($profile->admin_fee_qris_type ?? 'percentage') === 'percentage') {
+                    $adminFee = (int) round($subtotal * (($profile->admin_fee_qris_value ?? 0.70) / 100));
+                } else {
+                    $adminFee = (int) ($profile->admin_fee_qris_value ?? 0);
+                }
+            } elseif ($defaultMethod === 'va') {
+                $adminFee = (int) ($profile->admin_fee_va ?? 4000);
+            } elseif ($defaultMethod === 'retail') {
+                $adminFee = (int) ($profile->admin_fee_retail ?? 3000);
+            } else {
+                $adminFee = 0;
+            }
+        }
         $totalPayment = $subtotal + $adminFee;
 
         $pgate = Pgate::first();
@@ -110,13 +142,49 @@ class PaymentController extends Controller
             ];
         }
 
-        $adminFee = (int) round($subtotal * 0.007);
+        $profile = DB::table('tb_profile')->where('id_profile', 1)->first();
+        $feeType = $profile->admin_fee_type ?? 'flat';
+        $paymentMethod = $request->input('payment_method', 'qris');
+
+        if ($feeType === 'flat') {
+            $adminFee = (int) ($profile->admin_fee_flat ?? 2000);
+            $feeName = 'Biaya Admin';
+        } else {
+            if ($paymentMethod === 'qris') {
+                if (($profile->admin_fee_qris_status ?? 1) == 0) {
+                    return response()->json(['error' => 'Metode pembayaran QRIS dinonaktifkan oleh administrator.'], 422);
+                }
+                if (($profile->admin_fee_qris_type ?? 'percentage') === 'percentage') {
+                    $adminFee = (int) round($subtotal * (($profile->admin_fee_qris_value ?? 0.70) / 100));
+                    $feeName = 'Biaya Admin QRIS (' . ($profile->admin_fee_qris_value ?? 0.70) . '%)';
+                } else {
+                    $adminFee = (int) ($profile->admin_fee_qris_value ?? 0);
+                    $feeName = 'Biaya Admin QRIS';
+                }
+            } elseif ($paymentMethod === 'va') {
+                if (($profile->admin_fee_va_status ?? 1) == 0) {
+                    return response()->json(['error' => 'Metode pembayaran VA dinonaktifkan oleh administrator.'], 422);
+                }
+                $adminFee = (int) ($profile->admin_fee_va ?? 4000);
+                $feeName = 'Biaya Admin VA';
+            } elseif ($paymentMethod === 'retail') {
+                if (($profile->admin_fee_retail_status ?? 1) == 0) {
+                    return response()->json(['error' => 'Metode pembayaran retail dinonaktifkan oleh administrator.'], 422);
+                }
+                $adminFee = (int) ($profile->admin_fee_retail ?? 3000);
+                $feeName = 'Biaya Admin Retail';
+            } else {
+                $adminFee = (int) round($subtotal * 0.007);
+                $feeName = 'Biaya Admin (0,7%)';
+            }
+        }
+
         if ($adminFee > 0) {
             $items[] = [
                 'id' => 'ADMIN-001',
                 'price' => $adminFee,
                 'quantity' => 1,
-                'name' => 'Biaya Admin (0,7%)',
+                'name' => $feeName,
             ];
         }
 
@@ -142,6 +210,16 @@ class PaymentController extends Controller
             ],
             'notification_url' => $notificationUrl,
         ];
+
+        if ($feeType === 'payment_method') {
+            if ($paymentMethod === 'qris') {
+                $payload['enabled_payments'] = ['gopay', 'shopeepay', 'qris'];
+            } elseif ($paymentMethod === 'va') {
+                $payload['enabled_payments'] = ['bca_va', 'bni_va', 'bri_va', 'cimb_va', 'other_va'];
+            } elseif ($paymentMethod === 'retail') {
+                $payload['enabled_payments'] = ['indomaret', 'alfamart'];
+            }
+        }
 
         $isSandbox = $pgate->mode === 'sandbox' || (!$pgate->mode && str_starts_with($pgate->tclientkey, 'SB-'));
         $apiUrl = $isSandbox

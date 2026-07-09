@@ -6,6 +6,114 @@
 <!-- Leaflet CSS -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
 <style>
+    /* Custom Searchable Dropdown Styling */
+    .custom-select-container {
+        position: relative;
+        width: 100%;
+        user-select: none;
+    }
+
+    .custom-select-trigger {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border: 1px solid #cbd5e1;
+        border-radius: 12px;
+        padding: 10px 14px;
+        font-size: 0.95rem;
+        background-color: white;
+        cursor: pointer;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .custom-select-trigger:hover {
+        border-color: #cbd5e1;
+    }
+
+    .custom-select-container.active .custom-select-trigger {
+        border-color: #4f46e5;
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    }
+
+    .custom-select-dropdown {
+        display: none;
+        position: absolute;
+        top: calc(100% + 6px);
+        left: 0;
+        right: 0;
+        background-color: white;
+        border: 1px solid #cbd5e1;
+        border-radius: 16px;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        z-index: 1010;
+        overflow: hidden;
+        animation: slideDown 0.2s ease;
+    }
+
+    .custom-select-container.active .custom-select-dropdown {
+        display: block;
+    }
+
+    .custom-select-search-wrapper {
+        position: relative;
+        padding: 10px 12px;
+        border-bottom: 1px solid #cbd5e1;
+        background-color: #f8fafc;
+    }
+
+    .custom-select-search-wrapper i {
+        position: absolute;
+        left: 22px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #64748b;
+        font-size: 0.85rem;
+    }
+
+    .custom-select-search-input.form-control {
+        padding-left: 32px !important;
+        height: 36px;
+        font-size: 0.88rem;
+        border-radius: 10px;
+        border: 1px solid #e2e8f0;
+        background-color: white;
+    }
+
+    .custom-select-options {
+        max-height: 200px;
+        overflow-y: auto;
+    }
+
+    .custom-select-option {
+        padding: 10px 14px;
+        font-size: 0.92rem;
+        color: #0f172a;
+        cursor: pointer;
+        transition: background-color 0.15s;
+        text-align: left;
+    }
+
+    .custom-select-option:hover {
+        background-color: #f1f5f9;
+    }
+
+    .custom-select-option.selected {
+        background-color: #eff6ff;
+        color: #2563eb;
+        font-weight: 600;
+    }
+
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-8px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
     .btn {
         display: inline-flex;
         align-items: center;
@@ -345,12 +453,36 @@
 
                 <div class="form-group">
                     <label for="odc">Hubungkan ke ODC Induk *</label>
-                    <select id="odc" name="odc" class="form-control" required>
+                    <select id="odc" name="odc" class="form-control" required style="display: none;">
                         <option value="">-- Pilih ODC Induk --</option>
                         @foreach($odc as $o)
                             <option value="{{ $o->id_odc }}">{{ $o->nama_odc }} ({{ $o->perangkat_odc }})</option>
                         @endforeach
                     </select>
+
+                    <!-- Custom Searchable Dropdown for ODC -->
+                    <div class="custom-select-container" id="custom_odc_select">
+                        <div class="custom-select-trigger" onclick="toggleOdcDropdown('add')">
+                            <span id="custom_odc_text">-- Pilih ODC Induk --</span>
+                            <i class="fa-solid fa-chevron-down" style="font-size: 0.8rem; color: var(--text-gray);"></i>
+                        </div>
+                        <div class="custom-select-dropdown" id="custom_odc_dropdown_add">
+                            <div class="custom-select-search-wrapper">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                                <input type="text" id="search_odc_add" class="form-control custom-select-search-input" placeholder="Cari ODC..." autocomplete="off">
+                            </div>
+                            <div class="custom-select-options" id="custom_odc_options_add">
+                                <div class="custom-select-option selected" data-value="" data-text="-- Pilih ODC Induk --">
+                                    -- Pilih ODC Induk --
+                                </div>
+                                @foreach($odc as $o)
+                                    <div class="custom-select-option" data-value="{{ $o->id_odc }}" data-text="{{ $o->nama_odc }} ({{ $o->perangkat_odc }})">
+                                        {{ $o->nama_odc }} ({{ $o->perangkat_odc }})
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -402,12 +534,36 @@
 
                 <div class="form-group">
                     <label for="edit_odc">Hubungkan ke ODC Induk *</label>
-                    <select id="edit_odc" name="odc" class="form-control" required>
+                    <select id="edit_odc" name="odc" class="form-control" required style="display: none;">
                         <option value="">-- Pilih ODC Induk --</option>
                         @foreach($odc as $o)
                             <option value="{{ $o->id_odc }}">{{ $o->nama_odc }} ({{ $o->perangkat_odc }})</option>
                         @endforeach
                     </select>
+
+                    <!-- Custom Searchable Dropdown for Edit ODC -->
+                    <div class="custom-select-container" id="custom_edit_odc_select">
+                        <div class="custom-select-trigger" onclick="toggleOdcDropdown('edit')">
+                            <span id="custom_edit_odc_text">-- Pilih ODC Induk --</span>
+                            <i class="fa-solid fa-chevron-down" style="font-size: 0.8rem; color: var(--text-gray);"></i>
+                        </div>
+                        <div class="custom-select-dropdown" id="custom_odp_dropdown_edit">
+                            <div class="custom-select-search-wrapper">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                                <input type="text" id="search_odc_edit" class="form-control custom-select-search-input" placeholder="Cari ODC..." autocomplete="off">
+                            </div>
+                            <div class="custom-select-options" id="custom_odc_options_edit">
+                                <div class="custom-select-option selected" data-value="" data-text="-- Pilih ODC Induk --">
+                                    -- Pilih ODC Induk --
+                                </div>
+                                @foreach($odc as $o)
+                                    <div class="custom-select-option" data-value="{{ $o->id_odc }}" data-text="{{ $o->nama_odc }} ({{ $o->perangkat_odc }})">
+                                        {{ $o->nama_odc }} ({{ $o->perangkat_odc }})
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -501,6 +657,8 @@
 
     document.addEventListener("DOMContentLoaded", function () {
         setupTablePagination("#odpTable", "#odpPagination", "#tableLimit", "#tableSearch");
+        setupCustomOdcSelect('add');
+        setupCustomOdcSelect('edit');
         initMap();
 
         // Add Modal Picker
@@ -647,6 +805,8 @@
             map.removeLayer(clickMarker);
             clickMarker = null;
         }
+        document.getElementById('odc').value = '';
+        syncCustomOdcText('add');
     }
     function closeAddModal() {
         document.getElementById('addModal').classList.remove('active');
@@ -657,6 +817,7 @@
         document.getElementById('edit_nama_odp').value = odp.nama_odp;
         document.getElementById('edit_port_odp').value = odp.port_odp;
         document.getElementById('edit_odc').value = odp.odc || '';
+        syncCustomOdcText('edit');
         document.getElementById('edit_redaman').value = odp.redaman || '';
         document.getElementById('edit_location').value = odp.location;
         document.getElementById('editModal').classList.add('active');
@@ -899,6 +1060,115 @@
 
     function closeClientsModal() {
         document.getElementById('clientsModal').classList.remove('active');
+    }
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+        const odcContainer = document.getElementById('custom_odc_select');
+        if (odcContainer && !odcContainer.contains(e.target)) {
+            odcContainer.classList.remove('active');
+        }
+
+        const editOdcContainer = document.getElementById('custom_edit_odc_select');
+        if (editOdcContainer && !editOdcContainer.contains(e.target)) {
+            editOdcContainer.classList.remove('active');
+        }
+    });
+
+    // Toggle ODC dropdowns
+    function toggleOdcDropdown(type) {
+        const container = document.getElementById(type === 'add' ? 'custom_odc_select' : 'custom_edit_odc_select');
+        if (container) {
+            container.classList.toggle('active');
+            if (container.classList.contains('active')) {
+                const searchInput = document.getElementById(type === 'add' ? 'search_odc_add' : 'search_odc_edit');
+                if (searchInput) {
+                    searchInput.value = '';
+                    searchInput.dispatchEvent(new Event('input'));
+                    searchInput.focus();
+                }
+            }
+        }
+    }
+
+    function setupCustomOdcSelect(type) {
+        const container = document.getElementById(type === 'add' ? 'custom_odc_select' : 'custom_edit_odc_select');
+        const hiddenSelect = document.getElementById(type === 'add' ? 'odc' : 'edit_odc');
+        const triggerText = document.getElementById(type === 'add' ? 'custom_odc_text' : 'custom_edit_odc_text');
+        const optionsList = document.getElementById(type === 'add' ? 'custom_odc_options_add' : 'custom_odc_options_edit');
+        const searchInput = document.getElementById(type === 'add' ? 'search_odc_add' : 'search_odc_edit');
+
+        if (!container || !hiddenSelect || !triggerText || !optionsList || !searchInput) return;
+
+        // Use event delegation for option clicks
+        optionsList.onclick = function(e) {
+            const opt = e.target.closest('.custom-select-option');
+            if (!opt) return;
+
+            const val = opt.getAttribute('data-value');
+            const text = opt.getAttribute('data-text');
+
+            // Set values
+            hiddenSelect.value = val;
+            triggerText.textContent = text;
+
+            // Trigger change event
+            hiddenSelect.dispatchEvent(new Event('change'));
+
+            // Update styling
+            const optionElements = optionsList.querySelectorAll('.custom-select-option');
+            optionElements.forEach(el => el.classList.remove('selected'));
+            opt.classList.add('selected');
+
+            // Hide dropdown
+            container.classList.remove('active');
+        };
+
+        // Filter options on search
+        searchInput.oninput = function() {
+            const query = this.value.toLowerCase().trim();
+            const optionElements = optionsList.querySelectorAll('.custom-select-option');
+
+            optionElements.forEach((opt, index) => {
+                if (index === 0) {
+                    opt.style.display = 'block'; // Always show placeholder
+                    return;
+                }
+                const text = opt.getAttribute('data-text').toLowerCase();
+                if (text.includes(query)) {
+                    opt.style.display = 'block';
+                } else {
+                    opt.style.display = 'none';
+                }
+            });
+        };
+
+        // Prevent closing menu when typing in search input
+        searchInput.onclick = function(e) {
+            e.stopPropagation();
+        };
+    }
+
+    function syncCustomOdcText(type) {
+        const actualHiddenSelect = document.getElementById(type === 'add' ? 'odc' : 'edit_odc');
+        const triggerText = document.getElementById(type === 'add' ? 'custom_odc_text' : 'custom_edit_odc_text');
+        const actualOptionsList = document.getElementById(type === 'add' ? 'custom_odc_options_add' : 'custom_odc_options_edit');
+
+        if (!actualHiddenSelect || !triggerText || !actualOptionsList) return;
+
+        const val = actualHiddenSelect.value;
+        const selectedOption = actualOptionsList.querySelector(`.custom-select-option[data-value="${val}"]`);
+        
+        actualOptionsList.querySelectorAll('.custom-select-option').forEach(el => el.classList.remove('selected'));
+
+        if (selectedOption) {
+            triggerText.textContent = selectedOption.getAttribute('data-text');
+            selectedOption.classList.add('selected');
+        } else {
+            triggerText.textContent = '-- Pilih ODC Induk --';
+            const defaultOption = actualOptionsList.querySelector('.custom-select-option[data-value=""]');
+            if (defaultOption) defaultOption.classList.add('selected');
+        }
     }
 </script>
 @endsection

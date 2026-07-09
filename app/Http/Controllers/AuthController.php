@@ -147,7 +147,12 @@ class AuthController extends Controller
         $tagihanManual = $this->tagihanService->sumUnpaidManual($pelangganIds);
         $tagihanTotal = $tagihanBulanIni + $tagihanManual;
         
-        $statusPaket = ($tagihanTotal > 0) ? 'Terisolir' : 'Aktif';
+        // Status layanan diisolir jika ada tagihan yang status blokirnya aktif (blokir_status = 1)
+        $isBlocked = \App\Models\Tagihan::whereIn('id_pelanggan', $pelangganIds)
+            ->where('blokir_status', 1)
+            ->exists();
+        
+        $statusPaket = $isBlocked ? 'Terisolir' : 'Aktif';
 
         return view('profile', [
             'user' => $user,

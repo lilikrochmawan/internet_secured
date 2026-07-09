@@ -346,6 +346,47 @@ class AdminPengaturanController extends Controller
         return redirect()->route('admin.pengaturan.index')->with('success', $msg);
     }
 
+    public function updateBiayaAdmin(Request $request)
+    {
+        $request->validate([
+            'admin_fee_type' => 'required|string|in:flat,payment_method',
+            'admin_fee_flat' => 'required_if:admin_fee_type,flat|nullable|integer|min:0',
+            'admin_fee_qris_type' => 'required_if:admin_fee_type,payment_method|nullable|string|in:percentage,flat',
+            'admin_fee_qris_value' => 'required_if:admin_fee_type,payment_method|nullable|numeric|min:0',
+            'admin_fee_va' => 'required_if:admin_fee_type,payment_method|nullable|integer|min:0',
+            'admin_fee_retail' => 'required_if:admin_fee_type,payment_method|nullable|integer|min:0',
+        ]);
+
+        $admin_fee_type = htmlspecialchars(strip_tags($request->admin_fee_type));
+        $admin_fee_flat = $request->admin_fee_flat !== null ? intval($request->admin_fee_flat) : 2000;
+        $admin_fee_qris_type = htmlspecialchars(strip_tags($request->admin_fee_qris_type ?? 'percentage'));
+        $admin_fee_qris_value = $request->admin_fee_qris_value !== null ? floatval($request->admin_fee_qris_value) : 0.70;
+        $admin_fee_va = $request->admin_fee_va !== null ? intval($request->admin_fee_va) : 4000;
+        $admin_fee_retail = $request->admin_fee_retail !== null ? intval($request->admin_fee_retail) : 3000;
+        
+        $admin_fee_qris_status = $request->has('admin_fee_qris_status') ? 1 : 0;
+        $admin_fee_va_status = $request->has('admin_fee_va_status') ? 1 : 0;
+        $admin_fee_retail_status = $request->has('admin_fee_retail_status') ? 1 : 0;
+
+        try {
+            DB::table('tb_profile')->where('id_profile', 1)->update([
+                'admin_fee_type' => $admin_fee_type,
+                'admin_fee_flat' => $admin_fee_flat,
+                'admin_fee_qris_type' => $admin_fee_qris_type,
+                'admin_fee_qris_value' => $admin_fee_qris_value,
+                'admin_fee_va' => $admin_fee_va,
+                'admin_fee_retail' => $admin_fee_retail,
+                'admin_fee_qris_status' => $admin_fee_qris_status,
+                'admin_fee_va_status' => $admin_fee_va_status,
+                'admin_fee_retail_status' => $admin_fee_retail_status,
+            ]);
+
+            return redirect()->route('admin.pengaturan.index')->with('success', 'Pengaturan biaya admin berhasil diperbarui!');
+        } catch (\Exception $e) {
+            return back()->withErrors(['error' => 'Gagal memperbarui pengaturan biaya admin: ' . $e->getMessage()]);
+        }
+    }
+
     public function showUnlicensed()
     {
         $profile = DB::table('tb_profile')->where('id_profile', 1)->first();

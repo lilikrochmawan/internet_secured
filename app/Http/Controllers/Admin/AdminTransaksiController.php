@@ -416,7 +416,38 @@ class AdminTransaksiController extends Controller
             // Simpan status blokir di database
             $tagihan->update(['blokir_status' => 1]);
 
-            return redirect()->route('admin.transaksi.index')->with('success', 'Pelanggan berhasil diblokir di Mikrotik!');
+            // Kirim notifikasi WhatsApp jika fitur aktif dan token tersedia
+            $waMessage = '';
+            $blokirSetting = DB::table('tbl_blokir')->first();
+            $tokenInfo = DB::table('tbl_token')->where('id_token', 1)->first();
+
+            if ($blokirSetting && $blokirSetting->status_blokir === 'aktif' && $tokenInfo && !empty($tokenInfo->token) && !empty($pelanggan->no_telp)) {
+                $pesan = $blokirSetting->pesan_blokir;
+                $pesan = str_replace('$nama', $pelanggan->nama_pelanggan, $pesan);
+                $pesan = str_replace('$tagihan', number_format($tagihan->jml_bayar, 0, ',', '.'), $pesan);
+
+                try {
+                    $response = Http::timeout(10)->withHeaders([
+                        'Authorization' => $tokenInfo->token
+                    ])->asForm()->post('https://api.fonnte.com/send', [
+                        'target' => $pelanggan->no_telp,
+                        'message' => $pesan,
+                        'countryCode' => '62'
+                    ]);
+
+                    $resData = $response->json();
+                    if ($response->successful() && isset($resData['status']) && $resData['status'] === true) {
+                        $waMessage = ' & Notifikasi WhatsApp terkirim!';
+                    } else {
+                        $reason = $resData['reason'] ?? $resData['message'] ?? 'Device Fonnte tidak aktif.';
+                        $waMessage = ' tetapi Gagal mengirim WA: ' . $reason;
+                    }
+                } catch (\Exception $e) {
+                    $waMessage = ' tetapi Gagal mengirim WA: ' . $e->getMessage();
+                }
+            }
+
+            return redirect()->route('admin.transaksi.index')->with('success', 'Pelanggan berhasil diblokir di Mikrotik!' . $waMessage);
         }
 
         return back()->withErrors(['error' => 'Gagal terhubung ke Router Mikrotik. Harap periksa jaringan router Anda.']);

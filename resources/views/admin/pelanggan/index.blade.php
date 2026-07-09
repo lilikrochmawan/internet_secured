@@ -546,12 +546,36 @@
 
                 <div class="form-group">
                     <label for="odp">Mulai Pemasangan Dari ODP</label>
-                    <select id="odp" name="odp" class="form-control">
+                    <select id="odp" name="odp" class="form-control" style="display: none;">
                         <option value="NULL">-- Tanpa ODP --</option>
                         @foreach($odps as $odp)
                             <option value="{{ $odp->id_odp }}">{{ $odp->nama_odp }} (Port: {{ $odp->port_odp }})</option>
                         @endforeach
                     </select>
+                    
+                    <!-- Custom Searchable Dropdown for ODP -->
+                    <div class="custom-select-container" id="custom_odp_select">
+                        <div class="custom-select-trigger" onclick="toggleOdpDropdown('add')">
+                            <span id="custom_odp_text">-- Tanpa ODP --</span>
+                            <i class="fa-solid fa-chevron-down" style="font-size: 0.8rem; color: var(--text-gray);"></i>
+                        </div>
+                        <div class="custom-select-dropdown" id="custom_odp_dropdown_add">
+                            <div class="custom-select-search-wrapper">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                                <input type="text" id="search_odp_add" class="form-control custom-select-search-input" placeholder="Cari ODP..." autocomplete="off">
+                            </div>
+                            <div class="custom-select-options" id="custom_odp_options_add">
+                                <div class="custom-select-option selected" data-value="NULL" data-text="-- Tanpa ODP --">
+                                    -- Tanpa ODP --
+                                </div>
+                                @foreach($odps as $odp)
+                                    <div class="custom-select-option" data-value="{{ $odp->id_odp }}" data-text="{{ $odp->nama_odp }} (Port: {{ $odp->port_odp }})">
+                                        {{ $odp->nama_odp }} (Port: {{ $odp->port_odp }})
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -668,12 +692,36 @@
 
                 <div class="form-group">
                     <label for="edit_odp">Mulai Pemasangan Dari ODP</label>
-                    <select id="edit_odp" name="odp" class="form-control">
+                    <select id="edit_odp" name="odp" class="form-control" style="display: none;">
                         <option value="NULL">-- Tanpa ODP --</option>
                         @foreach($odps as $odp)
                             <option value="{{ $odp->id_odp }}">{{ $odp->nama_odp }}</option>
                         @endforeach
                     </select>
+
+                    <!-- Custom Searchable Dropdown for Edit ODP -->
+                    <div class="custom-select-container" id="custom_edit_odp_select">
+                        <div class="custom-select-trigger" onclick="toggleOdpDropdown('edit')">
+                            <span id="custom_edit_odp_text">-- Tanpa ODP --</span>
+                            <i class="fa-solid fa-chevron-down" style="font-size: 0.8rem; color: var(--text-gray);"></i>
+                        </div>
+                        <div class="custom-select-dropdown" id="custom_odp_dropdown_edit">
+                            <div class="custom-select-search-wrapper">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                                <input type="text" id="search_odp_edit" class="form-control custom-select-search-input" placeholder="Cari ODP..." autocomplete="off">
+                            </div>
+                            <div class="custom-select-options" id="custom_odp_options_edit">
+                                <div class="custom-select-option selected" data-value="NULL" data-text="-- Tanpa ODP --">
+                                    -- Tanpa ODP --
+                                </div>
+                                @foreach($odps as $odp)
+                                    <div class="custom-select-option" data-value="{{ $odp->id_odp }}" data-text="{{ $odp->nama_odp }}">
+                                        {{ $odp->nama_odp }}
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -725,6 +773,8 @@
     document.addEventListener("DOMContentLoaded", function () {
         setupTablePagination("#pelangganTable", "#pelangganPagination", "#tableLimit", "#tableSearch");
         setupCustomSecretSelect();
+        setupCustomOdpSelect('add');
+        setupCustomOdpSelect('edit');
     });
 
     // Modal Management
@@ -748,6 +798,9 @@
         document.getElementById('nama').value = '';
         document.getElementById('add_branch').value = '';
         document.getElementById('add_sub_branch').value = '';
+        
+        document.getElementById('odp').value = 'NULL';
+        syncCustomOdpText('add');
 
         document.getElementById('addModal').classList.add('active');
         
@@ -768,6 +821,8 @@
         document.getElementById('edit_paket').value = pelanggan.paket;
         document.getElementById('edit_nama_perangkat').value = pelanggan.id_perangkat || 'NULL';
         document.getElementById('edit_odp').value = pelanggan.odp || 'NULL';
+        syncCustomOdpText('edit');
+        
         document.getElementById('edit_id_mikrotik').value = pelanggan.id_mikrotik || 1;
         document.getElementById('edit_mapping').value = pelanggan.location || '';
         document.getElementById('edit_jatuh_tempo').value = pelanggan.jatuh_tempo ? pelanggan.jatuh_tempo.substring(0, 10) : '';
@@ -864,7 +919,113 @@
         if (container && !container.contains(e.target)) {
             container.classList.remove('active');
         }
+
+        const odpContainer = document.getElementById('custom_odp_select');
+        if (odpContainer && !odpContainer.contains(e.target)) {
+            odpContainer.classList.remove('active');
+        }
+
+        const editOdpContainer = document.getElementById('custom_edit_odp_select');
+        if (editOdpContainer && !editOdpContainer.contains(e.target)) {
+            editOdpContainer.classList.remove('active');
+        }
     });
+
+    // Toggle ODP dropdowns
+    function toggleOdpDropdown(type) {
+        const container = document.getElementById(type === 'add' ? 'custom_odp_select' : 'custom_edit_odp_select');
+        if (container) {
+            container.classList.toggle('active');
+            if (container.classList.contains('active')) {
+                const searchInput = document.getElementById(type === 'add' ? 'search_odp_add' : 'search_odp_edit');
+                if (searchInput) {
+                    searchInput.value = '';
+                    searchInput.dispatchEvent(new Event('input'));
+                    searchInput.focus();
+                }
+            }
+        }
+    }
+
+    function setupCustomOdpSelect(type) {
+        const container = document.getElementById(type === 'add' ? 'custom_odp_select' : 'custom_edit_odp_select');
+        const hiddenSelect = document.getElementById(type === 'add' ? 'odp' : 'edit_odp');
+        const triggerText = document.getElementById(type === 'add' ? 'custom_odp_text' : 'custom_edit_odp_text');
+        const optionsList = document.getElementById(type === 'add' ? 'custom_odp_options_add' : 'custom_odp_options_edit');
+        const searchInput = document.getElementById(type === 'add' ? 'search_odp_add' : 'search_odp_edit');
+
+        if (!container || !hiddenSelect || !triggerText || !optionsList || !searchInput) return;
+
+        // Use event delegation for option clicks
+        optionsList.onclick = function(e) {
+            const opt = e.target.closest('.custom-select-option');
+            if (!opt) return;
+
+            const val = opt.getAttribute('data-value');
+            const text = opt.getAttribute('data-text');
+
+            // Set values
+            hiddenSelect.value = val;
+            triggerText.textContent = text;
+
+            // Trigger change event
+            hiddenSelect.dispatchEvent(new Event('change'));
+
+            // Update styling
+            const optionElements = optionsList.querySelectorAll('.custom-select-option');
+            optionElements.forEach(el => el.classList.remove('selected'));
+            opt.classList.add('selected');
+
+            // Hide dropdown
+            container.classList.remove('active');
+        };
+
+        // Filter options on search
+        searchInput.oninput = function() {
+            const query = this.value.toLowerCase().trim();
+            const optionElements = optionsList.querySelectorAll('.custom-select-option');
+
+            optionElements.forEach((opt, index) => {
+                if (index === 0) {
+                    opt.style.display = 'block'; // Always show placeholder
+                    return;
+                }
+                const text = opt.getAttribute('data-text').toLowerCase();
+                if (text.includes(query)) {
+                    opt.style.display = 'block';
+                } else {
+                    opt.style.display = 'none';
+                }
+            });
+        };
+
+        // Prevent closing menu when typing in search input
+        searchInput.onclick = function(e) {
+            e.stopPropagation();
+        };
+    }
+
+    function syncCustomOdpText(type) {
+        const hiddenSelect = document.getElementById(type === 'add' ? 'odp' : 'edit_odp');
+        const triggerText = document.getElementById(type === 'add' ? 'custom_odp_text' : 'custom_edit_odp_text');
+        const optionsList = document.getElementById(type === 'add' ? 'custom_odp_options_add' : 'custom_odp_options_edit');
+
+        if (!hiddenSelect || !triggerText || !optionsList) return;
+
+        const val = hiddenSelect.value;
+        const selectedOption = optionsList.querySelector(`.custom-select-option[data-value="${val}"]`);
+        
+        optionsList.querySelectorAll('.custom-select-option').forEach(el => el.classList.remove('selected'));
+
+        if (selectedOption) {
+            triggerText.textContent = selectedOption.getAttribute('data-text');
+            selectedOption.classList.add('selected');
+        } else {
+            triggerText.textContent = '-- Tanpa ODP --';
+            const defaultOption = optionsList.querySelector('.custom-select-option[data-value="NULL"]');
+            if (defaultOption) defaultOption.classList.add('selected');
+        }
+    }
 
     let secretsLoaded = false;
     function loadMikrotikSecretsAsync() {

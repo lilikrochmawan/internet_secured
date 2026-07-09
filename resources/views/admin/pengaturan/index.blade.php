@@ -4,6 +4,47 @@
 
 @section('styles')
 <style>
+    /* Toggle switch styles */
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 46px;
+        height: 24px;
+    }
+    .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #cbd5e1;
+        transition: .3s;
+        border-radius: 24px;
+    }
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 18px;
+        width: 18px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        transition: .3s;
+        border-radius: 50%;
+    }
+    input:checked + .slider {
+        background-color: #4f46e5;
+    }
+    input:checked + .slider:before {
+        transform: translateX(22px);
+    }
+
     .settings-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -337,6 +378,195 @@
             </div>
         </form>
     </div>
+
+    <!-- Card: Pengaturan Biaya Admin -->
+    <div class="card" style="margin-top: 24px;">
+        <div class="card-header">
+            <div class="card-title">
+                <i class="fa-solid fa-money-bill-wave"></i>
+                <span>Pengaturan Biaya Admin Client</span>
+            </div>
+        </div>
+        
+        <form action="{{ route('admin.pengaturan.biaya_admin') }}" method="POST">
+            @csrf
+            
+            <div class="form-group">
+                <label for="admin_fee_type">Tipe Pembebanan Biaya Admin *</label>
+                <select id="admin_fee_type" name="admin_fee_type" class="form-control" style="padding: 10px 14px; height: auto; border-radius: 12px; font-size: 0.95rem; width: 100%; margin: 0; background-color: #f8fafc;" required>
+                    <option value="flat" {{ ($profile->admin_fee_type ?? 'flat') === 'flat' ? 'selected' : '' }}>Biaya Admin Tetap (Custom Nominal)</option>
+                    <option value="payment_method" {{ ($profile->admin_fee_type ?? '') === 'payment_method' ? 'selected' : '' }}>Sesuai Metode Pembayaran (QRIS, VA, Retail)</option>
+                </select>
+                <small style="color:var(--text-gray); margin-top:4px;">Tentukan apakah biaya admin diatur flat (nominal seragam) atau bervariasi sesuai metode pembayaran yang dipilih oleh pelanggan.</small>
+            </div>
+
+            <!-- Group Biaya Admin Flat -->
+            <div class="form-group" id="group_admin_fee_flat" style="{{ ($profile->admin_fee_type ?? 'flat') === 'payment_method' ? 'display:none;' : '' }}">
+                <label for="admin_fee_flat">Biaya Admin Tetap (Rp) *</label>
+                <input type="number" id="admin_fee_flat" name="admin_fee_flat" class="form-control" min="0" value="{{ $profile->admin_fee_flat ?? 2000 }}">
+                <small style="color:var(--text-gray); margin-top:4px;">Masukkan nominal biaya admin flat yang diinginkan (semisal: 2000, 3000, 5000, dll).</small>
+            </div>
+
+            <!-- Group Biaya Admin Per Metode Pembayaran -->
+            <div id="group_admin_fee_methods" style="{{ ($profile->admin_fee_type ?? 'flat') === 'flat' ? 'display:none;' : '' }}">
+                
+                <!-- QRIS Section -->
+                <div style="border: 1px solid #e2e8f0; border-radius: 16px; padding: 18px; margin-bottom: 15px; background: #ffffff;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <i class="fa-solid fa-qrcode" style="color: #4f46e5; font-size: 1.2rem;"></i>
+                            <strong style="color: #0f172a;">Metode QRIS / E-Wallet</strong>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="admin_fee_qris_status" name="admin_fee_qris_status" value="1" {{ ($profile->admin_fee_qris_status ?? 1) == 1 ? 'checked' : '' }}>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div id="group_qris_fields" style="{{ ($profile->admin_fee_qris_status ?? 1) == 0 ? 'display:none;' : '' }}">
+                        <div class="form-group" style="margin-top: 10px;">
+                            <label for="admin_fee_qris_type">Tipe Biaya QRIS *</label>
+                            <select id="admin_fee_qris_type" name="admin_fee_qris_type" class="form-control" style="padding: 10px 14px; height: auto; border-radius: 12px; font-size: 0.95rem; width: 100%; margin: 0; background-color: #f8fafc;">
+                                <option value="percentage" {{ ($profile->admin_fee_qris_type ?? 'percentage') === 'percentage' ? 'selected' : '' }}>Persentase (%)</option>
+                                <option value="flat" {{ ($profile->admin_fee_qris_type ?? '') === 'flat' ? 'selected' : '' }}>Flat (Nominal Rp)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="admin_fee_qris_value">Nilai Biaya QRIS (e.g. 0.7 atau 1000) *</label>
+                            <input type="number" step="0.01" id="admin_fee_qris_value" name="admin_fee_qris_value" class="form-control" min="0" value="{{ $profile->admin_fee_qris_value ?? 0.70 }}">
+                            <small style="color:var(--text-gray); margin-top:4px;">Gunakan titik (.) sebagai pemisah desimal jika memilih tipe persentase (contoh: 0.7 untuk 0,7%).</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VA Section -->
+                <div style="border: 1px solid #e2e8f0; border-radius: 16px; padding: 18px; margin-bottom: 15px; background: #ffffff;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <i class="fa-solid fa-building-columns" style="color: #4f46e5; font-size: 1.2rem;"></i>
+                            <strong style="color: #0f172a;">Metode Virtual Account (VA)</strong>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="admin_fee_va_status" name="admin_fee_va_status" value="1" {{ ($profile->admin_fee_va_status ?? 1) == 1 ? 'checked' : '' }}>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div id="group_va_fields" style="{{ ($profile->admin_fee_va_status ?? 1) == 0 ? 'display:none;' : '' }}">
+                        <div class="form-group" style="margin-top: 10px;">
+                            <label for="admin_fee_va">Biaya Admin Virtual Account (Rp) *</label>
+                            <input type="number" id="admin_fee_va" name="admin_fee_va" class="form-control" min="0" value="{{ $profile->admin_fee_va ?? 4000 }}">
+                            <small style="color:var(--text-gray); margin-top:4px;">Contoh bank transfer / VA: BNI, Mandiri, BCA, BRI (semisal: 4000).</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Retail Section -->
+                <div style="border: 1px solid #e2e8f0; border-radius: 16px; padding: 18px; margin-bottom: 15px; background: #ffffff;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <i class="fa-solid fa-shop" style="color: #4f46e5; font-size: 1.2rem;"></i>
+                            <strong style="color: #0f172a;">Metode Retail Store (Indomaret/Alfamart)</strong>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="admin_fee_retail_status" name="admin_fee_retail_status" value="1" {{ ($profile->admin_fee_retail_status ?? 1) == 1 ? 'checked' : '' }}>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div id="group_retail_fields" style="{{ ($profile->admin_fee_retail_status ?? 1) == 0 ? 'display:none;' : '' }}">
+                        <div class="form-group" style="margin-top: 10px;">
+                            <label for="admin_fee_retail">Biaya Admin Retail Store (Rp) *</label>
+                            <input type="number" id="admin_fee_retail" name="admin_fee_retail" class="form-control" min="0" value="{{ $profile->admin_fee_retail ?? 3000 }}">
+                            <small style="color:var(--text-gray); margin-top:4px;">Contoh outlet retail: Alfamart, Indomaret (semisal: 3000).</small>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; margin-top:20px;">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fa-solid fa-floppy-disk"></i> Simpan Biaya Admin
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const feeTypeSelect = document.getElementById('admin_fee_type');
+            const flatGroup = document.getElementById('group_admin_fee_flat');
+            const flatInput = document.getElementById('admin_fee_flat');
+            const methodsGroup = document.getElementById('group_admin_fee_methods');
+            
+            const qrisStatusCheckbox = document.getElementById('admin_fee_qris_status');
+            const qrisFields = document.getElementById('group_qris_fields');
+            const qrisValInput = document.getElementById('admin_fee_qris_value');
+
+            const vaStatusCheckbox = document.getElementById('admin_fee_va_status');
+            const vaFields = document.getElementById('group_va_fields');
+            const vaValInput = document.getElementById('admin_fee_va');
+
+            const retailStatusCheckbox = document.getElementById('admin_fee_retail_status');
+            const retailFields = document.getElementById('group_retail_fields');
+            const retailValInput = document.getElementById('admin_fee_retail');
+
+            function toggleFeeVisibility() {
+                if (feeTypeSelect.value === 'payment_method') {
+                    flatGroup.style.display = 'none';
+                    flatInput.removeAttribute('required');
+                    methodsGroup.style.display = 'block';
+                    toggleQrisVisibility();
+                    toggleVaVisibility();
+                    toggleRetailVisibility();
+                } else {
+                    flatGroup.style.display = 'block';
+                    flatInput.setAttribute('required', 'required');
+                    methodsGroup.style.display = 'none';
+                }
+            }
+
+            function toggleQrisVisibility() {
+                if (qrisStatusCheckbox && qrisStatusCheckbox.checked) {
+                    if (qrisFields) qrisFields.style.display = 'block';
+                    if (qrisValInput) qrisValInput.setAttribute('required', 'required');
+                } else {
+                    if (qrisFields) qrisFields.style.display = 'none';
+                    if (qrisValInput) qrisValInput.removeAttribute('required');
+                }
+            }
+
+            function toggleVaVisibility() {
+                if (vaStatusCheckbox && vaStatusCheckbox.checked) {
+                    if (vaFields) vaFields.style.display = 'block';
+                    if (vaValInput) vaValInput.setAttribute('required', 'required');
+                } else {
+                    if (vaFields) vaFields.style.display = 'none';
+                    if (vaValInput) vaValInput.removeAttribute('required');
+                }
+            }
+
+            function toggleRetailVisibility() {
+                if (retailStatusCheckbox && retailStatusCheckbox.checked) {
+                    if (retailFields) retailFields.style.display = 'block';
+                    if (retailValInput) retailValInput.setAttribute('required', 'required');
+                } else {
+                    if (retailFields) retailFields.style.display = 'none';
+                    if (retailValInput) retailValInput.removeAttribute('required');
+                }
+            }
+
+            if (feeTypeSelect) {
+                feeTypeSelect.addEventListener('change', toggleFeeVisibility);
+                if (qrisStatusCheckbox) qrisStatusCheckbox.addEventListener('change', toggleQrisVisibility);
+                if (vaStatusCheckbox) vaStatusCheckbox.addEventListener('change', toggleVaVisibility);
+                if (retailStatusCheckbox) retailStatusCheckbox.addEventListener('change', toggleRetailVisibility);
+                toggleFeeVisibility();
+            }
+        });
+    </script>
     
     <script>
         function previewImage(input) {

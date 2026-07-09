@@ -259,7 +259,7 @@
     <div class="card">
         <div class="card-header">
             <h1>Detail Pembayaran</h1>
-            <p>Informasi pembayaran tagihan internet dan biaya admin 0,7%.</p>
+            <p>Informasi pembayaran tagihan internet dan biaya admin.</p>
         </div>
         <div class="card-body">
             <div class="alert">
@@ -308,18 +308,96 @@
                 </div>
             </div>
 
+            @if(($profile->admin_fee_type ?? 'flat') === 'payment_method')
+            @php
+                $defaultSelected = 'qris';
+                if (($profile->admin_fee_qris_status ?? 1) == 0) {
+                    if (($profile->admin_fee_va_status ?? 1) == 1) {
+                        $defaultSelected = 'va';
+                    } elseif (($profile->admin_fee_retail_status ?? 1) == 1) {
+                        $defaultSelected = 'retail';
+                    } else {
+                        $defaultSelected = 'none';
+                    }
+                }
+            @endphp
+            <div class="section-card" style="margin-top: 20px;">
+                <h2>Pilih Metode Pembayaran</h2>
+                <div style="display: grid; gap: 12px; margin-top: 10px;">
+                    @if(($profile->admin_fee_qris_status ?? 1) == 1)
+                    <label class="payment-method-option" style="display: flex; align-items: center; justify-content: space-between; padding: 16px; border: 2px solid {{ $defaultSelected === 'qris' ? '#6366f1' : '#e2e8f0' }}; border-radius: 16px; cursor: pointer; background: white; transition: all 0.2s;" id="label-qris">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <input type="radio" name="payment_method" value="qris" {{ $defaultSelected === 'qris' ? 'checked' : '' }} style="width: 20px; height: 20px; accent-color: #6366f1;">
+                            <div>
+                                <strong style="color: #0f172a; display: block;">QRIS / E-Wallet</strong>
+                                <span style="font-size: 0.85rem; color: #64748b;">Gopay, ShopeePay, LinkAja, Dana, OVO, dll</span>
+                            </div>
+                        </div>
+                        <strong style="color: #4f46e5;">
+                            @if(($profile->admin_fee_qris_type ?? 'percentage') === 'percentage')
+                                +{{ $profile->admin_fee_qris_value ?? 0.70 }}%
+                            @else
+                                +Rp {{ number_format($profile->admin_fee_qris_value ?? 0, 0, ',', '.') }}
+                            @endif
+                        </strong>
+                    </label>
+                    @endif
+
+                    @if(($profile->admin_fee_va_status ?? 1) == 1)
+                    <label class="payment-method-option" style="display: flex; align-items: center; justify-content: space-between; padding: 16px; border: 2px solid {{ $defaultSelected === 'va' ? '#6366f1' : '#e2e8f0' }}; border-radius: 16px; cursor: pointer; background: white; transition: all 0.2s;" id="label-va">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <input type="radio" name="payment_method" value="va" {{ $defaultSelected === 'va' ? 'checked' : '' }} style="width: 20px; height: 20px; accent-color: #6366f1;">
+                            <div>
+                                <strong style="color: #0f172a; display: block;">Virtual Account (Transfer Bank)</strong>
+                                <span style="font-size: 0.85rem; color: #64748b;">BCA, Mandiri, BNI, BRI, Permata, dll</span>
+                            </div>
+                        </div>
+                        <strong style="color: #4f46e5;">+Rp {{ number_format($profile->admin_fee_va ?? 4000, 0, ',', '.') }}</strong>
+                    </label>
+                    @endif
+
+                    @if(($profile->admin_fee_retail_status ?? 1) == 1)
+                    <label class="payment-method-option" style="display: flex; align-items: center; justify-content: space-between; padding: 16px; border: 2px solid {{ $defaultSelected === 'retail' ? '#6366f1' : '#e2e8f0' }}; border-radius: 16px; cursor: pointer; background: white; transition: all 0.2s;" id="label-retail">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <input type="radio" name="payment_method" value="retail" {{ $defaultSelected === 'retail' ? 'checked' : '' }} style="width: 20px; height: 20px; accent-color: #6366f1;">
+                            <div>
+                                <strong style="color: #0f172a; display: block;">Gerai Retail</strong>
+                                <span style="font-size: 0.85rem; color: #64748b;">Alfamart, Indomaret</span>
+                            </div>
+                        </div>
+                        <strong style="color: #4f46e5;">+Rp {{ number_format($profile->admin_fee_retail ?? 3000, 0, ',', '.') }}</strong>
+                    </label>
+                    @endif
+                </div>
+            </div>
+            @endif
+
             <div class="summary">
                 <div class="summary-row">
                     <span>Total Tagihan:</span>
                     <strong>{{ 'Rp ' . number_format($subtotal, 0, ',', '.') }}</strong>
                 </div>
                 <div class="summary-row">
-                    <span>Biaya Admin (0,7%):</span>
-                    <strong>{{ 'Rp ' . number_format($adminFee, 0, ',', '.') }}</strong>
+                    <span id="fee-name-label">
+                        @if(($profile->admin_fee_type ?? 'flat') === 'flat')
+                            Biaya Admin:
+                        @else
+                            @if($defaultSelected === 'qris')
+                                Biaya Admin QRIS ({{ ($profile->admin_fee_qris_type ?? 'percentage') === 'percentage' ? ($profile->admin_fee_qris_value ?? '0.7') . '%' : 'Rp ' . number_format($profile->admin_fee_qris_value ?? 0, 0, ',', '.') }}):
+                            @elseif($defaultSelected === 'va')
+                                Biaya Admin VA:
+                            @elseif($defaultSelected === 'retail')
+                                Biaya Admin Retail:
+                            @else
+                                Biaya Admin:
+                            @endif
+                        @endif
+                    </span>
+                    <strong id="fee-amount-label">{{ 'Rp ' . number_format($adminFee, 0, ',', '.') }}</strong>
                 </div>
                 <div class="summary-total">
                     <span>Total Pembayaran:</span>
-                    <strong>{{ 'Rp ' . number_format($totalPayment, 0, ',', '.') }}</strong>
+                    <strong id="total-payment-label">{{ 'Rp ' . number_format($totalPayment, 0, ',', '.') }}</strong>
                 </div>
             </div>
 
@@ -351,6 +429,9 @@
                 ? currentPath.replace(/\/payment\/detail$/, '/dashboard')
                 : '/dashboard';
 
+            const selectedMethodEl = document.querySelector('input[name="payment_method"]:checked');
+            const selectedMethod = selectedMethodEl ? selectedMethodEl.value : 'qris';
+
             fetch(chargeUrl, {
                 method: 'POST',
                 credentials: 'same-origin',
@@ -359,7 +440,9 @@
                     'X-CSRF-TOKEN': '{{ csrf_token() }}',
                     'Accept': 'application/json',
                 },
-                body: JSON.stringify({})
+                body: JSON.stringify({
+                    payment_method: selectedMethod
+                })
             })
             .then(response => response.json())
             .then(data => {
@@ -397,6 +480,85 @@
                 alert(error.message || 'Terjadi kesalahan saat menghubungkan ke Midtrans.');
                 payButton.disabled = false;
                 payButton.textContent = 'Lanjut Pembayaran →';
+            });
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const subtotal = {{ $subtotal }};
+            const feeType = '{{ $profile->admin_fee_type ?? 'flat' }}';
+            
+            // Flat settings
+            const flatFee = {{ $profile->admin_fee_flat ?? 2000 }};
+            
+            // QRIS settings
+            const qrisType = '{{ $profile->admin_fee_qris_type ?? 'percentage' }}';
+            const qrisVal = {{ $profile->admin_fee_qris_value ?? 0.70 }};
+            
+            // VA and Retail settings
+            const vaFee = {{ $profile->admin_fee_va ?? 4000 }};
+            const retailFee = {{ $profile->admin_fee_retail ?? 3000 }};
+
+            const feeNameLabel = document.getElementById('fee-name-label');
+            const feeAmountLabel = document.getElementById('fee-amount-label');
+            const totalPaymentLabel = document.getElementById('total-payment-label');
+
+            function formatRupiah(value) {
+                return 'Rp ' + value.toLocaleString('id-ID');
+            }
+
+            function updatePaymentDetails() {
+                if (feeType === 'flat') {
+                    return; // No dynamic change if flat
+                }
+
+                const selectedEl = document.querySelector('input[name="payment_method"]:checked');
+                if (!selectedEl) return;
+
+                const method = selectedEl.value;
+                let fee = 0;
+                let feeName = '';
+
+                // Reset borders
+                const labelQris = document.getElementById('label-qris');
+                const labelVa = document.getElementById('label-va');
+                const labelRetail = document.getElementById('label-retail');
+
+                if (labelQris) labelQris.style.borderColor = '#e2e8f0';
+                if (labelVa) labelVa.style.borderColor = '#e2e8f0';
+                if (labelRetail) labelRetail.style.borderColor = '#e2e8f0';
+                
+                // Highlight active option border
+                const activeLabel = document.getElementById('label-' + method);
+                if (activeLabel) activeLabel.style.borderColor = '#6366f1';
+
+                if (method === 'qris') {
+                    if (qrisType === 'percentage') {
+                        fee = Math.round(subtotal * (qrisVal / 100));
+                        feeName = 'Biaya Admin QRIS (' + qrisVal + '%):';
+                    } else {
+                        fee = qrisVal;
+                        feeName = 'Biaya Admin QRIS:';
+                    }
+                } else if (method === 'va') {
+                    fee = vaFee;
+                    feeName = 'Biaya Admin VA:';
+                } else if (method === 'retail') {
+                    fee = retailFee;
+                    feeName = 'Biaya Admin Retail:';
+                }
+
+                const total = subtotal + fee;
+
+                if (feeNameLabel) feeNameLabel.textContent = feeName;
+                if (feeAmountLabel) feeAmountLabel.textContent = formatRupiah(fee);
+                if (totalPaymentLabel) totalPaymentLabel.textContent = formatRupiah(total);
+            }
+
+            const radios = document.querySelectorAll('input[name="payment_method"]');
+            radios.forEach(radio => {
+                radio.addEventListener('change', updatePaymentDetails);
             });
         });
     </script>
