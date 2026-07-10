@@ -377,7 +377,38 @@
     <div class="filter-bar">
         <form method="GET" action="{{ route('admin.transaksi.index') }}" class="filter-inputs">
             <input type="hidden" name="filter" value="1">
-            <input type="text" name="search" class="form-control" placeholder="Cari nama / kode pelanggan..." value="{{ $search }}" style="min-width: 260px;">
+            <!-- Hidden input to store selected pelanggan ID -->
+            <input type="hidden" name="id_pelanggan" id="filter_id_pelanggan" value="{{ request('id_pelanggan') }}">
+
+            <!-- Custom Searchable Dropdown for filter -->
+            <div class="custom-select-container" id="filter_pelanggan_select" style="width: 260px; min-width: 260px; margin-bottom: 0;">
+                <div class="custom-select-trigger" onclick="toggleFilterDropdown(event)" style="height: 40px; display: flex; align-items: center; justify-content: space-between; border-radius: 10px; border: 1px solid #e2e8f0; background: white; padding: 0 16px; cursor: pointer;">
+                    @php
+                        $selectedPelanggan = null;
+                        if (request('id_pelanggan')) {
+                            $selectedPelanggan = $pelanggan->firstWhere('id_pelanggan', request('id_pelanggan'));
+                        }
+                    @endphp
+                    <span id="filter_select_text">{{ $selectedPelanggan ? ($selectedPelanggan->nama_pelanggan . ' (' . $selectedPelanggan->kode_pelanggan . ')') : '-- Pilih Pelanggan --' }}</span>
+                    <i class="fa-solid fa-chevron-down" style="font-size: 0.8rem; color: var(--text-gray);"></i>
+                </div>
+                <div class="custom-select-dropdown" id="filter_select_dropdown">
+                    <div class="custom-select-search-wrapper" style="padding: 8px;">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" id="filter_search_pelanggan" class="form-control custom-select-search-input" placeholder="Cari nama atau kode..." autocomplete="off">
+                    </div>
+                    <div class="custom-select-options" id="filter_select_options" style="max-height: 240px; overflow-y: auto;">
+                        <div class="custom-select-option {{ !request('id_pelanggan') ? 'selected' : '' }}" data-value="" data-text="-- Pilih Pelanggan --">
+                            -- Pilih Pelanggan --
+                        </div>
+                        @foreach($pelanggan as $p)
+                            <div class="custom-select-option {{ request('id_pelanggan') == $p->id_pelanggan ? 'selected' : '' }}" data-value="{{ $p->id_pelanggan }}" data-text="{{ $p->nama_pelanggan }} ({{ $p->kode_pelanggan }})">
+                                <strong>{{ $p->nama_pelanggan }}</strong> <span style="font-family: monospace; font-size:0.78rem; color: var(--text-gray);">({{ $p->kode_pelanggan }})</span>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
             
             <select name="status" class="form-control">
                 <option value="">-- Semua Status --</option>
@@ -386,7 +417,7 @@
             </select>
 
             <select name="bulan" class="form-control">
-                <option value="">-- Pilih Bulan --</option>
+                <option value="">-- Semua Bulan --</option>
                 @php
                     $months = [
                         '01' => 'Januari', '02' => 'Februari', '03' => 'Maret', '04' => 'April',
@@ -410,12 +441,51 @@
                 <i class="fa-solid fa-magnifying-glass"></i> Cari
             </button>
             
-            @if($search || $status || $selectedMonth || $selectedYear)
+            @if($search || $status || $selectedMonth || $selectedYear || request('id_pelanggan'))
                 <a href="{{ route('admin.transaksi.index') }}" class="btn btn-secondary" style="padding: 8px 16px;">
                     Clear Filter
                 </a>
             @endif
         </form>
+    </div>
+
+    <!-- Stats Summary Cards -->
+    <div class="stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 20px; margin-bottom: 20px;">
+        <!-- Card 1: Total -->
+        <div style="background: white; border: 1px solid #e2e8f0; padding: 18px; border-radius: 16px; display: flex; align-items: center; gap: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+            <div style="width: 48px; height: 48px; border-radius: 12px; background: #eff6ff; display: flex; align-items: center; justify-content: center; color: #2563eb; font-size: 1.4rem;">
+                <i class="fa-solid fa-file-invoice"></i>
+            </div>
+            <div>
+                <span style="font-size: 0.85rem; color: #64748b; font-weight: 500; display: block;">Total Tagihan</span>
+                <strong style="font-size: 1.25rem; color: #0f172a; display: block;">Rp {{ number_format($totalAmount, 0, ',', '.') }}</strong>
+                <span style="font-size: 0.78rem; color: #94a3b8;">{{ $totalCount }} Transaksi</span>
+            </div>
+        </div>
+
+        <!-- Card 2: Sudah Bayar (Lunas) -->
+        <div style="background: white; border: 1px solid #e2e8f0; padding: 18px; border-radius: 16px; display: flex; align-items: center; gap: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+            <div style="width: 48px; height: 48px; border-radius: 12px; background: #ecfdf5; display: flex; align-items: center; justify-content: center; color: #10b981; font-size: 1.4rem;">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+            <div>
+                <span style="font-size: 0.85rem; color: #64748b; font-weight: 500; display: block;">Sudah Bayar (Lunas)</span>
+                <strong style="font-size: 1.25rem; color: #10b981; display: block;">Rp {{ number_format($paidAmount, 0, ',', '.') }}</strong>
+                <span style="font-size: 0.78rem; color: #34d399;">{{ $paidCount }} Transaksi</span>
+            </div>
+        </div>
+
+        <!-- Card 3: Belum Bayar -->
+        <div style="background: white; border: 1px solid #e2e8f0; padding: 18px; border-radius: 16px; display: flex; align-items: center; gap: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+            <div style="width: 48px; height: 48px; border-radius: 12px; background: #fef2f2; display: flex; align-items: center; justify-content: center; color: #ef4444; font-size: 1.4rem;">
+                <i class="fa-solid fa-circle-exclamation"></i>
+            </div>
+            <div>
+                <span style="font-size: 0.85rem; color: #64748b; font-weight: 500; display: block;">Belum Bayar</span>
+                <strong style="font-size: 1.25rem; color: #ef4444; display: block;">Rp {{ number_format($unpaidAmount, 0, ',', '.') }}</strong>
+                <span style="font-size: 0.78rem; color: #f87171;">{{ $unpaidCount }} Transaksi</span>
+            </div>
+        </div>
     </div>
 
     <!-- Search and Row Limiter -->
@@ -449,6 +519,7 @@
                     <th>No</th>
                     <th>Pelanggan</th>
                     <th>Bulan/Tahun</th>
+                    <th>Jatuh Tempo</th>
                     <th>Tagihan</th>
                     <th>Status Bayar</th>
                     <th>Waktu Pembayaran</th>
@@ -482,6 +553,28 @@
                             @endif
                         </td>
                         <td>{{ substr($tx->bulan_tahun, 0, 2) . '-' . substr($tx->bulan_tahun, 2) }}</td>
+                        <td>
+                            @php
+                                $jt = null;
+                                if ($tx->jatuh_tempo) {
+                                    $jt = \Carbon\Carbon::parse($tx->jatuh_tempo);
+                                } elseif ($tx->pelanggan && $tx->pelanggan->jatuh_tempo) {
+                                    $day = date('d', strtotime($tx->pelanggan->jatuh_tempo));
+                                    $month = substr($tx->bulan_tahun, 0, 2);
+                                    $year = substr($tx->bulan_tahun, 2);
+                                    try {
+                                        $jt = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', "$year-$month-$day 23:59:00");
+                                    } catch (\Exception $e) {
+                                        $jt = null;
+                                    }
+                                }
+                            @endphp
+                            @if($jt)
+                                <strong style="color: #4f46e5;">{{ $jt->translatedFormat('d F Y') }}</strong>
+                            @else
+                                <span style="color: var(--text-gray); font-style: italic;">-</span>
+                            @endif
+                        </td>
                         <td><strong>Rp {{ number_format($tx->jml_bayar, 0, ',', '.') }}</strong></td>
                         <td>
                             @if($tx->status_bayar == 1)
@@ -741,6 +834,7 @@
     document.addEventListener("DOMContentLoaded", function () {
         setupTablePagination("#transaksiTable", "#transaksiPagination", "#tableLimit", "#tableSearch");
         setupCustomSelect();
+        setupFilterCustomSelect();
     });
 
     // Toggle custom dropdown dropdown container
@@ -759,13 +853,83 @@
         }
     }
 
+    // Toggle filter custom dropdown container
+    function toggleFilterDropdown(e) {
+        if (e) e.stopPropagation();
+        const container = document.getElementById('filter_pelanggan_select');
+        if (container) {
+            container.classList.toggle('active');
+            if (container.classList.contains('active')) {
+                const searchInput = document.getElementById('filter_search_pelanggan');
+                if (searchInput) {
+                    searchInput.value = '';
+                    searchInput.dispatchEvent(new Event('input'));
+                    searchInput.focus();
+                }
+            }
+        }
+    }
+
     // Close custom dropdown when clicking outside
     document.addEventListener('click', function(e) {
         const container = document.getElementById('custom_pelanggan_select');
         if (container && !container.contains(e.target)) {
             container.classList.remove('active');
         }
+        const filterContainer = document.getElementById('filter_pelanggan_select');
+        if (filterContainer && !filterContainer.contains(e.target)) {
+            filterContainer.classList.remove('active');
+        }
     });
+
+    // Custom searchable select for filter bar
+    function setupFilterCustomSelect() {
+        const container = document.getElementById('filter_pelanggan_select');
+        const hiddenInput = document.getElementById('filter_id_pelanggan');
+        const triggerText = document.getElementById('filter_select_text');
+        const optionsList = document.getElementById('filter_select_options');
+        const searchInput = document.getElementById('filter_search_pelanggan');
+
+        if (!container || !hiddenInput || !triggerText || !optionsList || !searchInput) return;
+
+        const optionElements = Array.from(optionsList.querySelectorAll('.custom-select-option'));
+
+        optionElements.forEach(opt => {
+            opt.addEventListener('click', function() {
+                const val = this.getAttribute('data-value');
+                const text = this.getAttribute('data-text');
+
+                hiddenInput.value = val;
+                triggerText.textContent = text;
+
+                optionElements.forEach(el => el.classList.remove('selected'));
+                this.classList.add('selected');
+
+                container.classList.remove('active');
+            });
+        });
+
+        searchInput.addEventListener('input', function() {
+            const query = this.value.toLowerCase().trim();
+
+            optionElements.forEach((opt, index) => {
+                if (index === 0) {
+                    opt.style.display = 'block';
+                    return;
+                }
+                const text = opt.getAttribute('data-text').toLowerCase();
+                if (text.includes(query)) {
+                    opt.style.display = 'block';
+                } else {
+                    opt.style.display = 'none';
+                }
+            });
+        });
+
+        searchInput.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+    }
 
     // Custom searchable select functionality
     function setupCustomSelect() {

@@ -680,12 +680,17 @@
 
                 <!-- Tree Checkbox Section -->
                 <div class="form-group" id="access_tree_section">
-                    <label>Pilih Cakupan Hak Akses Area Operasional (Branch & Sub-Branch)</label>
+                    <label style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                        <span>Pilih Cakupan Hak Akses Area Operasional (Branch & Sub-Branch)</span>
+                        <label style="font-size: 0.85rem; font-weight: normal; margin-bottom: 0; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+                            <input type="checkbox" id="toggle_all_areas" onchange="toggleAllAreas(this)"> Pilih Semua
+                        </label>
+                    </label>
                     <div class="tree-checkbox-container">
                         @foreach($branches as $b)
                             <div class="tree-branch-group">
                                 <div class="tree-branch-header">
-                                    <input type="checkbox" name="branches[]" value="{{ $b->id }}" id="check_branch_{{ $b->id }}" class="branch-checkbox" onchange="toggleBranchChildren(this, '{{ $b->id }}')">
+                                    <input type="checkbox" name="branches[]" value="{{ $b->id }}" id="check_branch_{{ $b->id }}" class="branch-checkbox" onchange="toggleBranchChildren(this, '{{ $b->id }}'); updateAllAreasCheckbox();">
                                     <label for="check_branch_{{ $b->id }}" style="font-size: 0.95rem; font-weight: 600; cursor:pointer;">
                                         <i class="fa-solid fa-building" style="color:#4f46e5; margin-right:4px;"></i> {{ $b->nama_branch }}
                                     </label>
@@ -693,7 +698,7 @@
                                 <ul class="tree-sub-list">
                                     @foreach($b->subBranches as $s)
                                         <li class="tree-sub-item">
-                                            <input type="checkbox" name="sub_branches[]" value="{{ $s->id }}" id="check_sub_{{ $s->id }}" class="sub-checkbox branch-{{ $b->id }}-child" onchange="toggleChildInfluence(this, '{{ $b->id }}')">
+                                            <input type="checkbox" name="sub_branches[]" value="{{ $s->id }}" id="check_sub_{{ $s->id }}" class="sub-checkbox branch-{{ $b->id }}-child" onchange="toggleChildInfluence(this, '{{ $b->id }}'); updateAllAreasCheckbox();">
                                             <label for="check_sub_{{ $s->id }}" style="font-weight: 400; cursor:pointer;">
                                                 <i class="fa-solid fa-location-arrow" style="font-size:0.75rem; color:#8b5cf6; margin-right:2px;"></i> {{ $s->nama_sub_branch }}
                                             </label>
@@ -710,7 +715,12 @@
 
                 <!-- Menu Access Section -->
                 <div class="form-group" id="access_menu_section" style="margin-top: 20px;">
-                    <label>Pilih Akses Menu Sidebar</label>
+                    <label style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                        <span>Pilih Akses Menu Sidebar</span>
+                        <label style="font-size: 0.85rem; font-weight: normal; margin-bottom: 0; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+                            <input type="checkbox" id="toggle_all_menus" onchange="toggleAllMenus(this)"> Pilih Semua
+                        </label>
+                    </label>
                     <div class="menu-checkbox-container" style="max-height: 250px; overflow-y: auto; border: 1px solid #cbd5e1; border-radius: 12px; padding: 14px; background-color: #f8fafc; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                         <div class="menu-checkbox-item" style="display: flex; align-items: center; gap: 8px; pointer-events: none; opacity: 0.8;">
                             <input type="checkbox" name="menus[]" value="dashboard" id="menu_dashboard" class="menu-checkbox" checked>
@@ -928,9 +938,58 @@
             });
         }
 
+        updateAllAreasCheckbox();
+        updateAllMenusCheckbox();
+
         toggleAccessSectionByRole(user.level);
         openModal('modalEditAccess');
     }
+
+    // Toggle all operational area checkboxes
+    function toggleAllAreas(allCb) {
+        document.querySelectorAll('.branch-checkbox').forEach(cb => {
+            cb.checked = allCb.checked;
+        });
+        document.querySelectorAll('.sub-checkbox').forEach(cb => {
+            cb.checked = allCb.checked;
+        });
+    }
+
+    // Toggle all menu checkboxes (excluding dashboard)
+    function toggleAllMenus(allCb) {
+        document.querySelectorAll('.menu-checkbox').forEach(cb => {
+            if (cb.id !== 'menu_dashboard') {
+                cb.checked = allCb.checked;
+            }
+        });
+    }
+
+    // Update "Pilih Semua" checkbox state for areas
+    function updateAllAreasCheckbox() {
+        const allAreasCb = document.getElementById('toggle_all_areas');
+        if (!allAreasCb) return;
+        const total = document.querySelectorAll('.branch-checkbox, .sub-checkbox').length;
+        const checked = document.querySelectorAll('.branch-checkbox:checked, .sub-checkbox:checked').length;
+        allAreasCb.checked = (total > 0 && total === checked);
+    }
+
+    // Update "Pilih Semua" checkbox state for menus
+    function updateAllMenusCheckbox() {
+        const allMenusCb = document.getElementById('toggle_all_menus');
+        if (!allMenusCb) return;
+        const total = document.querySelectorAll('.menu-checkbox:not(#menu_dashboard)').length;
+        const checked = document.querySelectorAll('.menu-checkbox:not(#menu_dashboard):checked').length;
+        allMenusCb.checked = (total > 0 && total === checked);
+    }
+
+    // Bind event listeners to menu checkboxes
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll('.menu-checkbox').forEach(cb => {
+            if (cb.id !== 'menu_dashboard') {
+                cb.addEventListener('change', updateAllMenusCheckbox);
+            }
+        });
+    });
 
     // Control visibility of branch tree by role level
     function toggleAccessSectionByRole(role) {

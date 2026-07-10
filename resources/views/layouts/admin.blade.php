@@ -1277,6 +1277,81 @@
             let filteredRows = [...allRows];
             let currentPage = 1;
 
+            // Add sorting functionality to headers
+            const headers = Array.from(table.querySelectorAll("thead th"));
+            let sortDirection = {};
+
+            headers.forEach((th, colIndex) => {
+                // Skip if it's the first column (No) or actions column
+                if (colIndex === 0 || th.style.textAlign === 'center' || th.classList.contains('no-sort') || th.textContent.trim() === 'Aksi' || th.textContent.toLowerCase().includes('aksi')) {
+                    return;
+                }
+
+                th.style.cursor = 'pointer';
+                th.style.position = 'relative';
+                th.title = 'Klik untuk mengurutkan';
+                
+                const icon = document.createElement('i');
+                icon.className = 'fa-solid fa-sort';
+                icon.style.marginLeft = '6px';
+                icon.style.opacity = '0.35';
+                th.appendChild(icon);
+
+                th.addEventListener('click', function() {
+                    const direction = sortDirection[colIndex] === 'asc' ? 'desc' : 'asc';
+                    sortDirection = {}; // Clear other sorts
+                    sortDirection[colIndex] = direction;
+
+                    headers.forEach(h => {
+                        const iconEl = h.querySelector('i.fa-sort, i.fa-sort-up, i.fa-sort-down');
+                        if (iconEl) {
+                            iconEl.className = 'fa-solid fa-sort';
+                            iconEl.style.opacity = '0.35';
+                        }
+                    });
+
+                    icon.className = direction === 'asc' ? 'fa-solid fa-sort-up' : 'fa-solid fa-sort-down';
+                    icon.style.opacity = '1';
+
+                    allRows.sort((a, b) => {
+                        const cellA = a.cells[colIndex] ? a.cells[colIndex].textContent.trim() : '';
+                        const cellB = b.cells[colIndex] ? b.cells[colIndex].textContent.trim() : '';
+
+                        let valA = cellA.replace(/[^0-9.-]+/g, "");
+                        let valB = cellB.replace(/[^0-9.-]+/g, "");
+                        const isNum = valA !== '' && !isNaN(valA) && valB !== '' && !isNaN(valB);
+
+                        if (isNum) {
+                            return direction === 'asc' ? parseFloat(valA) - parseFloat(valB) : parseFloat(valB) - parseFloat(valA);
+                        }
+
+                        // Try to parse as date/datetime
+                        const cleanA = cellA.replace(/(\d{2})-(\d{2})-(\d{4})/, '$3-$2-$1');
+                        const cleanB = cellB.replace(/(\d{2})-(\d{2})-(\d{4})/, '$3-$2-$1');
+                        const dateA = Date.parse(cleanA);
+                        const dateB = Date.parse(cleanB);
+
+                        if (!isNaN(dateA) && !isNaN(dateB)) {
+                            return direction === 'asc' ? dateA - dateB : dateB - dateA;
+                        }
+
+                        return direction === 'asc' ? cellA.localeCompare(cellB) : cellB.localeCompare(cellA);
+                    });
+
+                    allRows.forEach(row => tableBody.appendChild(row));
+
+                    if (searchInput && searchInput.value) {
+                        const query = searchInput.value.toLowerCase();
+                        filteredRows = allRows.filter(row => row.textContent.toLowerCase().includes(query));
+                    } else {
+                        filteredRows = [...allRows];
+                    }
+
+                    currentPage = 1;
+                    renderTable();
+                });
+            });
+
             function renderTable() {
                 const limit = parseInt(limitSelect.value) || 10;
                 const totalItems = filteredRows.length;

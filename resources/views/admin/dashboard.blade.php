@@ -452,10 +452,10 @@
 @endif
 
 <!-- Row 2: Status Jaringan & Port -->
-@if(in_array(Auth::user()->level, ['admin', 'mitra', 'teknisi']))
-<div class="dashboard-row-2 {{ Auth::user()->level === 'teknisi' ? 'row-teknisi' : '' }}">
+@if(in_array(Auth::user()->level, ['admin', 'mitra', 'teknisi', 'kasir']))
+<div class="dashboard-row-2 {{ in_array(Auth::user()->level, ['teknisi', 'kasir']) ? 'row-teknisi' : '' }}">
     <!-- Card 4: Status pembayaran -->
-    @if(in_array(Auth::user()->level, ['admin', 'mitra']))
+    @if(in_array(Auth::user()->level, ['admin', 'mitra', 'kasir']))
     <div class="card">
         <div class="card-header-custom">
             <div class="card-title-custom">
@@ -529,6 +529,7 @@
     @endif
 
     <!-- Card 6: Infrastruktur ODC / ODP -->
+    @if(in_array(Auth::user()->level, ['admin', 'mitra', 'teknisi']))
     <div class="card">
         <div class="card-header-custom">
             <div class="card-title-custom">
@@ -568,6 +569,7 @@
             </div>
         </div>
     </div>
+    @endif
 </div>
 @endif
 

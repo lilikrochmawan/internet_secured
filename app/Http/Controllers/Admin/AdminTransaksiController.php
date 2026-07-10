@@ -20,12 +20,17 @@ class AdminTransaksiController extends Controller
         $status = $request->get('status'); // 'lunas', 'belum_bayar'
         $selectedMonth = $request->get('bulan');
         $selectedYear = $request->get('tahun');
+        $selectedPelangganId = $request->get('id_pelanggan');
 
         $query = Tagihan::with(['pelanggan'])->whereIn('id_pelanggan', Pelanggan::allowedForUser()->pluck('id_pelanggan'));
 
-        if (!empty($selectedMonth) && !empty($selectedYear)) {
-            $bulantahun = $selectedMonth . $selectedYear;
-            $query->where('bulan_tahun', $bulantahun);
+        if (!empty($selectedYear)) {
+            if (!empty($selectedMonth)) {
+                $bulantahun = $selectedMonth . $selectedYear;
+                $query->where('bulan_tahun', $bulantahun);
+            } else {
+                $query->where('bulan_tahun', 'like', '%' . $selectedYear);
+            }
         } else {
             $currentMonth = date('mY');
 
@@ -49,6 +54,10 @@ class AdminTransaksiController extends Controller
             });
         }
 
+        if (!empty($selectedPelangganId)) {
+            $query->where('id_pelanggan', $selectedPelangganId);
+        }
+
         if (!empty($search)) {
             $query->whereHas('pelanggan', function ($q) use ($search) {
                 $q->where('nama_pelanggan', 'like', '%' . $search . '%')
@@ -70,7 +79,19 @@ class AdminTransaksiController extends Controller
             ->get();
         $pelanggan = Pelanggan::with(['paketDetail'])->allowedForUser()->orderBy('nama_pelanggan')->get();
 
-        return view('admin.transaksi.index', compact('tagihan', 'search', 'status', 'pelanggan', 'selectedMonth', 'selectedYear'));
+        $totalCount = $tagihan->count();
+        $totalAmount = $tagihan->sum('jml_bayar');
+
+        $paidCount = $tagihan->where('status_bayar', 1)->count();
+        $paidAmount = $tagihan->where('status_bayar', 1)->sum('jml_bayar');
+
+        $unpaidCount = $totalCount - $paidCount;
+        $unpaidAmount = $totalAmount - $paidAmount;
+
+        return view('admin.transaksi.index', compact(
+            'tagihan', 'search', 'status', 'pelanggan', 'selectedMonth', 'selectedYear',
+            'totalCount', 'totalAmount', 'paidCount', 'paidAmount', 'unpaidCount', 'unpaidAmount'
+        ));
     }
 
     public function pembayaranJson(Request $request)
@@ -798,9 +819,13 @@ class AdminTransaksiController extends Controller
     {
         set_time_limit(1800); // Jeda 8 detik per pengiriman membutuhkan waktu eksekusi yang lebih lama
 
-        // Ambil semua tagihan yang belum lunas (scoped by branch access)
+        // Ambil semua tagihan yang belum lunas di bulan ini (scoped by branch access)
         $tagihanUnpaid = Tagihan::with('pelanggan')
-            ->whereNull('status_bayar')
+            ->where(function ($q) {
+                $q->whereNull('status_bayar')
+                  ->orWhereIn('status_bayar', [0, '0', 'belum', '']);
+            })
+            ->where('bulan_tahun', date('mY'))
             ->whereIn('id_pelanggan', Pelanggan::allowedForUser()->pluck('id_pelanggan'))
             ->get();
         
@@ -911,9 +936,13 @@ class AdminTransaksiController extends Controller
     {
         set_time_limit(1800); // Jeda 8 detik per pengiriman membutuhkan waktu eksekusi yang lebih lama
 
-        // Ambil semua tagihan yang belum lunas (scoped by branch access)
+        // Ambil semua tagihan yang belum lunas di bulan ini (scoped by branch access)
         $tagihanUnpaid = Tagihan::with('pelanggan')
-            ->whereNull('status_bayar')
+            ->where(function ($q) {
+                $q->whereNull('status_bayar')
+                  ->orWhereIn('status_bayar', [0, '0', 'belum', '']);
+            })
+            ->where('bulan_tahun', date('mY'))
             ->whereIn('id_pelanggan', Pelanggan::allowedForUser()->pluck('id_pelanggan'))
             ->get();
         
