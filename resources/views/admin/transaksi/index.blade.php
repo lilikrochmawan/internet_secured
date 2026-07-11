@@ -486,6 +486,18 @@
                 <span style="font-size: 0.78rem; color: #f87171;">{{ $unpaidCount }} Transaksi</span>
             </div>
         </div>
+
+        <!-- Card 4: Pendapatan Hari Ini -->
+        <div style="background: white; border: 1px solid #e2e8f0; padding: 18px; border-radius: 16px; display: flex; align-items: center; gap: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+            <div style="width: 48px; height: 48px; border-radius: 12px; background: #fef3c7; display: flex; align-items: center; justify-content: center; color: #d97706; font-size: 1.4rem;">
+                <i class="fa-solid fa-hand-holding-dollar"></i>
+            </div>
+            <div>
+                <span style="font-size: 0.85rem; color: #64748b; font-weight: 500; display: block;">Pendapatan Hari Ini</span>
+                <strong style="font-size: 1.25rem; color: #d97706; display: block;">Rp {{ number_format($todayPaidAmount, 0, ',', '.') }}</strong>
+                <span style="font-size: 0.78rem; color: #f59e0b;">{{ $todayPaidCount }} Transaksi</span>
+            </div>
+        </div>
     </div>
 
     <!-- Search and Row Limiter -->

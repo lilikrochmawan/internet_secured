@@ -88,9 +88,32 @@ class AdminTransaksiController extends Controller
         $unpaidCount = $totalCount - $paidCount;
         $unpaidAmount = $totalAmount - $paidAmount;
 
+        // Calculate Today's Income
+        $todayStart = Carbon::today()->startOfDay()->format('Y-m-d H:i:s');
+        $todayEnd = Carbon::today()->endOfDay()->format('Y-m-d H:i:s');
+        
+        $todayPaymentsQuery = Tagihan::whereIn('id_pelanggan', Pelanggan::allowedForUser()->pluck('id_pelanggan'))
+            ->where('status_bayar', 1)
+            ->whereBetween('waktu_bayar', [$todayStart, $todayEnd]);
+
+        if (!empty($selectedPelangganId)) {
+            $todayPaymentsQuery->where('id_pelanggan', $selectedPelangganId);
+        }
+
+        if (!empty($search)) {
+            $todayPaymentsQuery->whereHas('pelanggan', function ($q) use ($search) {
+                $q->where('nama_pelanggan', 'like', '%' . $search . '%')
+                  ->orWhere('kode_pelanggan', 'like', '%' . $search . '%');
+            });
+        }
+
+        $todayPaidCount = $todayPaymentsQuery->count();
+        $todayPaidAmount = $todayPaymentsQuery->sum('jml_bayar');
+
         return view('admin.transaksi.index', compact(
             'tagihan', 'search', 'status', 'pelanggan', 'selectedMonth', 'selectedYear',
-            'totalCount', 'totalAmount', 'paidCount', 'paidAmount', 'unpaidCount', 'unpaidAmount'
+            'totalCount', 'totalAmount', 'paidCount', 'paidAmount', 'unpaidCount', 'unpaidAmount',
+            'todayPaidCount', 'todayPaidAmount'
         ));
     }
 
