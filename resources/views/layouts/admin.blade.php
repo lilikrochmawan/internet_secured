@@ -915,6 +915,7 @@
                 </li>
             @endif
 
+
             @if(Auth::user()->level == 'admin' || Auth::user()->hasMenuAccess('pengguna'))
                 @php
                     $isSettingsActive = in_array($currRoute, ['admin.pengaturan.index', 'admin.pengaturan_client.index', 'admin.pengguna.index']);
@@ -1116,6 +1117,12 @@
                             </span>
                         @endif
                     </a>
+                </li>
+            @endif
+
+            @if(Auth::user()->level === 'admin')
+                <li class="sidebar-menu-item {{ Str::startsWith($currRoute, 'admin.logs') ? 'active' : '' }}">
+                    <a href="{{ route('admin.logs.index') }}"><i class="fa-solid fa-file-shield"></i><span>Log Aktivitas</span></a>
                 </li>
             @endif
 

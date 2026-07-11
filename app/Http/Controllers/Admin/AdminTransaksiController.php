@@ -333,6 +333,8 @@ class AdminTransaksiController extends Controller
             }
         }
 
+        \Illuminate\Support\Facades\Log::info("Staff [" . auth()->user()->nama_user . "] (level: " . auth()->user()->level . ") MENCATAT PEMBAYARAN tagihan pelanggan [" . ($pelanggan->nama_pelanggan ?? 'Unknown') . "] (kode: " . ($pelanggan->kode_pelanggan ?? '-') . ") sebesar Rp " . number_format($tagihan->jml_bayar, 0, ',', '.') . " untuk periode [" . $tagihan->bulan_tahun . "].");
+
         return redirect()->route('admin.transaksi.index')->with('success', 'Pembayaran tagihan berhasil dicatat!');
     }
 
@@ -392,6 +394,8 @@ class AdminTransaksiController extends Controller
 
         // Hapus dari tb_kas
         DB::table('tb_kas')->where('id_tagihan', $tagihan->id_tagihan)->delete();
+
+        \Illuminate\Support\Facades\Log::info("Staff [" . auth()->user()->nama_user . "] (level: " . auth()->user()->level . ") MEMBATALKAN PEMBAYARAN tagihan pelanggan [" . ($pelanggan->nama_pelanggan ?? 'Unknown') . "] (kode: " . ($pelanggan->kode_pelanggan ?? '-') . ") sebesar Rp " . number_format($tagihan->jml_bayar, 0, ',', '.') . " untuk periode [" . $tagihan->bulan_tahun . "].");
 
         return redirect()->route('admin.transaksi.index')->with('success', 'Pembayaran tagihan berhasil dibatalkan!');
     }
@@ -490,6 +494,8 @@ class AdminTransaksiController extends Controller
                     $waMessage = ' tetapi Gagal mengirim WA: ' . $e->getMessage();
                 }
             }
+            
+            \Illuminate\Support\Facades\Log::info("Staff [" . auth()->user()->nama_user . "] (level: " . auth()->user()->level . ") MEMBLOKIR internet pelanggan [" . $pelanggan->nama_pelanggan . "] (kode: " . $pelanggan->kode_pelanggan . ") karena tagihan belum dibayar.");
 
             return redirect()->route('admin.transaksi.index')->with('success', 'Pelanggan berhasil diblokir di Mikrotik!' . $waMessage);
         }
@@ -585,6 +591,8 @@ class AdminTransaksiController extends Controller
             
             // Update status blokir di database
             $tagihan->update(['blokir_status' => null]);
+
+            \Illuminate\Support\Facades\Log::info("Staff [" . auth()->user()->nama_user . "] (level: " . auth()->user()->level . ") MEMBUKA BLOKIR internet pelanggan [" . $pelanggan->nama_pelanggan . "] (kode: " . $pelanggan->kode_pelanggan . ").");
 
             return redirect()->route('admin.transaksi.index')->with('success', 'Blokir pelanggan berhasil dibuka di Mikrotik!');
         }
@@ -749,6 +757,8 @@ class AdminTransaksiController extends Controller
             }
         }
 
+        \Illuminate\Support\Facades\Log::info("Staff [" . auth()->user()->nama_user . "] (level: " . auth()->user()->level . ") MEN-GENERATE massal sebanyak [" . $generated . "] tagihan baru untuk periode/bulan [" . $request->bulan . $request->tahun . "].");
+
         return redirect()->route('admin.transaksi.index')->with('success', $generated . ' tagihan baru berhasil digenerate untuk periode tersebut.');
     }
 
@@ -786,6 +796,12 @@ class AdminTransaksiController extends Controller
             'item_tagihan' => $request->item_tagihan,
             'jatuh_tempo' => $request->jatuh_tempo . ' 23:59:00',
         ]);
+
+        $pelanggan = Pelanggan::find($request->id_pelanggan);
+        $namaPelanggan = $pelanggan ? $pelanggan->nama_pelanggan : 'Unknown';
+        $kodePelanggan = $pelanggan ? $pelanggan->kode_pelanggan : '-';
+
+        \Illuminate\Support\Facades\Log::info("Staff [" . auth()->user()->nama_user . "] (level: " . auth()->user()->level . ") MEMBUAT INVOICE MANUAL untuk pelanggan [" . $namaPelanggan . "] (kode: " . $kodePelanggan . ") sebesar Rp " . number_format($request->jml_bayar, 0, ',', '.') . " untuk periode [" . $bulantahun . "].");
 
         return redirect()->route('admin.transaksi.index')->with('success', 'Invoice manual berhasil dibuat!');
     }

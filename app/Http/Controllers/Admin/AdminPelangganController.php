@@ -264,6 +264,8 @@ class AdminPelangganController extends Controller
             'id_sub_branch' => $id_sub_branch,
         ]);
 
+        \Illuminate\Support\Facades\Log::info("Staff [" . auth()->user()->nama_user . "] (level: " . auth()->user()->level . ") MENAMBAHKAN pelanggan baru: [" . $nama . "] dengan kode [" . $kode_pelanggan . "].");
+
         // Insert into tb_user
         DB::table('tb_user')->insert([
             'username' => $username,
@@ -371,6 +373,8 @@ class AdminPelangganController extends Controller
             'id_sub_branch' => $id_sub_branch,
             'jatuh_tempo' => $new_jatuh_tempo,
         ]);
+
+        \Illuminate\Support\Facades\Log::info("Staff [" . auth()->user()->nama_user . "] (level: " . auth()->user()->level . ") MENGEDIT pelanggan [" . $pelanggan->nama_pelanggan . "] (kode: " . $pelanggan->kode_pelanggan . ") -> Nama baru: [" . $nama . "], Alamat: [" . $alamat . "], No Telp: [" . $no_telp . "], Paket ID: [" . $paketId . "], Jatuh Tempo: [" . $new_jatuh_tempo . "].");
 
         // Update unpaid bills' due dates to match the new due day
         $unpaidBills = DB::table('tb_tagihan')
@@ -530,6 +534,8 @@ class AdminPelangganController extends Controller
         // Delete from DB tables
         DB::table('tb_user')->where('id_pelanggan', $id)->delete();
         DB::table('tb_pelanggan')->where('id_pelanggan', $id)->delete();
+
+        \Illuminate\Support\Facades\Log::info("Staff [" . auth()->user()->nama_user . "] (level: " . auth()->user()->level . ") MENGHAPUS pelanggan [" . $pelanggan->nama_pelanggan . "] (kode: " . $pelanggan->kode_pelanggan . ").");
 
         return redirect()->route('admin.pelanggan.index')->with('success', 'Pelanggan berhasil dihapus!');
     }

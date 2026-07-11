@@ -46,6 +46,7 @@ use App\Http\Controllers\Admin\AdminMapController;
 use App\Http\Controllers\Admin\AdminOntController;
 use App\Http\Controllers\Admin\AdminNotificationController;
 use App\Http\Controllers\Admin\AdminPengaturanClientController;
+use App\Http\Controllers\Admin\AdminLogController;
 
 Route::prefix('administrator')->group(function () {
     Route::middleware('guest')->group(function () {
@@ -221,6 +222,9 @@ Route::prefix('administrator')->group(function () {
         // Topology & Client Map
         Route::get('/mapping', [AdminMapController::class, 'index'])->name('admin.mapping.index');
         Route::get('/mapping/coordinates', [AdminMapController::class, 'getCoordinates'])->name('admin.mapping.coordinates');
+
+        // Log Aktivitas
+        Route::get('/logs', [AdminLogController::class, 'index'])->name('admin.logs.index');
 
         Route::post('/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
     });

@@ -458,7 +458,13 @@
             </div>
             <div>
                 <span style="font-size: 0.85rem; color: #64748b; font-weight: 500; display: block;">Total Tagihan</span>
-                <strong style="font-size: 1.25rem; color: #0f172a; display: block;">Rp {{ number_format($totalAmount, 0, ',', '.') }}</strong>
+                <strong style="font-size: 1.25rem; color: #0f172a; display: block;">
+                    @if(auth()->user()->level === 'kasir')
+                        Rp ••••• <i class="fa-solid fa-eye-slash" style="color: #94a3b8; font-size: 0.9rem; margin-left: 6px;" title="Akses Terbatas"></i>
+                    @else
+                        Rp {{ number_format($totalAmount, 0, ',', '.') }}
+                    @endif
+                </strong>
                 <span style="font-size: 0.78rem; color: #94a3b8;">{{ $totalCount }} Transaksi</span>
             </div>
         </div>
@@ -470,7 +476,13 @@
             </div>
             <div>
                 <span style="font-size: 0.85rem; color: #64748b; font-weight: 500; display: block;">Sudah Bayar (Lunas)</span>
-                <strong style="font-size: 1.25rem; color: #10b981; display: block;">Rp {{ number_format($paidAmount, 0, ',', '.') }}</strong>
+                <strong style="font-size: 1.25rem; color: #10b981; display: block;">
+                    @if(auth()->user()->level === 'kasir')
+                        Rp ••••• <i class="fa-solid fa-eye-slash" style="color: #94a3b8; font-size: 0.9rem; margin-left: 6px;" title="Akses Terbatas"></i>
+                    @else
+                        Rp {{ number_format($paidAmount, 0, ',', '.') }}
+                    @endif
+                </strong>
                 <span style="font-size: 0.78rem; color: #34d399;">{{ $paidCount }} Transaksi</span>
             </div>
         </div>
@@ -482,7 +494,13 @@
             </div>
             <div>
                 <span style="font-size: 0.85rem; color: #64748b; font-weight: 500; display: block;">Belum Bayar</span>
-                <strong style="font-size: 1.25rem; color: #ef4444; display: block;">Rp {{ number_format($unpaidAmount, 0, ',', '.') }}</strong>
+                <strong style="font-size: 1.25rem; color: #ef4444; display: block;">
+                    @if(auth()->user()->level === 'kasir')
+                        Rp ••••• <i class="fa-solid fa-eye-slash" style="color: #94a3b8; font-size: 0.9rem; margin-left: 6px;" title="Akses Terbatas"></i>
+                    @else
+                        Rp {{ number_format($unpaidAmount, 0, ',', '.') }}
+                    @endif
+                </strong>
                 <span style="font-size: 0.78rem; color: #f87171;">{{ $unpaidCount }} Transaksi</span>
             </div>
         </div>

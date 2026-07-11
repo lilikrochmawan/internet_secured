@@ -79,6 +79,11 @@ class AdminMiddleware
             if ($user->level !== 'admin') {
                 return abort(403, 'Unauthorized action.');
             }
+        } elseif (preg_match('/^logs/', $subPath)) {
+            // Log Aktivitas is admin-only
+            if ($user->level !== 'admin') {
+                return abort(403, 'Unauthorized action.');
+            }
         } elseif (preg_match('/^teknisi\/clients/', $subPath)) {
             // Dapatkan akses untuk admin dan teknisi
             if (!in_array($user->level, ['admin', 'teknisi'])) {
