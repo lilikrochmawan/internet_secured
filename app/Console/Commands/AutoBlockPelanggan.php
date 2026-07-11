@@ -72,6 +72,7 @@ class AutoBlockPelanggan extends Command
 
         // Hubungkan ke router berdasarkan device mikrotik masing-masing
         $connections = [];
+        $processedCustomerIds = [];
 
         foreach ($overdueBills as $tx) {
             $pelanggan = $tx->pelanggan;
@@ -79,6 +80,14 @@ class AutoBlockPelanggan extends Command
                 $this->error('Tagihan ID ' . $tx->id_tagihan . ' tidak memiliki data pelanggan.');
                 continue;
             }
+
+            // Cegah pengiriman dobel jika pelanggan memiliki lebih dari satu tagihan menunggak
+            if (in_array($pelanggan->id_pelanggan, $processedCustomerIds)) {
+                $tx->update(['blokir_status' => 1]);
+                $this->info("Pelanggan {$pelanggan->nama_pelanggan} memiliki tunggakan lain yang sudah diproses. Tandai status blokir tagihan ini dan lewati.");
+                continue;
+            }
+            $processedCustomerIds[] = $pelanggan->id_pelanggan;
 
             // Cek apakah tagihan terbaru pelanggan ini sudah lunas. Jika lunas, abaikan blokir untuk tagihan lama.
             $latestBill = Tagihan::where('id_pelanggan', $pelanggan->id_pelanggan)
