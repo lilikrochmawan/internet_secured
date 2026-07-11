@@ -90,16 +90,12 @@ class AdminCustomPesanController extends Controller
     {
         $request->validate([
             'status_blokir' => 'required|string',
-            'berapa' => 'required|integer',
-            'kapan' => 'required|string',
             'pesan_blokir' => 'required|string',
         ]);
 
         $exists = DB::table('tbl_blokir')->first();
         $data = [
             'status_blokir' => $request->status_blokir,
-            'set_waktu' => $request->berapa,
-            'set_waktu2' => $request->kapan,
             'pesan_blokir' => $request->pesan_blokir,
         ];
 

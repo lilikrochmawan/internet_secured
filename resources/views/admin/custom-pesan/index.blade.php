@@ -210,20 +210,7 @@
                 </select>
             </div>
 
-            <div class="form-row-2-1">
-                <div class="form-group">
-                    <label for="berapa">Interval Waktu</label>
-                    <input type="number" name="berapa" id="berapa" value="{{ $blokir->set_waktu ?? 1 }}" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label for="kapan">Satuan</label>
-                    <select name="kapan" id="kapan" class="form-control">
-                        <option value="minutes" {{ ($blokir->set_waktu2 ?? 'day') == 'minutes' ? 'selected' : '' }}>Menit</option>
-                        <option value="hour" {{ ($blokir->set_waktu2 ?? 'day') == 'hour' ? 'selected' : '' }}>Jam</option>
-                        <option value="day" {{ ($blokir->set_waktu2 ?? 'day') == 'day' ? 'selected' : '' }}>Hari</option>
-                    </select>
-                </div>
-            </div>
+
 
             <div class="form-group">
                 <label for="pesan_blokir">Isi Pesan Isolir Otomatis</label>

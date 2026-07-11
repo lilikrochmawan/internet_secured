@@ -30,6 +30,14 @@ class AutoBlockPelanggan extends Command
      */
     public function handle()
     {
+        // Ambil pengaturan blokir kustom
+        $blokirSetting = DB::table('tbl_blokir')->first();
+        if (!$blokirSetting || ($blokirSetting->status_blokir ?? '') !== 'aktif') {
+            $this->info('Fitur pemblokiran otomatis dinonaktifkan di pengaturan custom pesan.');
+            Log::info('AutoBlockPelanggan: Fitur pemblokiran otomatis dinonaktifkan di pengaturan custom pesan.');
+            return Command::SUCCESS;
+        }
+
         // Ambil info sistem billing global
         $settings = DB::table('tb_profile')->first();
         $sistem = $settings->sistem_billing ?? 'prabayar';
@@ -59,6 +67,8 @@ class AutoBlockPelanggan extends Command
 
         require_once base_path('include/routeros_api.php');
         $checkUser = DB::table('tbl_penggunamikrotik')->first();
+        $tokenInfo = DB::table('tbl_token')->where('id_token', 1)->first();
+        $blokirSetting = DB::table('tbl_blokir')->first();
 
         // Hubungkan ke router berdasarkan device mikrotik masing-masing
         $connections = [];
@@ -150,6 +160,43 @@ class AutoBlockPelanggan extends Command
                     $tx->update(['blokir_status' => 1]);
                     $this->info('Berhasil memblokir pelanggan: ' . $pelanggan->nama_pelanggan);
                     Log::info('AutoBlockPelanggan: Berhasil memblokir ' . $pelanggan->nama_pelanggan);
+
+                    // Kirim Notifikasi WhatsApp Pemblokiran
+                    if ($blokirSetting && ($blokirSetting->status_blokir ?? '') === 'aktif' && $tokenInfo && !empty($tokenInfo->token) && !empty($pelanggan->no_telp)) {
+                        $pesan = $blokirSetting->pesan_blokir;
+                        $pesan = str_replace('$nama', $pelanggan->nama_pelanggan, $pesan);
+                        $pesan = str_replace('$no_telp', $pelanggan->no_telp, $pesan);
+                        $pesan = str_replace('$kode_pelanggan', $pelanggan->kode_pelanggan, $pesan);
+                        $pesan = str_replace('$tagihan', number_format($tx->jml_bayar, 0, ',', '.'), $pesan);
+                        $pesan = str_replace('$jatuh_tempo', \Carbon\Carbon::parse($tx->jatuh_tempo)->translatedFormat('d F Y') ?? $pelanggan->jatuh_tempo, $pesan);
+                        $pesan = str_replace('$hari_ini', \Carbon\Carbon::now()->translatedFormat('d F Y'), $pesan);
+
+                        try {
+                            $response = \Illuminate\Support\Facades\Http::timeout(10)->withHeaders([
+                                'Authorization' => $tokenInfo->token
+                            ])->asForm()->post('https://api.fonnte.com/send', [
+                                'target' => $pelanggan->no_telp,
+                                'message' => $pesan,
+                                'countryCode' => '62'
+                            ]);
+
+                            $resData = $response->json();
+                            if ($response->successful() && isset($resData['status']) && $resData['status'] === true) {
+                                $this->info('Notifikasi WA pemblokiran terkirim ke: ' . $pelanggan->nama_pelanggan);
+                                Log::info('AutoBlockPelanggan: Notifikasi WA pemblokiran terkirim ke ' . $pelanggan->nama_pelanggan);
+                            } else {
+                                $reason = $resData['reason'] ?? $resData['message'] ?? 'Device Fonnte tidak aktif.';
+                                $this->warn('Gagal kirim WA pemblokiran ke ' . $pelanggan->nama_pelanggan . ': ' . $reason);
+                                Log::warning('AutoBlockPelanggan: Gagal kirim WA pemblokiran ke ' . $pelanggan->nama_pelanggan . ': ' . $reason);
+                            }
+                        } catch (\Exception $e) {
+                            $this->error('Exception kirim WA pemblokiran ke ' . $pelanggan->nama_pelanggan . ': ' . $e->getMessage());
+                            Log::error('AutoBlockPelanggan: Exception kirim WA pemblokiran ke ' . $pelanggan->nama_pelanggan . ': ' . $e->getMessage());
+                        }
+
+                        // Jeda 5 detik antar pengiriman pesan WA untuk menghindari rate limit Fonnte
+                        sleep(5);
+                    }
                 }
 
             } catch (\Exception $e) {
