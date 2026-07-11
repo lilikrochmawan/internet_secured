@@ -906,7 +906,7 @@
                                         -- Tanpa Sub Branch --
                                     </div>
                                     @foreach($subBranches as $sb)
-                                        <div class="custom-select-option" data-value="{{ $sb->id }}" data-text="{{ $sb->nama_sub_branch }}">
+                                        <div class="custom-select-option" data-value="{{ $sb->id }}" data-branch="{{ $sb->id_branch }}" data-text="{{ $sb->nama_sub_branch }}">
                                             {{ $sb->nama_sub_branch }}
                                         </div>
                                     @endforeach
@@ -1190,19 +1190,72 @@
         });
     }
 
-    // Filter Sub Branch options based on search text
+    // Filter Sub Branch options based on search text and selected branch
     function filterApproveSubBranchOptions() {
         const query = document.getElementById('approve_search_sub_branch').value.toLowerCase();
+        const branchId = document.getElementById('approve_branch_id').value;
         const options = document.querySelectorAll('#approve_sub_branch_options .custom-select-option');
         
         options.forEach(opt => {
             const text = opt.getAttribute('data-text').toLowerCase();
-            if (text.includes(query)) {
+            const optBranch = opt.getAttribute('data-branch');
+            const optVal = opt.getAttribute('data-value');
+            
+            if (optVal === "") {
+                opt.style.display = text.includes(query) ? 'block' : 'none';
+                return;
+            }
+            
+            const matchesText = text.includes(query);
+            const matchesBranch = (!branchId || optBranch === branchId);
+            
+            if (matchesText && matchesBranch) {
                 opt.style.display = 'block';
             } else {
                 opt.style.display = 'none';
             }
         });
+    }
+
+    // Filter Sub Branch options dynamically when branch changes
+    function filterSubBranchByBranch() {
+        const branchId = document.getElementById('approve_branch_id').value;
+        const subBranchIdInput = document.getElementById('approve_sub_branch_id');
+        const selectedSubBranchVal = subBranchIdInput.value;
+        let selectedStillValid = false;
+        
+        const options = document.querySelectorAll('#approve_sub_branch_options .custom-select-option');
+        
+        options.forEach(opt => {
+            const optBranch = opt.getAttribute('data-branch');
+            const optVal = opt.getAttribute('data-value');
+            
+            if (optVal === "") {
+                opt.style.display = 'block';
+                return;
+            }
+            
+            if (!branchId || optBranch === branchId) {
+                opt.style.display = 'block';
+                if (optVal === selectedSubBranchVal) {
+                    selectedStillValid = true;
+                }
+            } else {
+                opt.style.display = 'none';
+                opt.classList.remove('selected');
+            }
+        });
+        
+        if (selectedSubBranchVal !== "" && !selectedStillValid) {
+            subBranchIdInput.value = '';
+            document.getElementById('approve_sub_branch_select_text').innerText = '-- Tanpa Sub Branch --';
+            document.querySelectorAll('#approve_sub_branch_options .custom-select-option').forEach(opt => {
+                opt.classList.remove('selected');
+                if (opt.getAttribute('data-value') === '') {
+                    opt.classList.add('selected');
+                }
+            });
+        }
     }
 
     // ACC Approval Modal
@@ -1264,6 +1317,9 @@
                 opt.classList.add('selected');
             }
         });
+
+        // Filter Sub Branch list by Branch selection
+        filterSubBranchByBranch();
 
         document.getElementById('approveModal').classList.add('active');
     }
@@ -1340,6 +1396,9 @@
                     opt.classList.remove('selected');
                 });
                 option.classList.add('selected');
+                
+                // Dynamically filter sub-branches when branch changes
+                filterSubBranchByBranch();
                 
                 document.getElementById('approve_branch_select').classList.remove('active');
             });
