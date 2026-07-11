@@ -211,8 +211,10 @@ function handleInform($koneksi, $xpath, $messageId) {
         
         // Extract PPPoE Username
         if ((strpos($name, 'WANPPPConnection') !== false || strpos($name, 'PPP.Interface') !== false) && strpos($name, 'Username') !== false) {
-            if (empty($pppoeUsername)) {
-                $pppoeUsername = $value;
+            if (empty($pppoeUsername) || strtolower($pppoeUsername) === 'default') {
+                if (!empty($value)) {
+                    $pppoeUsername = $value;
+                }
             }
         } elseif (strpos($name, 'X_CT-COM_UserInfo.UserName') !== false || strpos($name, 'X_CT-COM_UserInfo.UserId') !== false) {
             $itmsUsername = $value;
@@ -220,8 +222,10 @@ function handleInform($koneksi, $xpath, $messageId) {
         
         // Extract PPPoE Connection Status
         if ((strpos($name, 'WANPPPConnection') !== false || strpos($name, 'PPP.Interface') !== false) && strpos($name, 'ConnectionStatus') !== false) {
-            if (empty($pppoeStatus)) {
-                $pppoeStatus = $value;
+            if (empty($pppoeStatus) || $pppoeStatus !== 'Connected') {
+                if (!empty($value)) {
+                    $pppoeStatus = $value;
+                }
             }
         }
         
@@ -501,6 +505,20 @@ function handleEmptyPost($koneksi, $messageId) {
                 'InternetGatewayDevice.WANDevice.1.X_ZTE_GponInterfaceConfig.TXPower',
                 'InternetGatewayDevice.WANDevice.1.X_ZTE_EponInterfaceConfig.RXPower',
                 'InternetGatewayDevice.WANDevice.1.X_ZTE_EponInterfaceConfig.TXPower',
+                'InternetGatewayDevice.WANDevice.1.X_ZTE-COM_GponInterfaceConfig.RXPower',
+                'InternetGatewayDevice.WANDevice.1.X_ZTE-COM_GponInterfaceConfig.TXPower',
+                'InternetGatewayDevice.WANDevice.1.X_ZTE-COM_EponInterfaceConfig.RXPower',
+                'InternetGatewayDevice.WANDevice.1.X_ZTE-COM_EponInterfaceConfig.TXPower',
+                'InternetGatewayDevice.WANDevice.1.X_ZTE-COM_OpticalInfo.RxPower',
+                'InternetGatewayDevice.WANDevice.1.X_ZTE-COM_OpticalInfo.TxPower',
+                'InternetGatewayDevice.WANDevice.1.X_FH_PON.Optical.RxPower',
+                'InternetGatewayDevice.WANDevice.1.X_FH_PON.Optical.TxPower',
+                'InternetGatewayDevice.WANDevice.1.X_FH_PON.OpticalDiagnostics.RxPower',
+                'InternetGatewayDevice.WANDevice.1.X_FH_PON.OpticalDiagnostics.TxPower',
+                'InternetGatewayDevice.WANDevice.1.X_FI_PON.Optical.RxPower',
+                'InternetGatewayDevice.WANDevice.1.X_FI_PON.Optical.TxPower',
+                'InternetGatewayDevice.WANDevice.1.X_FH_OpticalInfo.RxPower',
+                'InternetGatewayDevice.WANDevice.1.X_FH_OpticalInfo.TxPower',
                 'InternetGatewayDevice.WANDevice.1.X_ZTE_Dslh.OpticalDiagnostics.RxPower',
                 'InternetGatewayDevice.WANDevice.1.X_ZTE_Dslh.OpticalDiagnostics.TxPower',
                 'InternetGatewayDevice.WANDevice.1.WANConnectionDevice.1.WANONUConnection.OpticalSignalLevel',
@@ -777,13 +795,24 @@ function handleResponse($koneksi, $methodName, $messageId, $xpath) {
             }
         }
         
-        // Find the active PPPoE connection with a username
+        // Find the active PPPoE connection with a username (prioritizing non-default usernames)
+        $fallbackUsername = null;
+        $fallbackStatus = null;
         foreach ($pppoeConnections as $conn) {
             if (!empty($conn['username'])) {
-                $pppoeUsername = $conn['username'];
-                $pppoeStatus = $conn['status'];
-                break;
+                if (strtolower($conn['username']) !== 'default') {
+                    $pppoeUsername = $conn['username'];
+                    $pppoeStatus = $conn['status'];
+                    break;
+                } else {
+                    $fallbackUsername = $conn['username'];
+                    $fallbackStatus = $conn['status'];
+                }
             }
+        }
+        if (empty($pppoeUsername) && !empty($fallbackUsername)) {
+            $pppoeUsername = $fallbackUsername;
+            $pppoeStatus = $fallbackStatus;
         }
         
         // Fallback to ITMS/RMS Username if PPPoE Username is empty
