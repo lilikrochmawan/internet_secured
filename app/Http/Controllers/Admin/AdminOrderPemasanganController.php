@@ -172,9 +172,6 @@ class AdminOrderPemasanganController extends Controller
         ]);
 
         $order = OrderPemasangan::findOrFail($request->id_order);
-        if (is_null($order->id_teknisi)) {
-            return back()->withErrors(['error' => 'Wajib menugaskan teknisi terlebih dahulu sebelum melakukan ACC!'])->withInput();
-        }
 
         $request->validate([
             'username' => 'required|string',

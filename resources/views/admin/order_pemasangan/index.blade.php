@@ -281,6 +281,99 @@
     .preview-remove:hover {
         background-color: rgba(220, 38, 38, 1);
     }
+
+    /* Custom Searchable Dropdown Styling */
+    .custom-select-container {
+        position: relative;
+        width: 100%;
+        user-select: none;
+    }
+    .custom-select-trigger {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border: 1px solid #cbd5e1;
+        border-radius: 12px;
+        padding: 10px 14px;
+        font-size: 0.95rem;
+        background-color: white;
+        cursor: pointer;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .custom-select-trigger:hover {
+        border-color: #94a3b8;
+    }
+    .custom-select-container.active .custom-select-trigger {
+        border-color: #4f46e5;
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    }
+    .custom-select-dropdown {
+        position: absolute;
+        top: calc(100% + 4px);
+        left: 0;
+        right: 0;
+        background-color: white;
+        border: 1px solid #cbd5e1;
+        border-radius: 12px;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        z-index: 9999;
+        display: none;
+        overflow: hidden;
+    }
+    .custom-select-container.active .custom-select-dropdown {
+        display: block;
+    }
+    .custom-select-search-wrapper {
+        position: relative;
+        padding: 8px;
+        border-bottom: 1px solid #e2e8f0;
+        background-color: #f8fafc;
+    }
+    .custom-select-search-wrapper i {
+        position: absolute;
+        left: 18px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #94a3b8;
+        font-size: 0.9rem;
+    }
+    .custom-select-search-input.form-control {
+        width: 100%;
+        padding: 8px 12px 8px 32px;
+        font-size: 0.88rem;
+        border-radius: 8px;
+        border: 1px solid #e2e8f0;
+        background-color: white;
+        height: 36px;
+    }
+    .custom-select-search-input.form-control:focus {
+        border-color: #4f46e5;
+        box-shadow: none;
+    }
+    .custom-select-options {
+        max-height: 220px;
+        overflow-y: auto;
+    }
+    .custom-select-option {
+        padding: 10px 14px;
+        font-size: 0.9rem;
+        color: #334155;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+    .custom-select-option:hover {
+        background-color: #f1f5f9;
+    }
+    .custom-select-option.selected {
+        background-color: #e0e7ff;
+        color: #4f46e5;
+        font-weight: 600;
+    }
+    .custom-select-option[disabled] {
+        opacity: 0.5;
+        cursor: not-allowed;
+        background-color: #f8fafc;
+    }
 </style>
 @endsection
 
@@ -475,16 +568,12 @@
                                     <!-- Admin / NOC Actions -->
                                     @if(Auth::user()->level === 'admin' || Auth::user()->level === 'noc')
                                         @if($row->status === 'pending')
-                                            @if(is_null($row->id_teknisi))
-                                                <button class="btn btn-primary" style="padding: 6px 12px; font-size: 0.8rem; border-radius: 8px; width: 100%; justify-content: center; opacity: 0.5; cursor: not-allowed;" disabled title="Wajib menugaskan teknisi terlebih dahulu sebelum melakukan ACC">
-                                                    <i class="fa-solid fa-check"></i> ACC
-                                                </button>
-                                            @else
-                                                <button class="btn btn-primary" style="padding: 6px 12px; font-size: 0.8rem; border-radius: 8px; width: 100%; justify-content: center;" 
-                                                    onclick='openApproveModal({!! json_encode($row) !!})'>
-                                                    <i class="fa-solid fa-check"></i> ACC
-                                                </button>
-                                            @endif
+                                            <button class="btn btn-primary" style="padding: 6px 12px; font-size: 0.8rem; border-radius: 8px; width: 100%; justify-content: center;" 
+                                                onclick='openApproveModal({!! json_encode($row) !!})'>
+                                                <i class="fa-solid fa-check"></i> ACC
+                                            </button>
+                                        @endif
+                                        @if($row->status === 'approved')
                                             <button class="btn btn-secondary" style="padding: 6px 12px; font-size: 0.8rem; border-radius: 8px; width: 100%; justify-content: center;" 
                                                 onclick="openAssignModal('{{ $row->id }}')">
                                                 <i class="fa-solid fa-user-plus"></i> {{ is_null($row->id_teknisi) ? 'Tugaskan Teknisi' : 'Ubah Teknisi' }}
@@ -731,38 +820,99 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="odp">Pilih ODP *</label>
-                    <select id="odp" name="odp" class="form-control">
-                        <option value="">-- Pilih ODP (Opsional) --</option>
-                        @foreach($odps as $o)
-                            @php
-                                $remaining = $o->port_odp - ($o->pelanggans_count ?? 0);
-                            @endphp
-                            <option value="{{ $o->id_odp }}" {{ $remaining <= 0 ? 'disabled style=color:var(--text-gray);' : '' }}>
-                                {{ $o->nama_odp }} (Sisa Port: {{ $remaining }} / {{ $o->port_odp }})
-                            </option>
-                        @endforeach
-                    </select>
+                    <label>Pilih ODP *</label>
+                    <!-- Hidden input to store actual selected value -->
+                    <input type="hidden" name="odp" id="approve_odp_id">
+
+                    <!-- Custom Searchable Dropdown -->
+                    <div class="custom-select-container" id="approve_odp_select">
+                        <div class="custom-select-trigger" onclick="toggleApproveOdpDropdown(event)">
+                            <span id="approve_odp_select_text">-- Pilih ODP (Opsional) --</span>
+                            <i class="fa-solid fa-chevron-down" style="font-size: 0.8rem; color: var(--text-gray);"></i>
+                        </div>
+                        <div class="custom-select-dropdown" id="approve_odp_dropdown">
+                            <div class="custom-select-search-wrapper">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                                <input type="text" id="approve_search_odp" class="form-control custom-select-search-input" placeholder="Cari ODP..." autocomplete="off">
+                            </div>
+                            <div class="custom-select-options" id="approve_odp_options">
+                                <div class="custom-select-option selected" data-value="" data-text="-- Pilih ODP (Opsional) --">
+                                    -- Pilih ODP (Opsional) --
+                                </div>
+                                @foreach($odps as $o)
+                                    @php
+                                        $remaining = $o->port_odp - ($o->pelanggans_count ?? 0);
+                                    @endphp
+                                    <div class="custom-select-option {{ $remaining <= 0 ? 'disabled' : '' }}" 
+                                         data-value="{{ $o->id_odp }}" 
+                                         data-text="{{ $o->nama_odp }} (Sisa Port: {{ $remaining }} / {{ $o->port_odp }})"
+                                         {!! $remaining <= 0 ? 'style="opacity: 0.5; pointer-events: none; background: #f8fafc;"' : '' !!}>
+                                        <strong>{{ $o->nama_odp }}</strong> 
+                                        <span style="font-size:0.8rem; color: var(--text-gray);">
+                                            (Sisa Port: {{ $remaining }} / {{ $o->port_odp }})
+                                        </span>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="form-row-2">
                     <div class="form-group">
-                        <label for="id_branch">Pilih Branch</label>
-                        <select id="id_branch" name="id_branch" class="form-control">
-                            <option value="">-- Tanpa Branch --</option>
-                            @foreach($branches as $b)
-                                <option value="{{ $b->id }}">{{ $b->nama_branch }}</option>
-                            @endforeach
-                        </select>
+                        <label>Pilih Branch</label>
+                        <input type="hidden" name="id_branch" id="approve_branch_id">
+                        
+                        <div class="custom-select-container" id="approve_branch_select">
+                            <div class="custom-select-trigger" onclick="toggleApproveBranchDropdown(event)">
+                                <span id="approve_branch_select_text">-- Tanpa Branch --</span>
+                                <i class="fa-solid fa-chevron-down" style="font-size: 0.8rem; color: var(--text-gray);"></i>
+                            </div>
+                            <div class="custom-select-dropdown" id="approve_branch_dropdown">
+                                <div class="custom-select-search-wrapper">
+                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                    <input type="text" id="approve_search_branch" class="form-control custom-select-search-input" placeholder="Cari Branch..." autocomplete="off">
+                                </div>
+                                <div class="custom-select-options" id="approve_branch_options">
+                                    <div class="custom-select-option selected" data-value="" data-text="-- Tanpa Branch --">
+                                        -- Tanpa Branch --
+                                    </div>
+                                    @foreach($branches as $b)
+                                        <div class="custom-select-option" data-value="{{ $b->id }}" data-text="{{ $b->nama_branch }}">
+                                            {{ $b->nama_branch }}
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
                     </div>
+                    
                     <div class="form-group">
-                        <label for="id_sub_branch">Pilih Sub Branch</label>
-                        <select id="id_sub_branch" name="id_sub_branch" class="form-control">
-                            <option value="">-- Tanpa Sub Branch --</option>
-                            @foreach($subBranches as $sb)
-                                <option value="{{ $sb->id }}">{{ $sb->nama_sub_branch }}</option>
-                            @endforeach
-                        </select>
+                        <label>Pilih Sub Branch</label>
+                        <input type="hidden" name="id_sub_branch" id="approve_sub_branch_id">
+                        
+                        <div class="custom-select-container" id="approve_sub_branch_select">
+                            <div class="custom-select-trigger" onclick="toggleApproveSubBranchDropdown(event)">
+                                <span id="approve_sub_branch_select_text">-- Tanpa Sub Branch --</span>
+                                <i class="fa-solid fa-chevron-down" style="font-size: 0.8rem; color: var(--text-gray);"></i>
+                            </div>
+                            <div class="custom-select-dropdown" id="approve_sub_branch_dropdown">
+                                <div class="custom-select-search-wrapper">
+                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                    <input type="text" id="approve_search_sub_branch" class="form-control custom-select-search-input" placeholder="Cari Sub Branch..." autocomplete="off">
+                                </div>
+                                <div class="custom-select-options" id="approve_sub_branch_options">
+                                    <div class="custom-select-option selected" data-value="" data-text="-- Tanpa Sub Branch --">
+                                        -- Tanpa Sub Branch --
+                                    </div>
+                                    @foreach($subBranches as $sb)
+                                        <div class="custom-select-option" data-value="{{ $sb->id }}" data-text="{{ $sb->nama_sub_branch }}">
+                                            {{ $sb->nama_sub_branch }}
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -956,6 +1106,105 @@
         document.getElementById('assignModal').classList.remove('active');
     }
 
+    // Dropdown toggling for Approve ODP Select
+    function toggleApproveOdpDropdown(event) {
+        event.stopPropagation();
+        const container = document.getElementById('approve_odp_select');
+        const searchInput = document.getElementById('approve_search_odp');
+        
+        // Close other dropdowns
+        const branchContainer = document.getElementById('approve_branch_select');
+        if (branchContainer) branchContainer.classList.remove('active');
+        const subContainer = document.getElementById('approve_sub_branch_select');
+        if (subContainer) subContainer.classList.remove('active');
+        
+        container.classList.toggle('active');
+        if (container.classList.contains('active')) {
+            searchInput.focus();
+        }
+    }
+
+    // Dropdown toggling for Approve Branch Select
+    function toggleApproveBranchDropdown(event) {
+        event.stopPropagation();
+        const container = document.getElementById('approve_branch_select');
+        const searchInput = document.getElementById('approve_search_branch');
+        
+        // Close other dropdowns
+        const odpContainer = document.getElementById('approve_odp_select');
+        if (odpContainer) odpContainer.classList.remove('active');
+        const subContainer = document.getElementById('approve_sub_branch_select');
+        if (subContainer) subContainer.classList.remove('active');
+        
+        container.classList.toggle('active');
+        if (container.classList.contains('active')) {
+            searchInput.focus();
+        }
+    }
+
+    // Dropdown toggling for Approve Sub Branch Select
+    function toggleApproveSubBranchDropdown(event) {
+        event.stopPropagation();
+        const container = document.getElementById('approve_sub_branch_select');
+        const searchInput = document.getElementById('approve_search_sub_branch');
+        
+        // Close other dropdowns
+        const odpContainer = document.getElementById('approve_odp_select');
+        if (odpContainer) odpContainer.classList.remove('active');
+        const branchContainer = document.getElementById('approve_branch_select');
+        if (branchContainer) branchContainer.classList.remove('active');
+        
+        container.classList.toggle('active');
+        if (container.classList.contains('active')) {
+            searchInput.focus();
+        }
+    }
+
+    // Filter ODP options based on search text
+    function filterApproveOdpOptions() {
+        const query = document.getElementById('approve_search_odp').value.toLowerCase();
+        const options = document.querySelectorAll('#approve_odp_options .custom-select-option');
+        
+        options.forEach(opt => {
+            const text = opt.getAttribute('data-text').toLowerCase();
+            if (text.includes(query)) {
+                opt.style.display = 'block';
+            } else {
+                opt.style.display = 'none';
+            }
+        });
+    }
+
+    // Filter Branch options based on search text
+    function filterApproveBranchOptions() {
+        const query = document.getElementById('approve_search_branch').value.toLowerCase();
+        const options = document.querySelectorAll('#approve_branch_options .custom-select-option');
+        
+        options.forEach(opt => {
+            const text = opt.getAttribute('data-text').toLowerCase();
+            if (text.includes(query)) {
+                opt.style.display = 'block';
+            } else {
+                opt.style.display = 'none';
+            }
+        });
+    }
+
+    // Filter Sub Branch options based on search text
+    function filterApproveSubBranchOptions() {
+        const query = document.getElementById('approve_search_sub_branch').value.toLowerCase();
+        const options = document.querySelectorAll('#approve_sub_branch_options .custom-select-option');
+        
+        options.forEach(opt => {
+            const text = opt.getAttribute('data-text').toLowerCase();
+            if (text.includes(query)) {
+                opt.style.display = 'block';
+            } else {
+                opt.style.display = 'none';
+            }
+        });
+    }
+
     // ACC Approval Modal
     function openApproveModal(order) {
         document.getElementById('approve_id').value = order.id;
@@ -977,12 +1226,171 @@
             document.getElementById('paket').value = '';
         }
 
+        // Reset ODP custom dropdown selection
+        document.getElementById('approve_odp_id').value = '';
+        document.getElementById('approve_odp_select_text').innerText = '-- Pilih ODP (Opsional) --';
+        document.getElementById('approve_search_odp').value = '';
+        filterApproveOdpOptions();
+        
+        document.querySelectorAll('#approve_odp_options .custom-select-option').forEach(opt => {
+            opt.classList.remove('selected');
+            if (opt.getAttribute('data-value') === '') {
+                opt.classList.add('selected');
+            }
+        });
+
+        // Reset Branch custom dropdown selection
+        document.getElementById('approve_branch_id').value = '';
+        document.getElementById('approve_branch_select_text').innerText = '-- Tanpa Branch --';
+        document.getElementById('approve_search_branch').value = '';
+        filterApproveBranchOptions();
+        
+        document.querySelectorAll('#approve_branch_options .custom-select-option').forEach(opt => {
+            opt.classList.remove('selected');
+            if (opt.getAttribute('data-value') === '') {
+                opt.classList.add('selected');
+            }
+        });
+
+        // Reset Sub Branch custom dropdown selection
+        document.getElementById('approve_sub_branch_id').value = '';
+        document.getElementById('approve_sub_branch_select_text').innerText = '-- Tanpa Sub Branch --';
+        document.getElementById('approve_search_sub_branch').value = '';
+        filterApproveSubBranchOptions();
+        
+        document.querySelectorAll('#approve_sub_branch_options .custom-select-option').forEach(opt => {
+            opt.classList.remove('selected');
+            if (opt.getAttribute('data-value') === '') {
+                opt.classList.add('selected');
+            }
+        });
+
         document.getElementById('approveModal').classList.add('active');
     }
 
+    // Close ACC Approval Modal
     function closeApproveModal() {
         document.getElementById('approveModal').classList.remove('active');
+        
+        // Close any active custom dropdowns
+        const odpContainer = document.getElementById('approve_odp_select');
+        if (odpContainer) odpContainer.classList.remove('active');
+        const branchContainer = document.getElementById('approve_branch_select');
+        if (branchContainer) branchContainer.classList.remove('active');
+        const subContainer = document.getElementById('approve_sub_branch_select');
+        if (subContainer) subContainer.classList.remove('active');
     }
+
+    // Bind event listeners for custom select on DOM load
+    document.addEventListener('DOMContentLoaded', function() {
+        // --- ODP ---
+        const searchInput = document.getElementById('approve_search_odp');
+        if (searchInput) {
+            searchInput.addEventListener('keyup', filterApproveOdpOptions);
+            searchInput.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+        }
+        
+        const optionsContainer = document.getElementById('approve_odp_options');
+        if (optionsContainer) {
+            optionsContainer.addEventListener('click', function(e) {
+                const option = e.target.closest('.custom-select-option');
+                if (!option) return;
+                
+                if (option.classList.contains('disabled')) return;
+                
+                const val = option.getAttribute('data-value');
+                const text = option.getAttribute('data-text');
+                
+                document.getElementById('approve_odp_id').value = val;
+                document.getElementById('approve_odp_select_text').innerText = text;
+                
+                document.querySelectorAll('#approve_odp_options .custom-select-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                option.classList.add('selected');
+                
+                document.getElementById('approve_odp_select').classList.remove('active');
+            });
+        }
+        
+        // --- Branch ---
+        const searchBranch = document.getElementById('approve_search_branch');
+        if (searchBranch) {
+            searchBranch.addEventListener('keyup', filterApproveBranchOptions);
+            searchBranch.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+        }
+        
+        const optionsBranch = document.getElementById('approve_branch_options');
+        if (optionsBranch) {
+            optionsBranch.addEventListener('click', function(e) {
+                const option = e.target.closest('.custom-select-option');
+                if (!option) return;
+                
+                const val = option.getAttribute('data-value');
+                const text = option.getAttribute('data-text');
+                
+                document.getElementById('approve_branch_id').value = val;
+                document.getElementById('approve_branch_select_text').innerText = text;
+                
+                document.querySelectorAll('#approve_branch_options .custom-select-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                option.classList.add('selected');
+                
+                document.getElementById('approve_branch_select').classList.remove('active');
+            });
+        }
+
+        // --- Sub Branch ---
+        const searchSubBranch = document.getElementById('approve_search_sub_branch');
+        if (searchSubBranch) {
+            searchSubBranch.addEventListener('keyup', filterApproveSubBranchOptions);
+            searchSubBranch.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+        }
+        
+        const optionsSubBranch = document.getElementById('approve_sub_branch_options');
+        if (optionsSubBranch) {
+            optionsSubBranch.addEventListener('click', function(e) {
+                const option = e.target.closest('.custom-select-option');
+                if (!option) return;
+                
+                const val = option.getAttribute('data-value');
+                const text = option.getAttribute('data-text');
+                
+                document.getElementById('approve_sub_branch_id').value = val;
+                document.getElementById('approve_sub_branch_select_text').innerText = text;
+                
+                document.querySelectorAll('#approve_sub_branch_options .custom-select-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                option.classList.add('selected');
+                
+                document.getElementById('approve_sub_branch_select').classList.remove('active');
+            });
+        }
+        
+        // --- Click outside closure ---
+        document.addEventListener('click', function(e) {
+            const odpContainer = document.getElementById('approve_odp_select');
+            if (odpContainer && !odpContainer.contains(e.target)) {
+                odpContainer.classList.remove('active');
+            }
+            const branchContainer = document.getElementById('approve_branch_select');
+            if (branchContainer && !branchContainer.contains(e.target)) {
+                branchContainer.classList.remove('active');
+            }
+            const subContainer = document.getElementById('approve_sub_branch_select');
+            if (subContainer && !subContainer.contains(e.target)) {
+                subContainer.classList.remove('active');
+            }
+        });
+    });
 
     // Complete Installation Modal (Technician)
     let selectedDocs = [];

@@ -213,7 +213,7 @@ class PaymentController extends Controller
 
         if ($feeType === 'payment_method') {
             if ($paymentMethod === 'qris') {
-                $payload['enabled_payments'] = ['gopay', 'shopeepay', 'qris'];
+                $payload['enabled_payments'] = ['gopay', 'shopeepay', 'qris', 'other_qris'];
             } elseif ($paymentMethod === 'va') {
                 $payload['enabled_payments'] = ['bca_va', 'bni_va', 'bri_va', 'cimb_va', 'other_va'];
             } elseif ($paymentMethod === 'retail') {
