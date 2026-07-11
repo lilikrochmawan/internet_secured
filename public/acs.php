@@ -39,7 +39,7 @@ if (!$dom->loadXML($xmlInput)) {
 if (!file_exists(dirname(__FILE__) . '/../scratch')) {
     mkdir(dirname(__FILE__) . '/../scratch', 0777, true);
 }
-file_put_contents(dirname(__FILE__) . '/../scratch/acs_debug.log', "[" . date('Y-m-d H:i:s') . "] Raw Input:\n" . $xmlInput . "\n\n", FILE_APPEND);
+// file_put_contents(dirname(__FILE__) . '/../scratch/acs_debug.log', "[" . date('Y-m-d H:i:s') . "] Raw Input:\n" . $xmlInput . "\n\n", FILE_APPEND);
 
 $xpath = new DOMXPath($dom);
 $xpath->registerNamespace('soap-env', 'http://schemas.xmlsoap.org/soap/envelope/');
@@ -687,7 +687,7 @@ function handleResponse($koneksi, $methodName, $messageId, $xpath) {
             $value = trim($node->getElementsByTagName('Value')->item(0)->nodeValue ?? '');
             
             // Log parsed parameter for debugging
-            file_put_contents(dirname(__FILE__) . '/../scratch/acs_debug.log', "Parsed Parameter: " . $name . " = " . $value . "\n", FILE_APPEND);
+            // file_put_contents(dirname(__FILE__) . '/../scratch/acs_debug.log', "Parsed Parameter: " . $name . " = " . $value . "\n", FILE_APPEND);
             
             // Extract ITMS/RMS Username
             if (strpos($name, 'X_CT-COM_UserInfo.UserName') !== false || strpos($name, 'X_CT-COM_UserInfo.UserId') !== false) {
