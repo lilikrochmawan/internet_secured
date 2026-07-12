@@ -196,13 +196,13 @@ class AdminKeluhanController extends Controller
                 $q->where('teknisi_id', $user->id)
                   ->orWhere('assign_to_all', 1);
             });
-            $title = 'Laporan Keluhan Anda (' . $user->nama_user . ')';
+            $title = 'Laporan Keluhan & Tiket Anda (' . $user->nama_user . ')';
         } else {
             $query->where(function($q) {
                 $q->whereIn('id_pelanggan', Pelanggan::allowedForUser()->pluck('id_pelanggan'))
                   ->orWhereNull('id_pelanggan');
             });
-            $title = 'Laporan Keluhan Pelanggan';
+            $title = 'Laporan Keluhan & Tiket';
         }
 
         // Filter Status
@@ -214,21 +214,21 @@ class AdminKeluhanController extends Controller
         if ($tipe === 'harian') {
             $tanggal = $request->get('tanggal', date('Y-m-d'));
             $query->whereDate('tanggal', $tanggal);
-            $title = 'Laporan Keluhan Harian (' . ($status === 'semua' ? 'Semua Status' : ucfirst($status)) . ') - ' . \Carbon\Carbon::parse($tanggal)->translatedFormat('d F Y');
+            $title = 'Laporan Keluhan & Tiket Harian (' . ($status === 'semua' ? 'Semua Status' : ucfirst($status)) . ') - ' . \Carbon\Carbon::parse($tanggal)->translatedFormat('d F Y');
         } elseif ($tipe === 'mingguan') {
             $tgl_mulai = $request->get('tgl_mulai', date('Y-m-d', strtotime('-6 days')));
             $tgl_selesai = $request->get('tgl_selesai', date('Y-m-d'));
             $query->whereBetween('tanggal', [$tgl_mulai . ' 00:00:00', $tgl_selesai . ' 23:59:59']);
-            $title = 'Laporan Keluhan Mingguan (' . ($status === 'semua' ? 'Semua Status' : ucfirst($status)) . ') - ' . \Carbon\Carbon::parse($tgl_mulai)->translatedFormat('d F Y') . ' s/d ' . \Carbon\Carbon::parse($tgl_selesai)->translatedFormat('d F Y');
+            $title = 'Laporan Keluhan & Tiket Mingguan (' . ($status === 'semua' ? 'Semua Status' : ucfirst($status)) . ') - ' . \Carbon\Carbon::parse($tgl_mulai)->translatedFormat('d F Y') . ' s/d ' . \Carbon\Carbon::parse($tgl_selesai)->translatedFormat('d F Y');
         } elseif ($tipe === 'bulanan') {
             $bulan = $request->get('bulan', date('m'));
             $tahun = $request->get('tahun_bulan', date('Y'));
             $query->whereMonth('tanggal', $bulan)->whereYear('tanggal', $tahun);
-            $title = 'Laporan Keluhan Bulanan (' . ($status === 'semua' ? 'Semua Status' : ucfirst($status)) . ') - ' . \Carbon\Carbon::create()->month((int)$bulan)->translatedFormat('F') . ' ' . $tahun;
+            $title = 'Laporan Keluhan & Tiket Bulanan (' . ($status === 'semua' ? 'Semua Status' : ucfirst($status)) . ') - ' . \Carbon\Carbon::create()->month((int)$bulan)->translatedFormat('F') . ' ' . $tahun;
         } elseif ($tipe === 'tahunan') {
             $tahun = $request->get('tahun', date('Y'));
             $query->whereYear('tanggal', $tahun);
-            $title = 'Laporan Keluhan Tahunan (' . ($status === 'semua' ? 'Semua Status' : ucfirst($status)) . ') - ' . $tahun;
+            $title = 'Laporan Keluhan & Tiket Tahunan (' . ($status === 'semua' ? 'Semua Status' : ucfirst($status)) . ') - ' . $tahun;
         }
 
         $keluhan = $query->get();

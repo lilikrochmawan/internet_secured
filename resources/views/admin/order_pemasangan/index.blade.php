@@ -404,8 +404,8 @@
             @else
                 <div style="text-align: center; color: var(--text-gray); padding: 40px 0; width: 100%;">
                     <i class="fa-solid fa-chart-bar" style="font-size: 3rem; color: #cbd5e1; margin-bottom: 12px; display: block;"></i>
-                    <p style="font-weight: 600; font-size: 0.95rem;">Belum ada data pemasangan selesai di bulan ini.</p>
-                    <p style="font-size: 0.8rem; color: #94a3b8; margin-top: 4px;">Data akan muncul secara realtime setelah teknisi menyelesaikan pemasangan.</p>
+                    <p style="font-weight: 600; font-size: 0.95rem;">Belum ada data pekerjaan selesai (pemasangan / tiket) di bulan ini.</p>
+                    <p style="font-size: 0.8rem; color: #94a3b8; margin-top: 4px;">Data akan muncul secara realtime setelah teknisi menyelesaikan pemasangan atau tiket gangguan.</p>
                 </div>
             @endif
         </div>
@@ -1043,39 +1043,51 @@
             const chartData = {!! json_encode($topTeknisi) !!};
             const ctx = document.getElementById('topTeknisiChart').getContext('2d');
             const labels = chartData.map(item => item.nama_user);
-            const data = chartData.map(item => item.total);
-
-            // Create gradients matching the overall system aesthetics (Indigo to Purple)
-            const gradient = ctx.createLinearGradient(0, 0, 0, 320);
-            gradient.addColorStop(0, 'rgba(79, 70, 229, 0.85)');
-            gradient.addColorStop(1, 'rgba(124, 58, 237, 0.85)');
-
-            const borderGradient = ctx.createLinearGradient(0, 0, 0, 320);
-            borderGradient.addColorStop(0, 'rgba(79, 70, 229, 1)');
-            borderGradient.addColorStop(1, 'rgba(124, 58, 237, 1)');
+            const installations = chartData.map(item => item.installations);
+            const tickets = chartData.map(item => item.tickets);
 
             new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: labels,
-                    datasets: [{
-                        label: 'Pemasangan Selesai',
-                        data: data,
-                        backgroundColor: gradient,
-                        borderColor: borderGradient,
-                        borderWidth: 1.5,
-                        borderRadius: 8,
-                        borderSkipped: false,
-                        barPercentage: 0.5,
-                        maxBarThickness: 45
-                    }]
+                    datasets: [
+                        {
+                            label: 'Selesai Pemasangan',
+                            data: installations,
+                            backgroundColor: 'rgba(22, 163, 74, 0.8)',
+                            borderColor: 'rgba(22, 163, 74, 1)',
+                            borderWidth: 1.5,
+                            borderRadius: 6,
+                            barPercentage: 0.6,
+                            categoryPercentage: 0.6
+                        },
+                        {
+                            label: 'Selesai Tiket',
+                            data: tickets,
+                            backgroundColor: 'rgba(249, 115, 22, 0.8)',
+                            borderColor: 'rgba(249, 115, 22, 1)',
+                            borderWidth: 1.5,
+                            borderRadius: 6,
+                            barPercentage: 0.6,
+                            categoryPercentage: 0.6
+                        }
+                    ]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
                         legend: {
-                            display: false
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                font: {
+                                    family: 'Outfit',
+                                    size: 11,
+                                    weight: 'bold'
+                                },
+                                color: '#475569'
+                            }
                         },
                         tooltip: {
                             backgroundColor: 'rgba(15, 23, 42, 0.9)',
@@ -1083,10 +1095,10 @@
                             bodyFont: { family: 'Inter', size: 12 },
                             padding: 10,
                             cornerRadius: 8,
-                            displayColors: false,
+                            displayColors: true,
                             callbacks: {
                                 label: function(context) {
-                                    return ` ${context.raw} Pemasangan`;
+                                    return ` ${context.dataset.label}: ${context.raw}`;
                                 }
                             }
                         }

@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Keluhan Pelanggan')
+@section('title', 'Keluhan & Tiket')
 
 @section('styles')
 <!-- Load Select2 CSS -->
@@ -237,12 +237,12 @@
 @endsection
 
 @section('content')
-<!-- Card Lihat Laporan Keluhan & Gangguan -->
+<!-- Card Lihat Laporan Keluhan & Tiket -->
 <div class="card" style="margin-bottom: 24px;">
     <div class="card-header">
         <div class="card-title">
             <i class="fa-solid fa-file-lines"></i>
-            <span>Lihat Laporan Keluhan & Gangguan</span>
+            <span>Lihat Laporan Keluhan & Tiket</span>
         </div>
     </div>
     <form action="{{ route('admin.keluhan.print') }}" method="GET" target="_blank" style="padding: 24px;">
@@ -331,7 +331,7 @@
     <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
         <div class="card-title">
             <i class="fa-solid fa-circle-exclamation"></i>
-            <span>Daftar Keluhan & Tiket Gangguan</span>
+            <span>Daftar Keluhan & Tiket</span>
         </div>
         @if(in_array(Auth::user()->level, ['admin', 'noc']))
             <button type="button" class="btn btn-primary" onclick="openCreateTicketModal()" style="height: 40px; border-radius: 12px; font-size: 0.85rem; padding: 8px 16px;">

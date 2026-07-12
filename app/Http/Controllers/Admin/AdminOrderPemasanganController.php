@@ -45,15 +45,36 @@ class AdminOrderPemasanganController extends Controller
             $currentMonthStart = Carbon::now()->startOfMonth()->toDateTimeString();
             $currentMonthEnd = Carbon::now()->endOfMonth()->toDateTimeString();
 
-            $topTeknisi = DB::table('tbl_order_pemasangan')
-                ->join('tb_user', 'tbl_order_pemasangan.id_teknisi', '=', 'tb_user.id')
-                ->select('tb_user.nama_user', DB::raw('count(tbl_order_pemasangan.id) as total'))
-                ->where('tbl_order_pemasangan.status', 'installed')
-                ->whereBetween('tbl_order_pemasangan.updated_at', [$currentMonthStart, $currentMonthEnd])
-                ->groupBy('tbl_order_pemasangan.id_teknisi', 'tb_user.nama_user')
-                ->orderBy('total', 'desc')
-                ->limit(10)
-                ->get();
+            $teknisiUsers = User::where('level', 'teknisi')->get();
+            $topTeknisi = $teknisiUsers->map(function($t) use ($currentMonthStart, $currentMonthEnd) {
+                // Count completed installations this month
+                $installationsCount = DB::table('tbl_order_pemasangan')
+                    ->where('id_teknisi', $t->id)
+                    ->whereIn('status', ['installed', 'completed'])
+                    ->whereBetween('updated_at', [$currentMonthStart, $currentMonthEnd])
+                    ->count();
+
+                // Count completed tickets this month
+                $ticketsCount = DB::table('tbl_keluhan')
+                    ->where('teknisi_id', $t->id)
+                    ->where('status_keluhan', 'selesai')
+                    ->whereBetween('tanggal', [$currentMonthStart, $currentMonthEnd])
+                    ->count();
+
+                return (object)[
+                    'nama_user' => $t->nama_user,
+                    'installations' => $installationsCount,
+                    'tickets' => $ticketsCount,
+                    'total' => $installationsCount + $ticketsCount
+                ];
+            })
+            ->filter(function($t) {
+                return $t->total > 0;
+            })
+            ->sortByDesc('total')
+            ->take(10)
+            ->values()
+            ->all();
         }
 
         // Fetch orders based on role
