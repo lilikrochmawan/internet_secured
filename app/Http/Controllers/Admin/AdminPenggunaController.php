@@ -28,6 +28,7 @@ class AdminPenggunaController extends Controller
             'nama_user' => 'required|string',
             'password' => 'required|string',
             'level' => 'required|string|in:admin,kasir,teknisi,sales,mitra,noc',
+            'phone_number' => 'required|string',
         ]);
 
         $user = User::create([
@@ -37,6 +38,7 @@ class AdminPenggunaController extends Controller
             'level' => $request->level,
             'foto' => 'admin.png',
             'id_pelanggan' => 0, // 0 menandakan staff bukan client
+            'phone_number' => htmlspecialchars(strip_tags($request->phone_number)),
         ]);
 
         // If NOC, insert default menu permissions
@@ -61,6 +63,7 @@ class AdminPenggunaController extends Controller
             'nama_user' => 'required|string',
             'password' => 'nullable|string',
             'level' => 'required|string|in:admin,kasir,teknisi,sales,mitra,noc,user',
+            'phone_number' => 'required_unless:level,user|nullable|string',
         ]);
 
         $user = User::findOrFail($request->id);
@@ -131,6 +134,7 @@ class AdminPenggunaController extends Controller
                 'username' => $newUsername,
                 'nama_user' => htmlspecialchars(strip_tags($request->nama_user)),
                 'level' => $request->level,
+                'phone_number' => htmlspecialchars(strip_tags($request->phone_number)),
             ];
 
             if ($isPasswordChanged) {

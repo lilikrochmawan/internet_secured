@@ -24,10 +24,19 @@ class Keluhan extends Model
         'status_keluhan',
         'tanggal',
         'user_id',
+        'teknisi_id',
+        'assign_to_all',
+        'tindakan',
+        'bukti_foto',
     ];
 
     public function pelanggan()
     {
         return $this->belongsTo(Pelanggan::class, 'id_pelanggan', 'id_pelanggan');
+    }
+
+    public function teknisi()
+    {
+        return $this->belongsTo(User::class, 'teknisi_id', 'id');
     }
 }

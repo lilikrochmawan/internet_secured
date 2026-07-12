@@ -390,13 +390,5 @@
         </div>
     </div>
 
-    <!-- Auto-print on load -->
-    <script>
-        window.onload = function() {
-            setTimeout(function() {
-                window.print();
-            }, 300);
-        };
-    </script>
 </body>
 </html>

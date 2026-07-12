@@ -98,6 +98,23 @@ class KeluhanController extends Controller
             $this->buildPelangganWhatsAppMessage($pelanggan, $nomorTiket)
         );
 
+        // Kirim WhatsApp notification ke Admin / NOC
+        $staffList = \App\Models\User::whereIn('level', ['admin', 'noc'])->get();
+        $pesanAdmin = "🔔 *TIKET GANGGUAN BARU DARI PELANGGAN*\n\n"
+                    . "Halo Rekan Admin/NOC,\n"
+                    . "Ada laporan tiket keluhan baru dari pelanggan:\n\n"
+                    . "• *Nomor Tiket:* #{$nomorTiket}\n"
+                    . "• *Nama Pelanggan:* {$pelanggan->nama_pelanggan} (" . ($pelanggan->kode_pelanggan ?? 'N/A') . ")\n"
+                    . "• *Keluhan:* {$request->judul_keluhan}\n"
+                    . "• *Detail:* {$request->isi_keluhan}\n\n"
+                    . "Silakan login ke panel untuk menugaskan teknisi atau memproses tiket ini. Terima kasih!";
+
+        foreach ($staffList as $staff) {
+            if (!empty($staff->phone_number)) {
+                $this->fonnteWhatsApp->send($staff->phone_number, $pesanAdmin);
+            }
+        }
+
         $successMessage = $waTerkirim
             ? 'Laporan berhasil dikirim. Notifikasi WhatsApp telah dikirim ke nomor Anda.'
             : 'Laporan berhasil dikirim. Notifikasi WhatsApp gagal dikirim, silakan hubungi admin jika diperlukan.';

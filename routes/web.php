@@ -112,6 +112,9 @@ Route::prefix('administrator')->group(function () {
         Route::get('/keluhan/print', [AdminKeluhanController::class, 'printReport'])->name('admin.keluhan.print');
         Route::post('/keluhan/proses', [AdminKeluhanController::class, 'proses'])->name('admin.keluhan.proses');
         Route::post('/keluhan/selesai', [AdminKeluhanController::class, 'selesai'])->name('admin.keluhan.selesai');
+        Route::post('/keluhan/teknisi-selesai', [AdminKeluhanController::class, 'teknisiSelesai'])->name('admin.keluhan.teknisi_selesai');
+        Route::post('/keluhan/verifikasi', [AdminKeluhanController::class, 'verifikasi'])->name('admin.keluhan.verifikasi');
+        Route::post('/keluhan/buat-tiket', [AdminKeluhanController::class, 'storeTicket'])->name('admin.keluhan.store_ticket');
         Route::get('/keluhan/gambar/{filename}', [AdminKeluhanController::class, 'showGambar'])->name('admin.keluhan.gambar');
 
         // Pengguna (tb_user)

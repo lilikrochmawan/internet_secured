@@ -1110,7 +1110,7 @@
                 <li class="sidebar-menu-item {{ $currRoute == 'admin.keluhan.index' ? 'active' : '' }}">
                     <a href="{{ route('admin.keluhan.index') }}">
                         <i class="fa-solid fa-circle-exclamation"></i>
-                        <span>Keluhan</span>
+                        <span>Keluhan/Ticket</span>
                         @if(isset($jumlahKeluhanAktif) && $jumlahKeluhanAktif > 0)
                             <span class="keluhan-badge" style="margin-left: auto; background-color: #ef4444; color: white; padding: 2px 8px; border-radius: 9999px; font-size: 0.72rem; font-weight: 700; min-width: 18px; text-align: center; line-height: 1.2; box-shadow: 0 2px 5px rgba(239, 68, 68, 0.3);">
                                 {{ $jumlahKeluhanAktif }}

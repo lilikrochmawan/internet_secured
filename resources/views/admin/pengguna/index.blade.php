@@ -251,7 +251,14 @@
                 @forelse($users as $index => $u)
                     <tr>
                         <td>{{ $index + 1 }}</td>
-                        <td><strong>{{ $u->nama_user }}</strong></td>
+                        <td>
+                            <strong>{{ $u->nama_user }}</strong><br>
+                            @if($u->phone_number)
+                                <small style="color:var(--text-gray);"><i class="fa-solid fa-phone" style="font-size:0.72rem;"></i> {{ $u->phone_number }}</small>
+                            @else
+                                <small style="color:#ef4444;"><i class="fa-solid fa-triangle-exclamation" style="font-size:0.72rem;"></i> Belum diatur</small>
+                            @endif
+                        </td>
                         <td><span style="font-family: monospace; font-weight:600; color:#4f46e5;">{{ $u->username }}</span></td>
                         <td><span style="font-family: monospace; color: #94a3b8;">••••••••</span></td>
                         <td>
@@ -454,6 +461,11 @@
                     </select>
                 </div>
 
+                <div class="form-group">
+                    <label for="phone_number">Nomor Telepon / WhatsApp *</label>
+                    <input type="text" id="phone_number" name="phone_number" class="form-control" required placeholder="Contoh: 081234567890">
+                </div>
+
                 <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
                     <button type="button" class="btn btn-secondary" onclick="closeAddModal()">Batal</button>
                     <button type="submit" class="btn btn-primary">Simpan Akun</button>
@@ -501,6 +513,11 @@
                         <option value="mitra">Mitra</option>
                         <option value="user">Pelanggan</option>
                     </select>
+                </div>
+
+                <div class="form-group" id="edit_phone_group">
+                    <label for="edit_phone_number">Nomor Telepon / WhatsApp *</label>
+                    <input type="text" id="edit_phone_number" name="phone_number" class="form-control" placeholder="Contoh: 081234567890">
                 </div>
 
                 <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
@@ -576,14 +593,23 @@
         const modalTitle = document.getElementById('edit_modal_title');
         const namaLabel = document.getElementById('edit_nama_label');
         
+        const phoneInput = document.getElementById('edit_phone_number');
+        const phoneGroup = document.getElementById('edit_phone_group');
+        
         levelSelect.value = user.level;
         
         if (user.level === 'user') {
             levelGroup.style.display = 'none';
+            phoneGroup.style.display = 'none';
+            phoneInput.removeAttribute('required');
+            phoneInput.value = '';
             modalTitle.innerText = 'Ubah Akun Pelanggan';
             namaLabel.innerText = 'Nama Pelanggan Lengkap *';
         } else {
             levelGroup.style.display = 'flex';
+            phoneGroup.style.display = 'flex';
+            phoneInput.setAttribute('required', 'required');
+            phoneInput.value = user.phone_number || '';
             modalTitle.innerText = 'Ubah Akun Staff';
             namaLabel.innerText = 'Nama Staff Lengkap *';
         }

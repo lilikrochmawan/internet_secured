@@ -39,9 +39,28 @@ class AppServiceProvider extends ServiceProvider
             }
 
             if (\Illuminate\Support\Facades\Schema::hasTable('tbl_keluhan')) {
-                $jumlahKeluhanAktif = \Illuminate\Support\Facades\DB::table('tbl_keluhan')
-                    ->whereIn('status_keluhan', ['menunggu', 'proses'])
-                    ->count();
+                $jumlahKeluhanAktif = 0;
+                if (\Illuminate\Support\Facades\Auth::check()) {
+                    $user = \Illuminate\Support\Facades\Auth::user();
+                    if ($user->level === 'teknisi') {
+                        $jumlahKeluhanAktif = \Illuminate\Support\Facades\DB::table('tbl_keluhan')
+                            ->where('status_keluhan', 'proses')
+                            ->where(function($q) use ($user) {
+                                $q->where('teknisi_id', $user->id)
+                                  ->orWhere('assign_to_all', 1);
+                            })
+                            ->count();
+                    } else {
+                        // Admin/NOC see tickets that need action (menunggu/perlu_verifikasi)
+                        $jumlahKeluhanAktif = \Illuminate\Support\Facades\DB::table('tbl_keluhan')
+                            ->whereIn('status_keluhan', ['menunggu', 'perlu_verifikasi'])
+                            ->count();
+                    }
+                } else {
+                    $jumlahKeluhanAktif = \Illuminate\Support\Facades\DB::table('tbl_keluhan')
+                        ->whereIn('status_keluhan', ['menunggu', 'proses'])
+                        ->count();
+                }
                 $view->with('jumlahKeluhanAktif', $jumlahKeluhanAktif);
             }
         });
