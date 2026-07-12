@@ -3,6 +3,8 @@
 @section('title', 'Order Pemasangan Baru')
 
 @section('styles')
+<!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <style>
     .btn {
         display: inline-flex;
@@ -373,6 +375,14 @@
         opacity: 0.5;
         cursor: not-allowed;
         background-color: #f8fafc;
+    }
+    
+    .custom-div-icon {
+        background: none !important;
+        border: none !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
     }
 </style>
 @endsection
@@ -820,7 +830,12 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Pilih ODP *</label>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                        <label style="margin: 0; font-weight: 600; font-size: 0.85rem; color: #334155;">Pilih ODP *</label>
+                        <button type="button" class="btn btn-info" id="btn_map_odp" onclick="openOdpMapModal()" style="padding: 4px 10px; font-size: 0.75rem; border-radius: 8px; height: auto; display: flex; align-items: center; gap: 4px;">
+                            <i class="fa-solid fa-map-location-dot"></i> Cari ODP Terdekat
+                        </button>
+                    </div>
                     <!-- Hidden input to store actual selected value -->
                     <input type="hidden" name="odp" id="approve_odp_id">
 
@@ -921,6 +936,28 @@
                     <button type="submit" class="btn btn-primary">ACC & Daftarkan Pelanggan</button>
                 </div>
             </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Map ODP -->
+<div class="modal" id="odpMapModal" style="z-index: 10005;">
+    <div class="modal-content" style="width: min(850px, 95vw); max-width: 850px;">
+        <div class="modal-header" style="background: var(--primary-gradient); color: white; display: flex; align-items: center; justify-content: space-between; padding: 20px 24px;">
+            <h3 style="margin: 0; font-family: 'Outfit', sans-serif; font-size: 1.2rem; font-weight: 700;">Pilih ODP Terdekat (Peta Topologi)</h3>
+            <button class="modal-close" onclick="closeOdpMapModal()" style="color: white; border: none; background: none; font-size: 1.2rem; cursor: pointer;">&times;</button>
+        </div>
+        <div class="modal-body" style="padding: 24px; display: flex; flex-direction: column; gap: 16px;">
+            <div style="font-size: 0.9rem; color: #475569; display: flex; align-items: center; gap: 8px; background: #eff6ff; padding: 12px; border-radius: 8px; border: 1px solid #dbeafe;">
+                <i class="fa-solid fa-circle-info" style="color: var(--primary-color);"></i>
+                <span>Berikut peta lokasi koordinat pasang dan sebaran ODP. Silakan klik penanda ODP untuk memilih ODP terdekat.</span>
+            </div>
+            
+            <div id="odpMap" style="height: 450px; width: 100%; border-radius: 12px; border: 1px solid #cbd5e1; z-index: 1;"></div>
+            
+            <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 10px;">
+                <button type="button" class="btn btn-secondary" onclick="closeOdpMapModal()">Tutup</button>
+            </div>
         </div>
     </div>
 </div>
@@ -1076,7 +1113,15 @@
     </script>
 @endif
 
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
+    let odpMapInstance = null;
+    let clientMarker = null;
+    let odpMarkers = [];
+    let currentClientCoords = '';
+    const odpsList = {!! json_encode($odps) !!};
+
     document.addEventListener("DOMContentLoaded", function () {
         setupTablePagination("#ordersTable", "#ordersPagination", "#tableLimit", "#tableSearch");
     });
@@ -1264,6 +1309,7 @@
         document.getElementById('approve_label_nama').innerText = order.nama;
         document.getElementById('approve_label_nik').innerText = "NIK: " + order.nik;
         document.getElementById('approve_label_alamat').innerText = "Alamat Pasang: " + order.alamat_pemasangan;
+        currentClientCoords = order.koordinat_pemasangan || '';
         
         // Default username and password suggestion
         var nameSlug = order.nama.toLowerCase().replace(/[^a-z0-9]/g, '_').substring(0, 10);
@@ -1336,6 +1382,142 @@
         const subContainer = document.getElementById('approve_sub_branch_select');
         if (subContainer) subContainer.classList.remove('active');
     }
+
+    // ODP Map Modal Functions
+    function openOdpMapModal() {
+        document.getElementById('odpMapModal').classList.add('active');
+        
+        setTimeout(function() {
+            let clientLat = -7.504893; // default fallback
+            let clientLng = 110.855417; // default fallback
+            
+            if (currentClientCoords) {
+                const parts = currentClientCoords.split(',');
+                if (parts.length === 2) {
+                    clientLat = parseFloat(parts[0].trim());
+                    clientLng = parseFloat(parts[1].trim());
+                }
+            }
+            
+            if (odpMapInstance === null) {
+                odpMapInstance = L.map('odpMap').setView([clientLat, clientLng], 15);
+                L.tileLayer('https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+                    maxZoom: 20,
+                    subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+                    attribution: '&copy; Google Maps'
+                }).addTo(odpMapInstance);
+            } else {
+                odpMapInstance.setView([clientLat, clientLng], 15);
+                if (clientMarker) {
+                    odpMapInstance.removeLayer(clientMarker);
+                }
+                odpMarkers.forEach(marker => {
+                    odpMapInstance.removeLayer(marker);
+                });
+                odpMarkers = [];
+            }
+            
+            // Custom Icons (Google Maps style teardrop pins)
+            const clientIcon = L.divIcon({
+                className: 'custom-div-icon',
+                html: "<i class='fa-solid fa-location-dot' style='color:#4f46e5; font-size:2.2rem; filter: drop-shadow(0px 3px 4px rgba(0,0,0,0.4));'></i>",
+                iconSize: [24, 32],
+                iconAnchor: [12, 32],
+                popupAnchor: [0, -32]
+            });
+            
+            const activeOdpIcon = L.divIcon({
+                className: 'custom-div-icon',
+                html: "<i class='fa-solid fa-location-dot' style='color:#16a34a; font-size:1.8rem; filter: drop-shadow(0px 2px 3px rgba(0,0,0,0.4));'></i>",
+                iconSize: [20, 26],
+                iconAnchor: [10, 26],
+                popupAnchor: [0, -26]
+            });
+            
+            const fullOdpIcon = L.divIcon({
+                className: 'custom-div-icon',
+                html: "<i class='fa-solid fa-location-dot' style='color:#dc2626; font-size:1.8rem; filter: drop-shadow(0px 2px 3px rgba(0,0,0,0.4));'></i>",
+                iconSize: [20, 26],
+                iconAnchor: [10, 26],
+                popupAnchor: [0, -26]
+            });
+            
+            // Add Client Marker
+            clientMarker = L.marker([clientLat, clientLng], { icon: clientIcon }).addTo(odpMapInstance);
+            clientMarker.bindPopup("<strong>Lokasi Pemasangan Baru</strong><br>Koordinat: " + clientLat + ", " + clientLng).openPopup();
+            
+            // Haversine formula
+            function calculateDistance(lat1, lon1, lat2, lon2) {
+                const R = 6371e3; // metres
+                const φ1 = lat1 * Math.PI/180;
+                const φ2 = lat2 * Math.PI/180;
+                const Δφ = (lat2-lat1) * Math.PI/180;
+                const Δλ = (lon2-lon1) * Math.PI/180;
+
+                const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+                          Math.cos(φ1) * Math.cos(φ2) *
+                          Math.sin(Δλ/2) * Math.sin(Δλ/2);
+                const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+                return R * c;
+            }
+            
+            // Populate ODP markers
+            odpsList.forEach(odp => {
+                if (odp.location) {
+                    const coords = odp.location.split(',');
+                    if (coords.length === 2) {
+                        const odpLat = parseFloat(coords[0].trim());
+                        const odpLng = parseFloat(coords[1].trim());
+                        
+                        const dist = calculateDistance(clientLat, clientLng, odpLat, odpLng);
+                        const usage = odp.pelanggans_count || 0;
+                        const totalPort = parseInt(odp.port_odp) || 0;
+                        const remaining = totalPort - usage;
+                        
+                        const isFull = remaining <= 0;
+                        const icon = isFull ? fullOdpIcon : activeOdpIcon;
+                        
+                        const marker = L.marker([odpLat, odpLng], { icon: icon }).addTo(odpMapInstance);
+                        
+                        let popupHtml = "<div style='font-family: sans-serif; font-size: 13px; line-height: 1.4;'>"
+                                      + "<strong>ODP: " + odp.nama_odp + "</strong><br>"
+                                      + "Sisa Port: <span style='font-weight:bold; color:" + (isFull ? '#dc2626' : '#16a34a') + ";'>" + remaining + " / " + totalPort + "</span><br>"
+                                      + "Jarak: " + dist.toFixed(1) + " meter<br>";
+                                      
+                        if (isFull) {
+                            popupHtml += "<span style='color:#dc2626; font-weight:bold; font-size:11px; display:inline-block; margin-top:4px;'>[PORT ODP PENUH]</span>";
+                        } else {
+                            popupHtml += "<button type='button' class='btn btn-primary' onclick='selectOdpFromMap(\"" + odp.id_odp + "\", \"" + odp.nama_odp + "\", " + remaining + ", " + totalPort + ")' style='margin-top:8px; padding:6px 10px; font-size:0.75rem; border-radius:6px; height:auto; color:white; width:100%; justify-content:center;'>Pilih ODP Ini</button>";
+                        }
+                        popupHtml += "</div>";
+                        
+                        marker.bindPopup(popupHtml);
+                        odpMarkers.push(marker);
+                    }
+                }
+            });
+            
+            odpMapInstance.invalidateSize();
+        }, 300);
+    }
+    
+    function closeOdpMapModal() {
+        document.getElementById('odpMapModal').classList.remove('active');
+    }
+    
+    window.selectOdpFromMap = function(id, name, remaining, total) {
+        document.getElementById('approve_odp_id').value = id;
+        document.getElementById('approve_odp_select_text').innerText = name + " (Sisa Port: " + remaining + " / " + total + ")";
+        
+        document.querySelectorAll('#approve_odp_options .custom-select-option').forEach(opt => {
+            opt.classList.remove('selected');
+            if (opt.getAttribute('data-value') === id) {
+                opt.classList.add('selected');
+            }
+        });
+        
+        closeOdpMapModal();
+    };
 
     // Bind event listeners for custom select on DOM load
     document.addEventListener('DOMContentLoaded', function() {
