@@ -168,6 +168,10 @@ class AdminOrderPemasanganController extends Controller
             $paketNama = $order->paketDetail->nama_paket ?? '-';
             $jadwalPasang = $order->jadwal_pemasangan ? Carbon::parse($order->jadwal_pemasangan)->format('d-m-Y H:i') : 'Sesuai Antrean';
             
+            // Get ODP from customer record
+            $pelanggan = \App\Models\Pelanggan::with('odpDetail')->where('nik', $order->nik)->first();
+            $odpNama = ($pelanggan && $pelanggan->odpDetail) ? $pelanggan->odpDetail->nama_odp : '-';
+            
             if ($request->id_teknisi == 0) {
                 // All Technicians
                 $teknisiList = User::where('level', 'teknisi')->get();
@@ -177,6 +181,7 @@ class AdminOrderPemasanganController extends Controller
                        . "• *Nama Pelanggan:* {$order->nama}\n"
                        . "• *No. Telepon:* {$order->no_telp}\n"
                        . "• *Paket:* {$paketNama}\n"
+                       . "• *Rekomendasi ODP:* {$odpNama}\n"
                        . "• *Alamat Pasang:* {$order->alamat_pemasangan}\n"
                        . "• *GPS:* " . ($order->koordinat_pemasangan ?? '-') . "\n"
                        . "• *Jadwal:* {$jadwalPasang}\n\n"
@@ -207,6 +212,7 @@ class AdminOrderPemasanganController extends Controller
                            . "• *Nama Pelanggan:* {$order->nama}\n"
                            . "• *No. Telepon:* {$order->no_telp}\n"
                            . "• *Paket:* {$paketNama}\n"
+                           . "• *Rekomendasi ODP:* {$odpNama}\n"
                            . "• *Alamat Pasang:* {$order->alamat_pemasangan}\n"
                            . "• *GPS:* " . ($order->koordinat_pemasangan ?? '-') . "\n"
                            . "• *Jadwal:* {$jadwalPasang}\n\n"

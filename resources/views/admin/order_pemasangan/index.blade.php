@@ -475,6 +475,20 @@
                                         <span style="color:#dc2626; font-style:italic;">Belum Pilih Paket</span>
                                     @endif
                                 </span>
+                                @if($row->status === 'approved' || $row->status === 'installed' || $row->status === 'completed')
+                                    @php
+                                        $pelangganObj = \App\Models\Pelanggan::with('odpDetail')->where('nik', $row->nik)->first();
+                                    @endphp
+                                    @if($pelangganObj && $pelangganObj->odpDetail)
+                                        <br>
+                                        <span style="font-size: 0.8rem; color: var(--text-gray);">
+                                            <strong>ODP Rekomendasi:</strong>
+                                            <span class="badge" style="background-color: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; font-size: 0.75rem; font-weight: bold; padding: 2px 6px; border-radius: 4px; display: inline-flex; align-items: center; gap: 3px;">
+                                                <i class="fa-solid fa-map-pin" style="font-size: 0.7rem;"></i> {{ $pelangganObj->odpDetail->nama_odp }}
+                                            </span>
+                                        </span>
+                                    @endif
+                                @endif
                             </td>
                             <td>
                                 <strong style="font-size: 0.8rem;">KTP:</strong> <span style="font-size: 0.8rem;">{{ $row->alamat_ktp }}</span><br>
