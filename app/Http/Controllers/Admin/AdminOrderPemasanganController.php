@@ -157,10 +157,75 @@ class AdminOrderPemasanganController extends Controller
             }
         }
 
-        $order = OrderPemasangan::findOrFail($request->id_order);
+        $order = OrderPemasangan::with('paketDetail')->findOrFail($request->id_order);
         $order->update([
             'id_teknisi' => $request->id_teknisi,
         ]);
+
+        // Send WhatsApp notification
+        $tokenInfo = DB::table('tbl_token')->where('id_token', 1)->first();
+        if ($tokenInfo && !empty($tokenInfo->token)) {
+            $paketNama = $order->paketDetail->nama_paket ?? '-';
+            $jadwalPasang = $order->jadwal_pemasangan ? Carbon::parse($order->jadwal_pemasangan)->format('d-m-Y H:i') : 'Sesuai Antrean';
+            
+            if ($request->id_teknisi == 0) {
+                // All Technicians
+                $teknisiList = User::where('level', 'teknisi')->get();
+                $pesan = "📢 *TUGAS PEMASANGAN BARU (SEMUA TEKNISI)*\n\n"
+                       . "Halo Rekan Teknisi,\n"
+                       . "Ada order pemasangan baru yang ditugaskan untuk *Semua Teknisi*:\n\n"
+                       . "• *Nama Pelanggan:* {$order->nama}\n"
+                       . "• *No. Telepon:* {$order->no_telp}\n"
+                       . "• *Paket:* {$paketNama}\n"
+                       . "• *Alamat Pasang:* {$order->alamat_pemasangan}\n"
+                       . "• *GPS:* " . ($order->koordinat_pemasangan ?? '-') . "\n"
+                       . "• *Jadwal:* {$jadwalPasang}\n\n"
+                       . "Silakan segera diambil/klaim order pemasangan ini di panel. Terima kasih!";
+
+                foreach ($teknisiList as $t) {
+                    if (!empty($t->phone_number)) {
+                        try {
+                            \Illuminate\Support\Facades\Http::withHeaders([
+                                'Authorization' => $tokenInfo->token
+                            ])->asForm()->post('https://api.fonnte.com/send', [
+                                'target' => $t->phone_number,
+                                'message' => $pesan,
+                                'countryCode' => '62'
+                            ]);
+                        } catch (\Exception $e) {
+                            \Illuminate\Support\Facades\Log::error('Fonnte API Error Order Pemasangan All: ' . $e->getMessage());
+                        }
+                    }
+                }
+            } else {
+                // Specific Technician
+                $teknisi = User::find($request->id_teknisi);
+                if ($teknisi && !empty($teknisi->phone_number)) {
+                    $pesan = "📢 *TUGAS PEMASANGAN BARU*\n\n"
+                           . "Halo *{$teknisi->nama_user}*,\n"
+                           . "Ada order pemasangan baru yang ditugaskan khusus kepada Anda:\n\n"
+                           . "• *Nama Pelanggan:* {$order->nama}\n"
+                           . "• *No. Telepon:* {$order->no_telp}\n"
+                           . "• *Paket:* {$paketNama}\n"
+                           . "• *Alamat Pasang:* {$order->alamat_pemasangan}\n"
+                           . "• *GPS:* " . ($order->koordinat_pemasangan ?? '-') . "\n"
+                           . "• *Jadwal:* {$jadwalPasang}\n\n"
+                           . "Silakan segera diproses dan laporkan dokumentasi jika sudah selesai dipasang. Terima kasih!";
+
+                    try {
+                        \Illuminate\Support\Facades\Http::withHeaders([
+                            'Authorization' => $tokenInfo->token
+                        ])->asForm()->post('https://api.fonnte.com/send', [
+                            'target' => $teknisi->phone_number,
+                            'message' => $pesan,
+                            'countryCode' => '62'
+                        ]);
+                    } catch (\Exception $e) {
+                        \Illuminate\Support\Facades\Log::error('Fonnte API Error Order Pemasangan Specific: ' . $e->getMessage());
+                    }
+                }
+            }
+        }
 
         return redirect()->route('admin.order_pemasangan.index')->with('success', 'Teknisi berhasil ditugaskan untuk order ini!');
     }
