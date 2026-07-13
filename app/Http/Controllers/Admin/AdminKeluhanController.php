@@ -16,7 +16,10 @@ class AdminKeluhanController extends Controller
         $user = Auth::user();
         
         $query = Keluhan::with(['pelanggan', 'teknisi'])
-            ->whereIn('id_pelanggan', Pelanggan::allowedForUser()->pluck('id_pelanggan'));
+            ->where(function($q) {
+                $q->whereIn('id_pelanggan', Pelanggan::allowedForUser()->pluck('id_pelanggan'))
+                  ->orWhereNull('id_pelanggan');
+            });
             
         // Filter tickets if user is a technician
         if ($user->level === 'teknisi') {
@@ -136,7 +139,7 @@ class AdminKeluhanController extends Controller
         ]);
 
         // Kirim Notifikasi WhatsApp ke Client via Fonnte API
-        $tokenInfo = DB::table('tbl_token')->where('id_token', 1)->first();
+        $tokenInfo = DB::table('tbl_token')->where('id_token', 1)->where('status', 'aktif')->first();
         $waSent = false;
         
         if ($tokenInfo && !empty($tokenInfo->token) && !empty($keluhan->no_wa)) {
@@ -311,7 +314,7 @@ class AdminKeluhanController extends Controller
         ]);
 
         // Kirim Notifikasi WhatsApp ke Client via Fonnte API
-        $tokenInfo = DB::table('tbl_token')->where('id_token', 1)->first();
+        $tokenInfo = DB::table('tbl_token')->where('id_token', 1)->where('status', 'aktif')->first();
         $waSent = false;
         
         if ($tokenInfo && !empty($tokenInfo->token) && !empty($keluhan->no_wa)) {
@@ -389,7 +392,7 @@ class AdminKeluhanController extends Controller
         }
 
         // Generate nomor tiket
-        $nomorTiket = $this->generateNomorTiket();
+        $nomorTiket = Keluhan::generateNomorTiket($request->tipe_tiket, $idPelanggan);
 
         Keluhan::create([
             'id_pelanggan' => $idPelanggan,
@@ -406,7 +409,7 @@ class AdminKeluhanController extends Controller
         $waSent = false;
         // Kirim WhatsApp notification ke pelanggan
         if ($pelanggan && !empty($pelanggan->no_telp)) {
-            $tokenInfo = DB::table('tbl_token')->where('id_token', 1)->first();
+            $tokenInfo = DB::table('tbl_token')->where('id_token', 1)->where('status', 'aktif')->first();
             
             if ($tokenInfo && !empty($tokenInfo->token)) {
                 $nama_pelanggan = $pelanggan->nama_pelanggan ?? 'Pelanggan';
@@ -443,18 +446,7 @@ class AdminKeluhanController extends Controller
         return redirect()->route('admin.keluhan.index')->with('success', $successMsg);
     }
 
-    private function generateNomorTiket(): string
-    {
-        $lastTicket = Keluhan::max('nomor_tiket');
 
-        if (!$lastTicket) {
-            return 'pengaduan-001';
-        }
-
-        $lastNumber = (int) substr($lastTicket, strrpos($lastTicket, '-') + 1);
-
-        return 'pengaduan-' . sprintf('%03d', $lastNumber + 1);
-    }
 
     private function sendWhatsAppNotification($target, $message)
     {
@@ -462,7 +454,7 @@ class AdminKeluhanController extends Controller
             return false;
         }
 
-        $tokenInfo = DB::table('tbl_token')->where('id_token', 1)->first();
+        $tokenInfo = DB::table('tbl_token')->where('id_token', 1)->where('status', 'aktif')->first();
         if (!$tokenInfo || empty($tokenInfo->token)) {
             return false;
         }

@@ -313,7 +313,7 @@ class AdminPelangganController extends Controller
             $pesan = str_replace('$username', $username, $pesan);
             $pesan = str_replace('$password', $password, $pesan);
 
-            $tokenInfo = DB::table('tbl_token')->where('id_token', 1)->first();
+            $tokenInfo = DB::table('tbl_token')->where('id_token', 1)->where('status', 'aktif')->first();
             if ($tokenInfo) {
                 Http::withHeaders([
                     'Authorization' => $tokenInfo->token

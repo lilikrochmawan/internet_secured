@@ -1053,9 +1053,9 @@
                 </li>
             @endif
 
-            @if(Auth::user()->hasMenuAccess('pelanggan') || Auth::user()->hasMenuAccess('paket') || Auth::user()->hasMenuAccess('ont'))
+            @if(Auth::user()->hasMenuAccess('pelanggan') || Auth::user()->hasMenuAccess('paket') || Auth::user()->hasMenuAccess('ont') || Auth::user()->hasMenuAccess('promo'))
                 @php
-                    $isMasterActive = in_array($currRoute, ['admin.pelanggan.index', 'admin.paket.index', 'admin.ont.index']);
+                    $isMasterActive = in_array($currRoute, ['admin.pelanggan.index', 'admin.paket.index', 'admin.ont.index', 'admin.promo.index', 'admin.promo.create']);
                 @endphp
                 <li class="sidebar-menu-item has-submenu {{ $isMasterActive ? 'active open' : '' }}">
                     <a href="javascript:void(0)" class="submenu-toggle">
@@ -1087,6 +1087,14 @@
                                 <a href="{{ route('admin.ont.index') }}">
                                     <i class="fa-solid fa-hard-drive"></i>
                                     <span>Data ONT</span>
+                                </a>
+                            </li>
+                        @endif
+                        @if(Auth::user()->hasMenuAccess('promo'))
+                            <li class="submenu-item {{ Str::startsWith($currRoute, 'admin.promo') ? 'active' : '' }}">
+                                <a href="{{ route('admin.promo.index') }}">
+                                    <i class="fa-solid fa-tags"></i>
+                                    <span>Promo</span>
                                 </a>
                             </li>
                         @endif

@@ -512,7 +512,7 @@ class PaymentController extends Controller
         // WhatsApp Notification
         if ($data_tagihan) {
             try {
-                $row_token = DB::table('tbl_token')->where('id_token', 1)->first();
+                $row_token = DB::table('tbl_token')->where('id_token', 1)->where('status', 'aktif')->first();
                 $bayar = DB::table('tbl_notifbayar')->first();
 
                 if ($row_token && !empty($row_token->token) && $bayar && !empty($bayar->pesan_bayar)) {

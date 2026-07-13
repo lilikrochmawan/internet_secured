@@ -457,6 +457,7 @@
                                                     'pelanggan' => 'Pelanggan',
                                                     'paket' => 'Paket',
                                                     'ont' => 'ONT',
+                                                    'promo' => 'Promo',
                                                     'transaksi' => 'Transaksi',
                                                     'kas' => 'Kas',
                                                     'keluhan' => 'Keluhan',
@@ -786,6 +787,12 @@
                             <input type="checkbox" name="menus[]" value="ont" id="menu_ont" class="menu-checkbox">
                             <label for="menu_ont" style="font-size: 0.9rem; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 6px;">
                                 <i class="fa-solid fa-hard-drive" style="color: #4f46e5; width: 16px;"></i> Data ONT
+                            </label>
+                        </div>
+                        <div class="menu-checkbox-item" style="display: flex; align-items: center; gap: 8px;">
+                            <input type="checkbox" name="menus[]" value="promo" id="menu_promo" class="menu-checkbox">
+                            <label for="menu_promo" style="font-size: 0.9rem; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                                <i class="fa-solid fa-tags" style="color: #4f46e5; width: 16px;"></i> Promo
                             </label>
                         </div>
                         <div class="menu-checkbox-item" style="display: flex; align-items: center; gap: 8px;">

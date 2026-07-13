@@ -310,6 +310,51 @@
         </form>
     </div>
 
+    <!-- Promo WhatsApp Notifikasi -->
+    <div class="card" style="margin-bottom: 0;">
+        <div class="card-header">
+            <div class="card-title">
+                <i class="fa-solid fa-tags"></i>
+                <span>Notifikasi Promo Baru</span>
+            </div>
+        </div>
+        <form method="POST" action="{{ route('admin.custom_pesan.promo') }}">
+            @csrf
+            <div class="form-group">
+                <label for="promo_status">Status Notifikasi</label>
+                <select name="status_promo" id="promo_status" class="form-control">
+                    <option value="aktif" {{ ($promo->status_promo ?? 'aktif') === 'aktif' ? 'selected' : '' }}>Aktif</option>
+                    <option value="tidakaktif" {{ ($promo->status_promo ?? 'aktif') === 'tidakaktif' ? 'selected' : '' }}>Tidak Aktif</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="pesan_promo">Isi Pesan Promo</label>
+                <textarea name="pesan_promo" id="pesan_promo" rows="7" class="form-control" placeholder="Tulis format notifikasi promo...">{{ $promo->pesan_promo ?? '' }}</textarea>
+            </div>
+            
+            <div class="helper-box" id="help-promo">
+                <p style="margin-bottom:6px; font-weight: 600; color:var(--text-dark);">Variabel yang tersedia:</p>
+                <ul style="list-style: none; display:flex; flex-direction:column; gap:4px;">
+                    <li><span class="helper-tag">$nama</span> : Nama Pelanggan</li>
+                    <li><span class="helper-tag">$no_telp</span> : No Telepon Pelanggan</li>
+                    <li><span class="helper-tag">$nama_promo</span> : Nama Promo</li>
+                    <li><span class="helper-tag">$tagihan</span> : Nominal Tagihan Awal</li>
+                    <li><span class="helper-tag">$mulai_promo</span> : Bulan Mulai Promo</li>
+                    <li><span class="helper-tag">$selesai_promo</span> : Bulan Selesai Promo</li>
+                </ul>
+            </div>
+
+            <div class="card-footer">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fa-solid fa-floppy-disk"></i> Simpan
+                </button>
+                <button type="button" class="btn btn-info btn-help" data-target="help-promo">
+                    <i class="fa-solid fa-circle-question"></i> Format Tulisan
+                </button>
+            </div>
+        </form>
+    </div>
+
     <!-- 5. Notifikasi Awal Pemasangan -->
     <div class="card" style="margin-bottom: 0; grid-column: 1 / -1;">
         <div class="card-header">

@@ -52,7 +52,7 @@ class SendAutoBillingNotifications extends Command
         }
 
         // Cek token Fonnte
-        $tokenInfo = DB::table('tbl_token')->where('id_token', 1)->first();
+        $tokenInfo = DB::table('tbl_token')->where('id_token', 1)->where('status', 'aktif')->first();
         if (!$tokenInfo || empty($tokenInfo->token)) {
             $this->error('Token WhatsApp Fonnte belum dikonfigurasi di pengaturan.');
             Log::error('SendAutoBillingNotifications: Token Fonnte belum dikonfigurasi.');

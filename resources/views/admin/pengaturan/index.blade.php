@@ -707,6 +707,18 @@
             
             <form action="{{ route('admin.pengaturan.token') }}" method="POST">
                 @csrf
+                
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; border-bottom: 1px dashed var(--border-color); padding-bottom: 15px;">
+                    <div>
+                        <strong style="color: #0f172a; font-size: 0.95rem; display: block;">Status Gateway Fonnte</strong>
+                        <small style="color: var(--text-gray); font-size: 0.8rem;">Aktifkan atau nonaktifkan pengiriman WhatsApp.</small>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="status" name="status" value="aktif" {{ ($token->status ?? 'aktif') === 'aktif' ? 'checked' : '' }}>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
                 <div class="form-group">
                     <label for="token">Token API Fonnte *</label>
                     <input type="text" id="token" name="token" class="form-control" value="{{ $token->token ?? '' }}" required placeholder="Masukkan token fonnte Anda">

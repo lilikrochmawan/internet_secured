@@ -106,14 +106,22 @@ class GenerateBulananTagihan extends Command
 
             $tgl_jatuh_tempo = sprintf('%04d-%02d-%02d 23:59:00', $due_year, $due_month, $due_day);
 
-            DB::transaction(function () use ($plg, $bulantahun, $total_tagihan, $tgl_jatuh_tempo) {
+            // Cek apakah pelanggan sedang dalam masa promo aktif pada bulan & tahun target
+            $activePromo = \App\Models\Promo::getActivePromoForPeriod($plg->id_pelanggan, $bulan, $tahun);
+
+            DB::transaction(function () use ($plg, $bulantahun, $total_tagihan, $tgl_jatuh_tempo, $activePromo) {
+                $status_bayar = $activePromo ? 1 : null;
+                $terbayar = $activePromo ? $total_tagihan : null;
+                $waktu_bayar = $activePromo ? now()->format('Y-m-d H:i:s') : null;
+
                 // Insert bill
                 DB::table('tb_tagihan')->insert([
                     'id_pelanggan' => $plg->id_pelanggan,
                     'bulan_tahun' => $bulantahun,
                     'jml_bayar' => $total_tagihan,
-                    'terbayar' => null,
-                    'status_bayar' => null,
+                    'terbayar' => $terbayar,
+                    'status_bayar' => $status_bayar,
+                    'waktu_bayar' => $waktu_bayar,
                     'manual_invoice' => 0,
                     'jatuh_tempo' => $tgl_jatuh_tempo
                 ]);

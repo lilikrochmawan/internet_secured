@@ -67,7 +67,7 @@ class AutoBlockPelanggan extends Command
 
         require_once base_path('include/routeros_api.php');
         $checkUser = DB::table('tbl_penggunamikrotik')->first();
-        $tokenInfo = DB::table('tbl_token')->where('id_token', 1)->first();
+        $tokenInfo = DB::table('tbl_token')->where('id_token', 1)->where('status', 'aktif')->first();
         $blokirSetting = DB::table('tbl_blokir')->first();
 
         // Hubungkan ke router berdasarkan device mikrotik masing-masing

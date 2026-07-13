@@ -184,7 +184,7 @@ class AdminOrderPemasanganController extends Controller
         ]);
 
         // Send WhatsApp notification
-        $tokenInfo = DB::table('tbl_token')->where('id_token', 1)->first();
+        $tokenInfo = DB::table('tbl_token')->where('id_token', 1)->where('status', 'aktif')->first();
         if ($tokenInfo && !empty($tokenInfo->token)) {
             $paketNama = $order->paketDetail->nama_paket ?? '-';
             $jadwalPasang = $order->jadwal_pemasangan ? Carbon::parse($order->jadwal_pemasangan)->format('d-m-Y H:i') : 'Sesuai Antrean';
@@ -415,7 +415,7 @@ class AdminOrderPemasanganController extends Controller
                 $pesan = str_replace('$username', $username, $pesan);
                 $pesan = str_replace('$password', $password, $pesan);
 
-                $tokenInfo = DB::table('tbl_token')->where('id_token', 1)->first();
+                $tokenInfo = DB::table('tbl_token')->where('id_token', 1)->where('status', 'aktif')->first();
                 if ($tokenInfo && !empty($tokenInfo->token)) {
                     try {
                         \Illuminate\Support\Facades\Http::withHeaders([

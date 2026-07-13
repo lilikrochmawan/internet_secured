@@ -309,7 +309,7 @@ class AdminTransaksiController extends Controller
 
             // Kirim Notifikasi WhatsApp Pembayaran Sukses
             try {
-                $row_token = DB::table('tbl_token')->where('id_token', 1)->first();
+                $row_token = DB::table('tbl_token')->where('id_token', 1)->where('status', 'aktif')->first();
                 $bayar = DB::table('tbl_notifbayar')->first();
 
                 if ($row_token && !empty($row_token->token) && $bayar && !empty($bayar->pesan_bayar) && !empty($pelanggan->no_telp)) {
@@ -467,7 +467,7 @@ class AdminTransaksiController extends Controller
             // Kirim notifikasi WhatsApp jika fitur aktif dan token tersedia
             $waMessage = '';
             $blokirSetting = DB::table('tbl_blokir')->first();
-            $tokenInfo = DB::table('tbl_token')->where('id_token', 1)->first();
+            $tokenInfo = DB::table('tbl_token')->where('id_token', 1)->where('status', 'aktif')->first();
 
             if ($blokirSetting && $blokirSetting->status_blokir === 'aktif' && $tokenInfo && !empty($tokenInfo->token) && !empty($pelanggan->no_telp)) {
                 $pesan = $blokirSetting->pesan_blokir;
@@ -617,7 +617,7 @@ class AdminTransaksiController extends Controller
             return back()->withErrors(['error' => 'Fitur notifikasi WhatsApp belum diaktifkan di pengaturan.']);
         }
 
-        $tokenInfo = DB::table('tbl_token')->where('id_token', 1)->first();
+        $tokenInfo = DB::table('tbl_token')->where('id_token', 1)->where('status', 'aktif')->first();
         if (!$tokenInfo || empty($tokenInfo->token)) {
             return back()->withErrors(['error' => 'Token WhatsApp Fonnte belum dikonfigurasi.']);
         }
@@ -737,13 +737,23 @@ class AdminTransaksiController extends Controller
                 $due_day_str = str_pad($due_day, 2, '0', STR_PAD_LEFT);
                 $tgl_jatuh_tempo = sprintf('%04d-%02d-%02d 23:59:00', $due_year, $due_month, $due_day);
 
+                // Cek apakah pelanggan sedang dalam masa promo aktif pada bulan & tahun target
+                $target_month = (int) substr($bulan2[$i], 0, 2);
+                $target_year = (int) substr($bulan2[$i], 2, 4);
+                $activePromo = \App\Models\Promo::getActivePromoForPeriod($id_pelanggan[$i], $target_month, $target_year);
+
+                $status_bayar = $activePromo ? 1 : null;
+                $terbayar = $activePromo ? $harga_oke : null;
+                $waktu_bayar = $activePromo ? now()->format('Y-m-d H:i:s') : null;
+
                 // Buat tagihan baru
                 DB::table('tb_tagihan')->insert([
                     'id_pelanggan' => $id_pelanggan[$i],
                     'bulan_tahun' => $bulan2[$i],
                     'jml_bayar' => $harga_oke,
-                    'terbayar' => null,
-                    'status_bayar' => null,
+                    'terbayar' => $terbayar,
+                    'status_bayar' => $status_bayar,
+                    'waktu_bayar' => $waktu_bayar,
                     'manual_invoice' => 0,
                     'jatuh_tempo' => $tgl_jatuh_tempo
                 ]);
@@ -823,7 +833,7 @@ class AdminTransaksiController extends Controller
             return back()->withErrors(['error' => 'Fitur reminder tagihan belum diaktifkan di pengaturan custom pesan.']);
         }
 
-        $tokenInfo = DB::table('tbl_token')->where('id_token', 1)->first();
+        $tokenInfo = DB::table('tbl_token')->where('id_token', 1)->where('status', 'aktif')->first();
         if (!$tokenInfo || empty($tokenInfo->token)) {
             return back()->withErrors(['error' => 'Token WhatsApp Fonnte belum dikonfigurasi.']);
         }
@@ -886,7 +896,7 @@ class AdminTransaksiController extends Controller
             ], 400);
         }
 
-        $tokenInfo = DB::table('tbl_token')->where('id_token', 1)->first();
+        $tokenInfo = DB::table('tbl_token')->where('id_token', 1)->where('status', 'aktif')->first();
         if (!$tokenInfo || empty($tokenInfo->token)) {
             return response()->json([
                 'success' => false,
@@ -1003,7 +1013,7 @@ class AdminTransaksiController extends Controller
             ], 400);
         }
 
-        $tokenInfo = DB::table('tbl_token')->where('id_token', 1)->first();
+        $tokenInfo = DB::table('tbl_token')->where('id_token', 1)->where('status', 'aktif')->first();
         if (!$tokenInfo || empty($tokenInfo->token)) {
             return response()->json([
                 'success' => false,
@@ -1115,7 +1125,7 @@ class AdminTransaksiController extends Controller
         }
 
         $blokirSetting = DB::table('tbl_blokir')->first();
-        $tokenInfo = DB::table('tbl_token')->where('id_token', 1)->first();
+        $tokenInfo = DB::table('tbl_token')->where('id_token', 1)->where('status', 'aktif')->first();
         $checkUser = DB::table('tbl_penggunamikrotik')->first();
 
         require_once base_path('include/routeros_api.php');

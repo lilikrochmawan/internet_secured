@@ -79,7 +79,7 @@ class KeluhanController extends Controller
             $file->move($uploadDir, $gambarName);
         }
 
-        $nomorTiket = $this->generateNomorTiket();
+        $nomorTiket = Keluhan::generateNomorTiket('pelanggan', $pelanggan->id_pelanggan);
 
         Keluhan::create([
             'id_pelanggan' => $pelanggan->id_pelanggan,
@@ -137,18 +137,7 @@ class KeluhanController extends Controller
         return $path;
     }
 
-    private function generateNomorTiket(): string
-    {
-        $lastTicket = Keluhan::max('nomor_tiket');
 
-        if (!$lastTicket) {
-            return 'pengaduan-001';
-        }
-
-        $lastNumber = (int) substr($lastTicket, strrpos($lastTicket, '-') + 1);
-
-        return 'pengaduan-' . sprintf('%03d', $lastNumber + 1);
-    }
 
     private function buildPelangganWhatsAppMessage(Pelanggan $pelanggan, string $nomorTiket): string
     {

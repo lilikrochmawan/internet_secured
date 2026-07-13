@@ -16,8 +16,9 @@ class AdminCustomPesanController extends Controller
         $bukablokir = DB::table('tbl_bukablokir')->first();
         $pemasangan = DB::table('tbl_npemasangan')->first();
         $reminder = DB::table('tbl_notifreminder')->first();
+        $promo = DB::table('tbl_notifpromo')->first();
 
-        return view('admin.custom-pesan.index', compact('notif', 'blokir', 'notifbayar', 'bukablokir', 'pemasangan', 'reminder'));
+        return view('admin.custom-pesan.index', compact('notif', 'blokir', 'notifbayar', 'bukablokir', 'pemasangan', 'reminder', 'promo'));
     }
 
     public function updateNotif(Request $request)
@@ -149,5 +150,29 @@ class AdminCustomPesanController extends Controller
         }
 
         return redirect()->route('admin.custom_pesan.index')->with('success', 'Pesan reminder tagihan berhasil diperbarui!');
+    }
+
+    public function updatePromo(Request $request)
+    {
+        $request->validate([
+            'status_promo' => 'required|string',
+            'pesan_promo' => 'required|string',
+        ]);
+
+        $exists = DB::table('tbl_notifpromo')->first();
+        $data = [
+            'status_promo' => $request->status_promo,
+            'pesan_promo' => $request->pesan_promo,
+            'updated_at' => now(),
+        ];
+
+        if ($exists) {
+            DB::table('tbl_notifpromo')->update($data);
+        } else {
+            $data['created_at'] = now();
+            DB::table('tbl_notifpromo')->insert($data);
+        }
+
+        return redirect()->route('admin.custom_pesan.index')->with('success', 'Pesan template Promo WhatsApp berhasil diperbarui!');
     }
 }

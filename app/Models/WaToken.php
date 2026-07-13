@@ -13,5 +13,17 @@ class WaToken extends Model
     protected $fillable = [
         'id_token',
         'token',
+        'status',
     ];
+
+    /**
+     * Accessor: only return token value if status is active.
+     */
+    public function getTokenAttribute($value)
+    {
+        if (isset($this->attributes['status']) && $this->attributes['status'] !== 'aktif') {
+            return null;
+        }
+        return $value;
+    }
 }

@@ -74,7 +74,7 @@ class AdminNotificationController extends Controller
         if (in_array('wa', $channels)) {
             set_time_limit(1800);
 
-            $tokenInfo = DB::table('tbl_token')->where('id_token', 1)->first();
+            $tokenInfo = DB::table('tbl_token')->where('id_token', 1)->where('status', 'aktif')->first();
             if (!$tokenInfo || empty($tokenInfo->token)) {
                 return response()->json([
                     'success' => false,
@@ -180,7 +180,7 @@ class AdminNotificationController extends Controller
 
         $odp = Odp::findOrFail($id_odp);
 
-        $tokenInfo = DB::table('tbl_token')->where('id_token', 1)->first();
+        $tokenInfo = DB::table('tbl_token')->where('id_token', 1)->where('status', 'aktif')->first();
         if (!$tokenInfo || empty($tokenInfo->token)) {
             return response()->json([
                 'success' => false,
@@ -288,7 +288,7 @@ class AdminNotificationController extends Controller
             ], 404);
         }
 
-        $tokenInfo = DB::table('tbl_token')->where('id_token', 1)->first();
+        $tokenInfo = DB::table('tbl_token')->where('id_token', 1)->where('status', 'aktif')->first();
         if (!$tokenInfo || empty($tokenInfo->token)) {
             return response()->json([
                 'success' => false,

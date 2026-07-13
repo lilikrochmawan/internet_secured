@@ -133,8 +133,11 @@ class AdminPengaturanController extends Controller
             'token' => 'required|string',
         ]);
 
+        $status = $request->has('status') ? 'aktif' : 'nonaktif';
+
         DB::table('tbl_token')->where('id_token', 1)->update([
             'token' => htmlspecialchars(strip_tags($request->token)),
+            'status' => $status,
         ]);
 
         return redirect()->route('admin.pengaturan.index')->with('success', 'Token WhatsApp Fonnte berhasil diperbarui!');

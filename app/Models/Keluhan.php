@@ -39,4 +39,22 @@ class Keluhan extends Model
     {
         return $this->belongsTo(User::class, 'teknisi_id', 'id');
     }
+
+    public static function generateNomorTiket(string $type, ?int $idPelanggan = null): string
+    {
+        $prefix = $type === 'pelanggan' ? 'TKT' . $idPelanggan : 'INT';
+        
+        $lastTicket = self::where('nomor_tiket', 'LIKE', $prefix . '%')
+            ->orderBy('id_keluhan', 'desc')
+            ->first();
+            
+        if (!$lastTicket) {
+            $nextNumber = 1;
+        } else {
+            $lastNumStr = substr($lastTicket->nomor_tiket, -3);
+            $nextNumber = ((int) $lastNumStr) + 1;
+        }
+        
+        return $prefix . sprintf('%03d', $nextNumber);
+    }
 }
