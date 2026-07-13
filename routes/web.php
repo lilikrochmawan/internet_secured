@@ -31,6 +31,7 @@ use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminPelangganController;
 use App\Http\Controllers\Admin\AdminPaketController;
+use App\Http\Controllers\Admin\AdminPromoController;
 use App\Http\Controllers\Admin\AdminTransaksiController;
 use App\Http\Controllers\Admin\AdminKasController;
 use App\Http\Controllers\Admin\AdminKeluhanController;
@@ -75,6 +76,12 @@ Route::prefix('administrator')->group(function () {
         Route::post('/paket', [AdminPaketController::class, 'store'])->name('admin.paket.store');
         Route::post('/paket/update', [AdminPaketController::class, 'update'])->name('admin.paket.update');
         Route::post('/paket/delete', [AdminPaketController::class, 'destroy'])->name('admin.paket.destroy');
+
+        // CRUD Promo
+        Route::get('/promo', [AdminPromoController::class, 'index'])->name('admin.promo.index');
+        Route::get('/promo/create', [AdminPromoController::class, 'create'])->name('admin.promo.create');
+        Route::post('/promo', [AdminPromoController::class, 'store'])->name('admin.promo.store');
+        Route::post('/promo/delete/{id}', [AdminPromoController::class, 'destroy'])->name('admin.promo.destroy');
 
         // CRUD ONT / Perangkat
         Route::get('/ont', [AdminOntController::class, 'index'])->name('admin.ont.index');
@@ -186,6 +193,7 @@ Route::prefix('administrator')->group(function () {
         Route::post('/custom-pesan/blokir', [AdminCustomPesanController::class, 'updateBlokir'])->name('admin.custom_pesan.blokir');
         Route::post('/custom-pesan/bukablokir', [AdminCustomPesanController::class, 'updateBukaBlokir'])->name('admin.custom_pesan.bukablokir');
         Route::post('/custom-pesan/reminder', [AdminCustomPesanController::class, 'updateReminder'])->name('admin.custom_pesan.reminder');
+        Route::post('/custom-pesan/promo', [AdminCustomPesanController::class, 'updatePromo'])->name('admin.custom_pesan.promo');
 
         // Broadcast Notifikasi & ODP/ODC Maintenance
         Route::get('/broadcast', [AdminNotificationController::class, 'index'])->name('admin.broadcast.index');
