@@ -61,26 +61,27 @@ class AdminPromoController extends Controller
 
         $pelanggan = Pelanggan::with('paketDetail')->findOrFail($request->id_pelanggan);
 
-        // Determine starting period for first bill (current month, or next month if current is already paid)
+        // Start target period from the promo's start date
+        $targetMonth = sprintf('%02d', $request->mulai_bulan);
+        $targetYear = (string)$request->mulai_tahun;
+
         $currMonth = date('m');
         $currYear = date('Y');
-        $currPeriod = $currMonth . $currYear;
 
-        // Check if there is already a paid bill for this month
-        $isPaidThisMonth = Tagihan::where('id_pelanggan', $pelanggan->id_pelanggan)
-            ->where('bulan_tahun', $currPeriod)
-            ->where('status_bayar', 1)
-            ->exists();
+        // Only apply the "already paid shifting logic" if the promo starts in the current month
+        if ($targetMonth === $currMonth && $targetYear === $currYear) {
+            $currPeriod = $currMonth . $currYear;
+            $isPaidThisMonth = Tagihan::where('id_pelanggan', $pelanggan->id_pelanggan)
+                ->where('bulan_tahun', $currPeriod)
+                ->where('status_bayar', 1)
+                ->exists();
 
-        if ($isPaidThisMonth) {
-            // Target is next month
-            $carbon = Carbon::now()->addMonth();
-            $targetMonth = $carbon->format('m');
-            $targetYear = $carbon->format('Y');
-        } else {
-            // Target is current month
-            $targetMonth = $currMonth;
-            $targetYear = $currYear;
+            if ($isPaidThisMonth) {
+                // Shift target to next month
+                $carbon = Carbon::now()->addMonth();
+                $targetMonth = $carbon->format('m');
+                $targetYear = $carbon->format('Y');
+            }
         }
 
         $targetPeriod = $targetMonth . $targetYear;
@@ -104,7 +105,7 @@ class AdminPromoController extends Controller
             Tagihan::where('id_pelanggan', $pelanggan->id_pelanggan)
                 ->where('bulan_tahun', $targetPeriod)
                 ->where(function($q) {
-                    $q->whereNull('status_bayar')->orWhere('status_promo', '!=', 1)->orWhere('status_bayar', '!=', 1);
+                    $q->whereNull('status_bayar')->orWhere('status_bayar', '!=', 1);
                 })
                 ->delete();
 
@@ -135,14 +136,14 @@ class AdminPromoController extends Controller
 
             $tgl_jatuh_tempo = sprintf('%04d-%02d-%02d 23:59:00', $due_year, $due_month, $due_day);
 
-            // Create Paid Tagihan
+            // Create Unpaid Tagihan (Persis seperti transaksi manual)
             $tagihan = Tagihan::create([
                 'id_pelanggan' => $pelanggan->id_pelanggan,
                 'bulan_tahun' => $targetPeriod,
                 'jml_bayar' => $request->nominal_tagihan,
-                'terbayar' => $request->nominal_tagihan,
-                'status_bayar' => 1, // Lunas
-                'waktu_bayar' => Carbon::now()->format('Y-m-d H:i:s'),
+                'terbayar' => 0,
+                'status_bayar' => null, // Belum Lunas
+                'waktu_bayar' => null,
                 'user_id' => Auth::id(),
                 'manual_invoice' => 1,
                 'item_tagihan' => "Tagihan Awal Promo: " . $request->nama_promo,
@@ -153,92 +154,6 @@ class AdminPromoController extends Controller
             $pelanggan->update([
                 'jatuh_tempo' => $tgl_jatuh_tempo
             ]);
-
-            // Log in tb_kas
-            $nama_paket = $pelanggan->paketDetail->nama_paket ?? '';
-            $ketKas = "Pembayaran Promo: " . $request->nama_promo . " AN. " . $pelanggan->nama_pelanggan . ", Paket " . $nama_paket;
-            DB::table('tb_kas')->insert([
-                'tgl_kas' => date('Y-m-d'),
-                'keterangan' => $ketKas,
-                'penerimaan' => $request->nominal_tagihan,
-                'id_tagihan' => $tagihan->id_tagihan
-            ]);
-
-            // Unblock Mikrotik if blocked
-            try {
-                $user = User::where('id_pelanggan', $pelanggan->id_pelanggan)->first();
-                $checkUser = DB::table('tbl_penggunamikrotik')->first();
-                $id_mikrotik = $pelanggan->id_mikrotik ?: 1;
-                $mikrotik = DB::table('tbl_mikrotik')->where('id_mikrotik', $id_mikrotik)->first();
-
-                $ip_address = ($checkUser && ($checkUser->status == 'ya' || $checkUser->ippelanggan == 'dynamic'))
-                    ? ($user ? $user->username : null)
-                    : $pelanggan->ip_address;
-
-                if ($mikrotik && $ip_address) {
-                    require_once base_path('include/routeros_api.php');
-                    $API = new \RouterosAPI();
-                    $API->timeout = 2;
-                    $API->attempts = 1;
-                    $API->delay = 1;
-
-                    if ($API->connect($mikrotik->ip, $mikrotik->username, $mikrotik->password)) {
-                        if ($checkUser && $checkUser->ippelanggan == 'statik') {
-                            $commentToSearch = "Blokir Bulanan " . $ip_address;
-                            $API->write('/ip/firewall/address-list/print', false);
-                            $API->write('?comment=' . $commentToSearch);
-                            $ips = $API->read();
-
-                            if (!empty($ips)) {
-                                foreach ($ips as $ip_data) {
-                                    $API->write('/ip/firewall/address-list/remove', false);
-                                    $API->write('=.id=' . $ip_data['.id']);
-                                    $API->read();
-                                }
-                            }
-                        } else {
-                            if ($user) {
-                                $paket = DB::table('tb_paket')->where('id_paket', $pelanggan->paket)->first();
-                                $profile = $paket ? $paket->id_pmikrotik : 'default';
-
-                                $secrets = $API->comm('/ppp/secret/print', [
-                                    '?name' => $ip_address,
-                                ]);
-
-                                $isCurrentlyBlocked = false;
-                                if (!empty($secrets)) {
-                                    $secret = $secrets[0];
-                                    $currentProfile = $secret['profile'] ?? '';
-                                    $isDisabled = ($secret['disabled'] ?? 'false') === 'true';
-                                    if ($currentProfile === 'pppoe-isolir' || $isDisabled) {
-                                        $isCurrentlyBlocked = true;
-                                    }
-                                }
-
-                                if ($isCurrentlyBlocked) {
-                                    $API->comm('/ppp/secret/set', [
-                                        'numbers' => $ip_address,
-                                        'profile' => $profile
-                                    ]);
-                                    $API->comm('/ppp/secret/enable', ['numbers' => $ip_address]);
-
-                                    $activeConnections = $API->comm('/ppp/active/print', [
-                                        '?name' => $ip_address,
-                                    ]);
-                                    foreach ($activeConnections as $conn) {
-                                        $API->comm('/ppp/active/remove', [
-                                            '.id' => $conn['.id'],
-                                        ]);
-                                    }
-                                }
-                            }
-                        }
-                        $API->disconnect();
-                    }
-                }
-            } catch (\Exception $e) {
-                Log::error('Promo Activation Mikrotik Unblock Error: ' . $e->getMessage());
-            }
 
             // Send Custom Promo WhatsApp Message
             try {

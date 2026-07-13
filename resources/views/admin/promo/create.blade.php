@@ -304,7 +304,7 @@
                 <label for="nominal_tagihan">Input Tagihan Awal (Rp)</label>
                 <input type="number" name="nominal_tagihan" id="nominal_tagihan" class="form-control" placeholder="Masukkan jumlah nominal pembayaran awal, misal: 100000" value="{{ old('nominal_tagihan') }}" required>
                 <small style="color:var(--text-gray); font-size:0.78rem; margin-top:2px;">
-                    * Tagihan awal ini akan langsung masuk sebagai tagihan Lunas bulan ini (atau bulan depan jika bulan ini sudah lunas).
+                    * Tagihan awal ini akan masuk sebagai tagihan belum lunas untuk bulan pertama promo dimulai (atau bulan berikutnya jika bulan pertama tersebut sudah lunas).
                 </small>
             </div>
 

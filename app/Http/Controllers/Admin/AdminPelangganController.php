@@ -66,7 +66,7 @@ class AdminPelangganController extends Controller
         // Fetch support data for modal forms
         $pakets = Paket::orderBy('id_paket')->get();
         $perangkats = DB::table('tb_perangkat')->orderBy('id_perangkat')->get();
-        $odps = DB::table('tbl_odp')->orderBy('id_odp')->get();
+        $odps = \App\Models\Odp::withCount('pelanggans')->orderBy('id_odp')->get();
         $mikrotiks = DB::table('tbl_mikrotik')->get();
         
         $checkUser = DB::table('tbl_penggunamikrotik')->first();

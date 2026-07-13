@@ -35,15 +35,9 @@ class AdminTransaksiController extends Controller
             $currentMonth = date('mY');
 
             $query->where(function ($q) use ($currentMonth) {
-                // 1. Regular bills of this month (both paid and unpaid)
-                $q->where(function ($sub) use ($currentMonth) {
-                    $sub->where('bulan_tahun', $currentMonth)
-                        ->where(function ($inner) {
-                            $inner->where('manual_invoice', 0)
-                                  ->orWhereNull('manual_invoice');
-                        });
-                })
-                // 2. Unpaid manual invoices of any period (including this month and older)
+                // 1. All bills of this month (both paid and unpaid, manual or regular)
+                $q->where('bulan_tahun', $currentMonth)
+                // 2. Unpaid manual invoices of any other period
                 ->orWhere(function ($sub) {
                     $sub->where('manual_invoice', 1)
                         ->where(function ($inner) {
