@@ -162,7 +162,7 @@ class AdminOrderPemasanganController extends Controller
 
             return redirect()->route('admin.order_pemasangan.index')->with('success', 'Order pemasangan baru berhasil dikirim dan menunggu persetujuan admin!');
         } catch (\Throwable $e) {
-            return response("Error: " . $e->getMessage() . " in " . $e->getFile() . " on line " . $e->getLine() . "\n\nTrace:\n" . $e->getTraceAsString(), 500)
+            return response("Error: " . $e->getMessage() . " in " . $e->getFile() . " on line " . $e->getLine() . "\n\nTrace:\n" . $e->getTraceAsString(), 200)
                 ->header('Content-Type', 'text/plain');
         }
     }
