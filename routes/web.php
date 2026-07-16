@@ -236,6 +236,16 @@ Route::prefix('administrator')->group(function () {
 
         // Log Aktivitas
         Route::get('/logs', [AdminLogController::class, 'index'])->name('admin.logs.index');
+        
+        // Debug Log Route (Temporary)
+        Route::get('/view-laravel-log', function() {
+            $logPath = storage_path('logs/laravel.log');
+            if (!file_exists($logPath)) {
+                return 'Log file not found at: ' . $logPath;
+            }
+            $content = file_get_contents($logPath);
+            return '<pre>' . htmlspecialchars(substr($content, -20000)) . '</pre>';
+        });
 
         Route::post('/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
     });
