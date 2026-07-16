@@ -1,15 +1,5 @@
 <?php
 
-if (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], 'order-pemasangan') !== false) {
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        header('Content-Type: text/plain');
-        echo "HIT INDEX.PHP POST SUCCESSFULLY!\n";
-        echo "POST DATA: " . print_r($_POST, true) . "\n";
-        echo "FILES DATA: " . print_r($_FILES, true) . "\n";
-        exit;
-    }
-}
-
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 
