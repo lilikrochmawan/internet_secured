@@ -108,58 +108,63 @@ class AdminOrderPemasanganController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'nik' => 'required|string|max:50',
-            'nama' => 'required|string|max:255',
-            'no_telp' => 'required|string|max:20',
-            'paket' => 'required|integer|exists:tb_paket,id_paket',
-            'alamat_ktp' => 'required|string',
-            'alamat_pemasangan' => 'required|string',
-            'koordinat_pemasangan' => 'required|string|max:100',
-            'jadwal_pemasangan' => 'nullable|string',
-            'foto_ktp' => 'required|image|mimes:jpeg,jpg,png,gif,webp|max:5120',
-        ], [
-            'foto_ktp.required' => 'Foto KTP wajib diunggah.',
-            'foto_ktp.image' => 'File harus berupa gambar.',
-            'foto_ktp.max' => 'Ukuran file maksimal 5 MB.',
-            'paket.required' => 'Paket internet wajib dipilih.',
-        ]);
+        try {
+            $request->validate([
+                'nik' => 'required|string|max:50',
+                'nama' => 'required|string|max:255',
+                'no_telp' => 'required|string|max:20',
+                'paket' => 'required|integer|exists:tb_paket,id_paket',
+                'alamat_ktp' => 'required|string',
+                'alamat_pemasangan' => 'required|string',
+                'koordinat_pemasangan' => 'required|string|max:100',
+                'jadwal_pemasangan' => 'nullable|string',
+                'foto_ktp' => 'required|image|mimes:jpeg,jpg,png,gif,webp|max:5120',
+            ], [
+                'foto_ktp.required' => 'Foto KTP wajib diunggah.',
+                'foto_ktp.image' => 'File harus berupa gambar.',
+                'foto_ktp.max' => 'Ukuran file maksimal 5 MB.',
+                'paket.required' => 'Paket internet wajib dipilih.',
+            ]);
 
-        $fotoName = '';
-        if ($request->hasFile('foto_ktp')) {
-            $uploadDir = base_path('administrator/page/order/images');
-            if (!is_dir($uploadDir)) {
-                mkdir($uploadDir, 0755, true);
+            $fotoName = '';
+            if ($request->hasFile('foto_ktp')) {
+                $uploadDir = base_path('administrator/page/order/images');
+                if (!is_dir($uploadDir)) {
+                    mkdir($uploadDir, 0755, true);
+                }
+                $file = $request->file('foto_ktp');
+                $fotoName = uniqid() . '_' . Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) . '.' . $file->getClientOriginalExtension();
+                $file->move($uploadDir, $fotoName);
             }
-            $file = $request->file('foto_ktp');
-            $fotoName = uniqid() . '_' . Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) . '.' . $file->getClientOriginalExtension();
-            $file->move($uploadDir, $fotoName);
-        }
 
-        $jadwal = null;
-        if (!empty($request->jadwal_pemasangan)) {
-            try {
-                $jadwal = Carbon::parse($request->jadwal_pemasangan)->format('Y-m-d H:i:s');
-            } catch (\Exception $e) {
-                $jadwal = null;
+            $jadwal = null;
+            if (!empty($request->jadwal_pemasangan)) {
+                try {
+                    $jadwal = Carbon::parse($request->jadwal_pemasangan)->format('Y-m-d H:i:s');
+                } catch (\Exception $e) {
+                    $jadwal = null;
+                }
             }
+
+            OrderPemasangan::create([
+                'nik' => htmlspecialchars(strip_tags($request->nik)),
+                'nama' => htmlspecialchars(strip_tags($request->nama)),
+                'no_telp' => htmlspecialchars(strip_tags($request->no_telp)),
+                'paket' => intval($request->paket),
+                'alamat_ktp' => htmlspecialchars(strip_tags($request->alamat_ktp)),
+                'alamat_pemasangan' => htmlspecialchars(strip_tags($request->alamat_pemasangan)),
+                'koordinat_pemasangan' => htmlspecialchars(strip_tags($request->koordinat_pemasangan)),
+                'jadwal_pemasangan' => $jadwal,
+                'foto_ktp' => $fotoName,
+                'status' => 'pending',
+                'id_sales' => Auth::id(),
+            ]);
+
+            return redirect()->route('admin.order_pemasangan.index')->with('success', 'Order pemasangan baru berhasil dikirim dan menunggu persetujuan admin!');
+        } catch (\Throwable $e) {
+            return response("Error: " . $e->getMessage() . " in " . $e->getFile() . " on line " . $e->getLine() . "\n\nTrace:\n" . $e->getTraceAsString(), 500)
+                ->header('Content-Type', 'text/plain');
         }
-
-        OrderPemasangan::create([
-            'nik' => htmlspecialchars(strip_tags($request->nik)),
-            'nama' => htmlspecialchars(strip_tags($request->nama)),
-            'no_telp' => htmlspecialchars(strip_tags($request->no_telp)),
-            'paket' => intval($request->paket),
-            'alamat_ktp' => htmlspecialchars(strip_tags($request->alamat_ktp)),
-            'alamat_pemasangan' => htmlspecialchars(strip_tags($request->alamat_pemasangan)),
-            'koordinat_pemasangan' => htmlspecialchars(strip_tags($request->koordinat_pemasangan)),
-            'jadwal_pemasangan' => $jadwal,
-            'foto_ktp' => $fotoName,
-            'status' => 'pending',
-            'id_sales' => Auth::id(),
-        ]);
-
-        return redirect()->route('admin.order_pemasangan.index')->with('success', 'Order pemasangan baru berhasil dikirim dan menunggu persetujuan admin!');
     }
 
     public function assign(Request $request)
