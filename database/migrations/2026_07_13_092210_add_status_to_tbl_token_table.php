@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('tbl_token', function (Blueprint $table) {
-            $table->string('status', 20)->default('aktif')->after('token');
-        });
+        if (!Schema::hasColumn('tbl_token', 'status')) {
+            Schema::table('tbl_token', function (Blueprint $table) {
+                $table->string('status', 20)->default('aktif')->after('token');
+            });
+        }
     }
 
     /**
@@ -21,8 +23,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('tbl_token', function (Blueprint $table) {
-            $table->dropColumn('status');
-        });
+        if (Schema::hasColumn('tbl_token', 'status')) {
+            Schema::table('tbl_token', function (Blueprint $table) {
+                $table->dropColumn('status');
+            });
+        }
     }
 };

@@ -11,18 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tb_promo', function (Blueprint $table) {
-            $table->id('id_promo');
-            $table->string('nama_promo', 150);
-            $table->integer('id_pelanggan');
-            $table->integer('id_paket');
-            $table->integer('mulai_bulan');
-            $table->integer('mulai_tahun');
-            $table->integer('selesai_bulan');
-            $table->integer('selesai_tahun');
-            $table->integer('nominal_tagihan');
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('tb_promo')) {
+            Schema::create('tb_promo', function (Blueprint $table) {
+                $table->id('id_promo');
+                $table->string('nama_promo', 150);
+                $table->integer('id_pelanggan');
+                $table->integer('id_paket');
+                $table->integer('mulai_bulan');
+                $table->integer('mulai_tahun');
+                $table->integer('selesai_bulan');
+                $table->integer('selesai_tahun');
+                $table->integer('nominal_tagihan');
+                $table->timestamps();
+            });
+        }
     }
 
     /**
