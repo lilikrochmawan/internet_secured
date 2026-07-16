@@ -576,14 +576,14 @@
                                 @endif
                                 <br>
                                 <span style="font-size: 0.75rem; color: var(--text-gray); display: inline-block; margin-top: 4px;">
-                                    <strong>Sales:</strong> {{ $row->sales->nama_user ?? 'N/A' }}
+                                    <strong>Sales:</strong> {{ $row->sales?->nama_user ?? 'N/A' }}
                                 </span><br>
                                 <span style="font-size: 0.75rem; color: var(--text-gray);">
                                     <strong>Teknisi:</strong> 
                                     @if($row->id_teknisi === 0)
                                         <span class="badge" style="background-color: #f0f9ff; color: #0284c7; border: 1px solid #bae6fd; font-size: 0.7rem; font-weight: bold; padding: 2px 6px; border-radius: 4px;">Semua Teknisi</span>
                                     @else
-                                        {{ $row->teknisi->nama_user ?? 'Belum Ditugaskan' }}
+                                        {{ $row->teknisi?->nama_user ?? 'Belum Ditugaskan' }}
                                     @endif
                                 </span>
                             </td>
