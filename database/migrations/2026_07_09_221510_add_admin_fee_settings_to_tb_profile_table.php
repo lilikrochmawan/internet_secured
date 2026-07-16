@@ -12,12 +12,24 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('tb_profile', function (Blueprint $table) {
-            $table->string('admin_fee_type')->default('flat'); // 'flat', 'payment_method'
-            $table->integer('admin_fee_flat')->default(2000);
-            $table->string('admin_fee_qris_type')->default('percentage'); // 'percentage', 'flat'
-            $table->decimal('admin_fee_qris_value', 8, 2)->default(0.70);
-            $table->integer('admin_fee_va')->default(4000);
-            $table->integer('admin_fee_retail')->default(3000);
+            if (!Schema::hasColumn('tb_profile', 'admin_fee_type')) {
+                $table->string('admin_fee_type')->default('flat');
+            }
+            if (!Schema::hasColumn('tb_profile', 'admin_fee_flat')) {
+                $table->integer('admin_fee_flat')->default(2000);
+            }
+            if (!Schema::hasColumn('tb_profile', 'admin_fee_qris_type')) {
+                $table->string('admin_fee_qris_type')->default('percentage');
+            }
+            if (!Schema::hasColumn('tb_profile', 'admin_fee_qris_value')) {
+                $table->decimal('admin_fee_qris_value', 8, 2)->default(0.70);
+            }
+            if (!Schema::hasColumn('tb_profile', 'admin_fee_va')) {
+                $table->integer('admin_fee_va')->default(4000);
+            }
+            if (!Schema::hasColumn('tb_profile', 'admin_fee_retail')) {
+                $table->integer('admin_fee_retail')->default(3000);
+            }
         });
     }
 
@@ -27,14 +39,12 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('tb_profile', function (Blueprint $table) {
-            $table->dropColumn([
-                'admin_fee_type',
-                'admin_fee_flat',
-                'admin_fee_qris_type',
-                'admin_fee_qris_value',
-                'admin_fee_va',
-                'admin_fee_retail',
-            ]);
+            $cols = ['admin_fee_type', 'admin_fee_flat', 'admin_fee_qris_type', 'admin_fee_qris_value', 'admin_fee_va', 'admin_fee_retail'];
+            foreach ($cols as $col) {
+                if (Schema::hasColumn('tb_profile', $col)) {
+                    $table->dropColumn($col);
+                }
+            }
         });
     }
 };

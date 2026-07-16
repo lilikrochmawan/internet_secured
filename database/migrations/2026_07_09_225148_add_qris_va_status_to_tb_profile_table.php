@@ -12,8 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('tb_profile', function (Blueprint $table) {
-            $table->boolean('admin_fee_qris_status')->default(true);
-            $table->boolean('admin_fee_va_status')->default(true);
+            if (!Schema::hasColumn('tb_profile', 'admin_fee_qris_status')) {
+                $table->boolean('admin_fee_qris_status')->default(true);
+            }
+            if (!Schema::hasColumn('tb_profile', 'admin_fee_va_status')) {
+                $table->boolean('admin_fee_va_status')->default(true);
+            }
         });
     }
 
@@ -23,7 +27,12 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('tb_profile', function (Blueprint $table) {
-            $table->dropColumn(['admin_fee_qris_status', 'admin_fee_va_status']);
+            if (Schema::hasColumn('tb_profile', 'admin_fee_qris_status')) {
+                $table->dropColumn('admin_fee_qris_status');
+            }
+            if (Schema::hasColumn('tb_profile', 'admin_fee_va_status')) {
+                $table->dropColumn('admin_fee_va_status');
+            }
         });
     }
 };
