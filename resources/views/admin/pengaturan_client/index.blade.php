@@ -297,9 +297,14 @@
 
     <!-- TAB 1: Branch & Sub-Branch -->
     <div id="tab-branch" class="tab-content active">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-            <div style="font-size: 0.9rem; color: var(--text-gray);">
-                Kelola cakupan area operasional dengan mendaftarkan Kantor Cabang (Branch) dan Sub Area (Sub-Branch).
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+            <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap; flex: 1;">
+                <div style="position: relative; width: 100%; max-width: 320px;">
+                    <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 0.9rem;"></i>
+                    <input type="text" id="search-branch-input" placeholder="Cari branch atau sub-branch..." 
+                        style="width: 100%; padding: 8px 12px 8px 36px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 0.9rem; outline: none; transition: border-color 0.2s;"
+                        oninput="filterBranches()">
+                </div>
             </div>
             <button class="btn btn-primary" onclick="openModal('modalAddBranch')">
                 <i class="fa-solid fa-plus"></i> Tambah Branch
@@ -376,8 +381,16 @@
 
     <!-- TAB 2: Hak Akses & Role Staff -->
     <div id="tab-access" class="tab-content">
-        <div style="font-size: 0.9rem; color: var(--text-gray); margin-bottom: 20px;">
-            Atur dan sesuaikan hak akses wilayah kerja (Branch & Sub-Branch) untuk masing-masing user Administrator, Kasir, Teknisi, Sales, dan Mitra.
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+            <div style="font-size: 0.9rem; color: var(--text-gray); flex: 1;">
+                Atur dan sesuaikan hak akses wilayah kerja (Branch & Sub-Branch) untuk masing-masing user Administrator, Kasir, Teknisi, Sales, dan Mitra.
+            </div>
+            <div style="position: relative; width: 100%; max-width: 320px;">
+                <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 0.9rem;"></i>
+                <input type="text" id="search-staff-input" placeholder="Cari nama staff, username, role..." 
+                    style="width: 100%; padding: 8px 12px 8px 36px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 0.9rem; outline: none; transition: border-color 0.2s;"
+                    oninput="filterStaff()">
+            </div>
         </div>
 
         <div style="overflow-x: auto;">
@@ -394,7 +407,7 @@
                 </thead>
                 <tbody>
                     @forelse($users as $u)
-                        <tr style="border-bottom: 1px solid var(--border-color);">
+                        <tr class="staff-row" style="border-bottom: 1px solid var(--border-color);">
                             <td style="padding: 14px;"><strong>{{ $u->nama_user }}</strong></td>
                             <td style="padding: 14px;"><code>{{ $u->username }}</code></td>
                             <td style="padding: 14px;">
@@ -851,6 +864,82 @@
 
         e.currentTarget.classList.add('active');
         document.getElementById(tabId).classList.add('active');
+    }
+
+    // Live search filter for branches and sub-branches
+    function filterBranches() {
+        const query = document.getElementById('search-branch-input').value.toLowerCase().trim();
+        const nodes = document.querySelectorAll('.branch-tree-node');
+        
+        nodes.forEach(node => {
+            const branchNameEl = node.querySelector('.branch-header span');
+            const branchName = branchNameEl ? branchNameEl.textContent.toLowerCase() : '';
+            
+            const branchDescEl = node.querySelector('.branch-header div div');
+            const branchDesc = branchDescEl ? branchDescEl.textContent.toLowerCase() : '';
+            
+            const branchMatches = branchName.includes(query) || branchDesc.includes(query);
+            
+            const subItems = node.querySelectorAll('.sub-branch-item');
+            let anySubMatches = false;
+            
+            subItems.forEach(sub => {
+                const subTextEl = sub.querySelector('strong');
+                const subText = subTextEl ? subTextEl.textContent.toLowerCase() : '';
+                
+                const subDescEl = sub.querySelector('span');
+                const subDesc = subDescEl ? subDescEl.textContent.toLowerCase() : '';
+                
+                const subMatches = subText.includes(query) || subDesc.includes(query);
+                
+                if (subMatches) {
+                    sub.style.display = 'flex';
+                    anySubMatches = true;
+                } else {
+                    if (branchMatches && query !== '') {
+                        sub.style.display = 'flex';
+                    } else if (query !== '') {
+                        sub.style.display = 'none';
+                    } else {
+                        sub.style.display = 'flex'; // Reset
+                    }
+                }
+            });
+            
+            if (branchMatches || anySubMatches || query === '') {
+                node.style.display = '';
+            } else {
+                node.style.display = 'none';
+            }
+        });
+    }
+
+    // Live search filter for staff accounts
+    function filterStaff() {
+        const query = document.getElementById('search-staff-input').value.toLowerCase().trim();
+        const rows = document.querySelectorAll('.staff-row');
+        
+        rows.forEach(row => {
+            const nameEl = row.querySelector('td:nth-child(1)');
+            const name = nameEl ? nameEl.textContent.toLowerCase() : '';
+            
+            const usernameEl = row.querySelector('td:nth-child(2)');
+            const username = usernameEl ? usernameEl.textContent.toLowerCase() : '';
+            
+            const roleEl = row.querySelector('td:nth-child(3)');
+            const role = roleEl ? roleEl.textContent.toLowerCase() : '';
+            
+            const regionEl = row.querySelector('td:nth-child(4)');
+            const region = regionEl ? regionEl.textContent.toLowerCase() : '';
+            
+            const matches = name.includes(query) || username.includes(query) || role.includes(query) || region.includes(query);
+            
+            if (matches || query === '') {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
     }
 
     // Modal management logic
