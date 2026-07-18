@@ -3,6 +3,8 @@
 @section('title', 'Data Pelanggan')
 
 @section('styles')
+<!-- Load Select2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <!-- Leaflet CSS -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
 <style>
@@ -283,6 +285,51 @@
         .modal-body {
             padding: 16px;
         }
+    }
+
+    /* Styling to make Select2 match our premium theme */
+    .select2-container--default .select2-selection--single {
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 12px !important;
+        height: 44px !important;
+        padding: 8px 12px !important;
+        font-family: inherit !important;
+        font-size: 0.95rem !important;
+        outline: none !important;
+        transition: border 0.2s !important;
+        display: inline-flex !important;
+        align-items: center !important;
+    }
+    .select2-container--default .select2-selection--single .select2-selection--rendered {
+        line-height: 26px !important;
+        padding-left: 0 !important;
+        color: #1e293b !important;
+    }
+    .select2-container--default .select2-selection--single .select2-selection--arrow {
+        height: 42px !important;
+        right: 10px !important;
+        display: flex !important;
+        align-items: center !important;
+    }
+    .select2-dropdown {
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 12px !important;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
+        overflow: hidden !important;
+        z-index: 99999 !important;
+    }
+    .select2-search--dropdown .select2-search__field {
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 8px !important;
+        padding: 6px 10px !important;
+        outline: none !important;
+    }
+    .select2-container--default .select2-results__option--highlighted[aria-selected] {
+        background: var(--primary-gradient) !important;
+        color: white !important;
+    }
+    .select2-container {
+        width: 100% !important;
     }
 </style>
 @endsection
@@ -801,12 +848,41 @@
 @endsection
 
 @section('scripts')
+<!-- Load jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Load Select2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
+    let allSubBranchOptionsAdd = [];
+    let allSubBranchOptionsEdit = [];
+
     document.addEventListener("DOMContentLoaded", function () {
         setupTablePagination("#pelangganTable", "#pelangganPagination", "#tableLimit", "#tableSearch");
         setupCustomSecretSelect();
         setupCustomOdpSelect('add');
         setupCustomOdpSelect('edit');
+
+        // Save original sub-branch options once
+        document.querySelectorAll('#add_sub_branch option').forEach(opt => {
+            allSubBranchOptionsAdd.push({
+                value: opt.value,
+                text: opt.textContent,
+                branch: opt.getAttribute('data-branch')
+            });
+        });
+        document.querySelectorAll('#edit_sub_branch option').forEach(opt => {
+            allSubBranchOptionsEdit.push({
+                value: opt.value,
+                text: opt.textContent,
+                branch: opt.getAttribute('data-branch')
+            });
+        });
+
+        // Initialize Select2 with dynamic configurations
+        $('#add_branch').select2({ placeholder: "-- Pilih Branch --", allowClear: true });
+        $('#add_sub_branch').select2({ placeholder: "-- Pilih Sub-Branch --", allowClear: true });
+        $('#edit_branch').select2({ placeholder: "-- Pilih Branch --", allowClear: true });
+        $('#edit_sub_branch').select2({ placeholder: "-- Pilih Sub-Branch --", allowClear: true });
     });
 
     // Modal Management
@@ -828,8 +904,8 @@
         document.getElementById('username').value = '';
         document.getElementById('password').value = '';
         document.getElementById('nama').value = '';
-        document.getElementById('add_branch').value = '';
-        document.getElementById('add_sub_branch').value = '';
+        $('#add_branch').val('').trigger('change.select2');
+        $('#add_sub_branch').val('').trigger('change.select2');
         
         document.getElementById('odp').value = 'NULL';
         syncCustomOdpText('add');
@@ -860,9 +936,9 @@
         document.getElementById('edit_jatuh_tempo').value = pelanggan.jatuh_tempo ? pelanggan.jatuh_tempo.substring(0, 10) : '';
         
         // Set branch & sub-branch values
-        document.getElementById('edit_branch').value = pelanggan.id_branch || '';
+        $('#edit_branch').val(pelanggan.id_branch || '').trigger('change.select2');
         filterSubBranches(pelanggan.id_branch || '', 'edit_sub_branch');
-        document.getElementById('edit_sub_branch').value = pelanggan.id_sub_branch || '';
+        $('#edit_sub_branch').val(pelanggan.id_sub_branch || '').trigger('change.select2');
         
         document.getElementById('map-edit-picker').style.display = 'none';
         document.getElementById('editModal').classList.add('active');
@@ -871,53 +947,48 @@
         document.getElementById('editModal').classList.remove('active');
     }
 
-    // Dynamic filtering for sub-branches based on branch selection
+    // Dynamic filtering for sub-branches based on branch selection (Select2 compatible)
     function filterSubBranches(branchId, targetSelectId) {
-        const select = document.getElementById(targetSelectId);
-        if (!select) return;
+        const select = $('#' + targetSelectId);
+        if (select.length === 0) return;
         
-        const label = select.parentElement.querySelector('label');
+        // Clear current options
+        select.empty();
         
         let visibleCount = 0;
-        const options = select.querySelectorAll('option');
-        options.forEach(opt => {
-            const optBranchId = opt.getAttribute('data-branch');
-            if (!optBranchId) {
-                opt.style.display = 'block'; // Keep placeholder options
-            } else if (branchId === '' || optBranchId == branchId) {
-                opt.style.display = 'block';
+        const originalOptions = (targetSelectId === 'add_sub_branch') ? allSubBranchOptionsAdd : allSubBranchOptionsEdit;
+        
+        // Filter and append
+        originalOptions.forEach(opt => {
+            if (!opt.branch) {
+                // Keep placeholder
+                select.append(new Option(opt.text, opt.value));
+            } else if (branchId === '' || opt.branch == branchId) {
+                select.append(new Option(opt.text, opt.value));
                 visibleCount++;
-            } else {
-                opt.style.display = 'none';
             }
         });
         
-        // Reset selected value if the selected option is now hidden
-        const activeOption = select.querySelector('option[value="' + select.value + '"]');
-        if (activeOption && activeOption.style.display === 'none') {
-            select.value = '';
-        }
+        const label = document.getElementById(targetSelectId).parentElement.querySelector('label');
+        const nativeSelect = document.getElementById(targetSelectId);
 
         // If there are no sub-branches for this branch, make it optional
         if (visibleCount === 0 && branchId !== '') {
-            select.required = false;
+            nativeSelect.required = false;
             if (label) {
                 label.innerHTML = 'Sub-Branch <span style="font-size: 0.8rem; color: #94a3b8; font-weight: normal;">(Opsional/Tidak Ada)</span>';
             }
-            const placeholderOpt = select.querySelector('option[value=""]');
-            if (placeholderOpt) {
-                placeholderOpt.textContent = '-- Tidak Ada Sub-Branch --';
-            }
+            select.find('option[value=""]').text('-- Tidak Ada Sub-Branch --');
         } else {
-            select.required = true;
+            nativeSelect.required = true;
             if (label) {
                 label.innerHTML = 'Sub-Branch <span style="color: #ef4444;">*</span>';
             }
-            const placeholderOpt = select.querySelector('option[value=""]');
-            if (placeholderOpt) {
-                placeholderOpt.textContent = '-- Pilih Sub-Branch --';
-            }
+            select.find('option[value=""]').text('-- Pilih Sub-Branch --');
         }
+        
+        // Re-trigger Select2 change without recursively calling filterSubBranches
+        select.val('').trigger('change.select2');
     }
 
     function openDeleteModal(id, name) {
