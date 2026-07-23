@@ -169,6 +169,29 @@ class AdminTransaksiController extends Controller
             $tanggal_sekarang = date('Y-m-d');
             $jatuh_tempo = $pelanggan->jatuh_tempo;
 
+            // Ambil pengaturan jatuh tempo global
+            $settings = DB::table('tb_profile')->first();
+            $tipe = $settings->tipe_jatuh_tempo ?? 'tanggal_tetap';
+            $default_hari = $settings->hari_jatuh_tempo ?? 10;
+            $adjust_late = $settings->adjust_due_date_late ?? 0;
+
+            $due_day = $default_hari;
+            if ($pelanggan->jatuh_tempo) {
+                $due_day = (int) date('d', strtotime($pelanggan->jatuh_tempo));
+            } elseif ($tipe === 'tanggal_pasang' && !empty($pelanggan->tgl_pemasangan)) {
+                $due_day = (int) date('d', strtotime($pelanggan->tgl_pemasangan));
+            }
+
+            $is_late = false;
+            if ($jatuh_tempo && $tanggal_sekarang > date('Y-m-d', strtotime($jatuh_tempo))) {
+                $is_late = true;
+            }
+
+            if ($is_late && $adjust_late == 1) {
+                // Bergeser ke tanggal pembayaran terakhir (hari ini)
+                $due_day = (int) date('d', strtotime($tanggal_sekarang));
+            }
+
             if ($jatuh_tempo && $tanggal_sekarang < date('Y-m-d', strtotime($jatuh_tempo))) {
                 $jatuh_tempo_obj = new \DateTime($jatuh_tempo);
             } else {
@@ -177,18 +200,6 @@ class AdminTransaksiController extends Controller
             $jatuh_tempo_obj->modify('+1 Month');
             $next_year = (int)$jatuh_tempo_obj->format('Y');
             $next_month = (int)$jatuh_tempo_obj->format('m');
-
-            // Ambil pengaturan jatuh tempo global
-            $settings = DB::table('tb_profile')->first();
-            $tipe = $settings->tipe_jatuh_tempo ?? 'tanggal_tetap';
-            $default_hari = $settings->hari_jatuh_tempo ?? 10;
-
-            $due_day = $default_hari;
-            if ($pelanggan->jatuh_tempo) {
-                $due_day = (int) date('d', strtotime($pelanggan->jatuh_tempo));
-            } elseif ($tipe === 'tanggal_pasang' && !empty($pelanggan->tgl_pemasangan)) {
-                $due_day = (int) date('d', strtotime($pelanggan->tgl_pemasangan));
-            }
 
             // Cari jumlah hari maksimum di bulan target
             $days_in_month = (int) date('t', strtotime($next_year . '-' . sprintf('%02d', $next_month) . '-01'));
@@ -203,13 +214,21 @@ class AdminTransaksiController extends Controller
                 'jatuh_tempo' => $tgl_jatuh_tempo
             ]);
 
-            // Otomatis unblock Mikrotik jika tagihan terbaru lunas
-            $latestBill = DB::table('tb_tagihan')
+            // Otomatis unblock Mikrotik jika tagihan bulan berjalan sudah lunas, atau belum jatuh tempo
+            $currentPeriod = date('mY');
+            $currentBill = DB::table('tb_tagihan')
                 ->where('id_pelanggan', $pelanggan->id_pelanggan)
-                ->orderBy('id_tagihan', 'desc')
+                ->where('bulan_tahun', $currentPeriod)
                 ->first();
 
-            if ($latestBill && $latestBill->status_bayar == 1) {
+            $unblock = true;
+            if ($currentBill && $currentBill->status_bayar != 1) {
+                if (strtotime($currentBill->jatuh_tempo) < time()) {
+                    $unblock = false;
+                }
+            }
+
+            if ($unblock) {
                 try {
                     $user = User::where('id_pelanggan', $pelanggan->id_pelanggan)->first();
                     $checkUser = DB::table('tbl_penggunamikrotik')->first();
@@ -299,6 +318,7 @@ class AdminTransaksiController extends Controller
                     'penerimaan' => $tagihan->jml_bayar,
                     'id_tagihan' => $tagihan->id_tagihan
                 ]);
+                \App\Models\Tagihan::allocateMitraCommission($tagihan->id_tagihan);
             }
 
             // Kirim Notifikasi WhatsApp Pembayaran Sukses

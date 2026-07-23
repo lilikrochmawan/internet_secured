@@ -66,7 +66,7 @@
 
     .order-grid {
         display: grid;
-        grid-template-columns: {{ Auth::user()->level === 'sales' ? 'minmax(0, 1.2fr) minmax(0, 0.8fr)' : 'minmax(0, 1fr)' }};
+        grid-template-columns: {{ in_array(Auth::user()->level, ['sales', 'mitra']) ? 'minmax(0, 1.2fr) minmax(0, 0.8fr)' : 'minmax(0, 1fr)' }};
         gap: 24px;
         margin-top: 20px;
     }
@@ -463,6 +463,11 @@
                             <td>{{ $index + 1 }}</td>
                              <td>
                                 <strong>{{ $row->nama }}</strong><br>
+                                @if(!empty($row->warnings))
+                                    <span class="badge" onclick='openDeletedReasonModal({!! json_encode($row->warnings) !!})' style="background-color: #fef2f2; color: #dc2626; border: 1px solid #fee2e2; font-size: 0.75rem; font-weight: bold; padding: 3px 6px; border-radius: 4px; display: inline-flex; align-items: center; gap: 4px; margin-top: 4px; margin-bottom: 4px; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.backgroundColor='#fee2e2'" onmouseout="this.style.backgroundColor='#fef2f2'">
+                                        <i class="fa-solid fa-triangle-exclamation"></i> Kemiripan Eks-Pelanggan ({{ count($row->warnings) }})
+                                    </span><br>
+                                @endif
                                 <span style="font-size: 0.8rem; color: var(--text-gray);">NIK: {{ $row->nik }}</span><br>
                                 <span style="font-size: 0.8rem; color: var(--text-gray);">Telp: {{ $row->no_telp ?? '-' }}</span><br>
                                 <span style="font-size: 0.8rem; color: var(--text-gray);">
@@ -672,8 +677,8 @@
         <div id="ordersPagination"></div>
     </div>
 
-    <!-- Kolom Kanan: Form Upload Pelanggan Baru (Hanya untuk Sales/Marketing) -->
-    @if(Auth::user()->level === 'sales' || Auth::user()->level === 'admin')
+    <!-- Kolom Kanan: Form Upload Pelanggan Baru (Hanya untuk Sales/Marketing/Mitra) -->
+    @if(in_array(Auth::user()->level, ['sales', 'mitra', 'admin']))
         <div class="card" style="margin: 0;">
             <div class="card-header">
                 <div class="card-title">
@@ -796,7 +801,7 @@
             <button class="modal-close" onclick="closeApproveModal()">&times;</button>
         </div>
         <div class="modal-body">
-            <form action="{{ route('admin.order_pemasangan.approve') }}" method="POST">
+            <form id="approveOrderForm" action="{{ route('admin.order_pemasangan.approve') }}" method="POST">
                 @csrf
                 <input type="hidden" name="id_order" id="approve_id">
 
@@ -805,6 +810,17 @@
                     <strong id="approve_label_nama" style="font-size: 1rem; color: #1e3a8a;"></strong><br>
                     <span id="approve_label_nik" style="font-size: 0.85rem; color: #1e40af;"></span><br>
                     <span id="approve_label_alamat" style="font-size: 0.85rem; color: #1e40af;"></span>
+                </div>
+
+                <!-- Warning Mantan Pelanggan Blacklist -->
+                <div id="approve_warning_box" style="display: none; background-color: #fef2f2; border: 1px solid #fee2e2; border-left: 4px solid #dc2626; padding: 16px; border-radius: 12px; margin-bottom: 18px;">
+                    <h4 style="margin: 0 0 8px 0; color: #991b1b; display: flex; align-items: center; gap: 6px; font-weight: 700; font-size: 0.95rem;">
+                        <i class="fa-solid fa-triangle-exclamation" style="font-size: 1.1rem; color: #dc2626;"></i> 
+                        PERINGATAN: Kemiripan Eks-Pelanggan Terdeteksi!
+                    </h4>
+                    <div id="approve_warning_list" style="font-size: 0.85rem; color: #7f1d1d; line-height: 1.6; display: flex; flex-direction: column; gap: 8px;">
+                        <!-- JS populated warnings -->
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -950,6 +966,24 @@
                     <button type="submit" class="btn btn-primary">ACC & Daftarkan Pelanggan</button>
                 </div>
             </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Detail Alasan Penghapusan Pelanggan -->
+<div class="modal" id="deletedReasonModal" style="z-index: 10007;">
+    <div class="modal-content" style="width: min(500px, 95vw); max-width: 500px;">
+        <div class="modal-header" style="background: #dc2626; color: white; display: flex; align-items: center; justify-content: space-between; padding: 20px 24px;">
+            <h3 style="margin: 0; font-family: 'Outfit', sans-serif; font-size: 1.2rem; font-weight: 700;">Detail Riwayat Pelanggan</h3>
+            <button class="modal-close" onclick="closeDeletedReasonModal()" style="color: white; border: none; background: none; font-size: 1.2rem; cursor: pointer;">&times;</button>
+        </div>
+        <div class="modal-body" style="padding: 20px;">
+            <div id="deleted_reason_content" style="display: flex; flex-direction: column; gap: 12px;">
+                <!-- Populated by JS -->
+            </div>
+            <div style="display: flex; justify-content: flex-end; margin-top: 20px;">
+                <button type="button" class="btn btn-secondary" onclick="closeDeletedReasonModal()">Tutup</button>
+            </div>
         </div>
     </div>
 </div>
@@ -1336,6 +1370,33 @@
         document.getElementById('approve_label_nik').innerText = "NIK: " + order.nik;
         document.getElementById('approve_label_alamat').innerText = "Alamat Pasang: " + order.alamat_pemasangan;
         currentClientCoords = order.koordinat_pemasangan || '';
+        
+        // Populate and display warning box if matching deleted customer found
+        const warningBox = document.getElementById('approve_warning_box');
+        const warningList = document.getElementById('approve_warning_list');
+        if (order.warnings && order.warnings.length > 0) {
+            warningList.innerHTML = '';
+            order.warnings.forEach(w => {
+                const item = document.createElement('div');
+                item.style.padding = '10px 14px';
+                item.style.backgroundColor = 'rgba(220, 38, 38, 0.03)';
+                item.style.borderRadius = '10px';
+                item.style.border = '1px dashed rgba(220, 38, 38, 0.2)';
+                item.style.marginBottom = '6px';
+                item.innerHTML = `
+                    <div style="font-weight: 700; color: #b91c1c; margin-bottom: 4px;">⚠️ ${w.matched_by}</div>
+                    <div style="color: #475569;"><strong>Nama Pelanggan:</strong> ${w.nama_pelanggan}</div>
+                    <div style="color: #475569;"><strong>Dihapus Pada:</strong> ${w.created_at}</div>
+                    <div style="margin-top: 6px; padding: 6px 10px; background-color: #fee2e2; color: #991b1b; border-radius: 8px; font-weight: 500;">
+                        <strong>Alasan Hapus:</strong> ${w.alasan_hapus}
+                    </div>
+                `;
+                warningList.appendChild(item);
+            });
+            warningBox.style.display = 'block';
+        } else {
+            warningBox.style.display = 'none';
+        }
         
         // Default username and password suggestion
         var nameSlug = order.nama.toLowerCase().replace(/[^a-z0-9]/g, '_').substring(0, 10);
@@ -1806,6 +1867,96 @@
             } else if (e.key === 'Escape') {
                 closeLightboxModal();
             }
+        }
+    });
+
+    function openDeletedReasonModal(warnings) {
+        const contentDiv = document.getElementById('deleted_reason_content');
+        contentDiv.innerHTML = '';
+        
+        warnings.forEach((w, index) => {
+            const item = document.createElement('div');
+            item.style.padding = '14px';
+            item.style.backgroundColor = '#f8fafc';
+            item.style.borderRadius = '12px';
+            item.style.border = '1px solid #e2e8f0';
+            if (index > 0) {
+                item.style.marginTop = '10px';
+            }
+            item.innerHTML = `
+                <div style="font-weight: 700; color: #dc2626; margin-bottom: 6px; font-size: 0.95rem;">
+                    ⚠️ Kriteria Cocok: ${w.matched_by}
+                </div>
+                <div style="font-size: 0.85rem; color: #475569; line-height: 1.5;">
+                    <strong>Nama Pelanggan:</strong> ${w.nama_pelanggan}<br>
+                    <strong>Dihapus Pada:</strong> ${w.created_at}
+                </div>
+                <div style="margin-top: 8px; padding: 10px; background-color: #fee2e2; color: #991b1b; border-radius: 8px; font-size: 0.85rem; font-weight: 600; line-height: 1.4;">
+                    <strong>Alasan Dihapus:</strong><br>
+                    ${w.alasan_hapus}
+                </div>
+            `;
+            contentDiv.appendChild(item);
+        });
+        
+        document.getElementById('deletedReasonModal').classList.add('active');
+    }
+
+    function closeDeletedReasonModal() {
+        document.getElementById('deletedReasonModal').classList.remove('active');
+    }
+
+    document.getElementById('approveOrderForm').addEventListener('submit', async function(e) {
+        // Prevent default submission
+        e.preventDefault();
+        
+        // Show loading spinner
+        if (typeof showLoading === 'function') {
+            showLoading();
+        }
+        
+        // Get phone number
+        const noTelp = document.getElementById('no_telp_approve').value.trim();
+        
+        // Check if there is already a confirmed flag
+        if (this.querySelector('input[name="confirm_same_phone"]')) {
+            this.submit();
+            return;
+        }
+        
+        try {
+            const response = await fetch('{{ route("admin.pelanggan.check_phone") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({ no_telp: noTelp })
+            });
+            const data = await response.json();
+            
+            if (data.exists) {
+                if (typeof hideLoading === 'function') {
+                    hideLoading();
+                }
+                const confirmSave = confirm(`Peringatan: Nomor HP/WhatsApp (${noTelp}) ini sudah digunakan oleh pelanggan "${data.nama_pelanggan}" (${data.kode_pelanggan}).\n\nApakah Anda yakin ingin tetap melakukan ACC dengan nomor HP yang sama?`);
+                if (confirmSave) {
+                    if (typeof showLoading === 'function') {
+                        showLoading();
+                    }
+                    const confirmInput = document.createElement('input');
+                    confirmInput.type = 'hidden';
+                    confirmInput.name = 'confirm_same_phone';
+                    confirmInput.value = '1';
+                    this.appendChild(confirmInput);
+                    this.submit();
+                }
+            } else {
+                this.submit();
+            }
+        } catch (err) {
+            console.error(err);
+            this.submit();
         }
     });
 </script>

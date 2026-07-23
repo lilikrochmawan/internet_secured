@@ -15,11 +15,26 @@ class AdminKeluhanController extends Controller
     {
         $user = Auth::user();
         
-        $query = Keluhan::with(['pelanggan', 'teknisi'])
-            ->where(function($q) {
+        $query = Keluhan::with(['pelanggan', 'teknisi']);
+        
+        if (in_array($user->level, ['mitra', 'sales'])) {
+            $query->where(function($q) use ($user) {
+                // Rule 1: Tiket yang dibuatnya sendiri (termasuk maintenance / id_pelanggan null)
+                $q->where('tbl_keluhan.user_id', $user->id)
+                // Rule 2: Tiket yang dibuat oleh pelanggan di branch/sub branch sesuai aksesnya
+                ->orWhere(function($subQ) {
+                    $subQ->whereIn('tbl_keluhan.id_pelanggan', Pelanggan::allowedForUser()->pluck('id_pelanggan'))
+                         ->whereIn('tbl_keluhan.user_id', function($uq) {
+                             $uq->select('id')->from('tb_user')->where('level', 'user');
+                         });
+                });
+            });
+        } else {
+            $query->where(function($q) {
                 $q->whereIn('id_pelanggan', Pelanggan::allowedForUser()->pluck('id_pelanggan'))
                   ->orWhereNull('id_pelanggan');
             });
+        }
             
         // Filter tickets if user is a technician
         if ($user->level === 'teknisi') {
@@ -31,10 +46,10 @@ class AdminKeluhanController extends Controller
         
         $keluhan = $query->orderBy('id_keluhan', 'desc')->get();
         
-        // Fetch list of technicians and pelanggan (for admin/noc)
+        // Fetch list of technicians and pelanggan (for admin/noc/mitra to create tickets)
         $teknisiList = [];
         $pelangganList = [];
-        if (in_array($user->level, ['admin', 'noc'])) {
+        if (in_array($user->level, ['admin', 'noc', 'mitra'])) {
             $teknisiList = \App\Models\User::where('level', 'teknisi')->get();
             $pelangganList = \App\Models\Pelanggan::allowedForUser()->orderBy('nama_pelanggan')->get();
         }
@@ -59,7 +74,6 @@ class AdminKeluhanController extends Controller
                 'status_keluhan' => 'proses',
                 'assign_to_all' => 1,
                 'teknisi_id' => null,
-                'user_id' => Auth::id(),
             ]);
             $msg = 'Tiket berhasil diproses dan ditugaskan ke semua teknisi!';
             
@@ -89,7 +103,6 @@ class AdminKeluhanController extends Controller
                 'status_keluhan' => 'proses',
                 'assign_to_all' => 0,
                 'teknisi_id' => Auth::id(),
-                'user_id' => Auth::id(),
             ]);
             $msg = 'Tiket berhasil diproses oleh Anda sendiri!';
         } else {
@@ -97,7 +110,6 @@ class AdminKeluhanController extends Controller
                 'status_keluhan' => 'proses',
                 'assign_to_all' => 0,
                 'teknisi_id' => $request->teknisi_id,
-                'user_id' => Auth::id(),
             ]);
             $msg = 'Teknisi berhasil ditugaskan dan status tiket diubah ke Proses!';
             
@@ -135,7 +147,6 @@ class AdminKeluhanController extends Controller
         $keluhan->update([
             'status_keluhan' => 'selesai',
             'masalah' => htmlspecialchars(strip_tags($request->masalah)),
-            'user_id' => Auth::id(), // Staff yang menyelesaikan keluhan
         ]);
 
         // Kirim Notifikasi WhatsApp ke Client via Fonnte API
@@ -200,6 +211,19 @@ class AdminKeluhanController extends Controller
                   ->orWhere('assign_to_all', 1);
             });
             $title = 'Laporan Keluhan & Tiket Anda (' . $user->nama_user . ')';
+        } elseif (in_array($user->level, ['mitra', 'sales'])) {
+            $query->where(function($q) use ($user) {
+                // Rule 1: Tiket yang dibuatnya sendiri (termasuk maintenance / id_pelanggan null)
+                $q->where('tbl_keluhan.user_id', $user->id)
+                // Rule 2: Tiket yang dibuat oleh pelanggan di branch/sub branch sesuai aksesnya
+                ->orWhere(function($subQ) {
+                    $subQ->whereIn('tbl_keluhan.id_pelanggan', Pelanggan::allowedForUser()->pluck('id_pelanggan'))
+                         ->whereIn('tbl_keluhan.user_id', function($uq) {
+                             $uq->select('id')->from('tb_user')->where('level', 'user');
+                         });
+                });
+            });
+            $title = 'Laporan Keluhan & Tiket';
         } else {
             $query->where(function($q) {
                 $q->whereIn('id_pelanggan', Pelanggan::allowedForUser()->pluck('id_pelanggan'))
@@ -310,7 +334,6 @@ class AdminKeluhanController extends Controller
         $keluhan->update([
             'status_keluhan' => 'selesai',
             'masalah' => htmlspecialchars(strip_tags($request->masalah)),
-            'user_id' => Auth::id(), // Staff yang memverifikasi keluhan
         ]);
 
         // Kirim Notifikasi WhatsApp ke Client via Fonnte API

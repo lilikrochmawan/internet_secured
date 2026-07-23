@@ -333,7 +333,7 @@
             <i class="fa-solid fa-circle-exclamation"></i>
             <span>Daftar Keluhan & Tiket</span>
         </div>
-        @if(in_array(Auth::user()->level, ['admin', 'noc']))
+        @if(in_array(Auth::user()->level, ['admin', 'noc', 'mitra']))
             <button type="button" class="btn btn-primary" onclick="openCreateTicketModal()" style="height: 40px; border-radius: 12px; font-size: 0.85rem; padding: 8px 16px;">
                 <i class="fa-solid fa-plus"></i> Buat Tiket
             </button>
@@ -476,7 +476,7 @@
                             @endif
                         </td>
                         <td align="center">
-                            @if(Auth::user()->level !== 'teknisi')
+                            @if(!in_array(Auth::user()->level, ['teknisi', 'mitra', 'sales']))
                                 @if($k->status_keluhan == 'menunggu')
                                     <div style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;">
                                         <button type="button" class="btn btn-info open-assign-modal" data-id="{{ $k->id_keluhan }}" data-tiket="{{ $k->nomor_tiket }}">
@@ -507,7 +507,7 @@
                                 @else
                                     <span style="font-size:0.85rem; color:#64748b; font-style:italic;">Tiket Selesai</span>
                                 @endif
-                            @else
+                            @elseif(Auth::user()->level === 'teknisi')
                                 {{-- For Technician level --}}
                                 @if($k->status_keluhan == 'proses')
                                     <button type="button" class="btn btn-success open-teknisi-selesai-modal" data-id="{{ $k->id_keluhan }}" data-tiket="{{ $k->nomor_tiket }}">
@@ -517,6 +517,15 @@
                                     <span style="font-size:0.85rem; color:#d97706; font-weight:600;"><i class="fa-solid fa-spinner fa-spin"></i> Menunggu Verifikasi</span>
                                 @else
                                     <span style="font-size:0.85rem; color:#16a34a; font-style:italic;"><i class="fa-solid fa-check-double"></i> Selesai</span>
+                                @endif
+                            @else
+                                {{-- For Mitra & Sales (Read-Only action status indicator) --}}
+                                @if($k->status_keluhan == 'selesai')
+                                    <span style="font-size:0.85rem; color:#16a34a; font-style:italic;"><i class="fa-solid fa-check-double"></i> Selesai</span>
+                                @elseif($k->status_keluhan == 'perlu_verifikasi')
+                                    <span style="font-size:0.85rem; color:#d97706; font-weight:600;">Menunggu Verifikasi</span>
+                                @else
+                                    <span style="font-size:0.85rem; color:#475569; font-weight:500;">{{ ucfirst($k->status_keluhan) }}</span>
                                 @endif
                             @endif
                         </td>

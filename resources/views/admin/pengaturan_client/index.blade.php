@@ -475,7 +475,8 @@
                                                     'kas' => 'Kas',
                                                     'keluhan' => 'Keluhan',
                                                     'pengguna' => 'Pengguna',
-                                                    'order_pemasangan' => 'Order Pemasangan'
+                                                    'order_pemasangan' => 'Order Pemasangan',
+                                                    'mitra' => 'Mitra'
                                                 ];
                                             @endphp
                                             @foreach($u->menu_access_list as $mKey)
@@ -836,6 +837,12 @@
                             <input type="checkbox" name="menus[]" value="order_pemasangan" id="menu_order_pemasangan" class="menu-checkbox">
                             <label for="menu_order_pemasangan" style="font-size: 0.9rem; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 6px;">
                                 <i class="fa-solid fa-truck-ramp-box" style="color: #4f46e5; width: 16px;"></i> Order Pemasangan
+                            </label>
+                        </div>
+                        <div class="menu-checkbox-item" style="display: flex; align-items: center; gap: 8px;">
+                            <input type="checkbox" name="menus[]" value="mitra" id="menu_mitra" class="menu-checkbox">
+                            <label for="menu_mitra" style="font-size: 0.9rem; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                                <i class="fa-solid fa-handshake" style="color: #4f46e5; width: 16px;"></i> Mitra
                             </label>
                         </div>
                     </div>

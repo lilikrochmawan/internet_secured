@@ -220,6 +220,7 @@ class AdminPengaturanController extends Controller
             'auto_send_billing' => 'required|integer|in:0,1',
             'auto_send_date' => 'required|integer|min:1|max:31',
             'auto_send_h_minus' => 'required|integer|min:0|max:30',
+            'adjust_due_date_late' => 'required|integer|in:0,1',
         ]);
 
         $tipe = htmlspecialchars(strip_tags($request->tipe_jatuh_tempo));
@@ -228,6 +229,7 @@ class AdminPengaturanController extends Controller
         $auto_send = intval($request->auto_send_billing);
         $auto_date = intval($request->auto_send_date);
         $auto_h_minus = intval($request->auto_send_h_minus);
+        $adjust_late = intval($request->adjust_due_date_late);
 
         DB::beginTransaction();
         try {
@@ -238,6 +240,7 @@ class AdminPengaturanController extends Controller
                 'auto_send_billing' => $auto_send,
                 'auto_send_date' => $auto_date,
                 'auto_send_h_minus' => $auto_h_minus,
+                'adjust_due_date_late' => $adjust_late,
             ]);
 
             // Sinkronisasi jatuh_tempo pelanggan dan tagihan yang belum lunas

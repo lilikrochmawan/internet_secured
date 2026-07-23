@@ -370,6 +370,29 @@ class PaymentController extends Controller
                 $id_pelanggan = $data_tagihan->id_pelanggan;
                 $jatuh_tempo = $data_tagihan->jatuh_tempo;
 
+                // Ambil pengaturan jatuh tempo global
+                $settings = DB::table('tb_profile')->first();
+                $tipe = $settings->tipe_jatuh_tempo ?? 'tanggal_tetap';
+                $default_hari = $settings->hari_jatuh_tempo ?? 10;
+                $adjust_late = $settings->adjust_due_date_late ?? 0;
+
+                $due_day = $default_hari;
+                if ($jatuh_tempo) {
+                    $due_day = (int) date('d', strtotime($jatuh_tempo));
+                } elseif ($tipe === 'tanggal_pasang' && $data_tagihan && !empty($data_tagihan->tgl_pemasangan)) {
+                    $due_day = (int) date('d', strtotime($data_tagihan->tgl_pemasangan));
+                }
+
+                $is_late = false;
+                if ($jatuh_tempo && $tanggal_sekarang > date('Y-m-d', strtotime($jatuh_tempo))) {
+                    $is_late = true;
+                }
+
+                if ($is_late && $adjust_late == 1) {
+                    // Bergeser ke tanggal pembayaran terakhir (hari ini)
+                    $due_day = (int) date('d', strtotime($tanggal_sekarang));
+                }
+
                 if ($tanggal_sekarang < $jatuh_tempo) {
                     $jatuh_tempo_obj = new \DateTime($jatuh_tempo);
                 } else {
@@ -378,16 +401,6 @@ class PaymentController extends Controller
                 $jatuh_tempo_obj->modify('+1 Month');
                 $next_year = (int)$jatuh_tempo_obj->format('Y');
                 $next_month = (int)$jatuh_tempo_obj->format('m');
-
-                // Ambil pengaturan jatuh tempo global
-                $settings = DB::table('tb_profile')->first();
-                $tipe = $settings->tipe_jatuh_tempo ?? 'tanggal_tetap';
-                $default_hari = $settings->hari_jatuh_tempo ?? 10;
-
-                $due_day = $default_hari;
-                if ($tipe === 'tanggal_pasang' && $data_tagihan && !empty($data_tagihan->tgl_pemasangan)) {
-                    $due_day = (int) date('d', strtotime($data_tagihan->tgl_pemasangan));
-                }
 
                 // Cari jumlah hari maksimum di bulan target
                 $days_in_month = (int) date('t', strtotime($next_year . '-' . sprintf('%02d', $next_month) . '-01'));
@@ -424,6 +437,7 @@ class PaymentController extends Controller
                             'penerimaan' => $jml_bayar,
                             'id_tagihan' => $id_tagihan
                         ]);
+                        \App\Models\Tagihan::allocateMitraCommission($id_tagihan);
                     }
                 }
 
@@ -436,68 +450,87 @@ class PaymentController extends Controller
             return response('Database error', 500);
         }
 
-        // Buka blokir Mikrotik
-        if ($data_tagihan) {
+        // Buka blokir Mikrotik untuk semua tagihan yang dibayar
+        if (!empty($id_tagihan_list)) {
             try {
                 $checkUser = DB::table('tbl_penggunamikrotik')->first();
-                $id_mikrotik = $data_tagihan->id_mikrotik ?: 1;
-                $mikrotik = DB::table('tbl_mikrotik')->where('id_mikrotik', $id_mikrotik)->first();
+                
+                $paidTagihans = DB::table('tb_tagihan')
+                    ->join('tb_pelanggan', 'tb_pelanggan.id_pelanggan', '=', 'tb_tagihan.id_pelanggan')
+                    ->leftJoin('tb_user', 'tb_user.id_pelanggan', '=', 'tb_pelanggan.id_pelanggan')
+                    ->whereIn('tb_tagihan.id_tagihan', $id_tagihan_list)
+                    ->select('tb_tagihan.id_tagihan', 'tb_pelanggan.*', 'tb_user.username as ppp_username')
+                    ->get();
 
-                $ip_address = ($checkUser && ($checkUser->status == 'ya' || $checkUser->ippelanggan == 'dynamic'))
-                    ? $data_tagihan->ppp_username
-                    : $data_tagihan->ip_address;
+                // Group by mikrotik to reuse connection
+                $mikrotikGroups = [];
+                foreach ($paidTagihans as $pt) {
+                    $id_mikrotik = $pt->id_mikrotik ?: 1;
+                    $mikrotikGroups[$id_mikrotik][] = $pt;
+                }
 
-                if ($mikrotik && $ip_address) {
-                    require_once base_path('include/routeros_api.php');
+                require_once base_path('include/routeros_api.php');
+
+                foreach ($mikrotikGroups as $id_mikrotik => $items) {
+                    $mikrotik = DB::table('tbl_mikrotik')->where('id_mikrotik', $id_mikrotik)->first();
+                    if (!$mikrotik) continue;
+
                     $API = new \RouterosAPI();
-
                     if ($API->connect($mikrotik->ip, $mikrotik->username, $mikrotik->password)) {
-                        if ($checkUser && $checkUser->ippelanggan == 'statik') {
-                            $commentToSearch = "Blokir Bulanan " . $ip_address;
-                            $API->write('/ip/firewall/address-list/print', false);
-                            $API->write('?comment=' . $commentToSearch);
-                            $ips = $API->read();
+                        foreach ($items as $item) {
+                            $ip_address = ($checkUser && ($checkUser->status == 'ya' || $checkUser->ippelanggan == 'dynamic'))
+                                ? $item->ppp_username
+                                : $item->ip_address;
 
-                            if (!empty($ips)) {
-                                foreach ($ips as $ip_data) {
-                                    $API->write('/ip/firewall/address-list/remove', false);
-                                    $API->write('=.id=' . $ip_data['.id']);
-                                    $API->read();
+                            if (!$ip_address) continue;
+
+                            if ($checkUser && $checkUser->ippelanggan == 'statik') {
+                                $commentToSearch = "Blokir Bulanan " . $ip_address;
+                                $API->write('/ip/firewall/address-list/print', false);
+                                $API->write('?comment=' . $commentToSearch);
+                                $ips = $API->read();
+
+                                if (!empty($ips)) {
+                                    foreach ($ips as $ip_data) {
+                                        $API->write('/ip/firewall/address-list/remove', false);
+                                        $API->write('=.id=' . $ip_data['.id']);
+                                        $API->read();
+                                    }
                                 }
-                            }
-                        } else {
-                            $paket = DB::table('tb_paket')->where('id_paket', $data_tagihan->paket)->first();
-                            $profile = $paket ? $paket->id_pmikrotik : 'default';
+                            } else {
+                                $paket = DB::table('tb_paket')->where('id_paket', $item->paket)->first();
+                                $profile = $paket ? $paket->id_pmikrotik : 'default';
 
-                            $secrets = $API->comm('/ppp/secret/print', [
-                                '?name' => $ip_address,
-                            ]);
-
-                            $isCurrentlyBlocked = false;
-                            if (!empty($secrets)) {
-                                $secret = $secrets[0];
-                                $currentProfile = $secret['profile'] ?? '';
-                                $isDisabled = ($secret['disabled'] ?? 'false') === 'true';
-                                if ($currentProfile === 'pppoe-isolir' || $isDisabled) {
-                                    $isCurrentlyBlocked = true;
-                                }
-                            }
-
-                            if ($isCurrentlyBlocked) {
-                                $API->comm('/ppp/secret/set', [
-                                    'numbers' => $ip_address,
-                                    'profile' => $profile
-                                ]);
-                                $API->comm('/ppp/secret/enable', ['numbers' => $ip_address]);
-
-                                // Putuskan koneksi aktif agar langsung dial ulang dengan profile baru
-                                $activeConnections = $API->comm('/ppp/active/print', [
+                                $secrets = $API->comm('/ppp/secret/print', [
                                     '?name' => $ip_address,
                                 ]);
-                                foreach ($activeConnections as $conn) {
-                                    $API->comm('/ppp/active/remove', [
-                                        '.id' => $conn['.id'],
+
+                                $isCurrentlyBlocked = false;
+                                if (!empty($secrets)) {
+                                    $secret = $secrets[0];
+                                    $currentProfile = $secret['profile'] ?? '';
+                                    $isDisabled = ($secret['disabled'] ?? 'false') === 'true';
+                                    if ($currentProfile === 'pppoe-isolir' || $isDisabled) {
+                                        $isCurrentlyBlocked = true;
+                                    }
+                                }
+
+                                if ($isCurrentlyBlocked) {
+                                    $API->comm('/ppp/secret/set', [
+                                        'numbers' => $ip_address,
+                                        'profile' => $profile
                                     ]);
+                                    $API->comm('/ppp/secret/enable', ['numbers' => $ip_address]);
+
+                                    // Putuskan koneksi aktif agar langsung dial ulang dengan profile baru
+                                    $activeConnections = $API->comm('/ppp/active/print', [
+                                        '?name' => $ip_address,
+                                    ]);
+                                    foreach ($activeConnections as $conn) {
+                                        $API->comm('/ppp/active/remove', [
+                                            '.id' => $conn['.id'],
+                                        ]);
+                                    }
                                 }
                             }
                         }
@@ -505,7 +538,7 @@ class PaymentController extends Controller
                     }
                 }
             } catch (\Exception $e) {
-                Log::error('Midtrans Webhook Mikrotik Error: ' . $e->getMessage());
+                Log::error('Midtrans Webhook Mikrotik Bulk Unblock Error: ' . $e->getMessage());
             }
         }
 

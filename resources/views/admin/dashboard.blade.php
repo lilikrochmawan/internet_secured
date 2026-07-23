@@ -68,6 +68,12 @@
     .dashboard-row-3.row-kasir {
         grid-template-columns: minmax(0, 1fr);
     }
+    .dashboard-row-1.row-mitra {
+        grid-template-columns: minmax(0, 1fr);
+    }
+    .dashboard-row-2.row-mitra {
+        grid-template-columns: minmax(0, 1fr);
+    }
 
     .mikrotik-grid {
         display: grid;
@@ -385,25 +391,9 @@
     </p>
 </div>
 
-<!-- Row 1: Charts & Keluhan -->
-@if(in_array(Auth::user()->level, ['admin', 'mitra', 'teknisi']))
-<div class="dashboard-row-1 {{ in_array(Auth::user()->level, ['teknisi', 'mitra']) ? 'row-teknisi' : '' }}">
-    <!-- Card 1: Tren Pemasukan & Pengeluaran -->
-    @if(Auth::user()->level === 'admin')
-    <div class="card">
-        <div class="card-header-custom">
-            <div class="card-title-custom">
-                <h3>Tren Pemasukan & Pengeluaran</h3>
-                <span>Perbandingan 6 bulan terakhir.</span>
-            </div>
-            <span class="badge-pill badge-financial">Financial</span>
-        </div>
-        <div style="height: 220px; position: relative;">
-            <canvas id="financialChart"></canvas>
-        </div>
-    </div>
-    @endif
-
+@if(Auth::user()->level === 'mitra')
+<!-- Layout Khusus Mitra: Status Pelanggan & Status Pembayaran Sejajar (2 Kolom) -->
+<div class="dashboard-row-1" style="grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 20px; margin-bottom: 24px;">
     <!-- Card 2: Status Pelanggan -->
     <div class="card">
         <div class="card-header-custom">
@@ -418,44 +408,7 @@
         </div>
     </div>
 
-    <!-- Card 3: Laporan Gangguan -->
-    <div class="card">
-        <div class="card-header-custom">
-            <div class="card-title-custom">
-                <h3>Laporan Gangguan</h3>
-                <span>Status tiket gangguan dari portal pelanggan.</span>
-            </div>
-            <a href="{{ route('admin.keluhan.index') }}" class="btn-xs" style="text-decoration: none; border: 1px solid var(--border-color); padding: 4px 8px; border-radius: 8px; font-size: 0.75rem; font-weight: 600; color: var(--text-dark); background-color: #f8fafc;">Lihat semua</a>
-        </div>
-        
-        <div class="block-grid-2x2">
-            <div class="block-box block-box-blue">
-                <span class="block-val">{{ $keluhanTotal }}</span>
-                <span class="block-lbl">Total Tiket</span>
-            </div>
-            <div class="block-box block-box-green">
-                <span class="block-val">{{ $keluhanMenunggu }}</span>
-                <span class="block-lbl">Open</span>
-            </div>
-            <div class="block-box block-box-orange">
-                <span class="block-val">{{ $keluhanProses }}</span>
-                <span class="block-lbl">Ditangani</span>
-            </div>
-            <div class="block-box block-box-red">
-                <span class="block-val">{{ $keluhanSelesai }}</span>
-                <span class="block-lbl">Selesai</span>
-            </div>
-        </div>
-        <small style="color: var(--text-gray); font-size: 0.75rem; text-align: center; margin-top: 4px;">Data gangguan terbaru.</small>
-    </div>
-</div>
-@endif
-
-<!-- Row 2: Status Jaringan & Port -->
-@if(in_array(Auth::user()->level, ['admin', 'mitra', 'teknisi', 'kasir']))
-<div class="dashboard-row-2 {{ in_array(Auth::user()->level, ['teknisi', 'kasir']) ? 'row-teknisi' : '' }}">
     <!-- Card 4: Status pembayaran -->
-    @if(in_array(Auth::user()->level, ['admin', 'mitra', 'kasir']))
     <div class="card">
         <div class="card-header-custom">
             <div class="card-title-custom">
@@ -465,119 +418,219 @@
             <span class="badge-pill badge-financial">Pembayaran</span>
         </div>
         
-        <div class="isolation-grid">
-            <div class="block-box block-box-red">
-                <span class="block-val">{{ $belumTerbayarCount }}</span>
-                <span class="block-lbl">Belum Terbayar</span>
+        <div class="isolation-grid" style="height: 220px; display: flex; flex-direction: column; justify-content: space-around; padding: 10px 0; gap: 8px;">
+            <div style="display: flex; gap: 12px; width: 100%;">
+                <div class="block-box block-box-red" style="flex: 1; padding: 12px;">
+                    <span class="block-val">{{ $belumTerbayarCount }}</span>
+                    <span class="block-lbl">Belum Terbayar</span>
+                </div>
+                <div class="block-box block-box-green" style="flex: 1; padding: 12px;">
+                    <span class="block-val">{{ $suksesBayarCount }}</span>
+                    <span class="block-lbl">Sukses Bayar</span>
+                </div>
             </div>
-            <div class="block-box block-box-green">
-                <span class="block-val">{{ $suksesBayarCount }}</span>
-                <span class="block-lbl">Sukses Bayar</span>
-            </div>
-            <div class="block-box block-box-orange isolation-box-full">
+            <div class="block-box block-box-orange" style="width: 100%; padding: 12px;">
                 <span class="block-val">{{ $bukaSementaraCount }}</span>
                 <span class="block-lbl">Buka Sementara</span>
             </div>
         </div>
     </div>
-    @endif
-
-    <!-- Card 5: Status Mikrotik -->
-    @if(in_array(Auth::user()->level, ['admin', 'mitra']))
-    <div class="card">
-        <div class="card-header-custom">
-            <div class="card-title-custom">
-                <h3>Status Mikrotik</h3>
-                <span>Pantau perangkat RouterOS dan konektivitas API.</span>
-            </div>
-            <span class="badge-pill badge-stabil">Stabil</span>
-        </div>
-        
-        <div class="mikrotik-grid">
-            <div class="block-box block-box-blue" style="padding: 10px;">
-                <span class="block-val" style="font-size: 1.25rem;">{{ $totalMikrotik }}</span>
-                <span class="block-lbl" style="font-size: 0.62rem;">Total Perangkat</span>
-            </div>
-            <div class="block-box block-box-green" style="padding: 10px;">
-                <span class="block-val" style="font-size: 1.25rem;">{{ $mikrotikOnline }}</span>
-                <span class="block-lbl" style="font-size: 0.62rem;">Online</span>
-            </div>
-            <div class="block-box block-box-red" style="padding: 10px;">
-                <span class="block-val" style="font-size: 1.25rem;">{{ $mikrotikOffline }}</span>
-                <span class="block-lbl" style="font-size: 0.62rem;">Offline</span>
-            </div>
-        </div>
-        
-        <small style="color: var(--text-gray); font-size: 0.72rem; margin-top: 4px;">Terakhir cek: {{ date('d M Y, H:i') }}</small>
-        
-        <div style="max-height: 110px; overflow-y: auto;">
-            @foreach($deviceList as $dev)
-                <div class="device-row">
-                    <div class="device-info">
-                        <span class="device-name">{{ $dev->nama }}</span>
-                        <span class="device-ip">{{ $dev->ip }}</span>
-                    </div>
-                    <div class="device-status">
-                        <span class="status-dot {{ $dev->online ? 'dot-online' : 'dot-offline' }}"></span>
-                        <span class="{{ $dev->online ? 'text-online' : 'text-offline' }}">{{ $dev->online ? 'Online' : 'Offline' }}</span>
-                    </div>
-                    <span class="device-time">Terhubung: {{ $dev->waktu }}</span>
-                </div>
-            @endforeach
-        </div>
-    </div>
-    @endif
-
-    <!-- Card 6: Infrastruktur ODC / ODP -->
-    @if(in_array(Auth::user()->level, ['admin', 'mitra', 'teknisi']))
-    <div class="card">
-        <div class="card-header-custom">
-            <div class="card-title-custom">
-                <h3>Infrastruktur ODC / ODP</h3>
-                <span>Status distribusi titik jaringan dan pemakaian port.</span>
-            </div>
-            <span class="badge-pill badge-live">Live</span>
-        </div>
-        
-        <div class="infra-grid">
-            <div class="block-box block-box-blue" style="padding: 8px;">
-                <span class="block-val" style="font-size: 1.1rem;">{{ $totalOdc }}</span>
-                <span class="block-lbl" style="font-size: 0.58rem;">Total ODC</span>
-            </div>
-            <div class="block-box block-box-green" style="padding: 8px;">
-                <span class="block-val" style="font-size: 1.1rem;">{{ $totalOdp }}</span>
-                <span class="block-lbl" style="font-size: 0.58rem;">Total ODP</span>
-            </div>
-            <div class="block-box block-box-orange" style="padding: 8px;">
-                <span class="block-val" style="font-size: 1.1rem;">{{ $portTerpakai }}</span>
-                <span class="block-lbl" style="font-size: 0.58rem;">Port Terpakai</span>
-            </div>
-            <div class="block-box block-box-cyan" style="padding: 8px;">
-                <span class="block-val" style="font-size: 1.1rem;">{{ $portTersedia }}</span>
-                <span class="block-lbl" style="font-size: 0.58rem;">Port Tersedia</span>
-            </div>
-        </div>
-        
-        <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 6px; border-top: 1px solid #f1f5f9; padding-top: 10px;">
-            <div style="display: flex; flex-direction: column; gap: 8px; font-size: 0.8rem; color: var(--text-dark); font-weight: 500;">
-                <span><strong>Distribusi Port</strong></span>
-                <span style="display: flex; align-items: center; gap: 6px;"><span style="width: 8px; height: 8px; border-radius: 50%; background-color: #06b6d4;"></span> Tersedia</span>
-                <span style="display: flex; align-items: center; gap: 6px;"><span style="width: 8px; height: 8px; border-radius: 50%; background-color: #f97316;"></span> Terpakai</span>
-            </div>
-            <div style="height: 100px; width: 100px; position: relative;">
-                <canvas id="portDistributionChart" style="max-height: 90px; max-width: 90px;"></canvas>
-            </div>
-        </div>
-    </div>
-    @endif
 </div>
+@else
+    <!-- Row 1: Charts & Keluhan -->
+    @if(in_array(Auth::user()->level, ['admin', 'teknisi']))
+    <div class="dashboard-row-1 {{ Auth::user()->level === 'teknisi' ? 'row-teknisi' : '' }}">
+        <!-- Card 1: Tren Pemasukan & Pengeluaran -->
+        @if(Auth::user()->level === 'admin')
+        <div class="card">
+            <div class="card-header-custom">
+                <div class="card-title-custom">
+                    <h3>Tren Pemasukan & Pengeluaran</h3>
+                    <span>Perbandingan 6 bulan terakhir.</span>
+                </div>
+                <span class="badge-pill badge-financial">Financial</span>
+            </div>
+            <div style="height: 220px; position: relative;">
+                <canvas id="financialChart"></canvas>
+            </div>
+        </div>
+        @endif
+
+        <!-- Card 2: Status Pelanggan -->
+        <div class="card">
+            <div class="card-header-custom">
+                <div class="card-title-custom">
+                    <h3>Status Pelanggan</h3>
+                    <span>Komposisi status saat ini.</span>
+                </div>
+                <span class="badge-pill badge-demographics">Demographics</span>
+            </div>
+            <div style="height: 220px; display: flex; align-items: center; justify-content: center; position: relative;">
+                <canvas id="customerStatusChart" style="max-height: 180px; max-width: 180px;"></canvas>
+            </div>
+        </div>
+
+        <!-- Card 3: Laporan Gangguan -->
+        <div class="card">
+            <div class="card-header-custom">
+                <div class="card-title-custom">
+                    <h3>Laporan Gangguan</h3>
+                    <span>Status tiket gangguan dari portal pelanggan.</span>
+                </div>
+                <a href="{{ route('admin.keluhan.index') }}" class="btn-xs" style="text-decoration: none; border: 1px solid var(--border-color); padding: 4px 8px; border-radius: 8px; font-size: 0.75rem; font-weight: 600; color: var(--text-dark); background-color: #f8fafc;">Lihat semua</a>
+            </div>
+            
+            <div class="block-grid-2x2">
+                <div class="block-box block-box-blue">
+                    <span class="block-val">{{ $keluhanTotal }}</span>
+                    <span class="block-lbl">Total Tiket</span>
+                </div>
+                <div class="block-box block-box-green">
+                    <span class="block-val">{{ $keluhanMenunggu }}</span>
+                    <span class="block-lbl">Open</span>
+                </div>
+                <div class="block-box block-box-orange">
+                    <span class="block-val">{{ $keluhanProses }}</span>
+                    <span class="block-lbl">Ditangani</span>
+                </div>
+                <div class="block-box block-box-red">
+                    <span class="block-val">{{ $keluhanSelesai }}</span>
+                    <span class="block-lbl">Selesai</span>
+                </div>
+            </div>
+            <small style="color: var(--text-gray); font-size: 0.75rem; text-align: center; margin-top: 4px;">Data gangguan terbaru.</small>
+        </div>
+    </div>
+    @endif
+
+    <!-- Row 2: Status Jaringan & Port -->
+    @if(in_array(Auth::user()->level, ['admin', 'teknisi', 'kasir']))
+    <div class="dashboard-row-2 {{ in_array(Auth::user()->level, ['teknisi', 'kasir']) ? 'row-teknisi' : '' }}">
+        <!-- Card 4: Status pembayaran -->
+        @if(in_array(Auth::user()->level, ['admin', 'kasir']))
+        <div class="card">
+            <div class="card-header-custom">
+                <div class="card-title-custom">
+                    <h3>Status pembayaran</h3>
+                    <span>Lunas: {{ $suksesBayarCount }} • Belum Bayar: {{ $belumTerbayarCount }}</span>
+                </div>
+                <span class="badge-pill badge-financial">Pembayaran</span>
+            </div>
+            
+            <div class="isolation-grid">
+                <div class="block-box block-box-red">
+                    <span class="block-val">{{ $belumTerbayarCount }}</span>
+                    <span class="block-lbl">Belum Terbayar</span>
+                </div>
+                <div class="block-box block-box-green">
+                    <span class="block-val">{{ $suksesBayarCount }}</span>
+                    <span class="block-lbl">Sukses Bayar</span>
+                </div>
+                <div class="block-box block-box-orange isolation-box-full">
+                    <span class="block-val">{{ $bukaSementaraCount }}</span>
+                    <span class="block-lbl">Buka Sementara</span>
+                </div>
+            </div>
+        </div>
+        @endif
+
+        <!-- Card 5: Status Mikrotik -->
+        @if(Auth::user()->level === 'admin')
+        <div class="card">
+            <div class="card-header-custom">
+                <div class="card-title-custom">
+                    <h3>Status Mikrotik</h3>
+                    <span>Pantau perangkat RouterOS dan konektivitas API.</span>
+                </div>
+                <span class="badge-pill badge-stabil">Stabil</span>
+            </div>
+            
+            <div class="mikrotik-grid">
+                <div class="block-box block-box-blue" style="padding: 10px;">
+                    <span class="block-val" style="font-size: 1.25rem;">{{ $totalMikrotik }}</span>
+                    <span class="block-lbl" style="font-size: 0.62rem;">Total Perangkat</span>
+                </div>
+                <div class="block-box block-box-green" style="padding: 10px;">
+                    <span class="block-val" style="font-size: 1.25rem;">{{ $mikrotikOnline }}</span>
+                    <span class="block-lbl" style="font-size: 0.62rem;">Online</span>
+                </div>
+                <div class="block-box block-box-red" style="padding: 10px;">
+                    <span class="block-val" style="font-size: 1.25rem;">{{ $mikrotikOffline }}</span>
+                    <span class="block-lbl" style="font-size: 0.62rem;">Offline</span>
+                </div>
+            </div>
+            
+            <small style="color: var(--text-gray); font-size: 0.72rem; margin-top: 4px;">Terakhir cek: {{ date('d M Y, H:i') }}</small>
+            
+            <div style="max-height: 110px; overflow-y: auto;">
+                @foreach($deviceList as $dev)
+                    <div class="device-row">
+                        <div class="device-info">
+                            <span class="device-name">{{ $dev->nama }}</span>
+                            <span class="device-ip">{{ $dev->ip }}</span>
+                        </div>
+                        <div class="device-status">
+                            <span class="status-dot {{ $dev->online ? 'dot-online' : 'dot-offline' }}"></span>
+                            <span class="{{ $dev->online ? 'text-online' : 'text-offline' }}">{{ $dev->online ? 'Online' : 'Offline' }}</span>
+                        </div>
+                        <span class="device-time">Terhubung: {{ $dev->waktu }}</span>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+        @endif
+
+        <!-- Card 6: Infrastruktur ODC / ODP -->
+        @if(in_array(Auth::user()->level, ['admin', 'teknisi']))
+        <div class="card">
+            <div class="card-header-custom">
+                <div class="card-title-custom">
+                    <h3>Infrastruktur ODC / ODP</h3>
+                    <span>Status distribusi titik jaringan dan pemakaian port.</span>
+                </div>
+                <span class="badge-pill badge-live">Live</span>
+            </div>
+            
+            <div class="infra-grid">
+                <div class="block-box block-box-blue" style="padding: 8px;">
+                    <span class="block-val" style="font-size: 1.1rem;">{{ $totalOdc }}</span>
+                    <span class="block-lbl" style="font-size: 0.58rem;">Total ODC</span>
+                </div>
+                <div class="block-box block-box-green" style="padding: 8px;">
+                    <span class="block-val" style="font-size: 1.1rem;">{{ $totalOdp }}</span>
+                    <span class="block-lbl" style="font-size: 0.58rem;">Total ODP</span>
+                </div>
+                <div class="block-box block-box-orange" style="padding: 8px;">
+                    <span class="block-val" style="font-size: 1.1rem;">{{ $portTerpakai }}</span>
+                    <span class="block-lbl" style="font-size: 0.58rem;">Port Terpakai</span>
+                </div>
+                <div class="block-box block-box-cyan" style="padding: 8px;">
+                    <span class="block-val" style="font-size: 1.1rem;">{{ $portTersedia }}</span>
+                    <span class="block-lbl" style="font-size: 0.58rem;">Port Tersedia</span>
+                </div>
+            </div>
+            
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 6px; border-top: 1px solid #f1f5f9; padding-top: 10px;">
+                <div style="display: flex; flex-direction: column; gap: 8px; font-size: 0.8rem; color: var(--text-dark); font-weight: 500;">
+                    <span><strong>Distribusi Port</strong></span>
+                    <span style="display: flex; align-items: center; gap: 6px;"><span style="width: 8px; height: 8px; border-radius: 50%; background-color: #06b6d4;"></span> Tersedia</span>
+                    <span style="display: flex; align-items: center; gap: 6px;"><span style="width: 8px; height: 8px; border-radius: 50%; background-color: #f97316;"></span> Terpakai</span>
+                </div>
+                <div style="height: 100px; width: 100px; position: relative;">
+                    <canvas id="portDistributionChart" style="max-height: 90px; max-width: 90px;"></canvas>
+                </div>
+            </div>
+        </div>
+        @endif
+    </div>
+    @endif
 @endif
 
 <!-- Row 3: Activities & Transactions -->
 @if(in_array(Auth::user()->level, ['admin', 'mitra', 'kasir']))
-<div class="dashboard-row-3 {{ Auth::user()->level === 'kasir' ? 'row-kasir' : '' }}">
+<div class="dashboard-row-3 {{ in_array(Auth::user()->level, ['kasir', 'mitra']) ? 'row-kasir' : '' }}">
     <!-- Card 7: Aktivitas Terbaru -->
-    @if(in_array(Auth::user()->level, ['admin', 'mitra']))
+    @if(Auth::user()->level === 'admin')
     <div class="card">
         <div class="card-header-custom">
             <div class="card-title-custom">

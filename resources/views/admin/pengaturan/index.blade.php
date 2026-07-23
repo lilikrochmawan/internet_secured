@@ -371,6 +371,16 @@
                 <small style="color:var(--text-gray); margin-top:4px;">Masukkan jumlah hari sebelum tanggal jatuh tempo untuk mengirimkan tagihan secara otomatis (misal: 3 hari sebelum).</small>
             </div>
 
+            <!-- Aturan Ubah Jatuh Tempo Berdasarkan Pembayaran Terakhir jika Terisolir -->
+            <div class="form-group" style="margin-top: 15px; border-top: 1px solid #e2e8f0; padding-top: 15px;">
+                <label for="adjust_due_date_late" style="font-weight: 700; color: #4f46e5;"><i class="fa-solid fa-clock-rotate-left"></i> Ubah Jatuh Tempo Berdasarkan Pembayaran Terakhir (Jika Terisolir) *</label>
+                <select id="adjust_due_date_late" name="adjust_due_date_late" class="form-control" style="padding: 10px 14px; height: auto; border-radius: 12px; font-size: 0.95rem; width: 100%; margin: 0; background-color: #f8fafc;" required>
+                    <option value="0" {{ ($profile->adjust_due_date_late ?? 0) == 0 ? 'selected' : '' }}>Tidak</option>
+                    <option value="1" {{ ($profile->adjust_due_date_late ?? 0) == 1 ? 'selected' : '' }}>Ya</option>
+                </select>
+                <small style="color:var(--text-gray); margin-top:4px;">Apabila diatur "Ya", jika pelanggan terlambat/terisolir dan membayar di tanggal baru (misal jatuh tempo tanggal 10 tapi dibayar tanggal 12), maka jatuh tempo berikutnya otomatis menetap di tanggal 12. Jika dibayar sebelum jatuh tempo, jatuh tempo tetap di tanggal 10.</small>
+            </div>
+
             <div style="display:flex; justify-content:flex-end; margin-top:20px;">
                 <button type="submit" class="btn btn-primary">
                     <i class="fa-solid fa-floppy-disk"></i> Simpan Jatuh Tempo

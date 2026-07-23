@@ -94,7 +94,9 @@ class GenerateBulananTagihan extends Command
             $due_month = $target_date->month;
 
             $due_day = $default_hari;
-            if ($tipe === 'tanggal_pasang' && !empty($plg->tgl_pemasangan)) {
+            if (!empty($plg->jatuh_tempo)) {
+                $due_day = (int) date('d', strtotime($plg->jatuh_tempo));
+            } elseif ($tipe === 'tanggal_pasang' && !empty($plg->tgl_pemasangan)) {
                 $due_day = (int) date('d', strtotime($plg->tgl_pemasangan));
             }
 

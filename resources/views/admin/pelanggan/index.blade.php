@@ -299,6 +299,7 @@
         transition: border 0.2s !important;
         display: inline-flex !important;
         align-items: center !important;
+        width: 100% !important;
     }
     .select2-container--default .select2-selection--single .select2-selection--rendered {
         line-height: 26px !important;
@@ -479,7 +480,7 @@
             <button class="modal-close" onclick="closeAddModal()">&times;</button>
         </div>
         <div class="modal-body">
-            <form action="{{ route('admin.pelanggan.store') }}" method="POST">
+            <form id="addPelangganForm" action="{{ route('admin.pelanggan.store') }}" method="POST">
                 @csrf
                 <input type="hidden" name="id_mikrotik" value="{{ $selected_device_id }}">
 
@@ -811,10 +812,14 @@
             <form action="{{ route('admin.pelanggan.destroy') }}" method="POST">
                 @csrf
                 <input type="hidden" name="id_pelanggan" id="delete_id">
-                <p style="font-size:0.95rem; margin-bottom:20px; line-height:1.5; color:#334155;">
+                <p style="font-size:0.95rem; margin-bottom:15px; line-height:1.5; color:#334155;">
                     Apakah Anda yakin ingin menghapus pelanggan <strong id="delete_name"></strong>?<br>
                     Tindakan ini juga akan menghapus akun login pelanggan dan secret PPPOE di router Mikrotik jika sinkronisasi aktif.
                 </p>
+                <div class="form-group" style="text-align: left; margin-bottom: 20px;">
+                    <label for="delete_alasan_hapus" style="font-weight: 600; font-size: 0.85rem; color: #334155; display: block; margin-bottom: 6px;">Alasan Penghapusan *</label>
+                    <textarea name="alasan_hapus" id="delete_alasan_hapus" rows="3" class="form-control" placeholder="Masukkan alasan kenapa pelanggan ini dihapus..." required style="border: 1px solid #cbd5e1; border-radius: 10px; padding: 8px 12px; font-size: 0.9rem; outline: none; width: 100%; resize: vertical; font-family: inherit;"></textarea>
+                </div>
                 <div style="display:flex; justify-content:flex-end; gap:10px;">
                     <button type="button" class="btn btn-secondary" onclick="closeDeleteModal()">Batal</button>
                     <button type="submit" class="btn btn-danger" style="background-color:#dc2626; color:white;">Ya, Hapus</button>
@@ -879,10 +884,10 @@
         });
 
         // Initialize Select2 with dynamic configurations
-        $('#add_branch').select2({ placeholder: "-- Pilih Branch --", allowClear: true });
-        $('#add_sub_branch').select2({ placeholder: "-- Pilih Sub-Branch --", allowClear: true });
-        $('#edit_branch').select2({ placeholder: "-- Pilih Branch --", allowClear: true });
-        $('#edit_sub_branch').select2({ placeholder: "-- Pilih Sub-Branch --", allowClear: true });
+        $('#add_branch').select2({ placeholder: "-- Pilih Branch --", allowClear: true, width: '100%' });
+        $('#add_sub_branch').select2({ placeholder: "-- Pilih Sub-Branch --", allowClear: true, width: '100%' });
+        $('#edit_branch').select2({ placeholder: "-- Pilih Branch --", allowClear: true, width: '100%' });
+        $('#edit_sub_branch').select2({ placeholder: "-- Pilih Sub-Branch --", allowClear: true, width: '100%' });
     });
 
     // Modal Management
@@ -994,9 +999,11 @@
     function openDeleteModal(id, name) {
         document.getElementById('delete_id').value = id;
         document.getElementById('delete_name').innerText = name;
+        document.getElementById('delete_alasan_hapus').value = '';
         document.getElementById('deleteModal').classList.add('active');
     }
     function closeDeleteModal() {
+        document.getElementById('delete_alasan_hapus').value = '';
         document.getElementById('deleteModal').classList.remove('active');
     }
 
@@ -1545,5 +1552,59 @@
         
         closeOdpMapModal();
     };
+
+    document.getElementById('addPelangganForm').addEventListener('submit', async function(e) {
+        // Prevent default submission
+        e.preventDefault();
+        
+        // Show loading spinner (from the global layout loading system)
+        if (typeof showLoading === 'function') {
+            showLoading();
+        }
+        
+        // Get phone number
+        const noTelp = document.getElementById('no_telp').value.trim();
+        
+        // Check if there is already a confirmed flag
+        if (this.querySelector('input[name="confirm_same_phone"]')) {
+            this.submit();
+            return;
+        }
+        
+        try {
+            const response = await fetch('{{ route("admin.pelanggan.check_phone") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({ no_telp: noTelp })
+            });
+            const data = await response.json();
+            
+            if (data.exists) {
+                if (typeof hideLoading === 'function') {
+                    hideLoading();
+                }
+                const confirmSave = confirm(`Peringatan: Nomor HP/WhatsApp (${noTelp}) ini sudah digunakan oleh pelanggan "${data.nama_pelanggan}" (${data.kode_pelanggan}).\n\nApakah Anda yakin ingin tetap menyimpan dengan nomor HP yang sama?`);
+                if (confirmSave) {
+                    if (typeof showLoading === 'function') {
+                        showLoading();
+                    }
+                    const confirmInput = document.createElement('input');
+                    confirmInput.type = 'hidden';
+                    confirmInput.name = 'confirm_same_phone';
+                    confirmInput.value = '1';
+                    this.appendChild(confirmInput);
+                    this.submit();
+                }
+            } else {
+                this.submit();
+            }
+        } catch (err) {
+            console.error(err);
+            this.submit();
+        }
+    });
 </script>
 @endsection

@@ -540,10 +540,14 @@
             <form action="{{ route('admin.pengguna.destroy') }}" method="POST">
                 @csrf
                 <input type="hidden" name="id" id="delete_id">
-                <p id="delete_warning_desc" style="font-size:0.95rem; margin-bottom:20px; line-height:1.5; color:#334155;">
+                <p id="delete_warning_desc" style="font-size:0.95rem; margin-bottom:15px; line-height:1.5; color:#334155;">
                     Apakah Anda yakin ingin menghapus akun staff <strong id="delete_name"></strong>?<br>
                     Tindakan ini tidak dapat dibatalkan.
                 </p>
+                <div class="form-group" id="group_delete_alasan" style="text-align: left; margin-bottom: 20px; display: none;">
+                    <label for="delete_alasan_hapus" style="font-weight: 600; font-size: 0.85rem; color: #334155; display: block; margin-bottom: 6px;">Alasan Penghapusan *</label>
+                    <textarea name="alasan_hapus" id="delete_alasan_hapus" rows="3" class="form-control" placeholder="Masukkan alasan kenapa pelanggan ini dihapus..." style="border: 1px solid #cbd5e1; border-radius: 10px; padding: 8px 12px; font-size: 0.9rem; outline: none; width: 100%; resize: vertical; font-family: inherit;"></textarea>
+                </div>
                 <div style="display:flex; justify-content:flex-end; gap:10px;">
                     <button type="button" class="btn btn-secondary" onclick="closeDeleteModal()">Batal</button>
                     <button type="submit" class="btn btn-danger" style="background-color:#dc2626; color:white;">Ya, Hapus</button>
@@ -625,6 +629,10 @@
         
         const modalTitle = document.getElementById('delete_modal_title');
         const warningDesc = document.getElementById('delete_warning_desc');
+        const alasanGroup = document.getElementById('group_delete_alasan');
+        const alasanTextarea = document.getElementById('delete_alasan_hapus');
+        
+        alasanTextarea.value = '';
         
         if (isCustomer) {
             modalTitle.innerText = 'Hapus Akun Pelanggan';
@@ -632,14 +640,19 @@
                                     '<span style="color:#dc2626; font-weight:700; display:inline-flex; align-items:center; gap:6px;">' +
                                     '<i class="fa-solid fa-triangle-exclamation"></i> PENTING: Tindakan ini juga akan menghapus data profil pelanggan & langganan mereka secara permanen dari database!' +
                                     '</span>';
+            alasanGroup.style.display = 'block';
+            alasanTextarea.setAttribute('required', 'required');
         } else {
             modalTitle.innerText = 'Hapus Akun Staff';
             warningDesc.innerHTML = 'Apakah Anda yakin ingin menghapus akun staff <strong>' + name + '</strong>?<br>Tindakan ini tidak dapat dibatalkan.';
+            alasanGroup.style.display = 'none';
+            alasanTextarea.removeAttribute('required');
         }
         
         document.getElementById('deleteModal').classList.add('active');
     }
     function closeDeleteModal() {
+        document.getElementById('delete_alasan_hapus').value = '';
         document.getElementById('deleteModal').classList.remove('active');
     }
 </script>

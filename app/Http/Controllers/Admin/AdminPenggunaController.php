@@ -161,8 +161,26 @@ class AdminPenggunaController extends Controller
         }
 
         if ($user->id_pelanggan > 0) {
+            $request->validate([
+                'alasan_hapus' => 'required|string',
+            ]);
+
             $id = $user->id_pelanggan;
             $pelanggan = DB::table('tb_pelanggan')->where('id_pelanggan', $id)->first();
+
+            // Record customer deletion history
+            if ($pelanggan) {
+                DB::table('tbl_deleted_pelanggan_history')->insert([
+                    'id_pelanggan' => $pelanggan->id_pelanggan,
+                    'nama_pelanggan' => $pelanggan->nama_pelanggan,
+                    'alamat' => $pelanggan->alamat,
+                    'nik' => $pelanggan->nik,
+                    'location' => $pelanggan->location,
+                    'alasan_hapus' => htmlspecialchars(strip_tags($request->alasan_hapus)),
+                    'deleted_by' => auth()->id(),
+                    'created_at' => now(),
+                ]);
+            }
 
             // Delete from Mikrotik if enabled
             $checkUser = DB::table('tbl_penggunamikrotik')->first();

@@ -69,6 +69,7 @@ Route::prefix('administrator')->group(function () {
         Route::post('/pelanggan', [AdminPelangganController::class, 'store'])->name('admin.pelanggan.store');
         Route::post('/pelanggan/update', [AdminPelangganController::class, 'update'])->name('admin.pelanggan.update');
         Route::post('/pelanggan/delete', [AdminPelangganController::class, 'destroy'])->name('admin.pelanggan.destroy');
+        Route::post('/pelanggan/check-phone', [AdminPelangganController::class, 'checkPhone'])->name('admin.pelanggan.check_phone');
 
         // CRUD Paket
         Route::get('/paket', [AdminPaketController::class, 'index'])->name('admin.paket.index');
@@ -229,6 +230,12 @@ Route::prefix('administrator')->group(function () {
         Route::post('/odp/update', [AdminOdpController::class, 'update'])->name('admin.odp.update');
         Route::post('/odp/delete', [AdminOdpController::class, 'destroy'])->name('admin.odp.destroy');
         Route::get('/odp/coordinates', [AdminOdpController::class, 'getCoordinates'])->name('admin.odp.coordinates');
+
+        // Mitra Management
+        Route::get('/mitra', [\App\Http\Controllers\Admin\AdminMitraController::class, 'index'])->name('admin.mitra.index');
+        Route::post('/mitra/config', [\App\Http\Controllers\Admin\AdminMitraController::class, 'updateConfig'])->name('admin.mitra.update_config');
+        Route::get('/mitra/laporan', [\App\Http\Controllers\Admin\AdminMitraController::class, 'laporan'])->name('admin.mitra.laporan');
+        Route::post('/mitra/payout', [\App\Http\Controllers\Admin\AdminMitraController::class, 'storePayout'])->name('admin.mitra.store_payout');
 
         // Topology & Client Map
         Route::get('/mapping', [AdminMapController::class, 'index'])->name('admin.mapping.index');

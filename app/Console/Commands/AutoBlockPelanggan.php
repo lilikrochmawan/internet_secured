@@ -45,14 +45,16 @@ class AutoBlockPelanggan extends Command
         $this->info('Memulai pengecekan tagihan jatuh tempo... Sistem: ' . strtoupper($sistem));
         Log::info('AutoBlockPelanggan: Memulai proses pemblokiran otomatis. Sistem: ' . $sistem);
 
-        // Cari tagihan yang belum bayar, belum diblokir, dan jatuh tempo sudah lewat
+        // Cari tagihan yang belum bayar, belum diblokir, dan jatuh tempo sudah lewat (hanya untuk bulan berjalan saja)
         $now = now();
+        $currentPeriod = date('mY');
         $overdueBills = Tagihan::with('pelanggan')
             ->whereNull('status_bayar')
             ->where(function ($query) {
                 $query->whereNull('blokir_status')
                       ->orWhere('blokir_status', 0);
             })
+            ->where('bulan_tahun', $currentPeriod)
             ->where('jatuh_tempo', '<', $now)
             ->get();
 

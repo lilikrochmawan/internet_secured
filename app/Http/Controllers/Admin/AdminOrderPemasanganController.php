@@ -78,27 +78,94 @@ class AdminOrderPemasanganController extends Controller
         }
 
         // Fetch orders based on role
-        if ($user->level === 'sales') {
-            // Sales sees only their own uploaded orders
+        if (in_array($user->level, ['sales', 'mitra', 'kasir', 'teknisi'])) {
+            // Show only orders created by the logged in user
             $orders = OrderPemasangan::with(['sales', 'teknisi', 'paketDetail'])
                 ->where('id_sales', $user->id)
                 ->orderBy('id', 'desc')
                 ->get();
-        } elseif ($user->level === 'teknisi') {
-            // Technician sees orders assigned to them or assigned to All (0) that are approved or installed
-            $orders = OrderPemasangan::with(['sales', 'teknisi', 'paketDetail'])
-                ->where(function($q) use ($user) {
-                    $q->where('id_teknisi', $user->id)
-                      ->orWhere('id_teknisi', 0);
-                })
-                ->whereIn('status', ['approved', 'installed'])
-                ->orderBy('id', 'desc')
-                ->get();
         } else {
-            // Admin and others see all orders
+            // Admin and NOC see all orders
             $orders = OrderPemasangan::with(['sales', 'teknisi', 'paketDetail'])
                 ->orderBy('id', 'desc')
                 ->get();
+        }
+
+        // Check for matching deleted customer warnings (only for admin/noc)
+        if ($user->level === 'admin' || $user->level === 'noc') {
+            $deletedHistory = DB::table('tbl_deleted_pelanggan_history')->get();
+
+            foreach ($orders as $order) {
+                $warnings = [];
+                foreach ($deletedHistory as $history) {
+                    $matched = false;
+                    
+                    // 1. NIK Match (exact or cross-matched with Nama in history)
+                    if (!empty($order->nik) && (
+                        (!empty($history->nik) && strtolower(trim($order->nik)) === strtolower(trim($history->nik))) ||
+                        (!empty($history->nama_pelanggan) && strtolower(trim($order->nik)) === strtolower(trim($history->nama_pelanggan)))
+                    )) {
+                        $warnings[] = [
+                            'type' => 'NIK',
+                            'matched_by' => 'Kecocokan NIK/Identitas (' . $order->nik . ')',
+                            'nama_pelanggan' => $history->nama_pelanggan,
+                            'alasan_hapus' => $history->alasan_hapus,
+                            'created_at' => Carbon::parse($history->created_at)->format('d-m-Y H:i'),
+                        ];
+                        $matched = true;
+                    }
+                    
+                    // 2. Nama Match (exact case-insensitive or cross-matched with NIK in history)
+                    if (!empty($order->nama) && (
+                        (!empty($history->nama_pelanggan) && strtolower(trim($order->nama)) === strtolower(trim($history->nama_pelanggan))) ||
+                        (!empty($history->nik) && strtolower(trim($order->nama)) === strtolower(trim($history->nik)))
+                    )) {
+                        $warnings[] = [
+                            'type' => 'Nama',
+                            'matched_by' => 'Kecocokan Nama/Identitas (' . $order->nama . ')',
+                            'nama_pelanggan' => $history->nama_pelanggan,
+                            'alasan_hapus' => $history->alasan_hapus,
+                            'created_at' => Carbon::parse($history->created_at)->format('d-m-Y H:i'),
+                        ];
+                        $matched = true;
+                    }
+                    
+                    // 3. Alamat Match (containment) - only if not already matched by NIK/Nama to prevent duplicate warnings for same history record
+                    if (!$matched && !empty($order->alamat_pemasangan) && !empty($history->alamat)) {
+                        $a1 = strtolower(trim($order->alamat_pemasangan));
+                        $a2 = strtolower(trim($history->alamat));
+                        if ($a1 === $a2 || (strlen($a1) > 5 && strlen($a2) > 5 && (str_contains($a1, $a2) || str_contains($a2, $a1)))) {
+                            $warnings[] = [
+                                'type' => 'Alamat',
+                                'matched_by' => 'Alamat mirip (' . $order->alamat_pemasangan . ')',
+                                'nama_pelanggan' => $history->nama_pelanggan,
+                                'alasan_hapus' => $history->alasan_hapus,
+                                'created_at' => Carbon::parse($history->created_at)->format('d-m-Y H:i'),
+                            ];
+                            $matched = true;
+                        }
+                    }
+                    
+                    // 4. GPS Koordinat Match (< 10 meters)
+                    if (!$matched && !empty($order->koordinat_pemasangan) && !empty($history->location)) {
+                        $distance = self::calculateDistance($order->koordinat_pemasangan, $history->location);
+                        if ($distance < 10) {
+                            $warnings[] = [
+                                'type' => 'Koordinat',
+                                'matched_by' => sprintf('Koordinat berjarak %.2f meter dari lokasi lama', $distance),
+                                'nama_pelanggan' => $history->nama_pelanggan,
+                                'alasan_hapus' => $history->alasan_hapus,
+                                'created_at' => Carbon::parse($history->created_at)->format('d-m-Y H:i'),
+                            ];
+                        }
+                    }
+                }
+                $order->warnings = $warnings;
+            }
+        } else {
+            foreach ($orders as $order) {
+                $order->warnings = [];
+            }
         }
 
         return view('admin.order_pemasangan.index', compact(
@@ -294,7 +361,7 @@ class AdminOrderPemasanganController extends Controller
 
         // Check if phone number already exists in pelanggan
         $existingPhone = Pelanggan::where('no_telp', $no_telp)->first();
-        if ($existingPhone) {
+        if ($existingPhone && !$request->has('confirm_same_phone')) {
             return back()->withErrors(['no_telp' => 'Nomor telepon sudah tercatat di database. Silakan gunakan nomor lain.'])->withInput();
         }
 
@@ -541,5 +608,28 @@ class AdminOrderPemasanganController extends Controller
             abort(404);
         }
         return response()->file($path);
+    }
+
+    public static function calculateDistance($coord1, $coord2)
+    {
+        if (empty($coord1) || empty($coord2)) return 999999;
+        
+        $c1 = array_map('trim', explode(',', $coord1));
+        $c2 = array_map('trim', explode(',', $coord2));
+        if (count($c1) < 2 || count($c2) < 2) return 999999;
+        
+        $lat1 = deg2rad((float)$c1[0]);
+        $lon1 = deg2rad((float)$c1[1]);
+        $lat2 = deg2rad((float)$c2[0]);
+        $lon2 = deg2rad((float)$c2[1]);
+        
+        $dlat = $lat2 - $lat1;
+        $dlon = $lon2 - $lon1;
+        
+        $a = sin($dlat / 2) * sin($dlat / 2) + cos($lat1) * cos($lat2) * sin($dlon / 2) * sin($dlon / 2);
+        $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
+        $r = 6371000; // Earth radius in meters
+        
+        return $r * $c;
     }
 }

@@ -1114,6 +1114,12 @@
                 </li>
             @endif
 
+            @if(Auth::user()->level === 'admin' || Auth::user()->hasMenuAccess('mitra'))
+                <li class="sidebar-menu-item {{ Str::startsWith($currRoute, 'admin.mitra') ? 'active' : '' }}">
+                    <a href="{{ route('admin.mitra.index') }}"><i class="fa-solid fa-handshake"></i><span>Mitra</span></a>
+                </li>
+            @endif
+
             @if(Auth::user()->hasMenuAccess('keluhan'))
                 <li class="sidebar-menu-item {{ $currRoute == 'admin.keluhan.index' ? 'active' : '' }}">
                     <a href="{{ route('admin.keluhan.index') }}">
@@ -1568,7 +1574,7 @@
     </script>
 
     <!-- Global Loading Overlay -->
-    <div id="global-loading-overlay" style="display: none; position: fixed; inset: 0; background-color: rgba(15, 23, 42, 0.6); z-index: 9999; align-items: center; justify-content: center; flex-direction: column; gap: 16px; backdrop-filter: blur(4px); color: white;">
+    <div id="global-loading-overlay" style="display: none; position: fixed; inset: 0; background-color: rgba(15, 23, 42, 0.6); z-index: 99999; align-items: center; justify-content: center; flex-direction: column; gap: 16px; backdrop-filter: blur(4px); color: white;">
         <div style="width: 50px; height: 50px; border: 5px solid rgba(255, 255, 255, 0.2); border-top-color: #ffffff; border-radius: 50%; animation: globalSpin 1s linear infinite;"></div>
         <div style="font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.15rem; letter-spacing: 0.5px;">Loading Data, Mohon Tunggu</div>
     </div>

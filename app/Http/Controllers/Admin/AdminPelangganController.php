@@ -152,6 +152,22 @@ class AdminPelangganController extends Controller
         ]);
     }
 
+    public function checkPhone(Request $request)
+    {
+        $no_telp = $request->no_telp;
+        $pelanggan = Pelanggan::where('no_telp', $no_telp)->first();
+        if ($pelanggan) {
+            return response()->json([
+                'exists' => true,
+                'nama_pelanggan' => $pelanggan->nama_pelanggan,
+                'kode_pelanggan' => $pelanggan->kode_pelanggan,
+            ]);
+        }
+        return response()->json([
+            'exists' => false
+        ]);
+    }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -218,7 +234,7 @@ class AdminPelangganController extends Controller
 
         // Check if phone number already exists in pelanggan
         $existingPhone = Pelanggan::where('no_telp', $no_telp)->first();
-        if ($existingPhone) {
+        if ($existingPhone && !$request->has('confirm_same_phone')) {
             return back()->withErrors(['no_telp' => 'Nomor telepon sudah tercatat di database. Silakan gunakan nomor lain.'])->withInput();
         }
 
@@ -505,9 +521,26 @@ class AdminPelangganController extends Controller
 
     public function destroy(Request $request)
     {
+        $request->validate([
+            'id_pelanggan' => 'required|integer',
+            'alasan_hapus' => 'required|string',
+        ]);
+
         $id = $request->id_pelanggan;
         $pelanggan = Pelanggan::findOrFail($id);
         $user = User::where('id_pelanggan', $id)->first();
+
+        // Record customer deletion history
+        DB::table('tbl_deleted_pelanggan_history')->insert([
+            'id_pelanggan' => $pelanggan->id_pelanggan,
+            'nama_pelanggan' => $pelanggan->nama_pelanggan,
+            'alamat' => $pelanggan->alamat,
+            'nik' => $pelanggan->nik,
+            'location' => $pelanggan->location,
+            'alasan_hapus' => htmlspecialchars(strip_tags($request->alasan_hapus)),
+            'deleted_by' => auth()->id(),
+            'created_at' => now(),
+        ]);
 
         // Delete from Mikrotik if enabled
         $checkUser = DB::table('tbl_penggunamikrotik')->first();
@@ -535,7 +568,7 @@ class AdminPelangganController extends Controller
         DB::table('tb_user')->where('id_pelanggan', $id)->delete();
         DB::table('tb_pelanggan')->where('id_pelanggan', $id)->delete();
 
-        \Illuminate\Support\Facades\Log::info("Staff [" . auth()->user()->nama_user . "] (level: " . auth()->user()->level . ") MENGHAPUS pelanggan [" . $pelanggan->nama_pelanggan . "] (kode: " . $pelanggan->kode_pelanggan . ").");
+        \Illuminate\Support\Facades\Log::info("Staff [" . auth()->user()->nama_user . "] (level: " . auth()->user()->level . ") MENGHAPUS pelanggan [" . $pelanggan->nama_pelanggan . "] (kode: " . $pelanggan->kode_pelanggan . ") dengan alasan: " . $request->alasan_hapus);
 
         return redirect()->route('admin.pelanggan.index')->with('success', 'Pelanggan berhasil dihapus!');
     }

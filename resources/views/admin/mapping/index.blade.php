@@ -50,6 +50,29 @@
         .stats-grid {
             grid-template-columns: 1fr;
         }
+        .search-input {
+            width: 100% !important;
+        }
+        .search-input:focus {
+            width: 100% !important;
+        }
+        .search-container {
+            width: 100%;
+        }
+        .card-header {
+            flex-direction: column;
+            gap: 12px;
+            align-items: stretch !important;
+        }
+        .card-header > div:last-child {
+            flex-direction: column;
+            align-items: stretch !important;
+            width: 100%;
+        }
+        #btn-lokasi-saya {
+            width: 100%;
+            justify-content: center;
+        }
     }
 
     .stat-card {
@@ -300,7 +323,7 @@
             <i class="fa-solid fa-map-location-dot"></i>
             <span>Peta Master Topologi Jaringan & Lokasi Client</span>
         </div>
-        <div style="display: flex; gap: 10px; align-items: center;">
+        <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap; width: 100%; justify-content: flex-end;">
             <!-- Search Pelanggan Dropdown -->
             <div class="search-container">
                 <i class="fa-solid fa-magnifying-glass search-icon-inside"></i>
@@ -308,7 +331,14 @@
                 <div id="search-results" class="search-results-dropdown"></div>
             </div>
             
-            <button class="btn btn-info" id="btn-lokasi-saya" style="padding: 6px 12px; font-size: 0.8rem;">
+            <!-- Cari Koordinat Input -->
+            <div class="search-container" style="display: flex; align-items: center; gap: 4px;">
+                <i class="fa-solid fa-map-pin search-icon-inside" style="color: #ea580c;"></i>
+                <input type="text" id="search-koordinat" class="search-input" placeholder="Cari koordinat (lat, lng)..." style="width: 220px;" autocomplete="off">
+                <button type="button" id="btn-go-koordinat" style="position: absolute; right: 4px; top: 50%; transform: translateY(-50%); background: var(--primary-gradient); color: white; border: none; padding: 4px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; height: 28px;">Go</button>
+            </div>
+            
+            <button class="btn btn-info" id="btn-lokasi-saya" style="padding: 6px 12px; font-size: 0.8rem; height: 34px;">
                 <i class="fa-solid fa-location-crosshairs"></i> Lokasi Saya
             </button>
         </div>
@@ -353,6 +383,7 @@
     document.addEventListener("DOMContentLoaded", function () {
         initMasterMap();
         setupSearchPelanggan();
+        setupSearchKoordinat();
     });
 
     var map;
@@ -429,35 +460,48 @@
         var legend = L.control({ position: 'bottomright' });
         legend.onAdd = function (map) {
             var div = L.DomUtil.create('div', 'map-legend');
+            
+            // Check if mobile screen
+            var isMobile = window.innerWidth < 768;
+            var displayStyle = isMobile ? 'none' : 'block';
+            var chevronClass = isMobile ? 'fa-solid fa-chevron-up' : 'fa-solid fa-chevron-down';
+
             div.innerHTML = `
-                <h4 style="font-family:'Outfit',sans-serif; margin: 0 0 8px 0; font-size:0.9rem; color:var(--text-dark); border-bottom:1px solid #e2e8f0; padding-bottom:4px;">Legenda Peta</h4>
-                <div class="legend-item">
-                    <span class="legend-color" style="background-color:#ef4444;"></span>
-                    <span>ODC Utama</span>
-                </div>
-                <div class="legend-item">
-                    <span class="legend-color" style="background-color:#2563eb;"></span>
-                    <span>ODC Distribusi</span>
-                </div>
-                <div class="legend-item">
-                    <span class="legend-color" style="background-color:#10b981;"></span>
-                    <span>Splitter ODP</span>
-                </div>
-                <div class="legend-item">
-                    <span class="legend-color" style="background-color:#8b5cf6;"></span>
-                    <span>Pelanggan (Client)</span>
-                </div>
-                <div class="legend-item">
-                    <span class="legend-line" style="border-top:3px dashed #e11d48; margin-top:2px;"></span>
-                    <span>Koneksi ODC Utama &rarr; Distribusi</span>
-                </div>
-                <div class="legend-item">
-                    <span class="legend-line" style="border-top:2.5px dashed #4f46e5; margin-top:2px;"></span>
-                    <span>Koneksi ODC Distribusi &rarr; ODP</span>
-                </div>
-                <div class="legend-item">
-                    <span class="legend-line" style="border-top:2px solid #10b981; margin-top:2px;"></span>
-                    <span>Koneksi ODP &rarr; Client</span>
+                <h4 style="font-family:'Outfit',sans-serif; margin: 0; font-size:0.9rem; color:var(--text-dark); display:flex; justify-content:space-between; align-items:center; width: 100%; gap: 10px;">
+                    <span>Legenda Peta</span>
+                    <button type="button" id="toggle-legend-btn" onclick="toggleMapLegend(event)" style="background:none; border:none; color:var(--text-gray); cursor:pointer; font-size:0.85rem; padding: 2px 6px; display:flex; align-items:center; justify-content:center; outline:none;">
+                        <i class="${chevronClass}" id="legend-chevron"></i>
+                    </button>
+                </h4>
+                <div id="legend-items-wrapper" style="border-top:1px solid #e2e8f0; padding-top:6px; margin-top:6px; display: ${displayStyle};">
+                    <div class="legend-item">
+                        <span class="legend-color" style="background-color:#ef4444;"></span>
+                        <span>ODC Utama</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color" style="background-color:#2563eb;"></span>
+                        <span>ODC Distribusi</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color" style="background-color:#10b981;"></span>
+                        <span>Splitter ODP</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color" style="background-color:#8b5cf6;"></span>
+                        <span>Pelanggan (Client)</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-line" style="border-top:3px dashed #e11d48; margin-top:2px;"></span>
+                        <span>Koneksi ODC Utama &rarr; Distribusi</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-line" style="border-top:2.5px dashed #4f46e5; margin-top:2px;"></span>
+                        <span>Koneksi ODC Distribusi &rarr; ODP</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-line" style="border-top:2px solid #10b981; margin-top:2px;"></span>
+                        <span>Koneksi ODP &rarr; Client</span>
+                    </div>
                 </div>
             `;
             return div;
@@ -782,6 +826,85 @@
             marker.openPopup();
         } else {
             map.setView([lat, lng], 17);
+        }
+    }
+
+    function setupSearchKoordinat() {
+        var input = document.getElementById('search-koordinat');
+        var btn = document.getElementById('btn-go-koordinat');
+        
+        btn.addEventListener('click', function() {
+            findCoordinates();
+        });
+        
+        input.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                findCoordinates();
+            }
+        });
+    }
+
+    window.searchCoordMarker = null;
+    function findCoordinates() {
+        var inputVal = document.getElementById('search-koordinat').value.trim();
+        if (inputVal === '') return;
+        
+        var parts = inputVal.split(',');
+        if (parts.length === 2) {
+            var lat = parseFloat(parts[0].trim());
+            var lng = parseFloat(parts[1].trim());
+            if (!isNaN(lat) && !isNaN(lng) && lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180) {
+                // Clear previous temp search marker if any
+                if (window.searchCoordMarker) {
+                    map.removeLayer(window.searchCoordMarker);
+                }
+                
+                // Add a new highlighted coordinate pin
+                window.searchCoordMarker = L.marker([lat, lng], {
+                    icon: L.icon({
+                        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-gold.png',
+                        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                        iconSize: [25, 41],
+                        iconAnchor: [12, 41],
+                        popupAnchor: [1, -34],
+                        shadowSize: [41, 41]
+                    })
+                }).addTo(map)
+                  .bindPopup(`
+                      <div style="font-family:'Inter',sans-serif; font-size:0.85rem; line-height:1.4; text-align:center; padding: 4px;">
+                          <strong style="color:#d97706; font-size:0.9rem; display:block; margin-bottom:4px;">📍 Koordinat Dicari</strong>
+                          <strong>Lat:</strong> ${lat}<br>
+                          <strong>Lng:</strong> ${lng}<br>
+                          <a href="https://www.google.com/maps?q=${lat},${lng}" target="_blank" class="map-link" style="display:inline-flex; justify-content:center; margin-top:8px;">
+                              <i class="fa-solid fa-map-location-dot"></i> Google Maps
+                          </a>
+                      </div>
+                  `).openPopup();
+                
+                map.setView([lat, lng], 16);
+            } else {
+                alert("Koordinat tidak valid! Harap masukkan format 'latitude, longitude' (contoh: -7.5612, 110.7812)");
+            }
+        } else {
+            alert("Format koordinat salah! Harap masukkan 'latitude, longitude' (contoh: -7.5612, 110.7812)");
+        }
+    }
+
+    window.toggleMapLegend = function(e) {
+        if(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        var wrapper = document.getElementById('legend-items-wrapper');
+        var chevron = document.getElementById('legend-chevron');
+        if (wrapper && chevron) {
+            if (wrapper.style.display === 'none') {
+                wrapper.style.display = 'block';
+                chevron.className = 'fa-solid fa-chevron-down';
+            } else {
+                wrapper.style.display = 'none';
+                chevron.className = 'fa-solid fa-chevron-up';
+            }
         }
     }
 </script>
