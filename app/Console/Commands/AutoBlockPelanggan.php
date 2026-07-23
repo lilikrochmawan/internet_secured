@@ -216,6 +216,108 @@ class AutoBlockPelanggan extends Command
             }
         }
 
+        // --- LOGIKA SELF-HEALING: Buka blokir otomatis bagi pelanggan yang sudah Lunas / belum Jatuh Tempo ---
+        $this->info('Memulai pengecekan self-healing untuk membuka blokir pelanggan yang sudah lunas/aktif...');
+        Log::info('AutoBlockPelanggan: Memulai pengecekan self-healing unblock.');
+
+        $blockedBillsInDb = Tagihan::with('pelanggan')
+            ->where('blokir_status', 1)
+            ->get();
+
+        foreach ($blockedBillsInDb as $tx) {
+            $pelanggan = $tx->pelanggan;
+            if (!$pelanggan) continue;
+
+            // Cek status tagihan bulan berjalan
+            $currentBill = Tagihan::where('id_pelanggan', $pelanggan->id_pelanggan)
+                ->where('bulan_tahun', $currentPeriod)
+                ->first();
+
+            $shouldUnblock = true;
+            if ($currentBill && $currentBill->status_bayar != 1) {
+                if (strtotime($currentBill->jatuh_tempo) < $now->timestamp) {
+                    $shouldUnblock = false;
+                }
+            }
+
+            if ($shouldUnblock) {
+                $id_mikrotik = $pelanggan->id_mikrotik ?: 1;
+                $user = User::where('id_pelanggan', $pelanggan->id_pelanggan)->first();
+
+                // Ambil data mikrotik
+                $mikrotik = DB::table('tbl_mikrotik')->where('id_mikrotik', $id_mikrotik)->first();
+                if (!$mikrotik) continue;
+
+                // Hubungkan jika belum terhubung
+                if (!isset($connections[$id_mikrotik])) {
+                    $API = new \RouterosAPI();
+                    $API->timeout = 5;
+                    if ($API->connect($mikrotik->ip, $mikrotik->username, $mikrotik->password)) {
+                        $connections[$id_mikrotik] = $API;
+                    } else {
+                        Log::error('AutoBlockPelanggan Self-Healing: Gagal terhubung ke Mikrotik ID ' . $id_mikrotik);
+                        continue;
+                    }
+                }
+
+                $API = $connections[$id_mikrotik];
+                $unblockedSuccessfully = false;
+
+                try {
+                    if ($checkUser && $checkUser->ippelanggan === 'statik') {
+                        // Buka Blokir Statik: Hapus IP dari Address-List
+                        $commentToSearch = "Blokir Bulanan " . $pelanggan->ip_address;
+                        $API->write('/ip/firewall/address-list/print', false);
+                        $API->write('?comment=' . $commentToSearch);
+                        $ips = $API->read();
+
+                        if (!empty($ips)) {
+                            foreach ($ips as $ip_data) {
+                                $API->write('/ip/firewall/address-list/remove', false);
+                                $API->write('=.id=' . $ip_data['.id']);
+                                $API->read();
+                            }
+                        }
+                        $unblockedSuccessfully = true;
+                    } else {
+                        // Buka Blokir PPPOE: Kembalikan profile paket asal
+                        if ($user) {
+                            $paket = DB::table('tb_paket')->where('id_paket', $pelanggan->paket)->first();
+                            $profile = $paket ? $paket->id_pmikrotik : 'default';
+
+                            $API->comm("/ppp/secret/set", [
+                                "numbers" => $user->username,
+                                "profile" => $profile,
+                            ]);
+                            $API->comm("/ppp/secret/enable", [
+                                "numbers" => $user->username,
+                            ]);
+
+                            // Putuskan koneksi aktif agar dial ulang
+                            $activeConnections = $API->comm("/ppp/active/print", [
+                                "?name" => $user->username,
+                            ]);
+
+                            foreach ($activeConnections as $conn) {
+                                $API->comm("/ppp/active/remove", [
+                                    ".id" => $conn['.id'],
+                                ]);
+                            }
+                            $unblockedSuccessfully = true;
+                        }
+                    }
+
+                    if ($unblockedSuccessfully) {
+                        $tx->update(['blokir_status' => null]);
+                        $this->info("Self-healing: Berhasil membuka blokir pelanggan {$pelanggan->nama_pelanggan}");
+                        Log::info("AutoBlockPelanggan Self-Healing: Berhasil membuka blokir {$pelanggan->nama_pelanggan}");
+                    }
+                } catch (\Exception $ex) {
+                    Log::error("AutoBlockPelanggan Self-Healing: Error membuka blokir {$pelanggan->nama_pelanggan}: " . $ex->getMessage());
+                }
+            }
+        }
+
         // Putus koneksi semua router
         foreach ($connections as $API) {
             $API->disconnect();

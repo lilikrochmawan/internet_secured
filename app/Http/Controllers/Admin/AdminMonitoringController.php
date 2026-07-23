@@ -300,7 +300,7 @@ class AdminMonitoringController extends Controller
         $device_id = $request->get('device_id', 1);
         $limit = (int)$request->get('limit', 100);
         if ($limit <= 0) $limit = 100;
-        if ($limit > 200) $limit = 200;
+        if ($limit > 1000) $limit = 1000;
 
         $mikrotik = DB::table('tbl_mikrotik')->where('id_mikrotik', $device_id)->first();
         if (!$mikrotik) {
@@ -558,9 +558,18 @@ class AdminMonitoringController extends Controller
                 }
             }
 
+            $usersMap = DB::table('tb_user')
+                ->join('tb_pelanggan', 'tb_pelanggan.id_pelanggan', '=', 'tb_user.id_pelanggan')
+                ->pluck('tb_pelanggan.nama_pelanggan', 'tb_user.username')
+                ->toArray();
+            $usersMap = array_change_key_case($usersMap, CASE_LOWER);
+
             $clientsList = [];
             foreach ($pppSecrets as $secret) {
                 $username = $secret['name'] ?? '';
+                $usernameLower = strtolower($username);
+                $namaPelanggan = $usersMap[$usernameLower] ?? null;
+
                 $lastLogout = $secret['last-logged-out'] ?? '-';
                 $ipAddress = $secret['remote-address'] ?? '-';
                 $disabled = $secret['disabled'] ?? 'false';
@@ -587,6 +596,7 @@ class AdminMonitoringController extends Controller
 
                 $clientsList[] = [
                     'username' => $username,
+                    'nama_pelanggan' => $namaPelanggan,
                     'ip_address' => $ipAddress,
                     'last_logout' => $lastLogout,
                     'status' => $status,

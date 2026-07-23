@@ -459,7 +459,12 @@
                     @forelse($clientsList as $index => $client)
                         <tr>
                             <td>{{ $index + 1 }}</td>
-                            <td><strong>{{ $client['username'] }}</strong></td>
+                            <td>
+                                <strong>{{ $client['username'] }}</strong>
+                                @if(!empty($client['nama_pelanggan']))
+                                    <span style="font-weight: 500; font-size: 0.82rem; color: #64748b; margin-left: 6px;">({{ $client['nama_pelanggan'] }})</span>
+                                @endif
+                            </td>
                             <td><code>{{ $client['ip_address'] }}</code></td>
                             <td>{{ $client['last_logout'] }}</td>
                             <td>

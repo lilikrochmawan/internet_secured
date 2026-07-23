@@ -204,8 +204,11 @@
 
 <!-- Tab Navigasi Monitoring -->
 <div class="monitoring-tabs">
-    <a href="{{ route('admin.monitoring.index', ['device_id' => $selected_device_id]) }}" class="monitoring-tab active">
-        <i class="fa-solid fa-chart-line"></i> Traffic & Log Realtime
+    <a href="#" id="tab-traffic" class="monitoring-tab active" onclick="switchTab('traffic'); return false;">
+        <i class="fa-solid fa-chart-line"></i> Traffic Realtime
+    </a>
+    <a href="#" id="tab-logs" class="monitoring-tab" onclick="switchTab('logs'); return false;">
+        <i class="fa-solid fa-list-check"></i> Log Aktivitas Mikrotik
     </a>
     <a href="{{ route('admin.monitoring.active', ['device_id' => $selected_device_id]) }}" class="monitoring-tab">
         <i class="fa-solid fa-users"></i> Client Aktif & Remote ONT
@@ -266,7 +269,7 @@
     </div>
 
     <!-- Monitoring Traffic Realtime -->
-    <div class="card">
+    <div class="card" id="trafficCard">
         <div class="card-header">
             <div class="card-title">
                 <i class="fa-solid fa-chart-area"></i>
@@ -303,7 +306,7 @@
     </div>
 
     <!-- Logs Mikrotik -->
-    <div class="card">
+    <div class="card" id="logsCard">
         <div class="card-header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
             <div class="card-title">
                 <i class="fa-solid fa-list-check"></i>
@@ -324,6 +327,8 @@
                         <option value="50">50 Baris</option>
                         <option value="100">100 Baris</option>
                         <option value="200">200 Baris</option>
+                        <option value="500">500 Baris</option>
+                        <option value="1000">Seluruh Baris (Max 1000)</option>
                     </select>
                 </div>
 
@@ -363,7 +368,51 @@
 <!-- Load Chart.js CDN -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
+    window.switchTab = function(tabName) {
+        const trafficTab = document.getElementById('tab-traffic');
+        const logsTab = document.getElementById('tab-logs');
+        const trafficCard = document.getElementById('trafficCard');
+        const logsCard = document.getElementById('logsCard');
+        
+        if (!trafficTab || !logsTab || !trafficCard || !logsCard) return;
+
+        if (tabName === 'traffic') {
+            trafficTab.classList.add('active');
+            logsTab.classList.remove('active');
+            trafficCard.style.display = 'block';
+            logsCard.style.display = 'none';
+            localStorage.setItem('active_monitoring_tab', 'traffic');
+            
+            // Start traffic monitoring again
+            const etherSelect = document.getElementById("etherSelect");
+            if (etherSelect && etherSelect.value && typeof window.startMonitoring === 'function') {
+                window.startMonitoring(etherSelect.value);
+            }
+        } else {
+            trafficTab.classList.remove('active');
+            logsTab.classList.add('active');
+            trafficCard.style.display = 'none';
+            logsCard.style.display = 'block';
+            localStorage.setItem('active_monitoring_tab', 'logs');
+            
+            // Stop traffic monitoring to save API calls
+            if (window.trafficTimer) {
+                clearInterval(window.trafficTimer);
+                window.trafficTimer = null;
+            }
+            
+            // Fetch logs immediately when tab is opened
+            if (typeof window.loadLogs === 'function') {
+                window.loadLogs();
+            }
+        }
+    };
+
     document.addEventListener("DOMContentLoaded", function () {
+        // Restore tab selection
+        const savedTab = localStorage.getItem('active_monitoring_tab') || 'traffic';
+        window.switchTab(savedTab);
+
         const deviceId = "{{ $selected_device_id }}";
         const etherSelect = document.getElementById("etherSelect");
         const rxNow = document.getElementById("rxNow");
@@ -490,7 +539,12 @@
         }
 
         function startMonitoring(iface) {
-            if (trafficTimer) clearInterval(trafficTimer);
+            const trafficCard = document.getElementById('trafficCard');
+            if (trafficCard && trafficCard.style.display === 'none') {
+                return; // Stop if not in traffic tab
+            }
+
+            if (window.trafficTimer) clearInterval(window.trafficTimer);
             
             // Clear current data
             labels.length = 0;
@@ -502,7 +556,16 @@
 
             trafficStatus.textContent = `Memantau interface ${iface} (update tiap 2 detik)...`;
 
-            trafficTimer = setInterval(() => {
+            window.trafficTimer = setInterval(() => {
+                // Double check if tab switched in the meantime
+                if (trafficCard && trafficCard.style.display === 'none') {
+                    if (window.trafficTimer) {
+                        clearInterval(window.trafficTimer);
+                        window.trafficTimer = null;
+                    }
+                    return;
+                }
+
                 const params = new URLSearchParams();
                 params.append('device_id', deviceId);
                 params.append('iface', iface);
@@ -532,6 +595,8 @@
                 });
             }, 2000);
         }
+
+        window.startMonitoring = startMonitoring;
 
         etherSelect.addEventListener("change", function () {
             startMonitoring(this.value);
@@ -682,9 +747,14 @@
             logsPagination.appendChild(nextBtn);
         }
 
-        // Load logs (fetch 200 logs to ensure enough records remain after API filter)
+        // Load logs (optimized to fetch 1000 logs so they can be paginated/searched completely in UI)
         function loadLogs() {
-            fetch("{{ route('admin.monitoring.logs') }}?device_id=" + deviceId + "&limit=200")
+            const logsCard = document.getElementById('logsCard');
+            if (logsCard && logsCard.style.display === 'none') {
+                return; // Stop execution to optimize and keep connection/rendering lightweight
+            }
+
+            fetch("{{ route('admin.monitoring.logs') }}?device_id=" + deviceId + "&limit=1000")
                 .then(r => r.json())
                 .then(res => {
                     if (res.success) {
@@ -699,6 +769,9 @@
                 });
         }
 
+        // Expose loadLogs to window scope so the tab switcher can trigger it
+        window.loadLogs = loadLogs;
+
         // Add event listeners for filters
         hideApiCheckbox.addEventListener("change", () => {
             logCurrentPage = 1;
@@ -706,7 +779,7 @@
         });
         logLimitSelect.addEventListener("change", function() {
             logCurrentPage = 1;
-            renderLogs();
+            renderLogs(); // Just re-paginate and render locally (no new API hit needed)
         });
         logSearchInput.addEventListener("keyup", function() {
             logCurrentPage = 1;
@@ -738,8 +811,8 @@
                 .catch(err => console.error("Gagal memperbarui resource:", err));
         }
 
-        // Initialize resource refresh (wait 2 seconds for first load to prevent concurrent connection spike on load)
-        setInterval(loadResources, 2000);
+        // Initialize resource refresh (wait 10 seconds for first load to prevent concurrent connection spike on load)
+        setInterval(loadResources, 10000);
     });
 </script>
 @endif
