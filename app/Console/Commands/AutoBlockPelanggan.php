@@ -295,23 +295,40 @@ class AutoBlockPelanggan extends Command
                             $paket = DB::table('tb_paket')->where('id_paket', $pelanggan->paket)->first();
                             $profile = $paket ? $paket->id_pmikrotik : 'default';
 
-                            $API->comm("/ppp/secret/set", [
-                                "numbers" => $user->username,
-                                "profile" => $profile,
-                            ]);
-                            $API->comm("/ppp/secret/enable", [
-                                "numbers" => $user->username,
+                            $secrets = $API->comm('/ppp/secret/print', [
+                                '?name' => $user->username,
                             ]);
 
-                            // Putuskan koneksi aktif agar dial ulang
-                            $activeConnections = $API->comm("/ppp/active/print", [
-                                "?name" => $user->username,
-                            ]);
+                            $isCurrentlyBlocked = false;
+                            if (!empty($secrets)) {
+                                $secret = $secrets[0];
+                                $currentProfile = $secret['profile'] ?? '';
+                                $isDisabled = ($secret['disabled'] ?? 'false') === 'true';
+                                if ($currentProfile === 'pppoe-isolir' || $isDisabled) {
+                                    $isCurrentlyBlocked = true;
+                                }
+                            }
 
-                            foreach ($activeConnections as $conn) {
-                                $API->comm("/ppp/active/remove", [
-                                    ".id" => $conn['.id'],
+                            // Only modify secret and disconnect if the client is currently blocked on the router
+                            if ($isCurrentlyBlocked) {
+                                $API->comm("/ppp/secret/set", [
+                                    "numbers" => $user->username,
+                                    "profile" => $profile,
                                 ]);
+                                $API->comm("/ppp/secret/enable", [
+                                    "numbers" => $user->username,
+                                ]);
+
+                                // Putuskan koneksi aktif agar dial ulang
+                                $activeConnections = $API->comm("/ppp/active/print", [
+                                    "?name" => $user->username,
+                                ]);
+
+                                foreach ($activeConnections as $conn) {
+                                    $API->comm("/ppp/active/remove", [
+                                        ".id" => $conn['.id'],
+                                    ]);
+                                }
                             }
                             $unblockedSuccessfully = true;
                         }
