@@ -215,7 +215,7 @@ class AdminTransaksiController extends Controller
             ]);
 
             // Otomatis unblock Mikrotik jika tagihan bulan berjalan sudah lunas, atau belum jatuh tempo
-            $currentPeriod = date('mY');
+            $currentPeriod = now()->format('mY');
             $currentBill = DB::table('tb_tagihan')
                 ->where('id_pelanggan', $pelanggan->id_pelanggan)
                 ->where('bulan_tahun', $currentPeriod)
@@ -223,7 +223,7 @@ class AdminTransaksiController extends Controller
 
             $unblock = true;
             if ($currentBill && $currentBill->status_bayar != 1) {
-                if (strtotime($currentBill->jatuh_tempo) < time()) {
+                if (\Carbon\Carbon::parse($currentBill->jatuh_tempo)->isPast()) {
                     $unblock = false;
                 }
             }

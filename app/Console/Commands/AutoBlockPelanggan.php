@@ -47,7 +47,7 @@ class AutoBlockPelanggan extends Command
 
         // Cari tagihan yang belum bayar, belum diblokir, dan jatuh tempo sudah lewat (hanya untuk bulan berjalan saja)
         $now = now();
-        $currentPeriod = date('mY');
+        $currentPeriod = now()->format('mY');
         $overdueBills = Tagihan::with('pelanggan')
             ->whereNull('status_bayar')
             ->where(function ($query) {
@@ -224,9 +224,18 @@ class AutoBlockPelanggan extends Command
             ->where('blokir_status', 1)
             ->get();
 
+        $processedUnblockCustomerIds = [];
+
         foreach ($blockedBillsInDb as $tx) {
             $pelanggan = $tx->pelanggan;
             if (!$pelanggan) continue;
+
+            // Prevent duplicate Mikrotik unblocking requests/disconnects for the same customer in the same run
+            if (in_array($pelanggan->id_pelanggan, $processedUnblockCustomerIds)) {
+                $tx->update(['blokir_status' => null]);
+                continue;
+            }
+            $processedUnblockCustomerIds[] = $pelanggan->id_pelanggan;
 
             // Cek status tagihan bulan berjalan
             $currentBill = Tagihan::where('id_pelanggan', $pelanggan->id_pelanggan)
@@ -235,7 +244,8 @@ class AutoBlockPelanggan extends Command
 
             $shouldUnblock = true;
             if ($currentBill && $currentBill->status_bayar != 1) {
-                if (strtotime($currentBill->jatuh_tempo) < $now->timestamp) {
+                // Fix timezone parsing discrepancy using Carbon comparison instead of native php strtotime
+                if (\Carbon\Carbon::parse($currentBill->jatuh_tempo)->lt($now)) {
                     $shouldUnblock = false;
                 }
             }
