@@ -80,12 +80,17 @@ class AdminOrderPemasanganController extends Controller
         // Fetch orders based on role
         if (in_array($user->level, ['sales', 'mitra', 'kasir', 'teknisi'])) {
             if ($user->level === 'teknisi') {
-                // Show orders created by the technician OR assigned to the technician
+                // Show orders created by the technician, assigned to the technician, or unassigned (id_teknisi = 0) with approved status
                 $orders = OrderPemasangan::with(['sales', 'teknisi', 'paketDetail'])
                     ->where(function($query) use ($user) {
                         $query->where('id_sales', $user->id)
-                              ->orWhere('id_teknisi', $user->id);
+                              ->orWhere('id_teknisi', $user->id)
+                              ->orWhere(function($sub) {
+                                  $sub->where('id_teknisi', 0)
+                                      ->where('status', 'approved');
+                              });
                     })
+                    ->whereNotIn('status', ['installed', 'completed'])
                     ->orderBy('id', 'desc')
                     ->get();
             } else {
