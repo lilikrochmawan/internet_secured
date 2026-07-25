@@ -79,11 +79,22 @@ class AdminOrderPemasanganController extends Controller
 
         // Fetch orders based on role
         if (in_array($user->level, ['sales', 'mitra', 'kasir', 'teknisi'])) {
-            // Show only orders created by the logged in user
-            $orders = OrderPemasangan::with(['sales', 'teknisi', 'paketDetail'])
-                ->where('id_sales', $user->id)
-                ->orderBy('id', 'desc')
-                ->get();
+            if ($user->level === 'teknisi') {
+                // Show orders created by the technician OR assigned to the technician
+                $orders = OrderPemasangan::with(['sales', 'teknisi', 'paketDetail'])
+                    ->where(function($query) use ($user) {
+                        $query->where('id_sales', $user->id)
+                              ->orWhere('id_teknisi', $user->id);
+                    })
+                    ->orderBy('id', 'desc')
+                    ->get();
+            } else {
+                // Show only orders created by the logged in user
+                $orders = OrderPemasangan::with(['sales', 'teknisi', 'paketDetail'])
+                    ->where('id_sales', $user->id)
+                    ->orderBy('id', 'desc')
+                    ->get();
+            }
         } else {
             // Admin and NOC see all orders
             $orders = OrderPemasangan::with(['sales', 'teknisi', 'paketDetail'])
