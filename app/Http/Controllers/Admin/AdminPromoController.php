@@ -136,14 +136,14 @@ class AdminPromoController extends Controller
 
             $tgl_jatuh_tempo = sprintf('%04d-%02d-%02d 23:59:00', $due_year, $due_month, $due_day);
 
-            // Create Unpaid Tagihan (Persis seperti transaksi manual)
+            // Create Paid Tagihan (Lunas otomatis karena berada dalam periode promo)
             $tagihan = Tagihan::create([
                 'id_pelanggan' => $pelanggan->id_pelanggan,
                 'bulan_tahun' => $targetPeriod,
                 'jml_bayar' => $request->nominal_tagihan,
-                'terbayar' => 0,
-                'status_bayar' => null, // Belum Lunas
-                'waktu_bayar' => null,
+                'terbayar' => $request->nominal_tagihan,
+                'status_bayar' => 1, // Lunas otomatis
+                'waktu_bayar' => now()->format('Y-m-d H:i:s'),
                 'user_id' => Auth::id(),
                 'manual_invoice' => 1,
                 'item_tagihan' => "Tagihan Awal Promo: " . $request->nama_promo,

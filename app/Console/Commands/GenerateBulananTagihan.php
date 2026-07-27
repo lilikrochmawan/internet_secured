@@ -68,17 +68,24 @@ class GenerateBulananTagihan extends Command
         $generated = 0;
 
         foreach ($pelanggans as $plg) {
-            $harga_paket = $plg->paketDetail->harga ?? 0;
-            $ppn_rate = $plg->paketDetail->ppn ?? 0;
-            
-            if ($ppn_aktif) {
-                $total_tagihan = $harga_paket + ($harga_paket * $ppn_rate);
+            // Cek apakah pelanggan sedang dalam masa promo aktif pada bulan & tahun target
+            $activePromo = \App\Models\Promo::getActivePromoForPeriod($plg->id_pelanggan, $bulan, $tahun);
+
+            if ($activePromo) {
+                $total_tagihan = $activePromo->nominal_tagihan;
             } else {
-                $total_tagihan = $harga_paket;
+                $harga_paket = $plg->paketDetail->harga ?? 0;
+                $ppn_rate = $plg->paketDetail->ppn ?? 0;
+                
+                if ($ppn_aktif) {
+                    $total_tagihan = $harga_paket + ($harga_paket * $ppn_rate);
+                } else {
+                    $total_tagihan = $harga_paket;
+                }
             }
 
-            // Skip if price is 0 or not configured properly (to prevent empty invoices unless package is free)
-            if ($total_tagihan <= 0) {
+            // Skip if price is 0 or not configured properly (to prevent empty invoices unless package is free or active promo)
+            if ($total_tagihan <= 0 && !$activePromo) {
                 continue;
             }
 
@@ -107,9 +114,6 @@ class GenerateBulananTagihan extends Command
             }
 
             $tgl_jatuh_tempo = sprintf('%04d-%02d-%02d 23:59:00', $due_year, $due_month, $due_day);
-
-            // Cek apakah pelanggan sedang dalam masa promo aktif pada bulan & tahun target
-            $activePromo = \App\Models\Promo::getActivePromoForPeriod($plg->id_pelanggan, $bulan, $tahun);
 
             DB::transaction(function () use ($plg, $bulantahun, $total_tagihan, $tgl_jatuh_tempo, $activePromo) {
                 $status_bayar = $activePromo ? 1 : null;

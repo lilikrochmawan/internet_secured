@@ -45,18 +45,43 @@ class AutoBlockPelanggan extends Command
         $this->info('Memulai pengecekan tagihan jatuh tempo... Sistem: ' . strtoupper($sistem));
         Log::info('AutoBlockPelanggan: Memulai proses pemblokiran otomatis. Sistem: ' . $sistem);
 
-        // Cari tagihan yang belum bayar, belum diblokir, dan jatuh tempo sudah lewat (hanya untuk bulan berjalan saja)
+        // Cari tagihan yang belum bayar dan belum diblokir (hanya untuk bulan berjalan saja)
         $now = now();
         $currentPeriod = now()->format('mY');
-        $overdueBills = Tagihan::with('pelanggan')
+        $unpaidBills = Tagihan::with('pelanggan')
             ->whereNull('status_bayar')
             ->where(function ($query) {
                 $query->whereNull('blokir_status')
                       ->orWhere('blokir_status', 0);
             })
             ->where('bulan_tahun', $currentPeriod)
-            ->where('jatuh_tempo', '<', $now)
             ->get();
+
+        // Filter tagihan yang sudah jatuh tempo (menggunakan jatuh_tempo di transaksi, jika null ambil dari tbl_pelanggan)
+        $overdueBills = $unpaidBills->filter(function ($tx) use ($now) {
+            $pelanggan = $tx->pelanggan;
+            if (!$pelanggan) {
+                return false;
+            }
+
+            // Cek apakah pelanggan sedang dalam masa promo aktif pada periode ini (jika ya, jangan diblokir)
+            $activePromo = \App\Models\Promo::getActivePromoForPeriod($pelanggan->id_pelanggan, $now->format('m'), $now->format('Y'));
+            if ($activePromo) {
+                return false;
+            }
+
+            // Cek jatuh tempo dari transaksi (tagihan), fallback ke pelanggan jika null/kosong
+            $jatuhTempo = $tx->jatuh_tempo;
+            if (is_null($jatuhTempo) || $jatuhTempo === '') {
+                $jatuhTempo = $pelanggan->jatuh_tempo;
+            }
+
+            if (is_null($jatuhTempo) || $jatuhTempo === '') {
+                return false;
+            }
+
+            return \Carbon\Carbon::parse($jatuhTempo)->lt($now);
+        });
 
         if ($overdueBills->isEmpty()) {
             $this->info('Tidak ada tagihan jatuh tempo yang perlu diblokir.');
@@ -128,6 +153,42 @@ class AutoBlockPelanggan extends Command
 
             $API = $connections[$id_mikrotik];
             $success = false;
+            $isAlreadyBlocked = false;
+
+            try {
+                // Cek apakah status pelanggan di Mikrotik sudah terblokir
+                if ($checkUser && $checkUser->ippelanggan === 'statik') {
+                    $existingList = $API->comm("/ip/firewall/address-list/print", [
+                        "?address" => $pelanggan->ip_address,
+                        "?list"    => "blocked_clients"
+                    ]);
+                    if (!empty($existingList)) {
+                        $isAlreadyBlocked = true;
+                    }
+                } else {
+                    if ($user) {
+                        $secrets = $API->comm("/ppp/secret/print", [
+                            "?name" => $user->username
+                        ]);
+                        if (!empty($secrets)) {
+                            $secret = $secrets[0];
+                            if (($secret['profile'] ?? '') === 'pppoe-isolir') {
+                                $isAlreadyBlocked = true;
+                            }
+                        }
+                    }
+                }
+            } catch (\Exception $e) {
+                Log::warning('AutoBlockPelanggan: Gagal cek status blokir Mikrotik untuk ' . $pelanggan->nama_pelanggan . ': ' . $e->getMessage());
+            }
+
+            if ($isAlreadyBlocked) {
+                // Update status di DB agar sinkron, tapi lewati pemblokiran ulang di Mikrotik dan notifikasi WA
+                $tx->update(['blokir_status' => 1]);
+                $this->info("Pelanggan {$pelanggan->nama_pelanggan} sudah terblokir di Mikrotik. Lewati pemblokiran ulang dan notifikasi WA.");
+                Log::info("AutoBlockPelanggan: Pelanggan {$pelanggan->nama_pelanggan} sudah terblokir di Mikrotik. Lewati pemblokiran ulang dan notifikasi WA.");
+                continue;
+            }
 
             try {
                 if ($checkUser && $checkUser->ippelanggan === 'statik') {
@@ -244,9 +305,16 @@ class AutoBlockPelanggan extends Command
 
             $shouldUnblock = true;
             if ($currentBill && $currentBill->status_bayar != 1) {
-                // Fix timezone parsing discrepancy using Carbon comparison instead of native php strtotime
-                if (\Carbon\Carbon::parse($currentBill->jatuh_tempo)->lt($now)) {
-                    $shouldUnblock = false;
+                // Ambil jatuh tempo dari transaksi (tagihan), fallback ke pelanggan jika null/kosong
+                $jatuhTempo = $currentBill->jatuh_tempo;
+                if (is_null($jatuhTempo) || $jatuhTempo === '') {
+                    $jatuhTempo = $pelanggan->jatuh_tempo;
+                }
+
+                if (!empty($jatuhTempo)) {
+                    if (\Carbon\Carbon::parse($jatuhTempo)->lt($now)) {
+                        $shouldUnblock = false;
+                    }
                 }
             }
 
