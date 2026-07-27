@@ -116,14 +116,14 @@ class AutoBlockPelanggan extends Command
             }
             $processedCustomerIds[] = $pelanggan->id_pelanggan;
 
-            // Cek apakah tagihan terbaru pelanggan ini sudah lunas. Jika lunas, abaikan blokir untuk tagihan lama.
-            $latestBill = Tagihan::where('id_pelanggan', $pelanggan->id_pelanggan)
-                ->orderBy('id_tagihan', 'desc')
+            // Cek apakah tagihan bulan berjalan (bulan ini) sudah lunas. Jika lunas, lewati blokir.
+            $currentMonthBill = Tagihan::where('id_pelanggan', $pelanggan->id_pelanggan)
+                ->where('bulan_tahun', $currentPeriod)
                 ->first();
 
-            if ($latestBill && $latestBill->status_bayar == 1) {
-                $this->info("Pelanggan {$pelanggan->nama_pelanggan} memiliki tagihan menunggak (ID {$tx->id_tagihan}), tetapi tagihan terbaru sudah lunas. Lewati blokir.");
-                Log::info("AutoBlockPelanggan: Pelanggan {$pelanggan->nama_pelanggan} memiliki tagihan menunggak (ID {$tx->id_tagihan}), tetapi tagihan terbaru sudah lunas. Lewati blokir.");
+            if ($currentMonthBill && $currentMonthBill->status_bayar == 1) {
+                $this->info("Pelanggan {$pelanggan->nama_pelanggan} memiliki tagihan menunggak, tetapi tagihan bulan berjalan ({$currentPeriod}) sudah lunas. Lewati blokir.");
+                Log::info("AutoBlockPelanggan: Pelanggan {$pelanggan->nama_pelanggan} memiliki tagihan menunggak, tetapi tagihan bulan berjalan ({$currentPeriod}) sudah lunas. Lewati blokir.");
                 continue;
             }
 
