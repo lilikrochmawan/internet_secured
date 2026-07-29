@@ -627,7 +627,32 @@
                             @elseif($tx->status_bayar == 1)
                                 <span class="badge badge-success">Aktif</span>
                             @else
-                                <span class="badge badge-warning">Buka Sementara</span>
+                                @php
+                                    $isOverdue = false;
+                                    $dueDate = null;
+                                    if ($tx->jatuh_tempo) {
+                                        $dueDate = \Carbon\Carbon::parse($tx->jatuh_tempo);
+                                    } elseif ($tx->pelanggan && $tx->pelanggan->jatuh_tempo) {
+                                        $day = date('d', strtotime($tx->pelanggan->jatuh_tempo));
+                                        $month = substr($tx->bulan_tahun, 0, 2);
+                                        $year = substr($tx->bulan_tahun, 2);
+                                        try {
+                                            $dueDate = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', "$year-$month-$day 23:59:00");
+                                        } catch (\Exception $e) {
+                                            $dueDate = \Carbon\Carbon::parse($tx->pelanggan->jatuh_tempo);
+                                        }
+                                    }
+                                    
+                                    if ($dueDate) {
+                                        $isOverdue = \Carbon\Carbon::now()->greaterThan($dueDate);
+                                    }
+                                @endphp
+                                
+                                @if($isOverdue)
+                                    <span class="badge badge-warning">Buka Sementara</span>
+                                @else
+                                    <span class="badge badge-success">Aktif</span>
+                                @endif
                             @endif
                         </td>
                         <td>
