@@ -19,3 +19,6 @@ Schedule::command('app:generate-bulanan-tagihan')->monthlyOn(1, '00:00')->timezo
 
 // Jadwal pemeriksaan lisensi otomatis setiap hari pukul 00.00 wib
 Schedule::command('license:check')->dailyAt('00:00')->timezone('Asia/Jakarta');
+
+// Jadwal backup database otomatis setiap hari pukul 02.00 wib
+Schedule::command('db:backup')->dailyAt('02:00')->timezone('Asia/Jakarta')->withoutOverlapping();

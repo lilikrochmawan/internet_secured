@@ -622,10 +622,12 @@
                             @endif
                         </td>
                         <td>
-                            @if($tx->blokir_status == 1)
+                            @if(in_array($tx->id_pelanggan, $blockedClientIds))
                                 <span class="badge badge-danger">Terblokir</span>
-                            @else
+                            @elseif($tx->status_bayar == 1)
                                 <span class="badge badge-success">Aktif</span>
+                            @else
+                                <span class="badge badge-warning">Buka Sementara</span>
                             @endif
                         </td>
                         <td>
@@ -664,7 +666,7 @@
                                     </form>
 
                                     <!-- Aksi Blokir Mikrotik -->
-                                    @if($tx->blokir_status != 1)
+                                    @if(!in_array($tx->id_pelanggan, $blockedClientIds))
                                         <form action="{{ route('admin.transaksi.blokir') }}" method="POST" onsubmit="return confirm('Blokir akses internet pelanggan ini di Mikrotik?')">
                                             @csrf
                                             <input type="hidden" name="id_tagihan" value="{{ $tx->id_tagihan }}">

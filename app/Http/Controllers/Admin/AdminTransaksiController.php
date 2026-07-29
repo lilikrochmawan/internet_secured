@@ -104,10 +104,16 @@ class AdminTransaksiController extends Controller
         $todayPaidCount = $todayPaymentsQuery->count();
         $todayPaidAmount = $todayPaymentsQuery->sum('jml_bayar');
 
+        $blockedClientIds = DB::table('tb_tagihan')
+            ->where('blokir_status', 1)
+            ->pluck('id_pelanggan')
+            ->unique()
+            ->toArray();
+
         return view('admin.transaksi.index', compact(
             'tagihan', 'search', 'status', 'pelanggan', 'selectedMonth', 'selectedYear',
             'totalCount', 'totalAmount', 'paidCount', 'paidAmount', 'unpaidCount', 'unpaidAmount',
-            'todayPaidCount', 'todayPaidAmount'
+            'todayPaidCount', 'todayPaidAmount', 'blockedClientIds'
         ));
     }
 
@@ -299,6 +305,7 @@ class AdminTransaksiController extends Controller
                                 }
                             }
                             $API->disconnect();
+                            DB::table('tb_tagihan')->where('id_pelanggan', $pelanggan->id_pelanggan)->update(['blokir_status' => null]);
                         }
                     }
                 } catch (\Exception $e) {
@@ -603,8 +610,8 @@ class AdminTransaksiController extends Controller
             }
             $API->disconnect();
             
-            // Update status blokir di database
-            $tagihan->update(['blokir_status' => null]);
+            // Update status blokir di database untuk semua tagihan pelanggan ini
+            DB::table('tb_tagihan')->where('id_pelanggan', $pelanggan->id_pelanggan)->update(['blokir_status' => null]);
 
             \Illuminate\Support\Facades\Log::info("Staff [" . auth()->user()->nama_user . "] (level: " . auth()->user()->level . ") MEMBUKA BLOKIR internet pelanggan [" . $pelanggan->nama_pelanggan . "] (kode: " . $pelanggan->kode_pelanggan . ").");
 

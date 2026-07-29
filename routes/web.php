@@ -216,6 +216,7 @@ Route::prefix('administrator')->group(function () {
         Route::post('/order-pemasangan/claim', [AdminOrderPemasanganController::class, 'claim'])->name('admin.order_pemasangan.claim');
         Route::get('/order-pemasangan/ktp/{filename}', [AdminOrderPemasanganController::class, 'showKtp'])->name('admin.order_pemasangan.ktp');
         Route::get('/order-pemasangan/dokumentasi/{filename}', [AdminOrderPemasanganController::class, 'showDokumentasi'])->name('admin.order_pemasangan.dokumentasi');
+        Route::get('/order-pemasangan/print', [AdminOrderPemasanganController::class, 'printReport'])->name('admin.order_pemasangan.print');
 
         // ODC Management
         Route::get('/odc', [AdminOdcController::class, 'index'])->name('admin.odc.index');

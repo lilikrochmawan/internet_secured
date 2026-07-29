@@ -66,7 +66,7 @@
 
     .order-grid {
         display: grid;
-        grid-template-columns: {{ in_array(Auth::user()->level, ['sales', 'mitra']) ? 'minmax(0, 1.2fr) minmax(0, 0.8fr)' : 'minmax(0, 1fr)' }};
+        grid-template-columns: minmax(0, 1fr);
         gap: 24px;
         margin-top: 20px;
     }
@@ -411,15 +411,82 @@
         </div>
     </div>
 @endif
+@if(in_array(Auth::user()->level, ['admin', 'noc']))
+    <!-- Card Cetak Laporan Order Pemasangan -->
+    <div class="card" style="margin-bottom: 24px; width: 100%;">
+        <div class="card-header">
+            <div class="card-title">
+                <i class="fa-solid fa-file-pdf"></i>
+                <span>Cetak Laporan Order Pemasangan Baru</span>
+            </div>
+        </div>
+        <form action="{{ route('admin.order_pemasangan.print') }}" method="GET" target="_blank" style="padding: 24px;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; align-items: flex-end;">
+                <div class="form-group" style="margin-bottom:0;">
+                    <label for="report_teknisi">Pilih Teknisi</label>
+                    <select name="id_teknisi" id="report_teknisi" class="form-control" style="height: 44px; border-radius: 12px;" required>
+                        <option value="semua">-- Semua Teknisi --</option>
+                        <option value="0">Semua Teknisi (Unassigned)</option>
+                        @foreach($teknisis as $tek)
+                            <option value="{{ $tek->id }}">{{ $tek->nama_user }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="form-group" style="margin-bottom:0;">
+                    <label for="report_sales">Pilih Sales</label>
+                    <select name="id_sales" id="report_sales" class="form-control" style="height: 44px; border-radius: 12px;" required>
+                        <option value="semua">-- Semua Sales --</option>
+                        @foreach($salesList as $s)
+                            <option value="{{ $s->id }}">{{ $s->nama_user }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="form-group" style="margin-bottom:0;">
+                    <label for="report_status">Status Order</label>
+                    <select name="status" id="report_status" class="form-control" style="height: 44px; border-radius: 12px;">
+                        <option value="semua" selected>Semua Status</option>
+                        <option value="pending">Pending (Menunggu ACC)</option>
+                        <option value="approved">ACC (Dalam Pemasangan)</option>
+                        <option value="installed">Selesai Dipasang (Verifikasi Admin)</option>
+                        <option value="completed">Selesai & Aktif</option>
+                    </select>
+                </div>
+
+                <div class="form-group" style="margin-bottom:0;">
+                    <label for="report_tgl_mulai">Tanggal Mulai</label>
+                    <input type="date" name="tgl_mulai" id="report_tgl_mulai" class="form-control" value="{{ date('Y-m-01') }}" style="height: 44px; border-radius: 12px;">
+                </div>
+
+                <div class="form-group" style="margin-bottom:0;">
+                    <label for="report_tgl_selesai">Tanggal Selesai</label>
+                    <input type="date" name="tgl_selesai" id="report_tgl_selesai" class="form-control" value="{{ date('Y-m-d') }}" style="height: 44px; border-radius: 12px;">
+                </div>
+
+                <div style="margin-bottom:0;">
+                    <button type="submit" class="btn btn-primary" style="height: 44px; border-radius: 12px; width: 100%; justify-content: center; gap: 8px;">
+                        <i class="fa-solid fa-print"></i> Cetak Laporan
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+@endif
 
 <div class="order-grid">
     <!-- Kolom Kiri: Tabel Order Pemasangan -->
     <div class="card" style="margin: 0;">
-        <div class="card-header">
+        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
             <div class="card-title">
                 <i class="fa-solid fa-truck-ramp-box"></i>
                 <span>Daftar Order Pemasangan Baru</span>
             </div>
+            @if(in_array(Auth::user()->level, ['admin', 'noc', 'sales', 'mitra']))
+                <button type="button" class="btn btn-primary" onclick="openAddOrderModal()" style="padding: 8px 16px; font-size: 0.85rem; font-weight: 600; border-radius: 10px; display: inline-flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-plus"></i> Tambah Pemasangan Baru
+                </button>
+            @endif
         </div>
 
         <!-- Search & Row Limiter -->
@@ -677,86 +744,8 @@
         <div id="ordersPagination"></div>
     </div>
 
-    <!-- Kolom Kanan: Form Upload Pelanggan Baru (Hanya untuk Sales/Marketing/Mitra) -->
-    @if(in_array(Auth::user()->level, ['sales', 'mitra', 'admin']))
-        <div class="card" style="margin: 0;">
-            <div class="card-header">
-                <div class="card-title">
-                    <i class="fa-solid fa-file-circle-plus"></i>
-                    <span>Form Pemasangan Baru</span>
-                </div>
-            </div>
-            <div class="card-body" style="padding: 16px 0 0 0;">
-                <form action="{{ route('admin.order_pemasangan.store') }}" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    <div class="form-group">
-                        <label for="nik">NIK Pelanggan *</label>
-                        <input type="text" id="nik" name="nik" class="form-control" required placeholder="Masukkan NIK 16 digit" value="{{ old('nik') }}">
-                    </div>
 
-                    <div class="form-group">
-                        <label for="nama">Nama Lengkap *</label>
-                        <input type="text" id="nama" name="nama" class="form-control" required placeholder="Contoh: Budi Santoso" value="{{ old('nama') }}">
-                    </div>
 
-                    <div class="form-group">
-                        <label for="no_telp">Nomor WhatsApp Pelanggan *</label>
-                        <input type="text" id="no_telp" name="no_telp" class="form-control" required placeholder="Contoh: 081234567890" value="{{ old('no_telp') }}">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="paket_order">Paket Internet Yang Diminta *</label>
-                        <select id="paket_order" name="paket" class="form-control" required>
-                            <option value="">-- Pilih Paket --</option>
-                            @foreach($pakets as $p)
-                                <option value="{{ $p->id_paket }}" {{ old('paket') == $p->id_paket ? 'selected' : '' }}>
-                                    {{ $p->nama_paket }} (Rp {{ number_format($p->harga, 0, ',', '.') }} / Bulan)
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="alamat_ktp">Alamat KTP *</label>
-                        <textarea id="alamat_ktp" name="alamat_ktp" class="form-control" rows="2" required placeholder="Alamat lengkap sesuai KTP">{{ old('alamat_ktp') }}</textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="alamat_pemasangan">Alamat Pemasangan *</label>
-                        <textarea id="alamat_pemasangan" name="alamat_pemasangan" class="form-control" rows="2" required placeholder="Alamat lengkap titik pemasangan">{{ old('alamat_pemasangan') }}</textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="koordinat_pemasangan">Koordinat Lokasi (Lat, Lng) *</label>
-                        <div style="display: flex; gap: 8px;">
-                            <input type="text" id="koordinat_pemasangan" name="koordinat_pemasangan" class="form-control" required placeholder="Contoh: -7.12345, 110.12345" value="{{ old('koordinat_pemasangan') }}" style="min-width: 0; flex-grow: 1;">
-                            <button type="button" class="btn btn-info" onclick="getGPSCoordinates()" style="flex-shrink: 0; padding: 0 16px;">
-                                <i class="fa-solid fa-location-crosshairs"></i> GPS HP
-                            </button>
-                        </div>
-                        <small style="color:var(--text-gray);">Gunakan tombol GPS HP saat berada di lokasi pemasangan secara presisi.</small>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="jadwal_pemasangan">Permintaan Jadwal Pasang (Opsional)</label>
-                        <input type="datetime-local" id="jadwal_pemasangan" name="jadwal_pemasangan" class="form-control" value="{{ old('jadwal_pemasangan') }}">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="foto_ktp">Upload Foto KTP *</label>
-                        <input type="file" id="foto_ktp" name="foto_ktp" class="form-control" required accept="image/*">
-                        <small style="color:var(--text-gray);">Maksimal ukuran file 5 MB (Format: jpeg, png, webp).</small>
-                    </div>
-
-                    <div style="margin-top:24px;">
-                        <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; height: 44px;">
-                            <i class="fa-solid fa-paper-plane"></i> Kirim Order Pemasangan
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    @endif
 </div>
 
 <!-- Modal Tugaskan Teknisi (Admin Only) -->
@@ -1009,6 +998,88 @@
         </div>
     </div>
 </div>
+
+<!-- Modal Form Pemasangan Baru (Admin, NOC, Sales & Mitra) -->
+@if(in_array(Auth::user()->level, ['admin', 'noc', 'sales', 'mitra']))
+<div class="modal" id="addOrderModal" style="z-index: 10006;">
+    <div class="modal-content" style="width: min(600px, 95vw); max-width: 600px;">
+        <div class="modal-header" style="background: var(--primary-gradient); color: white; padding: 20px 24px; display: flex; align-items: center; justify-content: space-between;">
+            <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.2rem; font-weight: 700; margin: 0;">Form Pemasangan Baru</h3>
+            <button class="modal-close" onclick="closeAddOrderModal()" style="color: white; border: none; background: none; font-size: 1.2rem; cursor: pointer;">&times;</button>
+        </div>
+        <div class="modal-body" style="padding: 24px; max-height: 80vh; overflow-y: auto;">
+            <form action="{{ route('admin.order_pemasangan.store') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="form-group">
+                    <label for="nik_modal">NIK Pelanggan *</label>
+                    <input type="text" id="nik_modal" name="nik" class="form-control" required placeholder="Masukkan NIK 16 digit" value="{{ old('nik') }}">
+                </div>
+
+                <div class="form-group">
+                    <label for="nama_modal">Nama Lengkap *</label>
+                    <input type="text" id="nama_modal" name="nama" class="form-control" required placeholder="Contoh: Budi Santoso" value="{{ old('nama') }}">
+                </div>
+
+                <div class="form-group">
+                    <label for="no_telp_modal">Nomor WhatsApp Pelanggan *</label>
+                    <input type="text" id="no_telp_modal" name="no_telp" class="form-control" required placeholder="Contoh: 081234567890" value="{{ old('no_telp') }}">
+                </div>
+
+                <div class="form-group">
+                    <label for="paket_order_modal">Paket Internet Yang Diminta *</label>
+                    <select id="paket_order_modal" name="paket" class="form-control" required>
+                        <option value="">-- Pilih Paket --</option>
+                        @foreach($pakets as $p)
+                            <option value="{{ $p->id_paket }}" {{ old('paket') == $p->id_paket ? 'selected' : '' }}>
+                                {{ $p->nama_paket }} (Rp {{ number_format($p->harga, 0, ',', '.') }} / Bulan)
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="alamat_ktp_modal">Alamat KTP *</label>
+                    <textarea id="alamat_ktp_modal" name="alamat_ktp" class="form-control" rows="2" required placeholder="Alamat lengkap sesuai KTP">{{ old('alamat_ktp') }}</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="alamat_pemasangan_modal">Alamat Pemasangan *</label>
+                    <textarea id="alamat_pemasangan_modal" name="alamat_pemasangan" class="form-control" rows="2" required placeholder="Alamat lengkap titik pemasangan">{{ old('alamat_pemasangan') }}</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="koordinat_pemasangan_modal">Koordinat Lokasi (Lat, Lng) *</label>
+                    <div style="display: flex; gap: 8px;">
+                        <input type="text" id="koordinat_pemasangan_modal" name="koordinat_pemasangan" class="form-control" required placeholder="Contoh: -7.12345, 110.12345" value="{{ old('koordinat_pemasangan') }}" style="min-width: 0; flex-grow: 1;">
+                        <button type="button" class="btn btn-info" onclick="getGPSCoordinatesModal()" style="flex-shrink: 0; padding: 0 16px;">
+                            <i class="fa-solid fa-location-crosshairs"></i> GPS HP
+                        </button>
+                    </div>
+                    <small style="color:var(--text-gray);">Gunakan tombol GPS HP saat berada di lokasi pemasangan secara presisi.</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="jadwal_pemasangan_modal">Permintaan Jadwal Pasang (Opsional)</label>
+                    <input type="datetime-local" id="jadwal_pemasangan_modal" name="jadwal_pemasangan" class="form-control" value="{{ old('jadwal_pemasangan') }}">
+                </div>
+
+                <div class="form-group">
+                    <label for="foto_ktp_modal">Upload Foto KTP *</label>
+                    <input type="file" id="foto_ktp_modal" name="foto_ktp" class="form-control" required accept="image/*">
+                    <small style="color:var(--text-gray);">Maksimal ukuran file 5 MB (Format: jpeg, png, webp).</small>
+                </div>
+
+                <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:24px;">
+                    <button type="button" class="btn btn-secondary" onclick="closeAddOrderModal()">Batal</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa-solid fa-paper-plane"></i> Kirim Order Pemasangan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@endif
 
 <!-- Modal Upload Dokumentasi & Selesai Pasang (Technician Only) -->
 <div class="modal" id="completeModal">
@@ -1959,5 +2030,27 @@
             this.submit();
         }
     });
+    function openAddOrderModal() {
+        document.getElementById('addOrderModal').classList.add('active');
+    }
+
+    function closeAddOrderModal() {
+        document.getElementById('addOrderModal').classList.remove('active');
+    }
+
+    function getGPSCoordinatesModal() {
+        if ('geolocation' in navigator) {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                var lat = position.coords.latitude.toFixed(6);
+                var lng = position.coords.longitude.toFixed(6);
+                document.getElementById('koordinat_pemasangan_modal').value = lat + ', ' + lng;
+            }, function (error) {
+                console.error("Gagal mendapatkan lokasi:", error);
+                alert("Gagal mendapatkan lokasi GPS HP: " + error.message);
+            }, { enableHighAccuracy: true });
+        } else {
+            alert("Geolocation tidak didukung oleh browser ini.");
+        }
+    }
 </script>
 @endsection

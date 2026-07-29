@@ -177,8 +177,8 @@ class AdminPelangganController extends Controller
             'no_telp' => 'required|string',
             'paket' => 'required|integer',
             'id_mikrotik' => 'required|integer',
-            'id_branch' => 'nullable|integer',
-            'id_sub_branch' => 'nullable|integer',
+            'id_branch' => 'nullable',
+            'id_sub_branch' => 'nullable',
         ]);
 
         // Cek limit maksimum pelanggan berdasarkan lisensi
@@ -198,12 +198,12 @@ class AdminPelangganController extends Controller
         $no_telp = htmlspecialchars(strip_tags($request->no_telp));
         $paketId = $request->paket;
         $id_mikrotik = intval($request->id_mikrotik);
-        $odpId = $request->odp;
-        $perangkatId = ($request->nama_perangkat !== 'NULL') ? $request->nama_perangkat : null;
+        $odpId = ($request->filled('odp') && $request->odp !== '' && $request->odp !== 'NULL') ? intval($request->odp) : null;
+        $perangkatId = ($request->nama_perangkat !== 'NULL' && $request->nama_perangkat !== '') ? $request->nama_perangkat : null;
         $ip_address = $request->ip_address;
         $mapping = $request->mapping;
-        $id_branch = $request->id_branch ? intval($request->id_branch) : null;
-        $id_sub_branch = $request->id_sub_branch ? intval($request->id_sub_branch) : null;
+        $id_branch = ($request->filled('id_branch') && $request->id_branch !== '') ? intval($request->id_branch) : null;
+        $id_sub_branch = ($request->filled('id_sub_branch') && $request->id_sub_branch !== '') ? intval($request->id_sub_branch) : null;
 
         $tgl_pemasangan = Carbon::now()->format('Y-m-d H:i');
 
@@ -351,8 +351,8 @@ class AdminPelangganController extends Controller
             'no_telp' => 'required|string',
             'paket' => 'required|integer',
             'id_mikrotik' => 'required|integer',
-            'id_branch' => 'nullable|integer',
-            'id_sub_branch' => 'nullable|integer',
+            'id_branch' => 'nullable',
+            'id_sub_branch' => 'nullable',
             'jatuh_tempo' => 'required|date',
         ]);
 
@@ -365,12 +365,12 @@ class AdminPelangganController extends Controller
         $no_telp = htmlspecialchars(strip_tags($request->no_telp));
         $paketId = $request->paket;
         $id_mikrotik = intval($request->id_mikrotik);
-        $odpId = $request->odp;
-        $perangkatId = ($request->nama_perangkat !== 'NULL') ? $request->nama_perangkat : null;
+        $odpId = ($request->filled('odp') && $request->odp !== '' && $request->odp !== 'NULL') ? intval($request->odp) : null;
+        $perangkatId = ($request->nama_perangkat !== 'NULL' && $request->nama_perangkat !== '') ? $request->nama_perangkat : null;
         $ip_address = $request->ip_address;
         $mapping = $request->mapping;
-        $id_branch = $request->id_branch ? intval($request->id_branch) : null;
-        $id_sub_branch = $request->id_sub_branch ? intval($request->id_sub_branch) : null;
+        $id_branch = ($request->filled('id_branch') && $request->id_branch !== '') ? intval($request->id_branch) : null;
+        $id_sub_branch = ($request->filled('id_sub_branch') && $request->id_sub_branch !== '') ? intval($request->id_sub_branch) : null;
         $new_jatuh_tempo = $request->jatuh_tempo . ' 23:59:00';
 
         // Update tb_pelanggan

@@ -28,8 +28,10 @@ class AdminOrderPemasanganController extends Controller
         $subBranches = [];
         $teknisis = [];
         $topTeknisi = [];
+        $salesList = [];
 
         if ($user->level === 'admin' || $user->level === 'noc') {
+            $salesList = User::where('level', '<>', 'user')->get();
             $mikrotiks = DB::table('tbl_mikrotik')->get();
             $odps = Odp::withCount('pelanggans')->get();
             $branches = DB::table('tb_branch')->get();
@@ -185,7 +187,7 @@ class AdminOrderPemasanganController extends Controller
         }
 
         return view('admin.order_pemasangan.index', compact(
-            'orders', 'pakets', 'mikrotiks', 'odps', 'branches', 'subBranches', 'teknisis', 'topTeknisi'
+            'orders', 'pakets', 'mikrotiks', 'odps', 'branches', 'subBranches', 'teknisis', 'topTeknisi', 'salesList'
         ));
     }
 
@@ -359,9 +361,9 @@ class AdminOrderPemasanganController extends Controller
             'no_telp' => 'required|string',
             'paket' => 'required|integer',
             'id_mikrotik' => 'required|integer',
-            'id_branch' => 'nullable|integer',
-            'id_sub_branch' => 'nullable|integer',
-            'odp' => 'nullable|integer',
+            'id_branch' => 'nullable',
+            'id_sub_branch' => 'nullable',
+            'odp' => 'nullable',
         ]);
 
         $order = OrderPemasangan::findOrFail($request->id_order);
@@ -371,9 +373,9 @@ class AdminOrderPemasanganController extends Controller
         $no_telp = htmlspecialchars(strip_tags($request->no_telp));
         $paketId = $request->paket;
         $id_mikrotik = intval($request->id_mikrotik);
-        $odpId = $request->odp;
-        $id_branch = $request->id_branch ? intval($request->id_branch) : null;
-        $id_sub_branch = $request->id_sub_branch ? intval($request->id_sub_branch) : null;
+        $odpId = ($request->filled('odp') && $request->odp !== '') ? intval($request->odp) : null;
+        $id_branch = ($request->filled('id_branch') && $request->id_branch !== '') ? intval($request->id_branch) : null;
+        $id_sub_branch = ($request->filled('id_sub_branch') && $request->id_sub_branch !== '') ? intval($request->id_sub_branch) : null;
 
         // Check if phone number already exists in pelanggan
         $existingPhone = Pelanggan::where('no_telp', $no_telp)->first();
@@ -647,5 +649,68 @@ class AdminOrderPemasanganController extends Controller
         $r = 6371000; // Earth radius in meters
         
         return $r * $c;
+    }
+
+    public function printReport(Request $request)
+    {
+        $user = Auth::user();
+        if ($user->level !== 'admin' && $user->level !== 'noc') {
+            abort(403, 'Akses ditolak.');
+        }
+
+        $id_teknisi = $request->id_teknisi;
+        $id_sales = $request->id_sales;
+        $status = $request->status;
+        $tgl_mulai = $request->tgl_mulai;
+        $tgl_selesai = $request->tgl_selesai;
+
+        $query = OrderPemasangan::with(['sales', 'teknisi', 'paketDetail']);
+
+        // Filter by technician
+        if ($id_teknisi !== 'semua') {
+            $query->where('id_teknisi', intval($id_teknisi));
+        }
+
+        // Filter by sales
+        if ($id_sales && $id_sales !== 'semua') {
+            $query->where('id_sales', intval($id_sales));
+        }
+
+        // Filter by status
+        if ($status !== 'semua') {
+            $query->where('status', $status);
+        }
+
+        // Filter by date range
+        if (!empty($tgl_mulai)) {
+            $query->whereDate('created_at', '>=', $tgl_mulai);
+        }
+        if (!empty($tgl_selesai)) {
+            $query->whereDate('created_at', '<=', $tgl_selesai);
+        }
+
+        $orders = $query->orderBy('id', 'desc')->get();
+
+        // Get technician name
+        $teknisiName = 'Semua Teknisi';
+        if ($id_teknisi !== 'semua') {
+            if ($id_teknisi == 0) {
+                $teknisiName = 'Semua Teknisi (Unassigned)';
+            } else {
+                $tek = User::find($id_teknisi);
+                $teknisiName = $tek->nama_user ?? 'Teknisi Tidak Dikenal';
+            }
+        }
+
+        // Get sales name
+        $salesName = 'Semua Sales';
+        if ($id_sales && $id_sales !== 'semua') {
+            $salesUser = User::find($id_sales);
+            $salesName = $salesUser->nama_user ?? 'Sales Tidak Dikenal';
+        }
+
+        $profile = DB::table('tb_profile')->where('id_profile', 1)->first();
+
+        return view('admin.order_pemasangan.print', compact('orders', 'teknisiName', 'salesName', 'status', 'tgl_mulai', 'tgl_selesai', 'profile'));
     }
 }
