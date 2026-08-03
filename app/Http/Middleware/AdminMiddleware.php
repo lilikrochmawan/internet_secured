@@ -45,8 +45,12 @@ class AdminMiddleware
             $menuKey = 'order_pemasangan';
         } elseif (preg_match('/^tr069/', $subPath)) {
             $menuKey = 'tr069';
+        } elseif (preg_match('/^odc\/coordinates/', $subPath)) {
+            $menuKey = 'mapping';
         } elseif (preg_match('/^odc/', $subPath)) {
             $menuKey = 'odc';
+        } elseif (preg_match('/^odp\/coordinates/', $subPath)) {
+            $menuKey = 'mapping';
         } elseif (preg_match('/^odp/', $subPath)) {
             $menuKey = 'odp';
         } elseif (preg_match('/^mapping/', $subPath)) {
