@@ -332,6 +332,16 @@
     .select2-container {
         width: 100% !important;
     }
+    #filterForm .select2-container {
+        width: 220px !important;
+    }
+    #filterForm .select2-container--default .select2-selection--single {
+        height: 40px !important;
+        border-radius: 10px !important;
+    }
+    #filterForm .select2-container--default .select2-selection--single .select2-selection--arrow {
+        height: 38px !important;
+    }
 </style>
 @endsection
 
@@ -376,16 +386,16 @@
     <!-- Search and Row Limiter & Branch Filters -->
     <div style="display:flex; justify-content:space-between; align-items:center; margin-top: 10px; margin-bottom:16px; flex-wrap:wrap; gap:12px;">
         <form method="GET" action="{{ route('admin.pelanggan.index') }}" style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin:0;" id="filterForm">
-            <select name="branch_id" id="filter_branch" class="form-control" style="width: auto; height: 40px; border-radius: 10px; font-size: 0.85rem; margin: 0;" onchange="filterSubBranches(this.value, 'filter_sub_branch'); this.form.submit();">
+            <select name="branch_id" id="filter_branch" class="form-control">
                 <option value="">-- Semua Branch --</option>
                 @foreach($branches as $b)
                     <option value="{{ $b->id }}" {{ request('branch_id') == $b->id ? 'selected' : '' }}>{{ $b->nama_branch }}</option>
                 @endforeach
             </select>
-            <select name="sub_branch_id" id="filter_sub_branch" class="form-control" style="width: auto; height: 40px; border-radius: 10px; font-size: 0.85rem; margin: 0;" onchange="this.form.submit();">
+            <select name="sub_branch_id" id="filter_sub_branch" class="form-control">
                 <option value="">-- Semua Sub-Branch --</option>
                 @foreach($subBranches as $s)
-                    <option value="{{ $s->id }}" data-branch="{{ $s->id_branch }}" {{ request('sub_branch_id') == $s->id ? 'selected' : '' }} style="{{ request('branch_id') && request('branch_id') != $s->id_branch ? 'display:none;' : '' }}">{{ $s->nama_sub_branch }}</option>
+                    <option value="{{ $s->id }}" data-branch="{{ $s->id_branch }}" {{ request('sub_branch_id') == $s->id ? 'selected' : '' }}>{{ $s->nama_sub_branch }}</option>
                 @endforeach
             </select>
             @if(request('branch_id') || request('sub_branch_id'))
@@ -860,6 +870,7 @@
 <script>
     let allSubBranchOptionsAdd = [];
     let allSubBranchOptionsEdit = [];
+    let allSubBranchOptionsFilter = [];
 
     document.addEventListener("DOMContentLoaded", function () {
         setupTablePagination("#pelangganTable", "#pelangganPagination", "#tableLimit", "#tableSearch");
@@ -882,12 +893,44 @@
                 branch: opt.getAttribute('data-branch')
             });
         });
+        document.querySelectorAll('#filter_sub_branch option').forEach(opt => {
+            allSubBranchOptionsFilter.push({
+                value: opt.value,
+                text: opt.textContent,
+                branch: opt.getAttribute('data-branch')
+            });
+        });
 
         // Initialize Select2 with dynamic configurations
         $('#add_branch').select2({ placeholder: "-- Pilih Branch --", allowClear: true, width: '100%' });
         $('#add_sub_branch').select2({ placeholder: "-- Pilih Sub-Branch --", allowClear: true, width: '100%' });
         $('#edit_branch').select2({ placeholder: "-- Pilih Branch --", allowClear: true, width: '100%' });
         $('#edit_sub_branch').select2({ placeholder: "-- Pilih Sub-Branch --", allowClear: true, width: '100%' });
+
+        $('#filter_branch').select2({ placeholder: "-- Semua Branch --", allowClear: true, width: '220px' });
+        $('#filter_sub_branch').select2({ placeholder: "-- Semua Sub-Branch --", allowClear: true, width: '220px' });
+
+        // Filter sub-branches on page load if branch is already selected
+        const activeBranchId = $('#filter_branch').val();
+        if (activeBranchId) {
+            filterSubBranches(activeBranchId, 'filter_sub_branch');
+            const urlParams = new URLSearchParams(window.location.search);
+            const activeSubBranchId = urlParams.get('sub_branch_id');
+            if (activeSubBranchId) {
+                $('#filter_sub_branch').val(activeSubBranchId).trigger('change.select2');
+            }
+        }
+
+        // Handle filter form submission on user selection
+        $('#filter_branch').on('select2:select select2:unselect', function (e) {
+            const val = $(this).val();
+            filterSubBranches(val, 'filter_sub_branch');
+            $('#filterForm').submit();
+        });
+
+        $('#filter_sub_branch').on('select2:select select2:unselect', function (e) {
+            $('#filterForm').submit();
+        });
     });
 
     // Modal Management
@@ -961,7 +1004,14 @@
         select.empty();
         
         let visibleCount = 0;
-        const originalOptions = (targetSelectId === 'add_sub_branch') ? allSubBranchOptionsAdd : allSubBranchOptionsEdit;
+        let originalOptions;
+        if (targetSelectId === 'add_sub_branch') {
+            originalOptions = allSubBranchOptionsAdd;
+        } else if (targetSelectId === 'edit_sub_branch') {
+            originalOptions = allSubBranchOptionsEdit;
+        } else {
+            originalOptions = allSubBranchOptionsFilter;
+        }
         
         // Filter and append
         originalOptions.forEach(opt => {
@@ -974,22 +1024,25 @@
             }
         });
         
-        const label = document.getElementById(targetSelectId).parentElement.querySelector('label');
+        const parentElem = document.getElementById(targetSelectId).parentElement;
+        const label = parentElem ? parentElem.querySelector('label') : null;
         const nativeSelect = document.getElementById(targetSelectId);
 
         // If there are no sub-branches for this branch, make it optional
         if (visibleCount === 0 && branchId !== '') {
-            nativeSelect.required = false;
+            if (nativeSelect) nativeSelect.required = false;
             if (label) {
                 label.innerHTML = 'Sub-Branch <span style="font-size: 0.8rem; color: #94a3b8; font-weight: normal;">(Opsional/Tidak Ada)</span>';
             }
-            select.find('option[value=""]').text('-- Tidak Ada Sub-Branch --');
+            select.find('option[value=""]').text(targetSelectId === 'filter_sub_branch' ? '-- Semua Sub-Branch --' : '-- Tidak Ada Sub-Branch --');
         } else {
-            nativeSelect.required = true;
+            if (targetSelectId !== 'filter_sub_branch') {
+                if (nativeSelect) nativeSelect.required = true;
+            }
             if (label) {
                 label.innerHTML = 'Sub-Branch <span style="color: #ef4444;">*</span>';
             }
-            select.find('option[value=""]').text('-- Pilih Sub-Branch --');
+            select.find('option[value=""]').text(targetSelectId === 'filter_sub_branch' ? '-- Semua Sub-Branch --' : '-- Pilih Sub-Branch --');
         }
         
         // Re-trigger Select2 change without recursively calling filterSubBranches

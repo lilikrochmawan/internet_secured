@@ -489,37 +489,6 @@ class AdminOrderPemasanganController extends Controller
                     }
                 }
             }
-
-            // 5. WhatsApp notification if enabled
-            $notifikasi = DB::table('tbl_npemasangan')->first();
-            if ($notifikasi && $notifikasi->status_notif == 'aktif') {
-                $paket = Paket::find($paketId);
-                $namaPaket = $paket ? $paket->nama_paket : '';
-
-                $pesan = $notifikasi->pesan_notif;
-                $pesan = str_replace('$nama', $order->nama, $pesan);
-                $pesan = str_replace('$alamat', $order->alamat_pemasangan, $pesan);
-                $pesan = str_replace('$no_telp', $no_telp, $pesan);
-                $pesan = str_replace('$paket', $namaPaket, $pesan);
-                $pesan = str_replace('$tgl_pemasangan', $tgl_pemasangan, $pesan);
-                $pesan = str_replace('$username', $username, $pesan);
-                $pesan = str_replace('$password', $password, $pesan);
-
-                $tokenInfo = DB::table('tbl_token')->where('id_token', 1)->where('status', 'aktif')->first();
-                if ($tokenInfo && !empty($tokenInfo->token)) {
-                    try {
-                        \Illuminate\Support\Facades\Http::withHeaders([
-                            'Authorization' => $tokenInfo->token
-                        ])->asForm()->post('https://api.fonnte.com/send', [
-                            'target' => $no_telp,
-                            'message' => $pesan,
-                            'countryCode' => '62'
-                        ]);
-                    } catch (\Exception $e) {
-                        \Illuminate\Support\Facades\Log::error('Fonnte API Error Order Approved: ' . $e->getMessage());
-                    }
-                }
-            }
         });
 
         return redirect()->route('admin.order_pemasangan.index')->with('success', 'Order berhasil disetujui (ACC) dan data pelanggan telah terdaftar!');
@@ -615,6 +584,46 @@ class AdminOrderPemasanganController extends Controller
         $order->update([
             'status' => 'completed',
         ]);
+
+        // Send WhatsApp notification after confirmation if enabled
+        try {
+            $pelanggan = DB::table('tb_pelanggan')->where('nik', $order->nik)->first();
+            if ($pelanggan) {
+                $userAccount = DB::table('tb_user')->where('id_pelanggan', $pelanggan->id_pelanggan)->first();
+                $notifikasi = DB::table('tbl_npemasangan')->first();
+                if ($notifikasi && $notifikasi->status_notif == 'aktif') {
+                    $paket = DB::table('tb_paket')->where('id_paket', $pelanggan->paket)->first();
+                    $namaPaket = $paket ? $paket->nama_paket : '';
+
+                    $username = $userAccount ? $userAccount->username : '';
+                    $password = $userAccount ? $userAccount->password : '';
+                    $no_telp = $pelanggan->no_telp;
+                    $tgl_pemasangan = $pelanggan->tgl_pemasangan;
+
+                    $pesan = $notifikasi->pesan_notif;
+                    $pesan = str_replace('$nama', $order->nama, $pesan);
+                    $pesan = str_replace('$alamat', $order->alamat_pemasangan, $pesan);
+                    $pesan = str_replace('$no_telp', $no_telp, $pesan);
+                    $pesan = str_replace('$paket', $namaPaket, $pesan);
+                    $pesan = str_replace('$tgl_pemasangan', $tgl_pemasangan, $pesan);
+                    $pesan = str_replace('$username', $username, $pesan);
+                    $pesan = str_replace('$password', $password, $pesan);
+
+                    $tokenInfo = DB::table('tbl_token')->where('id_token', 1)->where('status', 'aktif')->first();
+                    if ($tokenInfo && !empty($tokenInfo->token)) {
+                        \Illuminate\Support\Facades\Http::withHeaders([
+                            'Authorization' => $tokenInfo->token
+                        ])->asForm()->post('https://api.fonnte.com/send', [
+                            'target' => $no_telp,
+                            'message' => $pesan,
+                            'countryCode' => '62'
+                        ]);
+                    }
+                }
+            }
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Fonnte API Error Order Confirmed: ' . $e->getMessage());
+        }
 
         return redirect()->route('admin.order_pemasangan.index')->with('success', 'Pemasangan berhasil dikonfirmasi selesai dan aktif!');
     }
@@ -712,5 +721,135 @@ class AdminOrderPemasanganController extends Controller
         $profile = DB::table('tb_profile')->where('id_profile', 1)->first();
 
         return view('admin.order_pemasangan.print', compact('orders', 'teknisiName', 'salesName', 'status', 'tgl_mulai', 'tgl_selesai', 'profile'));
+    }
+
+    public function reject(Request $request)
+    {
+        $request->validate([
+            'id_order' => 'required|integer|exists:tbl_order_pemasangan,id',
+            'alasan_ditolak' => 'required|string',
+        ]);
+
+        $order = OrderPemasangan::findOrFail($request->id_order);
+        $order->update([
+            'status' => 'rejected',
+            'alasan_ditolak' => htmlspecialchars(strip_tags($request->alasan_ditolak)),
+        ]);
+
+        return redirect()->route('admin.order_pemasangan.index')->with('success', 'Order pemasangan berhasil ditolak!');
+    }
+
+    public function cancel(Request $request)
+    {
+        $request->validate([
+            'id_order' => 'required|integer|exists:tbl_order_pemasangan,id',
+            'alasan_batal' => 'required|string',
+        ]);
+
+        $order = OrderPemasangan::findOrFail($request->id_order);
+
+        // Transaction DB to cancel installation and delete the created customer & Mikrotik secret if exists
+        DB::transaction(function() use ($order, $request) {
+            $order->update([
+                'status' => 'cancelled',
+                'alasan_batal' => htmlspecialchars(strip_tags($request->alasan_batal)),
+            ]);
+
+            // Try to find registered customer by NIK
+            $pelanggan = DB::table('tb_pelanggan')->where('nik', $order->nik)->first();
+            if ($pelanggan) {
+                $id = $pelanggan->id_pelanggan;
+                $user = DB::table('tb_user')->where('id_pelanggan', $id)->first();
+
+                // Delete from Mikrotik if enabled
+                $checkUser = DB::table('tbl_penggunamikrotik')->first();
+                if ($checkUser && $checkUser->addppsecret == 'ya' && $user) {
+                    $mikrotik = DB::table('tbl_mikrotik')->where('id_mikrotik', $pelanggan->id_mikrotik)->first();
+                    if ($mikrotik) {
+                        try {
+                            require_once base_path('include/routeros_api.php');
+                            $API = new \RouterosAPI();
+                            if ($API->connect($mikrotik->ip, $mikrotik->username, $mikrotik->password)) {
+                                $API->write('/ppp/secret/print', false);
+                                $API->write('?name=' . $user->username);
+                                $secrets = $API->read();
+                                if (!empty($secrets)) {
+                                    $API->write('/ppp/secret/remove', false);
+                                    $API->write('=.id=' . $secrets[0]['.id']);
+                                    $API->read();
+                                }
+                                $API->disconnect();
+                            }
+                        } catch (\Exception $e) {
+                            \Illuminate\Support\Facades\Log::error("Mikrotik disconnect on cancel error: " . $e->getMessage());
+                        }
+                    }
+                }
+
+                // Delete from DB tables
+                DB::table('tb_user')->where('id_pelanggan', $id)->delete();
+                DB::table('tb_pelanggan')->where('id_pelanggan', $id)->delete();
+            }
+        });
+
+        return redirect()->route('admin.order_pemasangan.index')->with('success', 'Pemasangan berhasil dibatalkan dan data pelanggan terkait telah dibersihkan!');
+    }
+
+    public function pendingOrder(Request $request)
+    {
+        $request->validate([
+            'id_order' => 'required|integer|exists:tbl_order_pemasangan,id',
+            'alasan_pending' => 'required|string',
+        ]);
+
+        $order = OrderPemasangan::findOrFail($request->id_order);
+
+        // Transaction DB to set status back to pending, clear other reasons, and delete the created customer & Mikrotik secret if exists
+        DB::transaction(function() use ($order, $request) {
+            $order->update([
+                'status' => 'pending',
+                'alasan_pending' => htmlspecialchars(strip_tags($request->alasan_pending)),
+                'alasan_ditolak' => null,
+                'alasan_batal' => null,
+            ]);
+
+            // Try to find registered customer by NIK
+            $pelanggan = DB::table('tb_pelanggan')->where('nik', $order->nik)->first();
+            if ($pelanggan) {
+                $id = $pelanggan->id_pelanggan;
+                $user = DB::table('tb_user')->where('id_pelanggan', $id)->first();
+
+                // Delete from Mikrotik if enabled
+                $checkUser = DB::table('tbl_penggunamikrotik')->first();
+                if ($checkUser && $checkUser->addppsecret == 'ya' && $user) {
+                    $mikrotik = DB::table('tbl_mikrotik')->where('id_mikrotik', $pelanggan->id_mikrotik)->first();
+                    if ($mikrotik) {
+                        try {
+                            require_once base_path('include/routeros_api.php');
+                            $API = new \RouterosAPI();
+                            if ($API->connect($mikrotik->ip, $mikrotik->username, $mikrotik->password)) {
+                                $API->write('/ppp/secret/print', false);
+                                $API->write('?name=' . $user->username);
+                                $secrets = $API->read();
+                                if (!empty($secrets)) {
+                                    $API->write('/ppp/secret/remove', false);
+                                    $API->write('=.id=' . $secrets[0]['.id']);
+                                    $API->read();
+                                }
+                                $API->disconnect();
+                            }
+                        } catch (\Exception $e) {
+                            \Illuminate\Support\Facades\Log::error("Mikrotik disconnect on pending error: " . $e->getMessage());
+                        }
+                    }
+                }
+
+                // Delete from DB tables
+                DB::table('tb_user')->where('id_pelanggan', $id)->delete();
+                DB::table('tb_pelanggan')->where('id_pelanggan', $id)->delete();
+            }
+        });
+
+        return redirect()->route('admin.order_pemasangan.index')->with('success', 'Order pemasangan berhasil dipending (ditunda) dan data pelanggan terkait telah dibersihkan!');
     }
 }

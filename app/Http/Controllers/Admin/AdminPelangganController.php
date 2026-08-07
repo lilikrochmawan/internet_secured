@@ -171,14 +171,16 @@ class AdminPelangganController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'username' => 'required|string',
-            'password' => 'required|string',
-            'nama' => 'required|string',
-            'no_telp' => 'required|string',
+            'username' => 'required|string|max:100',
+            'password' => 'required|string|max:100',
+            'nama' => 'required|string|max:255',
+            'no_telp' => 'required|string|max:20',
             'paket' => 'required|integer',
             'id_mikrotik' => 'required|integer',
             'id_branch' => 'nullable',
             'id_sub_branch' => 'nullable',
+            'nik' => 'nullable|string|max:18',
+            'alamat' => 'nullable|string|max:255',
         ]);
 
         // Cek limit maksimum pelanggan berdasarkan lisensi
@@ -261,99 +263,112 @@ class AdminPelangganController extends Controller
         $newId = $lastId + 1;
         $kode_pelanggan = "WNG03100" . $newId;
 
-        // Insert into tb_pelanggan
-        $pelangganId = DB::table('tb_pelanggan')->insertGetId([
-            'nik' => $nik,
-            'kode_pelanggan' => $kode_pelanggan,
-            'nama_pelanggan' => $nama,
-            'alamat' => $alamat,
-            'no_telp' => $no_telp,
-            'paket' => $paketId,
-            'ip_address' => $ip_address,
-            'tgl_pemasangan' => $tgl_pemasangan,
-            'jatuh_tempo' => $tgl_jatuh_tempo,
-            'location' => $mapping,
-            'id_perangkat' => $perangkatId,
-            'odp' => ($odpId !== 'NULL') ? $odpId : null,
-            'id_mikrotik' => $id_mikrotik,
-            'id_branch' => $id_branch,
-            'id_sub_branch' => $id_sub_branch,
-        ]);
+        try {
+            DB::transaction(function() use (
+                $nik, $kode_pelanggan, $nama, $alamat, $no_telp, $paketId, $ip_address,
+                $tgl_pemasangan, $tgl_jatuh_tempo, $mapping, $perangkatId, $odpId, $id_mikrotik,
+                $id_branch, $id_sub_branch, $username, $password
+            ) {
+                // Insert into tb_pelanggan
+                $pelangganId = DB::table('tb_pelanggan')->insertGetId([
+                    'nik' => $nik,
+                    'kode_pelanggan' => $kode_pelanggan,
+                    'nama_pelanggan' => $nama,
+                    'alamat' => $alamat,
+                    'no_telp' => $no_telp,
+                    'paket' => $paketId,
+                    'ip_address' => $ip_address,
+                    'tgl_pemasangan' => $tgl_pemasangan,
+                    'jatuh_tempo' => $tgl_jatuh_tempo,
+                    'location' => $mapping,
+                    'id_perangkat' => $perangkatId,
+                    'odp' => ($odpId !== 'NULL') ? $odpId : null,
+                    'id_mikrotik' => $id_mikrotik,
+                    'id_branch' => $id_branch,
+                    'id_sub_branch' => $id_sub_branch,
+                ]);
 
-        \Illuminate\Support\Facades\Log::info("Staff [" . auth()->user()->nama_user . "] (level: " . auth()->user()->level . ") MENAMBAHKAN pelanggan baru: [" . $nama . "] dengan kode [" . $kode_pelanggan . "].");
+                \Illuminate\Support\Facades\Log::info("Staff [" . auth()->user()->nama_user . "] (level: " . auth()->user()->level . ") MENAMBAHKAN pelanggan baru: [" . $nama . "] dengan kode [" . $kode_pelanggan . "].");
 
-        // Insert into tb_user
-        DB::table('tb_user')->insert([
-            'username' => $username,
-            'nama_user' => $nama,
-            'password' => $password, // Plain text for legacy support
-            'level' => 'user',
-            'foto' => 'admin.png',
-            'id_pelanggan' => $pelangganId,
-        ]);
+                // Insert into tb_user
+                DB::table('tb_user')->insert([
+                    'username' => $username,
+                    'nama_user' => $nama,
+                    'password' => $password, // Plain text for legacy support
+                    'level' => 'user',
+                    'foto' => 'admin.png',
+                    'id_pelanggan' => $pelangganId,
+                ]);
 
-        // Sync with Mikrotik if enabled
-        $checkUser = DB::table('tbl_penggunamikrotik')->first();
-        if ($checkUser && $checkUser->addppsecret == 'ya') {
-            $paket = Paket::find($paketId);
-            $id_profile = $paket ? $paket->id_pmikrotik : '';
+                // Sync with Mikrotik if enabled
+                $checkUser = DB::table('tbl_penggunamikrotik')->first();
+                if ($checkUser && $checkUser->addppsecret == 'ya') {
+                    $paket = Paket::find($paketId);
+                    $id_profile = $paket ? $paket->id_pmikrotik : '';
 
-            $mikrotik = DB::table('tbl_mikrotik')->where('id_mikrotik', $id_mikrotik)->first();
-            if ($mikrotik) {
-                require_once base_path('include/routeros_api.php');
-                $API = new \RouterosAPI();
-                if ($API->connect($mikrotik->ip, $mikrotik->username, $mikrotik->password)) {
-                    $API->comm("/ppp/secret/add", [
-                        "name" => $username,
-                        "password" => $password,
-                        "service" => 'pppoe',
-                        "profile" => $id_profile,
+                    $mikrotik = DB::table('tbl_mikrotik')->where('id_mikrotik', $id_mikrotik)->first();
+                    if ($mikrotik) {
+                        require_once base_path('include/routeros_api.php');
+                        $API = new \RouterosAPI();
+                        if ($API->connect($mikrotik->ip, $mikrotik->username, $mikrotik->password)) {
+                            $API->comm("/ppp/secret/add", [
+                                "name" => $username,
+                                "password" => $password,
+                                "service" => 'pppoe',
+                                "profile" => $id_profile,
+                            ]);
+                            $API->disconnect();
+                        }
+                    }
+                }
+            });
+
+            // WhatsApp notification if enabled (outside transaction so it doesn't slow down/block DB transaction)
+            $notifikasi = DB::table('tbl_npemasangan')->first();
+            if ($notifikasi && $notifikasi->status_notif == 'aktif') {
+                $paket = Paket::find($paketId);
+                $namaPaket = $paket ? $paket->nama_paket : '';
+
+                $pesan = $notifikasi->pesan_notif;
+                $pesan = str_replace('$nama', $nama, $pesan);
+                $pesan = str_replace('$alamat', $alamat, $pesan);
+                $pesan = str_replace('$no_telp', $no_telp, $pesan);
+                $pesan = str_replace('$paket', $namaPaket, $pesan);
+                $pesan = str_replace('$tgl_pemasangan', $tgl_pemasangan, $pesan);
+                $pesan = str_replace('$username', $username, $pesan);
+                $pesan = str_replace('$password', $password, $pesan);
+
+                $tokenInfo = DB::table('tbl_token')->where('id_token', 1)->where('status', 'aktif')->first();
+                if ($tokenInfo) {
+                    Http::withHeaders([
+                        'Authorization' => $tokenInfo->token
+                    ])->asForm()->post('https://api.fonnte.com/send', [
+                        'target' => $no_telp,
+                        'message' => $pesan,
                     ]);
-                    $API->disconnect();
                 }
             }
+
+            return redirect()->route('admin.pelanggan.index')->with('success', 'Pelanggan berhasil ditambahkan!');
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error("Error saat menyimpan pelanggan baru: " . $e->getMessage());
+            return back()->withErrors(['error' => 'Gagal menyimpan data pelanggan: ' . $e->getMessage()])->withInput();
         }
-
-        // WhatsApp notification if enabled
-        $notifikasi = DB::table('tbl_npemasangan')->first();
-        if ($notifikasi && $notifikasi->status_notif == 'aktif') {
-            $paket = Paket::find($paketId);
-            $namaPaket = $paket ? $paket->nama_paket : '';
-
-            $pesan = $notifikasi->pesan_notif;
-            $pesan = str_replace('$nama', $nama, $pesan);
-            $pesan = str_replace('$alamat', $alamat, $pesan);
-            $pesan = str_replace('$no_telp', $no_telp, $pesan);
-            $pesan = str_replace('$paket', $namaPaket, $pesan);
-            $pesan = str_replace('$tgl_pemasangan', $tgl_pemasangan, $pesan);
-            $pesan = str_replace('$username', $username, $pesan);
-            $pesan = str_replace('$password', $password, $pesan);
-
-            $tokenInfo = DB::table('tbl_token')->where('id_token', 1)->where('status', 'aktif')->first();
-            if ($tokenInfo) {
-                Http::withHeaders([
-                    'Authorization' => $tokenInfo->token
-                ])->asForm()->post('https://api.fonnte.com/send', [
-                    'target' => $no_telp,
-                    'message' => $pesan,
-                ]);
-            }
-        }
-
-        return redirect()->route('admin.pelanggan.index')->with('success', 'Pelanggan berhasil ditambahkan!');
     }
 
     public function update(Request $request)
     {
         $request->validate([
             'id_pelanggan' => 'required|integer',
-            'nama_pelanggan' => 'required|string',
-            'no_telp' => 'required|string',
+            'nama_pelanggan' => 'required|string|max:255',
+            'no_telp' => 'required|string|max:20',
             'paket' => 'required|integer',
             'id_mikrotik' => 'required|integer',
             'id_branch' => 'nullable',
             'id_sub_branch' => 'nullable',
             'jatuh_tempo' => 'required|date',
+            'nik' => 'nullable|string|max:18',
+            'alamat' => 'nullable|string|max:255',
         ]);
 
         $id = $request->id_pelanggan;
@@ -373,150 +388,161 @@ class AdminPelangganController extends Controller
         $id_sub_branch = ($request->filled('id_sub_branch') && $request->id_sub_branch !== '') ? intval($request->id_sub_branch) : null;
         $new_jatuh_tempo = $request->jatuh_tempo . ' 23:59:00';
 
-        // Update tb_pelanggan
-        DB::table('tb_pelanggan')->where('id_pelanggan', $id)->update([
-            'nik' => $nik,
-            'nama_pelanggan' => $nama,
-            'alamat' => $alamat,
-            'no_telp' => $no_telp,
-            'paket' => $paketId,
-            'ip_address' => $ip_address,
-            'location' => $mapping,
-            'id_perangkat' => $perangkatId,
-            'odp' => ($odpId !== 'NULL') ? $odpId : null,
-            'id_mikrotik' => $id_mikrotik,
-            'id_branch' => $id_branch,
-            'id_sub_branch' => $id_sub_branch,
-            'jatuh_tempo' => $new_jatuh_tempo,
-        ]);
+        try {
+            $mikrotikMessage = '';
 
-        \Illuminate\Support\Facades\Log::info("Staff [" . auth()->user()->nama_user . "] (level: " . auth()->user()->level . ") MENGEDIT pelanggan [" . $pelanggan->nama_pelanggan . "] (kode: " . $pelanggan->kode_pelanggan . ") -> Nama baru: [" . $nama . "], Alamat: [" . $alamat . "], No Telp: [" . $no_telp . "], Paket ID: [" . $paketId . "], Jatuh Tempo: [" . $new_jatuh_tempo . "].");
+            DB::transaction(function() use (
+                $id, $nik, $nama, $alamat, $no_telp, $paketId, $ip_address, $mapping, $perangkatId,
+                $odpId, $id_mikrotik, $id_branch, $id_sub_branch, $new_jatuh_tempo, $pelanggan, &$mikrotikMessage
+            ) {
+                // Update tb_pelanggan
+                DB::table('tb_pelanggan')->where('id_pelanggan', $id)->update([
+                    'nik' => $nik,
+                    'nama_pelanggan' => $nama,
+                    'alamat' => $alamat,
+                    'no_telp' => $no_telp,
+                    'paket' => $paketId,
+                    'ip_address' => $ip_address,
+                    'location' => $mapping,
+                    'id_perangkat' => $perangkatId,
+                    'odp' => ($odpId !== 'NULL') ? $odpId : null,
+                    'id_mikrotik' => $id_mikrotik,
+                    'id_branch' => $id_branch,
+                    'id_sub_branch' => $id_sub_branch,
+                    'jatuh_tempo' => $new_jatuh_tempo,
+                ]);
 
-        // Update unpaid bills' due dates to match the new due day
-        $unpaidBills = DB::table('tb_tagihan')
-            ->where('id_pelanggan', $id)
-            ->whereNull('status_bayar')
-            ->get();
+                \Illuminate\Support\Facades\Log::info("Staff [" . auth()->user()->nama_user . "] (level: " . auth()->user()->level . ") MENGEDIT pelanggan [" . $pelanggan->nama_pelanggan . "] (kode: " . $pelanggan->kode_pelanggan . ") -> Nama baru: [" . $nama . "], Alamat: [" . $alamat . "], No Telp: [" . $no_telp . "], Paket ID: [" . $paketId . "], Jatuh Tempo: [" . $new_jatuh_tempo . "].");
 
-        $new_due_day = (int) date('d', strtotime($new_jatuh_tempo));
+                // Update unpaid bills' due dates to match the new due day
+                $unpaidBills = DB::table('tb_tagihan')
+                    ->where('id_pelanggan', $id)
+                    ->whereNull('status_bayar')
+                    ->get();
 
-        foreach ($unpaidBills as $bill) {
-            if ($bill->jatuh_tempo) {
-                $bill_date = new \DateTime($bill->jatuh_tempo);
-                $bill_year = $bill_date->format('Y');
-                $bill_month = $bill_date->format('m');
-                
-                $days_in_month = (int) date('t', strtotime($bill_year . '-' . $bill_month . '-01'));
-                $adjusted_day = ($new_due_day > $days_in_month) ? $days_in_month : $new_due_day;
-                
-                $new_bill_due = sprintf('%04d-%02d-%02d 23:59:00', $bill_year, $bill_month, $adjusted_day);
-                
-                DB::table('tb_tagihan')
-                    ->where('id_tagihan', $bill->id_tagihan)
-                    ->update(['jatuh_tempo' => $new_bill_due]);
-            }
-        }
+                $new_due_day = (int) date('d', strtotime($new_jatuh_tempo));
 
-        // Update tb_user name associated
-        DB::table('tb_user')->where('id_pelanggan', $id)->update([
-            'nama_user' => $nama,
-        ]);
-
-        // Sync package change to Mikrotik if package changed and Mikrotik integration is active
-        $mikrotikMessage = '';
-        $oldPaketId = $pelanggan->paket;
-        $paketChanged = intval($oldPaketId) !== intval($paketId);
-
-        if ($paketChanged) {
-            $user = User::where('id_pelanggan', $id)->first();
-            $checkUser = DB::table('tbl_penggunamikrotik')->first();
-            if ($checkUser && $checkUser->addppsecret == 'ya' && $user) {
-                $paket = Paket::find($paketId);
-                $id_profile = $paket ? $paket->id_pmikrotik : '';
-
-                if ($id_profile) {
-                    $mikrotik = DB::table('tbl_mikrotik')->where('id_mikrotik', $id_mikrotik)->first();
-                    if ($mikrotik) {
-                        require_once base_path('include/routeros_api.php');
-                        $API = new \RouterosAPI();
-                        if ($API->connect($mikrotik->ip, $mikrotik->username, $mikrotik->password)) {
-                            // 1. Update secret profile
-                            $secrets = $API->comm('/ppp/secret/print', ['?name' => $user->username]);
-                            if (!empty($secrets)) {
-                                $API->comm('/ppp/secret/set', [
-                                    '.id' => $secrets[0]['.id'],
-                                    'profile' => $id_profile
-                                ]);
-                            } else {
-                                $API->comm('/ppp/secret/add', [
-                                    'name' => $user->username,
-                                    'password' => $user->password,
-                                    'service' => 'pppoe',
-                                    'profile' => $id_profile
-                                ]);
-                            }
-
-                            // 2. Disconnect active connection
-                            $activeConnections = $API->comm('/ppp/active/print', ['?name' => $user->username]);
-                            if (!empty($activeConnections)) {
-                                foreach ($activeConnections as $connection) {
-                                    $API->comm('/ppp/active/remove', [
-                                        '.id' => $connection['.id']
-                                    ]);
-                                }
-                            }
-                            $API->disconnect();
-                        } else {
-                            $mikrotikMessage = ' Namun, gagal terhubung ke router Mikrotik untuk memperbarui profil PPPoE.';
-                        }
-                    } else {
-                        $mikrotikMessage = ' Namun, konfigurasi router Mikrotik tidak ditemukan.';
+                foreach ($unpaidBills as $bill) {
+                    if ($bill->jatuh_tempo) {
+                        $bill_date = new \DateTime($bill->jatuh_tempo);
+                        $bill_year = $bill_date->format('Y');
+                        $bill_month = $bill_date->format('m');
+                        
+                        $days_in_month = (int) date('t', strtotime($bill_year . '-' . $bill_month . '-01'));
+                        $adjusted_day = ($new_due_day > $days_in_month) ? $days_in_month : $new_due_day;
+                        
+                        $new_bill_due = sprintf('%04d-%02d-%02d 23:59:00', $bill_year, $bill_month, $adjusted_day);
+                        
+                        DB::table('tb_tagihan')
+                            ->where('id_tagihan', $bill->id_tagihan)
+                            ->update(['jatuh_tempo' => $new_bill_due]);
                     }
                 }
-            }
 
-            // Adjust unpaid monthly bill/invoice for the current month
-            $currentMonth = date('mY');
-            $unpaidTagihan = DB::table('tb_tagihan')
-                ->where('id_pelanggan', $id)
-                ->where('bulan_tahun', $currentMonth)
-                ->where(function ($q) {
-                    $q->whereNull('status_bayar')
-                      ->orWhereIn('status_bayar', [0, '0', 'belum', '']);
-                })
-                ->where(function ($q) {
-                    $q->where('manual_invoice', 0)
-                      ->orWhereNull('manual_invoice');
-                })
-                ->first();
+                // Update tb_user name associated
+                DB::table('tb_user')->where('id_pelanggan', $id)->update([
+                    'nama_user' => $nama,
+                ]);
 
-            if ($unpaidTagihan) {
-                // Calculate new bill amount (taking into account the PPN settings)
-                $ppn_aktif = false;
-                $paketSettings = DB::table('tbl_paketmikrotik')->first();
-                if ($paketSettings && isset($paketSettings->ppn) && $paketSettings->ppn === 'aktif') {
-                    $ppn_aktif = true;
+                // Sync package change to Mikrotik if package changed and Mikrotik integration is active
+                $oldPaketId = $pelanggan->paket;
+                $paketChanged = intval($oldPaketId) !== intval($paketId);
+
+                if ($paketChanged) {
+                    $user = User::where('id_pelanggan', $id)->first();
+                    $checkUser = DB::table('tbl_penggunamikrotik')->first();
+                    if ($checkUser && $checkUser->addppsecret == 'ya' && $user) {
+                        $paket = Paket::find($paketId);
+                        $id_profile = $paket ? $paket->id_pmikrotik : '';
+
+                        if ($id_profile) {
+                            $mikrotik = DB::table('tbl_mikrotik')->where('id_mikrotik', $id_mikrotik)->first();
+                            if ($mikrotik) {
+                                require_once base_path('include/routeros_api.php');
+                                $API = new \RouterosAPI();
+                                if ($API->connect($mikrotik->ip, $mikrotik->username, $mikrotik->password)) {
+                                    // 1. Update secret profile
+                                    $secrets = $API->comm('/ppp/secret/print', ['?name' => $user->username]);
+                                    if (!empty($secrets)) {
+                                        $API->comm('/ppp/secret/set', [
+                                            '.id' => $secrets[0]['.id'],
+                                            'profile' => $id_profile
+                                        ]);
+                                    } else {
+                                        $API->comm('/ppp/secret/add', [
+                                            'name' => $user->username,
+                                            'password' => $user->password,
+                                            'service' => 'pppoe',
+                                            'profile' => $id_profile
+                                        ]);
+                                    }
+
+                                    // 2. Disconnect active connection
+                                    $activeConnections = $API->comm('/ppp/active/print', ['?name' => $user->username]);
+                                    if (!empty($activeConnections)) {
+                                        foreach ($activeConnections as $connection) {
+                                            $API->comm('/ppp/active/remove', [
+                                                '.id' => $connection['.id']
+                                            ]);
+                                        }
+                                    }
+                                    $API->disconnect();
+                                } else {
+                                    $mikrotikMessage = ' Namun, gagal terhubung ke router Mikrotik untuk memperbarui profil PPPoE.';
+                                }
+                            } else {
+                                $mikrotikMessage = ' Namun, konfigurasi router Mikrotik tidak ditemukan.';
+                            }
+                        }
+                    }
+
+                    // Adjust unpaid monthly bill/invoice for the current month
+                    $currentMonth = date('mY');
+                    $unpaidTagihan = DB::table('tb_tagihan')
+                        ->where('id_pelanggan', $id)
+                        ->where('bulan_tahun', $currentMonth)
+                        ->where(function ($q) {
+                            $q->whereNull('status_bayar')
+                              ->orWhereIn('status_bayar', [0, '0', 'belum', '']);
+                        })
+                        ->where(function ($q) {
+                            $q->where('manual_invoice', 0)
+                              ->orWhereNull('manual_invoice');
+                        })
+                        ->first();
+
+                    if ($unpaidTagihan) {
+                        // Calculate new bill amount (taking into account the PPN settings)
+                        $ppn_aktif = false;
+                        $paketSettings = DB::table('tbl_paketmikrotik')->first();
+                        if ($paketSettings && isset($paketSettings->ppn) && $paketSettings->ppn === 'aktif') {
+                            $ppn_aktif = true;
+                        }
+
+                        $newPaket = Paket::find($paketId);
+                        $harga_paket = $newPaket ? $newPaket->harga : 0;
+                        $ppn_rate = $newPaket ? $newPaket->ppn : 0;
+
+                        if ($ppn_aktif) {
+                            $newJmlBayar = $harga_paket + ($harga_paket * $ppn_rate);
+                        } else {
+                            $newJmlBayar = $harga_paket;
+                        }
+
+                        DB::table('tb_tagihan')
+                            ->where('id_tagihan', $unpaidTagihan->id_tagihan)
+                            ->update(['jml_bayar' => $newJmlBayar]);
+
+                        $mikrotikMessage .= ' Tagihan bulan ini yang belum terbayar juga telah disesuaikan dengan nominal paket baru.';
+                    }
                 }
+            });
 
-                $newPaket = Paket::find($paketId);
-                $harga_paket = $newPaket ? $newPaket->harga : 0;
-                $ppn_rate = $newPaket ? $newPaket->ppn : 0;
-
-                if ($ppn_aktif) {
-                    $newJmlBayar = $harga_paket + ($harga_paket * $ppn_rate);
-                } else {
-                    $newJmlBayar = $harga_paket;
-                }
-
-                DB::table('tb_tagihan')
-                    ->where('id_tagihan', $unpaidTagihan->id_tagihan)
-                    ->update(['jml_bayar' => $newJmlBayar]);
-
-                $mikrotikMessage .= ' Tagihan bulan ini yang belum terbayar juga telah disesuaikan dengan nominal paket baru.';
-            }
+            return redirect()->route('admin.pelanggan.index')->with('success', 'Detail pelanggan berhasil diubah!' . $mikrotikMessage);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error("Error saat mengupdate data pelanggan: " . $e->getMessage());
+            return back()->withErrors(['error' => 'Gagal mengubah data pelanggan: ' . $e->getMessage()])->withInput();
         }
-
-        return redirect()->route('admin.pelanggan.index')->with('success', 'Detail pelanggan berhasil diubah!' . $mikrotikMessage);
     }
 
     public function destroy(Request $request)

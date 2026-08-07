@@ -214,6 +214,9 @@ Route::prefix('administrator')->group(function () {
         Route::post('/order-pemasangan/complete', [AdminOrderPemasanganController::class, 'complete'])->name('admin.order_pemasangan.complete');
         Route::post('/order-pemasangan/confirm', [AdminOrderPemasanganController::class, 'confirm'])->name('admin.order_pemasangan.confirm');
         Route::post('/order-pemasangan/claim', [AdminOrderPemasanganController::class, 'claim'])->name('admin.order_pemasangan.claim');
+        Route::post('/order-pemasangan/reject', [AdminOrderPemasanganController::class, 'reject'])->name('admin.order_pemasangan.reject');
+        Route::post('/order-pemasangan/cancel', [AdminOrderPemasanganController::class, 'cancel'])->name('admin.order_pemasangan.cancel');
+        Route::post('/order-pemasangan/pending', [AdminOrderPemasanganController::class, 'pendingOrder'])->name('admin.order_pemasangan.pending');
         Route::get('/order-pemasangan/ktp/{filename}', [AdminOrderPemasanganController::class, 'showKtp'])->name('admin.order_pemasangan.ktp');
         Route::get('/order-pemasangan/dokumentasi/{filename}', [AdminOrderPemasanganController::class, 'showDokumentasi'])->name('admin.order_pemasangan.dokumentasi');
         Route::get('/order-pemasangan/print', [AdminOrderPemasanganController::class, 'printReport'])->name('admin.order_pemasangan.print');

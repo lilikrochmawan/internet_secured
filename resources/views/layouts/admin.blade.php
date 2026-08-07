@@ -1154,7 +1154,7 @@
             </div>
 
             <div class="topbar-right">
-                @if(Auth::user()->level === 'admin')
+                @if(Auth::user()->level === 'admin' || Auth::user()->level === 'noc')
                     <!-- Bell Notifications Wrapper -->
                     <div class="topbar-bell-wrapper" id="bell-dropdown-trigger">
                         <button class="topbar-bell-btn" aria-label="Notifikasi">
@@ -1165,7 +1165,7 @@
                         <!-- Bell Dropdown List -->
                         <div class="topbar-bell-dropdown" id="bell-dropdown">
                             <div class="topbar-bell-header">
-                                <span>Notifikasi Admin</span>
+                                <span>Notifikasi</span>
                                 <button class="topbar-bell-clear-btn" id="bell-clear-btn">Tandai semua dibaca</button>
                             </div>
                             <div class="topbar-bell-content" id="bell-notifications-list">
@@ -1594,7 +1594,7 @@
             }
         });
     </script>
-    @if(Auth::user()->level === 'admin')
+    @if(Auth::user()->level === 'admin' || Auth::user()->level === 'noc')
         <!-- Bell Notifications JS Script -->
         <script>
             (function() {

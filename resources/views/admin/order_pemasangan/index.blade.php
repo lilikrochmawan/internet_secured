@@ -143,6 +143,18 @@
         border: 1px solid #bbf7d0;
     }
 
+    .status-rejected {
+        background-color: #fee2e2;
+        color: #dc2626;
+        border: 1px solid #fecaca;
+    }
+
+    .status-cancelled {
+        background-color: #f1f5f9;
+        color: #64748b;
+        border: 1px solid #e2e8f0;
+    }
+
     /* Modal Styling */
     .modal {
         display: none;
@@ -526,7 +538,7 @@
                 </thead>
                 <tbody>
                     @forelse($orders as $index => $row)
-                        <tr>
+                        <tr style="{{ ($row->status === 'rejected' || $row->status === 'cancelled') ? 'background-color: #fef2f2;' : '' }}">
                             <td>{{ $index + 1 }}</td>
                              <td>
                                 <strong>{{ $row->nama }}</strong><br>
@@ -639,12 +651,31 @@
                             <td>
                                 @if($row->status === 'pending')
                                     <span class="status-badge status-pending">Pending (Menunggu ACC)</span>
+                                    @if($row->alasan_pending)
+                                        <div style="font-size: 0.7rem; color: #d97706; margin-top: 4px; font-weight: 500;">
+                                            <strong>Alasan Pending:</strong> {{ $row->alasan_pending }}
+                                        </div>
+                                    @endif
                                 @elseif($row->status === 'approved')
                                     <span class="status-badge status-approved">ACC (Dalam Pemasangan)</span>
                                 @elseif($row->status === 'installed')
                                     <span class="status-badge status-installed">Selesai Dipasang (Verifikasi Admin)</span>
                                 @elseif($row->status === 'completed')
                                     <span class="status-badge status-completed">Selesai & Aktif</span>
+                                @elseif($row->status === 'rejected')
+                                    <span class="status-badge status-rejected">Ditolak</span>
+                                    @if($row->alasan_ditolak)
+                                        <div style="font-size: 0.7rem; color: #dc2626; margin-top: 4px; font-weight: 500;">
+                                            <strong>Alasan:</strong> {{ $row->alasan_ditolak }}
+                                        </div>
+                                    @endif
+                                @elseif($row->status === 'cancelled')
+                                    <span class="status-badge status-cancelled">Dibatalkan</span>
+                                    @if($row->alasan_batal)
+                                        <div style="font-size: 0.7rem; color: #64748b; margin-top: 4px; font-weight: 500;">
+                                            <strong>Alasan:</strong> {{ $row->alasan_batal }}
+                                        </div>
+                                    @endif
                                 @endif
                                 <br>
                                 <span style="font-size: 0.75rem; color: var(--text-gray); display: inline-block; margin-top: 4px;">
@@ -668,11 +699,32 @@
                                                 onclick='openApproveModal({!! json_encode($row) !!})'>
                                                 <i class="fa-solid fa-check"></i> ACC
                                             </button>
+                                            <button class="btn btn-danger" style="padding: 6px 12px; font-size: 0.8rem; border-radius: 8px; width: 100%; justify-content: center; background-color: #dc2626; border-color: #dc2626; color: white;" 
+                                                onclick="openRejectOrderModal('{{ $row->id }}')">
+                                                <i class="fa-solid fa-ban"></i> Tolak
+                                            </button>
                                         @endif
                                         @if($row->status === 'approved')
                                             <button class="btn btn-secondary" style="padding: 6px 12px; font-size: 0.8rem; border-radius: 8px; width: 100%; justify-content: center;" 
                                                 onclick="openAssignModal('{{ $row->id }}')">
                                                 <i class="fa-solid fa-user-plus"></i> {{ is_null($row->id_teknisi) ? 'Tugaskan Teknisi' : 'Ubah Teknisi' }}
+                                            </button>
+                                            <button class="btn btn-danger" style="padding: 6px 12px; font-size: 0.8rem; border-radius: 8px; width: 100%; justify-content: center; background-color: #dc2626; border-color: #dc2626; color: white;" 
+                                                onclick="openCancelOrderModal('{{ $row->id }}')">
+                                                <i class="fa-solid fa-rectangle-xmark"></i> Batal Pemasangan
+                                            </button>
+                                            <button class="btn" style="padding: 6px 12px; font-size: 0.8rem; border-radius: 8px; width: 100%; justify-content: center; background: linear-gradient(135deg, #f59e0b, #d97706); border: none; color: white;" 
+                                                onclick="openPendingOrderModal('{{ $row->id }}')">
+                                                <i class="fa-solid fa-clock"></i> Pending Pemasangan
+                                            </button>
+                                        @endif
+                                        @if($row->status === 'rejected')
+                                            <button class="btn btn-secondary" style="padding: 6px 12px; font-size: 0.8rem; border-radius: 8px; width: 100%; justify-content: center; opacity: 0.6; cursor: not-allowed; background-color: #fee2e2; color: #dc2626; border: 1px solid #fecaca;" disabled>
+                                                <i class="fa-solid fa-ban"></i> Ditolak
+                                            </button>
+                                        @elseif($row->status === 'cancelled')
+                                            <button class="btn btn-secondary" style="padding: 6px 12px; font-size: 0.8rem; border-radius: 8px; width: 100%; justify-content: center; opacity: 0.6; cursor: not-allowed; background-color: #fee2e2; color: #dc2626; border: 1px solid #fecaca;" disabled>
+                                                <i class="fa-solid fa-rectangle-xmark"></i> Batal Pemasangan
                                             </button>
                                         @endif
                                     @endif
@@ -776,6 +828,96 @@
                 <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:24px;">
                     <button type="button" class="btn btn-secondary" onclick="closeAssignModal()">Batal</button>
                     <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Tolak Order Pemasangan (Admin Only) -->
+<div class="modal" id="rejectOrderModal">
+    <div class="modal-content" style="width: min(450px, 100%); border-top: 5px solid #dc2626; border-radius: 16px; overflow: hidden; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.15);">
+        <div class="modal-header" style="background: linear-gradient(135deg, #dc2626, #b91c1c) !important; color: white !important; padding: 16px 24px; border-bottom: none;">
+            <h3 style="color: white !important; display: flex; align-items: center; gap: 8px; margin: 0; font-size: 1.15rem; font-weight: 700;">
+                <i class="fa-solid fa-ban" style="color: white !important;"></i> Tolak Order Pemasangan
+            </h3>
+            <button class="modal-close" onclick="closeRejectOrderModal()" style="font-size: 1.5rem; color: white !important; opacity: 0.9; hover:opacity: 1; cursor: pointer;">&times;</button>
+        </div>
+        <div class="modal-body" style="padding: 24px;">
+            <form action="{{ route('admin.order_pemasangan.reject') }}" method="POST">
+                @csrf
+                <input type="hidden" name="id_order" id="reject_id">
+
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label for="alasan_ditolak" style="font-weight: 600; color: #7f1d1d; display: block; margin-bottom: 8px; font-size: 0.9rem;">Alasan Penolakan *</label>
+                    <textarea id="alasan_ditolak" name="alasan_ditolak" class="form-control" rows="4" required placeholder="Masukkan alasan kenapa order pemasangan ini ditolak..." style="border-radius: 10px; border: 1px solid #fca5a5; padding: 12px; font-size: 0.9rem; outline: none; transition: border-color 0.2s;" onfocus="this.style.borderColor='#dc2626'" onblur="this.style.borderColor='#fca5a5'"></textarea>
+                </div>
+
+                <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:24px;">
+                    <button type="button" class="btn btn-secondary" onclick="closeRejectOrderModal()" style="border-radius: 10px; padding: 8px 16px; font-size: 0.85rem;">Batal</button>
+                    <button type="submit" class="btn btn-danger" style="background: linear-gradient(135deg, #dc2626, #b91c1c); border: none; color: white; border-radius: 10px; padding: 8px 18px; font-size: 0.85rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                        <i class="fa-solid fa-ban"></i> Tolak Order
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Batal Pemasangan (Admin Only) -->
+<div class="modal" id="cancelOrderModal">
+    <div class="modal-content" style="width: min(450px, 100%); border-top: 5px solid #dc2626; border-radius: 16px; overflow: hidden; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.15);">
+        <div class="modal-header" style="background: linear-gradient(135deg, #dc2626, #b91c1c) !important; color: white !important; padding: 16px 24px; border-bottom: none;">
+            <h3 style="color: white !important; display: flex; align-items: center; gap: 8px; margin: 0; font-size: 1.15rem; font-weight: 700;">
+                <i class="fa-solid fa-rectangle-xmark" style="color: white !important;"></i> Batalkan Pemasangan
+            </h3>
+            <button class="modal-close" onclick="closeCancelOrderModal()" style="font-size: 1.5rem; color: white !important; opacity: 0.9; hover:opacity: 1; cursor: pointer;">&times;</button>
+        </div>
+        <div class="modal-body" style="padding: 24px;">
+            <form action="{{ route('admin.order_pemasangan.cancel') }}" method="POST">
+                @csrf
+                <input type="hidden" name="id_order" id="cancel_id">
+
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label for="alasan_batal" style="font-weight: 600; color: #334155; display: block; margin-bottom: 8px; font-size: 0.9rem;">Alasan Pembatalan *</label>
+                    <textarea id="alasan_batal" name="alasan_batal" class="form-control" rows="4" required placeholder="Masukkan alasan kenapa pemasangan ini dibatalkan..." style="border-radius: 10px; border: 1px solid #cbd5e1; padding: 12px; font-size: 0.9rem; outline: none; transition: border-color 0.2s;" onfocus="this.style.borderColor='#dc2626'" onblur="this.style.borderColor='#cbd5e1'"></textarea>
+                </div>
+
+                <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:24px;">
+                    <button type="button" class="btn btn-secondary" onclick="closeCancelOrderModal()" style="border-radius: 10px; padding: 8px 16px; font-size: 0.85rem;">Batal</button>
+                    <button type="submit" class="btn" style="background: linear-gradient(135deg, #dc2626, #b91c1c); border: none; color: white; border-radius: 10px; padding: 8px 18px; font-size: 0.85rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                        <i class="fa-solid fa-rectangle-xmark"></i> Batalkan Pemasangan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Pending Pemasangan (Admin Only) -->
+<div class="modal" id="pendingOrderModal">
+    <div class="modal-content" style="width: min(450px, 100%); border-top: 5px solid #d97706; border-radius: 16px; overflow: hidden; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.15);">
+        <div class="modal-header" style="background: linear-gradient(135deg, #f59e0b, #d97706) !important; color: white !important; padding: 16px 24px; border-bottom: none;">
+            <h3 style="color: white !important; display: flex; align-items: center; gap: 8px; margin: 0; font-size: 1.15rem; font-weight: 700;">
+                <i class="fa-solid fa-clock" style="color: white !important;"></i> Pending Pemasangan
+            </h3>
+            <button class="modal-close" onclick="closePendingOrderModal()" style="font-size: 1.5rem; color: white !important; opacity: 0.9; hover:opacity: 1; cursor: pointer;">&times;</button>
+        </div>
+        <div class="modal-body" style="padding: 24px;">
+            <form action="{{ route('admin.order_pemasangan.pending') }}" method="POST">
+                @csrf
+                <input type="hidden" name="id_order" id="pending_id">
+
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label for="alasan_pending" style="font-weight: 600; color: #92400e; display: block; margin-bottom: 8px; font-size: 0.9rem;">Alasan Pending *</label>
+                    <textarea id="alasan_pending" name="alasan_pending" class="form-control" rows="4" required placeholder="Masukkan alasan kenapa pemasangan ini dipending..." style="border-radius: 10px; border: 1px solid #fde68a; padding: 12px; font-size: 0.9rem; outline: none; transition: border-color 0.2s;" onfocus="this.style.borderColor='#d97706'" onblur="this.style.borderColor='#fde68a'"></textarea>
+                </div>
+
+                <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:24px;">
+                    <button type="button" class="btn btn-secondary" onclick="closePendingOrderModal()" style="border-radius: 10px; padding: 8px 16px; font-size: 0.85rem;">Batal</button>
+                    <button type="submit" class="btn" style="background: linear-gradient(135deg, #f59e0b, #d97706); border: none; color: white; border-radius: 10px; padding: 8px 18px; font-size: 0.85rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                        <i class="fa-solid fa-clock"></i> Pending Pemasangan
+                    </button>
                 </div>
             </form>
         </div>
@@ -1280,6 +1422,34 @@
 
     function closeAssignModal() {
         document.getElementById('assignModal').classList.remove('active');
+    }
+
+    // Reject & Cancel Order Modals
+    function openRejectOrderModal(id) {
+        document.getElementById('reject_id').value = id;
+        document.getElementById('alasan_ditolak').value = '';
+        document.getElementById('rejectOrderModal').classList.add('active');
+    }
+    function closeRejectOrderModal() {
+        document.getElementById('rejectOrderModal').classList.remove('active');
+    }
+
+    function openCancelOrderModal(id) {
+        document.getElementById('cancel_id').value = id;
+        document.getElementById('alasan_batal').value = '';
+        document.getElementById('cancelOrderModal').classList.add('active');
+    }
+    function closeCancelOrderModal() {
+        document.getElementById('cancelOrderModal').classList.remove('active');
+    }
+
+    function openPendingOrderModal(id) {
+        document.getElementById('pending_id').value = id;
+        document.getElementById('alasan_pending').value = '';
+        document.getElementById('pendingOrderModal').classList.add('active');
+    }
+    function closePendingOrderModal() {
+        document.getElementById('pendingOrderModal').classList.remove('active');
     }
 
     // Dropdown toggling for Approve ODP Select
