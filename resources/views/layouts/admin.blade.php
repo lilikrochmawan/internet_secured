@@ -604,12 +604,23 @@
         /* Pagination Styles */
         .pagination-wrapper {
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
-            gap: 6px;
             margin-top: 20px;
             padding-top: 15px;
             border-top: 1px solid var(--border-color);
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .pagination-info {
+            font-size: 0.85rem;
+            color: var(--text-gray);
+            font-weight: 500;
+        }
+        .pagination-buttons {
+            display: flex;
+            align-items: center;
+            gap: 6px;
             flex-wrap: wrap;
         }
 
@@ -1291,6 +1302,19 @@
 
             if (!tableBody || !controls || !limitSelect) return;
 
+            // Let's create a label element for the total count next to the select element
+            let totalInfoLabel = limitSelect.parentNode.querySelector(".table-total-info");
+            if (!totalInfoLabel) {
+                totalInfoLabel = document.createElement("span");
+                totalInfoLabel.className = "table-total-info";
+                totalInfoLabel.style.fontSize = "0.85rem";
+                totalInfoLabel.style.color = "var(--text-gray)";
+                totalInfoLabel.style.fontWeight = "600";
+                totalInfoLabel.style.marginLeft = "8px";
+                totalInfoLabel.style.display = "inline-block";
+                limitSelect.parentNode.appendChild(totalInfoLabel);
+            }
+
             let allRows = Array.from(tableBody.querySelectorAll("tr"));
             // Filter out empty state rows (where cells colspan is large or no actual data)
             allRows = allRows.filter(row => row.cells.length > 2);
@@ -1376,6 +1400,7 @@
             function renderTable() {
                 const limit = parseInt(limitSelect.value) || 10;
                 const totalItems = filteredRows.length;
+                const totalAll = allRows.length;
                 const totalPages = Math.ceil(totalItems / limit) || 1;
 
                 if (currentPage > totalPages) currentPage = totalPages;
@@ -1400,18 +1425,47 @@
                     }
                 });
 
+                // Update total info next to limit select dropdown
+                if (totalInfoLabel) {
+                    totalInfoLabel.textContent = `(Total: ${totalAll} Baris)`;
+                }
+
                 // Render page controls
                 renderControls(totalPages);
             }
 
             function renderControls(totalPages) {
                 controls.innerHTML = "";
-                if (totalPages <= 1) {
-                    controls.style.display = "none";
-                    return;
-                }
                 controls.style.display = "flex";
                 controls.className = "pagination-wrapper";
+
+                // 1. Create Left Info Element
+                const infoSpan = document.createElement("span");
+                infoSpan.className = "pagination-info";
+                
+                const limit = parseInt(limitSelect.value) || 10;
+                const totalItems = filteredRows.length;
+                const totalAll = allRows.length;
+                
+                let start = totalItems > 0 ? (currentPage - 1) * limit + 1 : 0;
+                let end = Math.min(currentPage * limit, totalItems);
+                
+                if (totalItems === totalAll) {
+                    infoSpan.textContent = `Menampilkan ${start} - ${end} dari total ${totalItems} baris`;
+                } else {
+                    infoSpan.textContent = `Menampilkan ${start} - ${end} dari total ${totalItems} baris (difilter dari ${totalAll} baris)`;
+                }
+                controls.appendChild(infoSpan);
+
+                // 2. Create Right Buttons Container
+                const buttonsContainer = document.createElement("div");
+                buttonsContainer.className = "pagination-buttons";
+                controls.appendChild(buttonsContainer);
+
+                // If totalPages <= 1, we don't need buttons
+                if (totalPages <= 1) {
+                    return;
+                }
 
                 // Previous page button
                 const prevBtn = document.createElement("button");
@@ -1425,7 +1479,7 @@
                         renderTable();
                     }
                 };
-                controls.appendChild(prevBtn);
+                buttonsContainer.appendChild(prevBtn);
 
                 // Page numbers logic
                 let startPage = Math.max(1, currentPage - 2);
@@ -1440,13 +1494,13 @@
                     firstBtn.textContent = "1";
                     firstBtn.className = "page-btn";
                     firstBtn.onclick = () => { currentPage = 1; renderTable(); };
-                    controls.appendChild(firstBtn);
+                    buttonsContainer.appendChild(firstBtn);
 
                     if (startPage > 2) {
                         const ellipsis = document.createElement("span");
                         ellipsis.textContent = "...";
                         ellipsis.className = "page-ellipsis";
-                        controls.appendChild(ellipsis);
+                        buttonsContainer.appendChild(ellipsis);
                     }
                 }
 
@@ -1456,7 +1510,7 @@
                     pageBtn.textContent = i;
                     pageBtn.className = "page-btn" + (currentPage === i ? " active" : "");
                     pageBtn.onclick = () => { currentPage = i; renderTable(); };
-                    controls.appendChild(pageBtn);
+                    buttonsContainer.appendChild(pageBtn);
                 }
 
                 if (endPage < totalPages) {
@@ -1464,7 +1518,7 @@
                         const ellipsis = document.createElement("span");
                         ellipsis.textContent = "...";
                         ellipsis.className = "page-ellipsis";
-                        controls.appendChild(ellipsis);
+                        buttonsContainer.appendChild(ellipsis);
                     }
 
                     const lastBtn = document.createElement("button");
@@ -1472,7 +1526,7 @@
                     lastBtn.textContent = totalPages;
                     lastBtn.className = "page-btn";
                     lastBtn.onclick = () => { currentPage = totalPages; renderTable(); };
-                    controls.appendChild(lastBtn);
+                    buttonsContainer.appendChild(lastBtn);
                 }
 
                 // Next page button
@@ -1487,7 +1541,7 @@
                         renderTable();
                     }
                 };
-                controls.appendChild(nextBtn);
+                buttonsContainer.appendChild(nextBtn);
             }
 
             // Search filtering integration
