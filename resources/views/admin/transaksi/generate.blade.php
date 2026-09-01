@@ -194,6 +194,12 @@
                             @php
                                 $harga_paket = $plg->paketDetail->harga ?? 0;
                                 $ppn_rate = $plg->paketDetail->ppn ?? 0;
+                                if ($ppn_rate <= 0) {
+                                    $ppn_rate = $global_ppn_rate ?? 0.11;
+                                } else if ($ppn_rate > 1) {
+                                    $ppn_rate = $ppn_rate / 100;
+                                }
+                                
                                 if ($ppn_aktif) {
                                     $total_tagihan = $harga_paket + ($harga_paket * $ppn_rate);
                                 } else {
@@ -209,7 +215,7 @@
                                 </td>
                                 <td><span style="font-family: monospace;">{{ $plg->kode_pelanggan }}</span></td>
                                 <td>{{ $plg->paketDetail->nama_paket ?? '-' }}</td>
-                                <td>Rp {{ number_format($harga_paket, 0, ',', '.') }} @if($ppn_aktif && $ppn_rate > 0) <small style="color: #6366f1;">+ PPN {{ $ppn_rate * 100 }}%</small> @endif</td>
+                                <td>Rp {{ number_format($harga_paket, 0, ',', '.') }} @if($ppn_aktif && $ppn_rate > 0) <small style="color: #6366f1;">+ PPN {{ round($ppn_rate * 100, 2) }}%</small> @endif</td>
                                 <td>
                                     <input type="text" name="harga[]" value="{{ $total_tagihan }}" class="form-control" style="width: 130px; font-weight: bold; background-color: #f8fafc;" readonly>
                                 </td>

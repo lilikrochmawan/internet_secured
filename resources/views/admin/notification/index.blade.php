@@ -3,7 +3,34 @@
 @section('title', 'Broadcast Notifikasi')
 
 @section('styles')
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <style>
+    /* Select2 custom styling */
+    .select2-container .select2-selection--single {
+        height: 44px;
+        border-radius: 12px;
+        border: 1px solid #ced4da;
+        display: flex;
+        align-items: center;
+        padding-left: 6px;
+    }
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+        height: 42px;
+        right: 8px;
+    }
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        color: #495057;
+        line-height: normal;
+    }
+    .select2-dropdown {
+        border-radius: 12px;
+        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+        border: 1px solid #e2e8f0;
+    }
+    .select2-search__field {
+        border-radius: 8px !important;
+    }
+
     .monitoring-tabs {
         display: flex;
         gap: 8px;
@@ -539,6 +566,8 @@
 @endsection
 
 @section('scripts')
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
     function switchTab(tabId) {
         // Switch tab classes
@@ -587,6 +616,21 @@
 
     document.addEventListener("DOMContentLoaded", function () {
         toggleTitleInput();
+
+        $('#select_odp').select2({
+            placeholder: '-- Pilih ODP --',
+            allowClear: true,
+            width: '100%'
+        }).on('change', function() {
+            // Trigger native change event for existing vanilla JS listener
+            this.dispatchEvent(new Event('change'));
+        });
+
+        $('#select_odc').select2({
+            placeholder: '-- Pilih ODC --',
+            allowClear: true,
+            width: '100%'
+        });
 
         // ODP dropdown trigger to load clients via AJAX
         const selectOdp = document.getElementById('select_odp');

@@ -658,17 +658,38 @@
                 logsBody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-gray); padding: 20px;">Tidak ada log yang sesuai filter.</td></tr>`;
             }
 
-            renderLogControls(totalPages);
+            renderLogControls(totalPages, totalItems, currentLogs.length, limit);
         }
 
-        function renderLogControls(totalPages) {
+        function renderLogControls(totalPages, totalItems, totalAll, limit) {
             logsPagination.innerHTML = "";
-            if (totalPages <= 1) {
+            if (totalPages === 0) {
                 logsPagination.style.display = "none";
                 return;
             }
             logsPagination.style.display = "flex";
             logsPagination.className = "pagination-wrapper";
+
+            // 1. Create Left Info Element
+            const infoSpan = document.createElement("span");
+            infoSpan.className = "pagination-info";
+            
+            let start = totalItems > 0 ? (logCurrentPage - 1) * limit + 1 : 0;
+            let end = Math.min(logCurrentPage * limit, totalItems);
+            
+            if (totalItems === totalAll) {
+                infoSpan.textContent = `Menampilkan ${start} - ${end} dari total ${totalItems} baris`;
+            } else {
+                infoSpan.textContent = `Menampilkan ${start} - ${end} dari total ${totalItems} baris (difilter dari ${totalAll} baris)`;
+            }
+            logsPagination.appendChild(infoSpan);
+
+            if (totalPages <= 1) return;
+
+            // 2. Create Right Buttons Container
+            const buttonsContainer = document.createElement("div");
+            buttonsContainer.className = "pagination-buttons";
+            logsPagination.appendChild(buttonsContainer);
 
             // Previous button
             const prevBtn = document.createElement("button");
@@ -682,7 +703,7 @@
                     renderLogs();
                 }
             };
-            logsPagination.appendChild(prevBtn);
+            buttonsContainer.appendChild(prevBtn);
 
             // Pages
             let startPage = Math.max(1, logCurrentPage - 2);
@@ -697,13 +718,13 @@
                 firstBtn.textContent = "1";
                 firstBtn.className = "page-btn";
                 firstBtn.onclick = () => { logCurrentPage = 1; renderLogs(); };
-                logsPagination.appendChild(firstBtn);
+                buttonsContainer.appendChild(firstBtn);
 
                 if (startPage > 2) {
                     const ellipsis = document.createElement("span");
                     ellipsis.textContent = "...";
                     ellipsis.className = "page-ellipsis";
-                    logsPagination.appendChild(ellipsis);
+                    buttonsContainer.appendChild(ellipsis);
                 }
             }
 
@@ -713,7 +734,7 @@
                 pageBtn.textContent = i;
                 pageBtn.className = "page-btn" + (logCurrentPage === i ? " active" : "");
                 pageBtn.onclick = () => { logCurrentPage = i; renderLogs(); };
-                logsPagination.appendChild(pageBtn);
+                buttonsContainer.appendChild(pageBtn);
             }
 
             if (endPage < totalPages) {
@@ -721,7 +742,7 @@
                     const ellipsis = document.createElement("span");
                     ellipsis.textContent = "...";
                     ellipsis.className = "page-ellipsis";
-                    logsPagination.appendChild(ellipsis);
+                    buttonsContainer.appendChild(ellipsis);
                 }
 
                 const lastBtn = document.createElement("button");
@@ -729,7 +750,7 @@
                 lastBtn.textContent = totalPages;
                 lastBtn.className = "page-btn";
                 lastBtn.onclick = () => { logCurrentPage = totalPages; renderLogs(); };
-                logsPagination.appendChild(lastBtn);
+                buttonsContainer.appendChild(lastBtn);
             }
 
             // Next button
@@ -744,7 +765,7 @@
                     renderLogs();
                 }
             };
-            logsPagination.appendChild(nextBtn);
+            buttonsContainer.appendChild(nextBtn);
         }
 
         // Load logs (optimized to fetch 1000 logs so they can be paginated/searched completely in UI)

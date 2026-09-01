@@ -287,7 +287,14 @@
 
     <!-- Search and Row Limiter -->
     <div style="display:flex; justify-content:space-between; align-items:center; margin-top: 10px; margin-bottom:16px; flex-wrap:wrap; gap:12px;">
-        <div></div>
+        <div>
+            <form method="POST" action="{{ route('admin.tr069.autolink') }}" onsubmit="return confirm('Apakah Anda yakin ingin memproses pencocokan otomatis PPPoE CPE dengan database pelanggan?')">
+                @csrf
+                <button type="submit" class="btn btn-primary" style="height: 40px; border-radius: 10px; padding: 0 16px; display: inline-flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> Hubungkan Otomatis
+                </button>
+            </form>
+        </div>
         <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
             <div style="display: flex; align-items: center; gap: 8px;">
                 <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-gray);">Tampilkan:</span>
@@ -465,7 +472,18 @@
                             @endforeach
                         </div>
                     </div>
-                </div>
+            </div>
+            
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label style="display: flex; align-items: flex-start; gap: 8px; cursor: pointer; font-weight: normal;">
+                    <input type="checkbox" name="auto_provision" value="1" checked style="width: 16px; height: 16px; margin-top: 3px;">
+                    <div>
+                        <span style="font-size: 0.9rem; font-weight: 600; color: var(--text-dark);">Setting Otomatis Modem (PPPoE & WiFi)</span>
+                        <div style="font-size: 0.76rem; color: var(--text-gray); margin-top: 2px;">
+                            SSID WiFi akan diset sesuai nama pelanggan, password WiFi & PPPoE diset otomatis sesuai akun portal pelanggan.
+                        </div>
+                    </div>
+                </label>
             </div>
             
             <div style="display:flex; justify-content: flex-end; gap:8px;">

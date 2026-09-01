@@ -504,6 +504,117 @@
         </form>
     </div>
 
+    <!-- Card: Pengaturan Pajak & PNBP (PPN, BHP, USO) -->
+    <div class="card" style="margin-top: 24px;">
+        <div class="card-header">
+            <div class="card-title">
+                <i class="fa-solid fa-scale-balanced"></i>
+                <span>Pengaturan Pajak & PNBP (PPN, BHP, USO)</span>
+            </div>
+        </div>
+        
+        <form action="{{ route('admin.pengaturan.tax_settings') }}" method="POST">
+            @csrf
+            
+            <!-- PPN Section -->
+            <div style="border: 1px solid #e2e8f0; border-radius: 16px; padding: 18px; margin-bottom: 15px; background: #ffffff;">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <i class="fa-solid fa-percent" style="color: #4f46e5; font-size: 1.2rem;"></i>
+                        <strong style="color: #0f172a;">Pajak Pertambahan Nilai (PPN)</strong>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="tax_ppn_status_chk" name="tax_ppn_status_chk" value="aktif" {{ ($profile->tax_ppn_status ?? 'tidak') === 'aktif' ? 'checked' : '' }} onchange="document.getElementById('tax_ppn_status').value = this.checked ? 'aktif' : 'tidak'; toggleTaxField('group_ppn_fields', this.checked);">
+                        <span class="slider"></span>
+                    </label>
+                    <input type="hidden" name="tax_ppn_status" id="tax_ppn_status" value="{{ $profile->tax_ppn_status ?? 'tidak' }}">
+                </div>
+                
+                <div id="group_ppn_fields" style="{{ ($profile->tax_ppn_status ?? 'tidak') === 'tidak' ? 'display:none;' : '' }}">
+                    <div class="form-group" style="margin-top: 10px;">
+                        <label for="tax_ppn_rate">Tarif PPN (%) *</label>
+                        <input type="number" step="0.01" id="tax_ppn_rate" name="tax_ppn_rate" class="form-control" min="0" max="100" value="{{ $profile->tax_ppn_rate ?? 11.00 }}" required>
+                        <small style="color:var(--text-gray); margin-top:4px;">Masukkan tarif PPN yang berlaku (contoh: 11 untuk PPN 11%).</small>
+                    </div>
+
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 15px; border-top: 1px dashed #e2e8f0; padding-top: 15px;">
+                        <div>
+                            <strong style="color: #0f172a; font-size: 0.9rem; display: block;">Bebankan PPN ke Pelanggan</strong>
+                            <small style="color: var(--text-gray); font-size: 0.8rem;">Jika aktif, nominal PPN akan ditambahkan di atas harga paket internet pada tagihan pelanggan.</small>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="tax_ppn_charged_chk" name="tax_ppn_charged_chk" value="ya" {{ ($profile->tax_ppn_charged ?? 'ya') === 'ya' ? 'checked' : '' }} onchange="document.getElementById('tax_ppn_charged').value = this.checked ? 'ya' : 'tidak';">
+                            <span class="slider"></span>
+                        </label>
+                        <input type="hidden" name="tax_ppn_charged" id="tax_ppn_charged" value="{{ $profile->tax_ppn_charged ?? 'ya' }}">
+                    </div>
+                </div>
+            </div>
+
+            <!-- BHP Section -->
+            <div style="border: 1px solid #e2e8f0; border-radius: 16px; padding: 18px; margin-bottom: 15px; background: #ffffff;">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <i class="fa-solid fa-tower-broadcast" style="color: #4f46e5; font-size: 1.2rem;"></i>
+                        <strong style="color: #0f172a;">BHP Telekomunikasi (PNBP)</strong>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="tax_bhp_status_chk" name="tax_bhp_status_chk" value="aktif" {{ ($profile->tax_bhp_status ?? 'aktif') === 'aktif' ? 'checked' : '' }} onchange="document.getElementById('tax_bhp_status').value = this.checked ? 'aktif' : 'tidak'; toggleTaxField('group_bhp_fields', this.checked);">
+                        <span class="slider"></span>
+                    </label>
+                    <input type="hidden" name="tax_bhp_status" id="tax_bhp_status" value="{{ $profile->tax_bhp_status ?? 'aktif' }}">
+                </div>
+                
+                <div id="group_bhp_fields" style="{{ ($profile->tax_bhp_status ?? 'aktif') === 'tidak' ? 'display:none;' : '' }}">
+                    <div class="form-group" style="margin-top: 10px;">
+                        <label for="tax_bhp_rate">Tarif BHP Telekomunikasi (%) *</label>
+                        <input type="number" step="0.01" id="tax_bhp_rate" name="tax_bhp_rate" class="form-control" min="0" max="100" value="{{ $profile->tax_bhp_rate ?? 0.50 }}" required>
+                        <small style="color:var(--text-gray); margin-top:4px;">Masukkan tarif BHP Telekomunikasi (contoh: 0.5 untuk 0,5%). BHP dihitung dari DPP (Dasar Pengenaan Pajak).</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- USO Section -->
+            <div style="border: 1px solid #e2e8f0; border-radius: 16px; padding: 18px; margin-bottom: 15px; background: #ffffff;">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <i class="fa-solid fa-signal" style="color: #4f46e5; font-size: 1.2rem;"></i>
+                        <strong style="color: #0f172a;">Kontribusi KPU / USO (PNBP)</strong>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="tax_uso_status_chk" name="tax_uso_status_chk" value="aktif" {{ ($profile->tax_uso_status ?? 'aktif') === 'aktif' ? 'checked' : '' }} onchange="document.getElementById('tax_uso_status').value = this.checked ? 'aktif' : 'tidak'; toggleTaxField('group_uso_fields', this.checked);">
+                        <span class="slider"></span>
+                    </label>
+                    <input type="hidden" name="tax_uso_status" id="tax_uso_status" value="{{ $profile->tax_uso_status ?? 'aktif' }}">
+                </div>
+                
+                <div id="group_uso_fields" style="{{ ($profile->tax_uso_status ?? 'aktif') === 'tidak' ? 'display:none;' : '' }}">
+                    <div class="form-group" style="margin-top: 10px;">
+                        <label for="tax_uso_rate">Tarif Kontribusi USO (%) *</label>
+                        <input type="number" step="0.01" id="tax_uso_rate" name="tax_uso_rate" class="form-control" min="0" max="100" value="{{ $profile->tax_uso_rate ?? 1.25 }}" required>
+                        <small style="color:var(--text-gray); margin-top:4px;">Masukkan tarif kontribusi pelayanan universal / USO (contoh: 1.25 untuk 1,25%). USO dihitung dari DPP.</small>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; margin-top:20px;">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fa-solid fa-floppy-disk"></i> Simpan Setelan Pajak & PNBP
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        function toggleTaxField(elementId, isChecked) {
+            const container = document.getElementById(elementId);
+            if (container) {
+                container.style.display = isChecked ? 'block' : 'none';
+            }
+        }
+    </script>
+
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const feeTypeSelect = document.getElementById('admin_fee_type');

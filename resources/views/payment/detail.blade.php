@@ -373,10 +373,21 @@
             @endif
 
             <div class="summary">
-                <div class="summary-row">
-                    <span>Total Tagihan:</span>
-                    <strong>{{ 'Rp ' . number_format($subtotal, 0, ',', '.') }}</strong>
-                </div>
+                @if($showPpn)
+                    <div class="summary-row">
+                        <span>Tagihan (DPP):</span>
+                        <strong>{{ 'Rp ' . number_format($baseSubtotal, 0, ',', '.') }}</strong>
+                    </div>
+                    <div class="summary-row">
+                        <span>PPN ({{ $ppnRate }}%):</span>
+                        <strong>{{ 'Rp ' . number_format($ppnAmount, 0, ',', '.') }}</strong>
+                    </div>
+                @else
+                    <div class="summary-row">
+                        <span>Total Tagihan:</span>
+                        <strong>{{ 'Rp ' . number_format($subtotal, 0, ',', '.') }}</strong>
+                    </div>
+                @endif
                 <div class="summary-row">
                     <span id="fee-name-label">
                         @if(($profile->admin_fee_type ?? 'flat') === 'flat')
@@ -488,6 +499,8 @@
         document.addEventListener('DOMContentLoaded', function() {
             const subtotal = {{ $subtotal }};
             const feeType = '{{ $profile->admin_fee_type ?? 'flat' }}';
+            const showPpn = {{ $showPpn ? 'true' : 'false' }};
+            const ppnAmount = {{ $ppnAmount }};
             
             // Flat settings
             const flatFee = {{ $profile->admin_fee_flat ?? 2000 }};
@@ -549,7 +562,7 @@
                     feeName = 'Biaya Admin Retail:';
                 }
 
-                const total = subtotal + fee;
+                const total = subtotal + (showPpn ? ppnAmount : 0) + fee;
 
                 if (feeNameLabel) feeNameLabel.textContent = feeName;
                 if (feeAmountLabel) feeAmountLabel.textContent = formatRupiah(fee);

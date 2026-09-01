@@ -3,9 +3,30 @@
 @section('title', 'Map Client & Topologi Jaringan')
 
 @section('styles')
+<!-- Select2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <!-- Leaflet CSS -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
 <style>
+    /* Select2 custom styling for Modal */
+    .select2-container .select2-selection--single {
+        height: 44px;
+        border-radius: 8px;
+        border: 1px solid #cbd5e1;
+        display: flex;
+        align-items: center;
+        padding-left: 6px;
+    }
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+        height: 42px;
+        right: 8px;
+    }
+    .select2-dropdown {
+        z-index: 99999; /* Higher than modal */
+        border-radius: 8px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
     .btn {
         display: inline-flex;
         align-items: center;
@@ -374,16 +395,73 @@
         <div id="master-map" style="height: 600px; z-index: 1;"></div>
     </div>
 </div>
+
+<!-- Modal Edit ODP Client -->
+<div id="editOdpModal" class="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 9999; justify-content: center; align-items: center;">
+    <div style="background: white; border-radius: 12px; padding: 24px; width: min(400px, 90%); box-shadow: 0 10px 25px rgba(0,0,0,0.15);">
+        <h3 style="margin-top: 0; margin-bottom: 16px; font-family: 'Outfit', sans-serif; display: flex; align-items: center; gap: 8px;">
+            <i class="fa-solid fa-network-wired" style="color: #4f46e5;"></i>
+            Ubah ODP Pelanggan
+        </h3>
+        <p style="font-size: 0.9rem; color: #64748b; margin-bottom: 20px;">
+            Pelanggan: <strong id="edit_odp_nama_pelanggan" style="color: #1e293b;">-</strong>
+        </p>
+        
+        <form id="editOdpForm">
+            @csrf
+            <input type="hidden" name="id_pelanggan" id="edit_odp_id_pelanggan">
+            
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label style="display: block; font-weight: 500; margin-bottom: 8px; font-size: 0.9rem;">Pilih ODP Baru:</label>
+                <select name="id_odp" id="edit_odp_select" class="form-control" style="width: 100%; padding: 10px 14px; border-radius: 8px; border: 1px solid #cbd5e1;" required>
+                    <option value="">-- Pilih ODP --</option>
+                    @foreach($odps as $odp)
+                        @php
+                            $isFull = $odp->pelanggans_count >= $odp->port_odp;
+                            $label = $odp->nama_odp . ' (Terisi: ' . $odp->pelanggans_count . '/' . $odp->port_odp . ' Port)';
+                            if ($isFull) $label .= ' - PENUH';
+                        @endphp
+                        <option value="{{ $odp->id_odp }}" {{ $isFull ? 'disabled' : '' }}>{{ $label }}</option>
+                    @endforeach
+                </select>
+            </div>
+            
+            <div style="display: flex; justify-content: flex-end; gap: 12px;">
+                <button type="button" onclick="closeEditOdpModal()" class="btn" style="background: #f1f5f9; color: #475569; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer;">Batal</button>
+                <button type="submit" id="btnSaveOdp" class="btn btn-primary" style="padding: 8px 16px; border-radius: 8px;">
+                    <i class="fa-solid fa-save"></i> Simpan
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 @endsection
 
 @section('scripts')
+<!-- jQuery & Select2 JS -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <!-- Leaflet JS -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script>
+    $(document).ready(function() {
+        $('#edit_odp_select').select2({
+            dropdownParent: $('#editOdpModal'),
+            placeholder: '-- Pilih ODP --',
+            width: '100%',
+            allowClear: true
+        });
+    });
+
     document.addEventListener("DOMContentLoaded", function () {
         initMasterMap();
         setupSearchPelanggan();
         setupSearchKoordinat();
+        
+        document.getElementById('chk-pelanggan').addEventListener('change', fetchAndPlotData);
+        document.getElementById('chk-topology').addEventListener('change', fetchAndPlotData);
+        // Initial fetch
+        fetchAndPlotData();
     });
 
     var map;
@@ -391,68 +469,28 @@
     var odpLayerGroup;
     var pelangganLayerGroup;
     var lineLayerGroup;
-    var pelangganMarkers = {}; // Store marker references by pelanggan code
+    var pelangganMarkers = {}; 
 
-    var odcCoordinates = []; // List of {nama_odc, lat, lng}
-    var odpCoordinates = []; // List of {nama_odp, lat, lng, nama_odc}
-    var pelangganCoordinates = []; // List of {nama_pelanggan, lat, lng, odp_name}
+    var odcCoordinates = []; 
+    var odpCoordinates = []; 
+    var pelangganCoordinates = []; 
 
-    var odcMap = {}; // name -> [lat, lng]
-    var odcIdMap = {}; // id -> [lat, lng]
-    var odpMap = {}; // name -> [lat, lng]
+    var odcMap = {}; 
+    var odcIdMap = {}; 
+    var odpMap = {}; 
 
     function initMasterMap() {
-        // Default Center
         map = L.map('master-map').setView([-2.548926, 118.014863], 5);
-
-        // Layers
         var googleStreets = L.tileLayer('https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
             subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
             attribution: '&copy; Google Maps'
         });
-
-        var googleHybrid = L.tileLayer('https://{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
-            subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-            attribution: '&copy; Google Maps'
-        });
-
-        var googleSatellite = L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
-            subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-            attribution: '&copy; Google Maps'
-        });
-
-        var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; OpenStreetMap contributors'
-        });
-
-        // Add Google Streets as default
         googleStreets.addTo(map);
-
-        var baseLayers = {
-            "Google Maps (Jalan)": googleStreets,
-            "Google Maps (Satelit)": googleSatellite,
-            "Google Maps (Hibrida)": googleHybrid,
-            "OpenStreetMap": osm
-        };
-
-        L.control.layers(baseLayers).addTo(map);
-
-        // Group Layers
         odcLayerGroup = L.layerGroup().addTo(map);
         odpLayerGroup = L.layerGroup().addTo(map);
         pelangganLayerGroup = L.layerGroup().addTo(map);
         lineLayerGroup = L.layerGroup().addTo(map);
-
-        // Add Legend
         addMapLegend();
-
-        // Load data in sequence to resolve topology lines correctly
-        loadDataAndPlot();
-
-        // Listen for filter toggles
-        setupFilterListeners();
-
-        // Geolocation locate
         setupGeolocation();
     }
 
@@ -460,12 +498,9 @@
         var legend = L.control({ position: 'bottomright' });
         legend.onAdd = function (map) {
             var div = L.DomUtil.create('div', 'map-legend');
-            
-            // Check if mobile screen
             var isMobile = window.innerWidth < 768;
             var displayStyle = isMobile ? 'none' : 'block';
             var chevronClass = isMobile ? 'fa-solid fa-chevron-up' : 'fa-solid fa-chevron-down';
-
             div.innerHTML = `
                 <h4 style="font-family:'Outfit',sans-serif; margin: 0; font-size:0.9rem; color:var(--text-dark); display:flex; justify-content:space-between; align-items:center; width: 100%; gap: 10px;">
                     <span>Legenda Peta</span>
@@ -474,34 +509,10 @@
                     </button>
                 </h4>
                 <div id="legend-items-wrapper" style="border-top:1px solid #e2e8f0; padding-top:6px; margin-top:6px; display: ${displayStyle};">
-                    <div class="legend-item">
-                        <span class="legend-color" style="background-color:#ef4444;"></span>
-                        <span>ODC Utama</span>
-                    </div>
-                    <div class="legend-item">
-                        <span class="legend-color" style="background-color:#2563eb;"></span>
-                        <span>ODC Distribusi</span>
-                    </div>
-                    <div class="legend-item">
-                        <span class="legend-color" style="background-color:#10b981;"></span>
-                        <span>Splitter ODP</span>
-                    </div>
-                    <div class="legend-item">
-                        <span class="legend-color" style="background-color:#8b5cf6;"></span>
-                        <span>Pelanggan (Client)</span>
-                    </div>
-                    <div class="legend-item">
-                        <span class="legend-line" style="border-top:3px dashed #e11d48; margin-top:2px;"></span>
-                        <span>Koneksi ODC Utama &rarr; Distribusi</span>
-                    </div>
-                    <div class="legend-item">
-                        <span class="legend-line" style="border-top:2.5px dashed #4f46e5; margin-top:2px;"></span>
-                        <span>Koneksi ODC Distribusi &rarr; ODP</span>
-                    </div>
-                    <div class="legend-item">
-                        <span class="legend-line" style="border-top:2px solid #10b981; margin-top:2px;"></span>
-                        <span>Koneksi ODP &rarr; Client</span>
-                    </div>
+                    <div class="legend-item"><span class="legend-color" style="background-color:#ef4444;"></span><span>ODC Utama</span></div>
+                    <div class="legend-item"><span class="legend-color" style="background-color:#2563eb;"></span><span>ODC Distribusi</span></div>
+                    <div class="legend-item"><span class="legend-color" style="background-color:#10b981;"></span><span>Splitter ODP</span></div>
+                    <div class="legend-item"><span class="legend-color" style="background-color:#8b5cf6;"></span><span>Pelanggan (Client)</span></div>
                 </div>
             `;
             return div;
@@ -509,38 +520,25 @@
         legend.addTo(map);
     }
 
-    function loadDataAndPlot() {
-        // Step 1: Load ODC
+    function fetchAndPlotData() {
         fetch('{{ route("admin.odc.coordinates") }}')
             .then(res => res.json())
             .then(odcs => {
                 odcCoordinates = odcs;
-                odcs.forEach(o => {
-                    odcMap[o.nama_odc] = [o.lat, o.lng];
-                    odcIdMap[o.id_odc] = [o.lat, o.lng];
-                });
-
-                // Step 2: Load ODP
+                odcs.forEach(o => { odcMap[o.nama_odc] = [o.lat, o.lng]; odcIdMap[o.id_odc] = [o.lat, o.lng]; });
                 return fetch('{{ route("admin.odp.coordinates") }}');
             })
             .then(res => res.json())
             .then(odps => {
                 odpCoordinates = odps;
-                odps.forEach(o => {
-                    odpMap[o.nama_odp] = [o.lat, o.lng];
-                });
-
-                // Step 3: Load Pelanggan
+                odps.forEach(o => { odpMap[o.nama_odp] = [o.lat, o.lng]; });
                 return fetch('{{ route("admin.mapping.coordinates") }}');
             })
             .then(res => res.json())
             .then(pelanggan => {
-                pelangganCoordinates = pelanggan;
-
-                // Plot all markers and topology lines
+                window.pelangganCoordinatesData = pelanggan;
                 renderMapElements();
-            })
-            .catch(err => console.error("Gagal memuat peta master:", err));
+            });
     }
 
     function renderMapElements() {
@@ -548,11 +546,9 @@
         odpLayerGroup.clearLayers();
         pelangganLayerGroup.clearLayers();
         lineLayerGroup.clearLayers();
-        pelangganMarkers = {}; // Reset marker references
-
+        pelangganMarkers = {}; 
         var bounds = [];
 
-        // 1. Plot ODC (Red for Utama, Blue for Distribusi)
         if (document.getElementById('chk-odc').checked) {
             odcCoordinates.forEach(o => {
                 var markerColor = o.jenis_odc === 'utama' ? 'red' : 'blue';
@@ -584,7 +580,6 @@
             });
         }
 
-        // 2. Plot ODP (Green)
         if (document.getElementById('chk-odp').checked) {
             odpCoordinates.forEach(o => {
                 var clientsHtml = "";
@@ -628,25 +623,17 @@
             });
         }
 
-        // 3. Plot Pelanggan (Violet)
         if (document.getElementById('chk-pelanggan').checked) {
-            pelangganCoordinates.forEach(p => {
-                var marker = L.marker([p.lat, p.lng], {
-                    icon: L.icon({
-                        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-violet.png',
-                        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-                        iconSize: [25, 41],
-                        iconAnchor: [12, 41],
-                        popupAnchor: [1, -34],
-                        shadowSize: [41, 41]
-                    })
-                }).bindPopup(`
+            window.pelangganCoordinatesData.forEach(p => {
+                var marker = L.marker([p.lat, p.lng], { icon: L.icon({ iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-violet.png', shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png', iconSize: [25, 41], iconAnchor: [12, 41] }) }).addTo(pelangganLayerGroup);
+                marker.bindPopup(`
                     <div style="font-family:'Inter',sans-serif; font-size:0.85rem; line-height:1.4; min-width: 180px;">
                         <h4 style="font-family:'Outfit',sans-serif; margin:0 0 6px 0; color:#8b5cf6; font-size:0.95rem;">${p.nama_pelanggan}</h4>
                         <strong>Kode:</strong> ${p.kode_pelanggan}<br>
                         <strong>No. Telp:</strong> ${p.no_telp}<br>
                         <strong>Alamat:</strong> ${p.alamat}<br>
-                        <strong>Koneksi ODP:</strong> ${p.odp_name}<br>
+                        <strong>Koneksi ODP:</strong> <span id="odp-text-${p.id_pelanggan}">${p.odp_name}</span> 
+                        <i class="fa-solid fa-pencil" style="color: #4f46e5; cursor: pointer; margin-left: 5px; background: #e0e7ff; padding: 4px; border-radius: 4px; font-size: 0.75rem;" onclick="openEditOdpModal(${p.id_pelanggan}, ${p.id_odp || 'null'}, '${p.nama_pelanggan}')"></i><br>
                         <div style="display:flex; justify-content:space-between; margin-top:8px; align-items:center; gap:10px;">
                             <a href="https://www.google.com/maps?q=${p.lat},${p.lng}" target="_blank" class="map-link" style="margin:0;">
                                 <i class="fa-solid fa-map-location-dot"></i> Maps
@@ -657,9 +644,8 @@
                         </div>
                     </div>
                 `);
-                pelangganLayerGroup.addLayer(marker);
+                pelangganMarkers[p.kode_pelanggan] = marker;
                 bounds.push([p.lat, p.lng]);
-                pelangganMarkers[p.kode_pelanggan] = marker; // Save reference
             });
         }
 
@@ -671,7 +657,7 @@
                     var parentCoord = odcIdMap[o.parent_id];
                     if (parentCoord && document.getElementById('chk-odc').checked) {
                         var polyline = L.polyline([[o.lat, o.lng], parentCoord], {
-                            color: '#e11d48', // Rose color for ODC Utama -> Distribusi connection line
+                            color: '#e11d48', // Rose color
                             weight: 3,
                             opacity: 0.85,
                             dashArray: '4, 4'
@@ -681,22 +667,35 @@
                 }
             });
 
-            // Draw ODC -> ODP lines (Solid Purple/Indigo Line)
+            // Draw ODC -> ODP or ODP -> ODP lines
             odpCoordinates.forEach(odp => {
-                var odcCoord = odcMap[odp.nama_odc];
-                if (odcCoord && document.getElementById('chk-odc').checked && document.getElementById('chk-odp').checked) {
-                    var polyline = L.polyline([[odp.lat, odp.lng], odcCoord], {
-                        color: '#6366f1',
-                        weight: 2.5,
-                        opacity: 0.7,
-                        dashArray: '6, 6'
-                    });
-                    lineLayerGroup.addLayer(polyline);
+                if (odp.has_ratio && odp.parent_odp_name) {
+                    var parentOdpCoord = odpMap[odp.parent_odp_name];
+                    if (parentOdpCoord && document.getElementById('chk-odp').checked) {
+                        var polyline = L.polyline([[odp.lat, odp.lng], parentOdpCoord], {
+                            color: '#8b5cf6', // Violet color for ratio
+                            weight: 2.5,
+                            opacity: 0.8,
+                            dashArray: '5, 5'
+                        });
+                        lineLayerGroup.addLayer(polyline);
+                    }
+                } else {
+                    var odcCoord = odcMap[odp.nama_odc];
+                    if (odcCoord && document.getElementById('chk-odc').checked && document.getElementById('chk-odp').checked) {
+                        var polyline = L.polyline([[odp.lat, odp.lng], odcCoord], {
+                            color: '#6366f1',
+                            weight: 2.5,
+                            opacity: 0.7,
+                            dashArray: '6, 6'
+                        });
+                        lineLayerGroup.addLayer(polyline);
+                    }
                 }
             });
 
-            // Draw ODP -> Client lines (Solid Emerald Green Line)
-            pelangganCoordinates.forEach(pel => {
+            // Draw ODP -> Client lines
+            window.pelangganCoordinatesData.forEach(pel => {
                 var odpCoord = odpMap[pel.odp_name];
                 if (odpCoord && document.getElementById('chk-odp').checked && document.getElementById('chk-pelanggan').checked) {
                     var polyline = L.polyline([[pel.lat, pel.lng], odpCoord], {
@@ -709,20 +708,59 @@
             });
         }
 
-        // Adjust map bounds to fit all plotted elements
         if (bounds.length > 0) {
             map.fitBounds(bounds, { padding: [40, 40] });
         }
     }
 
-    function setupFilterListeners() {
-        var filters = ['chk-odc', 'chk-odp', 'chk-pelanggan', 'chk-topology'];
-        filters.forEach(id => {
-            document.getElementById(id).addEventListener('change', function () {
-                renderMapElements();
-            });
-        });
+    function openEditOdpModal(idPelanggan, currentOdpId, namaPelanggan) {
+        document.getElementById('edit_odp_id_pelanggan').value = idPelanggan;
+        document.getElementById('edit_odp_nama_pelanggan').textContent = namaPelanggan;
+        
+        // Use jQuery for select2 update
+        if (typeof $ !== 'undefined') {
+            $('#edit_odp_select').val(currentOdpId || '').trigger('change');
+        } else {
+            document.getElementById('edit_odp_select').value = currentOdpId || '';
+        }
+        
+        document.getElementById('editOdpModal').style.display = 'flex';
     }
+
+    function closeEditOdpModal() { document.getElementById('editOdpModal').style.display = 'none'; }
+
+    document.getElementById('editOdpForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        var form = this;
+        var btn = document.getElementById('btnSaveOdp');
+        var originalBtnText = btn.innerHTML;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...';
+        btn.disabled = true;
+
+        fetch("{{ route('admin.mapping.update_odp') }}", {
+            method: 'POST',
+            body: new FormData(form),
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if(data.success) {
+                var idPelanggan = document.getElementById('edit_odp_id_pelanggan').value;
+                var textEl = document.getElementById('odp-text-' + idPelanggan);
+                if(textEl) {
+                    textEl.textContent = data.new_odp_name;
+                    textEl.style.backgroundColor = '#dcfce7';
+                    setTimeout(() => { textEl.style.backgroundColor = 'transparent'; }, 2000);
+                }
+                if (window.pelangganCoordinatesData) {
+                    let pData = window.pelangganCoordinatesData.find(p => p.id_pelanggan == idPelanggan);
+                    if (pData) { pData.id_odp = document.getElementById('edit_odp_select').value; pData.odp_name = data.new_odp_name; }
+                }
+                closeEditOdpModal();
+            } else { alert(data.message || 'Gagal memperbarui ODP'); }
+        })
+        .finally(() => { btn.innerHTML = originalBtnText; btn.disabled = false; });
+    });
 
     function setupGeolocation() {
         document.getElementById('btn-lokasi-saya').addEventListener('click', function () {

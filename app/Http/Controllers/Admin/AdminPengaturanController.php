@@ -497,4 +497,29 @@ class AdminPengaturanController extends Controller
             ];
         }
     }
+
+    public function updateTaxSettings(Request $request)
+    {
+        $request->validate([
+            'tax_ppn_status' => 'required|string|in:aktif,tidak',
+            'tax_ppn_rate' => 'required|numeric|min:0|max:100',
+            'tax_ppn_charged' => 'required|string|in:ya,tidak',
+            'tax_bhp_status' => 'required|string|in:aktif,tidak',
+            'tax_bhp_rate' => 'required|numeric|min:0|max:100',
+            'tax_uso_status' => 'required|string|in:aktif,tidak',
+            'tax_uso_rate' => 'required|numeric|min:0|max:100',
+        ]);
+
+        DB::table('tb_profile')->where('id_profile', 1)->update([
+            'tax_ppn_status' => $request->tax_ppn_status,
+            'tax_ppn_rate' => $request->tax_ppn_rate,
+            'tax_ppn_charged' => $request->tax_ppn_charged,
+            'tax_bhp_status' => $request->tax_bhp_status,
+            'tax_bhp_rate' => $request->tax_bhp_rate,
+            'tax_uso_status' => $request->tax_uso_status,
+            'tax_uso_rate' => $request->tax_uso_rate,
+        ]);
+
+        return redirect()->route('admin.pengaturan.index')->with('success', 'Pengaturan Pajak & PNBP (PPN, BHP, USO) berhasil diperbarui!');
+    }
 }

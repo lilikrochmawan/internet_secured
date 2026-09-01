@@ -75,6 +75,21 @@ class PaymentController extends Controller
             ? 'https://app.sandbox.midtrans.com/snap/snap.js'
             : 'https://app.midtrans.com/snap/snap.js';
 
+        $isPpnActive = (($profile->tax_ppn_status ?? 'tidak') === 'aktif');
+        $isPpnCharged = (($profile->tax_ppn_charged ?? 'ya') === 'ya');
+        $showPpn = $isPpnActive && $isPpnCharged;
+        $ppnRate = (double)($profile->tax_ppn_rate ?? 11.00);
+
+        $ppnAmount = 0;
+        $baseSubtotal = $subtotal;
+        if ($showPpn) {
+            $baseSubtotal = $subtotal;
+            $ppnAmount = (int) round($subtotal * ($ppnRate / 100));
+            $totalPayment = $subtotal + $ppnAmount + $adminFee;
+        } else {
+            $totalPayment = $subtotal + $adminFee;
+        }
+
         return view('payment.detail', [
             'pelanggan' => $pelanggan,
             'invoices' => $invoices,
@@ -85,6 +100,11 @@ class PaymentController extends Controller
             'snapJsUrl' => $snapJsUrl,
             'isSandbox' => $isSandbox,
             'jumlahAkunGabung' => $jumlahAkunGabung,
+            'showPpn' => $showPpn,
+            'ppnRate' => $ppnRate,
+            'ppnAmount' => $ppnAmount,
+            'baseSubtotal' => $baseSubtotal,
+            'profile' => $profile
         ]);
     }
 
@@ -179,6 +199,24 @@ class PaymentController extends Controller
             }
         }
 
+        $isPpnActive = (($profile->tax_ppn_status ?? 'tidak') === 'aktif');
+        $isPpnCharged = (($profile->tax_ppn_charged ?? 'ya') === 'ya');
+        $showPpn = $isPpnActive && $isPpnCharged;
+        $ppnRate = (double)($profile->tax_ppn_rate ?? 11.00);
+
+        if ($showPpn) {
+            $ppnAmount = (int) round($subtotal * ($ppnRate / 100));
+            $items[] = [
+                'id' => 'PPN-001',
+                'price' => $ppnAmount,
+                'quantity' => 1,
+                'name' => 'PPN (' . $ppnRate . '%)',
+            ];
+            $totalPayment = $subtotal + $ppnAmount + $adminFee;
+        } else {
+            $totalPayment = $subtotal + $adminFee;
+        }
+
         if ($adminFee > 0) {
             $items[] = [
                 'id' => 'ADMIN-001',
@@ -188,7 +226,6 @@ class PaymentController extends Controller
             ];
         }
 
-        $totalPayment = $subtotal + $adminFee;
         $orderId = 'tagihan-' . $pelanggan->id_pelanggan . '-' . time();
 
         // URL notification diarahkan ke route Laravel native

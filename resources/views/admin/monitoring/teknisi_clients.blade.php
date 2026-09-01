@@ -470,7 +470,30 @@
         function renderPaginationControls(totalPages) {
             paginationContainer.innerHTML = "";
 
+            // 1. Create Left Info Element
+            const infoSpan = document.createElement("span");
+            infoSpan.className = "pagination-info";
+            
+            const limit = parseInt(limitSelect.value) || 10;
+            const totalItems = filteredRows.length;
+            const totalAll = allRows.length;
+            
+            let start = totalItems > 0 ? (currentPage - 1) * limit + 1 : 0;
+            let end = Math.min(currentPage * limit, totalItems);
+            
+            if (totalItems === totalAll) {
+                infoSpan.textContent = `Menampilkan ${start} - ${end} dari total ${totalItems} baris`;
+            } else {
+                infoSpan.textContent = `Menampilkan ${start} - ${end} dari total ${totalItems} baris (difilter dari ${totalAll} baris)`;
+            }
+            paginationContainer.appendChild(infoSpan);
+
             if (totalPages <= 1) return;
+
+            // 2. Create Right Buttons Container
+            const buttonsContainer = document.createElement("div");
+            buttonsContainer.className = "pagination-buttons";
+            paginationContainer.appendChild(buttonsContainer);
 
             // Prev Button
             const prevBtn = document.createElement("button");
@@ -483,7 +506,7 @@
                     filterAndPaginate();
                 }
             });
-            paginationContainer.appendChild(prevBtn);
+            buttonsContainer.appendChild(prevBtn);
 
             // Page Buttons
             for (let i = 1; i <= totalPages; i++) {
@@ -494,7 +517,7 @@
                             const ellipsis = document.createElement("span");
                             ellipsis.className = "page-ellipsis";
                             ellipsis.textContent = "...";
-                            paginationContainer.appendChild(ellipsis);
+                            buttonsContainer.appendChild(ellipsis);
                         }
                         continue;
                     }
@@ -507,7 +530,7 @@
                     currentPage = i;
                     filterAndPaginate();
                 });
-                paginationContainer.appendChild(pageBtn);
+                buttonsContainer.appendChild(pageBtn);
             }
 
             // Next Button
@@ -521,7 +544,7 @@
                     filterAndPaginate();
                 }
             });
-            paginationContainer.appendChild(nextBtn);
+            buttonsContainer.appendChild(nextBtn);
         }
 
         // Attach event listeners for real-time reactivity

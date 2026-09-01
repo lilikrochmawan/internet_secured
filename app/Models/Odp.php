@@ -18,8 +18,19 @@ class Odp extends Model
         'port_odp',
         'location',
         'odc',
-        'redaman',
+        'has_ratio',
+        'parent_odp_id',
     ];
+
+    public function parentOdp()
+    {
+        return $this->belongsTo(Odp::class, 'parent_odp_id', 'id_odp');
+    }
+
+    public function childOdps()
+    {
+        return $this->hasMany(Odp::class, 'parent_odp_id', 'id_odp');
+    }
 
     public function odcDetail()
     {

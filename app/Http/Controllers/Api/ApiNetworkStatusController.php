@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use App\Models\Paket;
 use App\Services\MikrotikService;
 use Illuminate\Support\Facades\Auth;
@@ -9,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
 
-class NetworkStatusController extends Controller
+class ApiNetworkStatusController extends Controller
 {
     public function __construct(
         private MikrotikService $mikrotikService
@@ -22,7 +23,10 @@ class NetworkStatusController extends Controller
         $pelanggan = $user->pelanggan;
 
         if (!$pelanggan) {
-            abort(404, 'Pelanggan tidak ditemukan.');
+            return response()->json([
+                'success' => false,
+                'message' => 'Pelanggan tidak ditemukan.'
+            ], 404);
         }
 
         $pelanggan->load('paketDetail');
@@ -34,21 +38,27 @@ class NetworkStatusController extends Controller
 
         $currentSpeed = $this->parsePaketSpeed($pelanggan->paketDetail?->nama_paket);
 
-        $paketUpgrade = Paket::whereIn('nama_paket', ['20 Mb', '30 Mb'])
-            ->orderBy('harga')
-            ->get();
-
         $cpe = DB::table('tb_cpe')
             ->where('id_pelanggan', $pelanggan->id_pelanggan)
             ->first();
 
-        return view('network.status', [
-            'pelanggan' => $pelanggan,
-            'paket' => $pelanggan->paketDetail,
-            'pppStatus' => $pppStatus,
-            'paketUpgrade' => $paketUpgrade,
-            'currentSpeed' => $currentSpeed,
-            'cpe' => $cpe,
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'pppStatus' => $pppStatus,
+                'currentSpeed' => $currentSpeed,
+                'cpe' => $cpe ? [
+                    'id_cpe' => $cpe->id_cpe,
+                    'serial_number' => $cpe->serial_number,
+                    'oui' => $cpe->oui,
+                    'product_class' => $cpe->product_class,
+                    'hardware_version' => $cpe->hardware_version,
+                    'software_version' => $cpe->software_version,
+                    'wifi_ssid_24' => $cpe->wifi_ssid_24,
+                    'wifi_ssid_5' => $cpe->wifi_ssid_5,
+                    'cwmp_model' => $cpe->cwmp_model,
+                ] : null
+            ]
         ]);
     }
 
@@ -56,8 +66,12 @@ class NetworkStatusController extends Controller
     {
         $user = Auth::user();
         $pelanggan = $user->pelanggan;
+
         if (!$pelanggan) {
-            return back()->withErrors(['error' => 'Pelanggan tidak ditemukan.']);
+            return response()->json([
+                'success' => false,
+                'message' => 'Pelanggan tidak ditemukan.'
+            ], 404);
         }
 
         $cpe = DB::table('tb_cpe')
@@ -65,10 +79,13 @@ class NetworkStatusController extends Controller
             ->first();
 
         if (!$cpe) {
-            return back()->withErrors(['error' => 'Perangkat modem tidak terhubung dengan akun Anda.']);
+            return response()->json([
+                'success' => false,
+                'message' => 'Perangkat modem tidak terhubung dengan akun Anda.'
+            ], 404);
         }
 
-        // Validate SSID and Password inputs
+        // Validasi input
         $rules = [
             'wifi_ssid_24' => 'required|string|min:1|max:32',
             'wifi_password_24' => 'nullable|string|min:8|max:63',
@@ -81,14 +98,8 @@ class NetworkStatusController extends Controller
 
         $request->validate($rules);
 
-        // Detect if it is TR-181 or TR-098 based on CPE model
         $hasTr181InQueue = ($cpe->cwmp_model === 'tr181');
-
-        if (!empty($cpe->wifi_ssid_5_index)) {
-            $index5g = (int) $cpe->wifi_ssid_5_index;
-        } else {
-            $index5g = 5;
-        }
+        $index5g = !empty($cpe->wifi_ssid_5_index) ? (int) $cpe->wifi_ssid_5_index : 5;
 
         $params = [];
         if ($hasTr181InQueue) {
@@ -118,7 +129,7 @@ class NetworkStatusController extends Controller
         }
 
         if (!empty($params)) {
-            // Insert to ACS queue
+            // Masukkan ke antrean ACS
             DB::table('tb_acs_queue')->insert([
                 'serial_number' => $cpe->serial_number,
                 'command_type' => 'SetParameterValues',
@@ -127,10 +138,10 @@ class NetworkStatusController extends Controller
                 'created_at' => now(),
             ]);
 
-            // Trigger Connection Request
+            // Jalankan Connection Request
             $this->sendConnectionRequest($cpe->connection_request_url);
             
-            // Also queue a GetParameterValues to update the DB with new SSIDs after connection
+            // Queue GetParameterValues untuk sinkronisasi ulang
             $getPaths = [];
             if ($hasTr181InQueue) {
                 $getPaths[] = 'Device.WiFi.SSID.1.SSID';
@@ -156,10 +167,16 @@ class NetworkStatusController extends Controller
 
             $this->cleanOldQueue($cpe->serial_number);
 
-            return back()->with('success', 'Perintah perubahan nama & password WiFi telah dikirim ke modem. Perubahan biasanya aktif dalam 1-2 menit setelah modem memproses antrean.');
+            return response()->json([
+                'success' => true,
+                'message' => 'Perintah perubahan nama & password WiFi telah dikirim ke modem. Proses sinkronisasi biasanya membutuhkan waktu 1-2 menit.'
+            ]);
         }
 
-        return back()->withErrors(['error' => 'Gagal memperbarui pengaturan WiFi.']);
+        return response()->json([
+            'success' => false,
+            'message' => 'Gagal memperbarui pengaturan WiFi. Parameter tidak ditemukan.'
+        ], 400);
     }
 
     private function cleanOldQueue($serialNumber)
@@ -177,7 +194,7 @@ class NetworkStatusController extends Controller
                       ) tmp
                   )", [$serialNumber, $serialNumber]);
         } catch (\Exception $e) {
-            // Suppress database deletion errors to avoid interrupting user flows
+            // Abaikan error penghapusan db
         }
     }
 

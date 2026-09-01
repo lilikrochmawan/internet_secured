@@ -3,9 +3,64 @@
 @section('title', 'Kelola ODP (Optical Distribution Point)')
 
 @section('styles')
+<!-- Select2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <!-- Leaflet CSS -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
 <style>
+    /* Select2 Modal Styling */
+    .select2-container {
+        font-family: 'Inter', sans-serif;
+        font-size: 0.95rem;
+        width: 100% !important;
+    }
+    .select2-container .select2-selection--single {
+        height: 44px !important;
+        border-radius: 12px !important;
+        border: 1px solid #cbd5e1 !important;
+        display: flex !important;
+        align-items: center !important;
+        padding: 0 14px !important;
+        transition: border 0.2s !important;
+    }
+    .select2-container--open .select2-selection--single {
+        border-color: #4f46e5 !important;
+    }
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        padding-left: 0 !important;
+        color: #334155 !important;
+        line-height: normal !important;
+    }
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+        height: 42px !important;
+        right: 14px !important;
+    }
+    .select2-dropdown {
+        font-family: 'Inter', sans-serif;
+        font-size: 0.95rem;
+        z-index: 1060;
+        border-radius: 12px !important;
+        border: 1px solid #cbd5e1 !important;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1) !important;
+        overflow: hidden;
+    }
+    .select2-search--dropdown .select2-search__field {
+        border-radius: 8px !important;
+        border: 1px solid #cbd5e1 !important;
+        padding: 6px 10px !important;
+        font-family: 'Inter', sans-serif !important;
+        outline: none !important;
+    }
+    .select2-search--dropdown .select2-search__field:focus {
+        border-color: #4f46e5 !important;
+    }
+    .select2-results__option {
+        padding: 8px 14px !important;
+    }
+    .select2-container--default .select2-results__option--highlighted.select2-results__option--selectable {
+        background-color: #4f46e5 !important;
+        color: white !important;
+    }
     /* Custom Searchable Dropdown Styling */
     .custom-select-container {
         position: relative;
@@ -355,7 +410,7 @@
                         <th>Nama ODP</th>
                         <th>Kapasitas Port</th>
                         <th>Redaman</th>
-                        <th>ODC Induk</th>
+                        <th>ODC Induk & Rasio</th>
                         <th>Pelanggan</th>
                         <th>Aksi</th>
                     </tr>
@@ -372,6 +427,11 @@
                                     <span style="font-weight: 500; color: #4f46e5;">{{ $row->odcDetail->nama_odc }}</span>
                                 @else
                                     <span style="color: var(--text-gray); font-style: italic;">Tidak Ada ODC</span>
+                                @endif
+                                @if($row->has_ratio && $row->parentOdp)
+                                    <div style="font-size: 0.8rem; margin-top: 4px; color: #64748b; background: #f1f5f9; padding: 2px 6px; border-radius: 4px; display: inline-block;">
+                                        <i class="fa-solid fa-link" style="color: #10b981; margin-right: 4px;"></i> Rasio dari: <strong>{{ $row->parentOdp->nama_odp }}</strong>
+                                    </div>
                                 @endif
                             </td>
                             <td>
@@ -452,6 +512,14 @@
                 </div>
 
                 <div class="form-group">
+                    <label>Gunakan Splitter Rasio? (Estafet ODP) *</label>
+                    <select name="has_ratio" id="add_has_ratio" class="form-control" onchange="toggleRatio('add')">
+                        <option value="0">Tidak</option>
+                        <option value="1">Ya</option>
+                    </select>
+                </div>
+
+                <div class="form-group" id="group_odc_add">
                     <label for="odc">Hubungkan ke ODC Induk *</label>
                     <select id="odc" name="odc" class="form-control" required style="display: none;">
                         <option value="">-- Pilih ODC Induk --</option>
@@ -483,6 +551,16 @@
                             </div>
                         </div>
                     </div>
+                </div>
+
+                <div class="form-group" id="group_parent_odp_add" style="display:none;">
+                    <label for="parent_odp_id_add">Pilih ODP Induk (Sumber) *</label>
+                    <select name="parent_odp_id" id="parent_odp_id_add" class="form-control select2-odp" style="width: 100%;">
+                        <option value="">-- Pilih ODP Induk --</option>
+                        @foreach($allOdps as $p)
+                            <option value="{{ $p->id_odp }}">{{ $p->nama_odp }} (Kapasitas: {{ $p->port_odp }} Port)</option>
+                        @endforeach
+                    </select>
                 </div>
 
                 <div class="form-group">
@@ -533,6 +611,14 @@
                 </div>
 
                 <div class="form-group">
+                    <label>Gunakan Splitter Rasio? (Estafet ODP) *</label>
+                    <select name="has_ratio" id="edit_has_ratio" class="form-control" onchange="toggleRatio('edit')">
+                        <option value="0">Tidak</option>
+                        <option value="1">Ya</option>
+                    </select>
+                </div>
+
+                <div class="form-group" id="group_odc_edit">
                     <label for="edit_odc">Hubungkan ke ODC Induk *</label>
                     <select id="edit_odc" name="odc" class="form-control" required style="display: none;">
                         <option value="">-- Pilih ODC Induk --</option>
@@ -564,6 +650,16 @@
                             </div>
                         </div>
                     </div>
+                </div>
+
+                <div class="form-group" id="group_parent_odp_edit" style="display:none;">
+                    <label for="parent_odp_id_edit">Pilih ODP Induk (Sumber) *</label>
+                    <select name="parent_odp_id" id="parent_odp_id_edit" class="form-control select2-odp" style="width: 100%;">
+                        <option value="">-- Pilih ODP Induk --</option>
+                        @foreach($allOdps as $p)
+                            <option value="{{ $p->id_odp }}">{{ $p->nama_odp }} (Kapasitas: {{ $p->port_odp }} Port)</option>
+                        @endforeach
+                    </select>
                 </div>
 
                 <div class="form-group">
@@ -649,9 +745,29 @@
 @endsection
 
 @section('scripts')
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<!-- jQuery & Select2 JS -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <!-- Leaflet JS -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script>
+    $(document).ready(function() {
+        $('#parent_odp_id_add').select2({
+            dropdownParent: $('#addModal'),
+            placeholder: '-- Pilih ODP Induk --',
+            allowClear: true,
+            width: '100%'
+        });
+        
+        $('#parent_odp_id_edit').select2({
+            dropdownParent: $('#editModal'),
+            placeholder: '-- Pilih ODP Induk --',
+            allowClear: true,
+            width: '100%'
+        });
+    });
+
     var mapAddPicker = null, mapEditPicker = null;
     var markerAddPicker = null, markerEditPicker = null;
 
@@ -807,6 +923,22 @@
         }
         document.getElementById('odc').value = '';
         syncCustomOdcText('add');
+        toggleRatio('add');
+    }
+
+    function toggleRatio(type) {
+        var hasRatio = document.getElementById(type + '_has_ratio').value;
+        if (hasRatio === "1") {
+            document.getElementById('group_odc_' + type).style.display = 'none';
+            document.getElementById('group_parent_odp_' + type).style.display = 'block';
+            document.getElementById(type === 'add' ? 'odc' : 'edit_odc').removeAttribute('required');
+            document.getElementById('parent_odp_id_' + type).setAttribute('required', 'required');
+        } else {
+            document.getElementById('group_odc_' + type).style.display = 'block';
+            document.getElementById('group_parent_odp_' + type).style.display = 'none';
+            document.getElementById(type === 'add' ? 'odc' : 'edit_odc').setAttribute('required', 'required');
+            document.getElementById('parent_odp_id_' + type).removeAttribute('required');
+        }
     }
     function closeAddModal() {
         document.getElementById('addModal').classList.remove('active');
@@ -817,6 +949,15 @@
         document.getElementById('edit_nama_odp').value = odp.nama_odp;
         document.getElementById('edit_port_odp').value = odp.port_odp;
         document.getElementById('edit_odc').value = odp.odc || '';
+        document.getElementById('edit_has_ratio').value = odp.has_ratio ? '1' : '0';
+        
+        if (typeof $ !== 'undefined') {
+            $('#parent_odp_id_edit').val(odp.parent_odp_id || '').trigger('change');
+        } else {
+            document.getElementById('parent_odp_id_edit').value = odp.parent_odp_id || '';
+        }
+
+        toggleRatio('edit');
         syncCustomOdcText('edit');
         document.getElementById('edit_redaman').value = odp.redaman || '';
         document.getElementById('edit_location').value = odp.location;
@@ -955,6 +1096,7 @@
                         `<strong>ODC Induk:</strong> ${odp.nama_odc}<br>` +
                         `<strong>Kapasitas Port:</strong> ${odp.port_odp} Port<br>` +
                         `<strong>Redaman ODP:</strong> <span style="color:#ea580c; font-weight:600;">${odp.redaman}</span><br>` +
+                        (odp.has_ratio ? `<strong>Rasio dari:</strong> ${odp.parent_odp_name || '-'}<br>` : ``) +
                         `<a href="https://www.google.com/maps?q=${odp.lat},${odp.lng}" target="_blank" class="map-link">` +
                         `<i class="fa-solid fa-map-location-dot"></i> Buka di Google Maps</a>` +
                         `</div>`

@@ -157,11 +157,42 @@
                 </select>
             </div>
 
+            <div style="width: 150px; min-width: 120px;">
+                <label style="font-size: 0.85rem; font-weight: 600; color: #475569; display: block; margin-bottom: 6px;">Bulan</label>
+                <select name="month" class="form-control" style="height: 42px;">
+                    <option value="">-- Semua Bulan --</option>
+                    @php
+                        $monthsList = [
+                            '01' => 'Januari', '02' => 'Februari', '03' => 'Maret', '04' => 'April',
+                            '05' => 'Mei', '06' => 'Juni', '07' => 'Juli', '08' => 'Agustus',
+                            '09' => 'September', '10' => 'Oktober', '11' => 'November', '12' => 'Desember'
+                        ];
+                    @endphp
+                    @foreach($monthsList as $val => $name)
+                        <option value="{{ $val }}" {{ $month == $val ? 'selected' : '' }}>{{ $name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div style="width: 130px; min-width: 100px;">
+                <label style="font-size: 0.85rem; font-weight: 600; color: #475569; display: block; margin-bottom: 6px;">Tahun</label>
+                <select name="year" class="form-control" style="height: 42px;">
+                    <option value="">-- Semua Tahun --</option>
+                    @php
+                        $currentYear = (int)date('Y');
+                        $yearsList = range($currentYear + 1, 2024);
+                    @endphp
+                    @foreach($yearsList as $yr)
+                        <option value="{{ $yr }}" {{ $year == $yr ? 'selected' : '' }}>{{ $yr }}</option>
+                    @endforeach
+                </select>
+            </div>
+
             <div style="display: flex; gap: 8px;">
                 <button type="submit" class="btn btn-primary" style="height: 42px;">
                     <i class="fa-solid fa-filter"></i> Filter
                 </button>
-                @if($search || $level)
+                @if($search || $level || $month || $year)
                     <a href="{{ route('admin.logs.index') }}" class="btn btn-secondary" style="height: 42px; display: inline-flex; align-items: center; justify-content: center;">
                         Clear
                     </a>

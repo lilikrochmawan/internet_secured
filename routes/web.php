@@ -142,6 +142,7 @@ Route::prefix('administrator')->group(function () {
         Route::post('/pengaturan/jatuh-tempo', [AdminPengaturanController::class, 'updateJatuhTempo'])->name('admin.pengaturan.jatuh_tempo');
         Route::post('/pengaturan/biaya-admin', [AdminPengaturanController::class, 'updateBiayaAdmin'])->name('admin.pengaturan.biaya_admin');
         Route::post('/pengaturan/license', [AdminPengaturanController::class, 'updateLicense'])->name('admin.pengaturan.license');
+        Route::post('/pengaturan/tax-settings', [AdminPengaturanController::class, 'updateTaxSettings'])->name('admin.pengaturan.tax_settings');
         Route::get('/pengaturan/backup', [AdminPengaturanController::class, 'backupDb'])->name('admin.pengaturan.backup');
 
         // Pengaturan Client (Branch & Staff Access)
@@ -185,6 +186,8 @@ Route::prefix('administrator')->group(function () {
         Route::post('/tr069/parameters', [AdminAcsController::class, 'setParameters'])->name('admin.tr069.parameters');
         Route::post('/tr069/connection-request', [AdminAcsController::class, 'triggerConnectionRequest'])->name('admin.tr069.cr');
         Route::post('/tr069/delete', [AdminAcsController::class, 'destroy'])->name('admin.tr069.destroy');
+        Route::post('/tr069/auto-provision', [AdminAcsController::class, 'autoProvision'])->name('admin.tr069.autoprovision');
+        Route::post('/tr069/auto-link', [AdminAcsController::class, 'autoLink'])->name('admin.tr069.autolink');
 
         // Custom Pesan WhatsApp Templates
         Route::get('/custom-pesan', [AdminCustomPesanController::class, 'index'])->name('admin.custom_pesan.index');
@@ -244,9 +247,16 @@ Route::prefix('administrator')->group(function () {
         // Topology & Client Map
         Route::get('/mapping', [AdminMapController::class, 'index'])->name('admin.mapping.index');
         Route::get('/mapping/coordinates', [AdminMapController::class, 'getCoordinates'])->name('admin.mapping.coordinates');
+        Route::post('/mapping/update-odp', [AdminMapController::class, 'updateClientOdp'])->name('admin.mapping.update_odp');
 
         // Log Aktivitas
         Route::get('/logs', [AdminLogController::class, 'index'])->name('admin.logs.index');
+        
+        // Smart OLT Management
+        Route::resource('olt', \App\Http\Controllers\Admin\AdminOltController::class);
+        Route::get('olt/{id}/autofind', [\App\Http\Controllers\Admin\AdminOltController::class, 'autofind'])->name('admin.olt.autofind');
+        Route::post('olt/{id}/register', [\App\Http\Controllers\Admin\AdminOltController::class, 'register'])->name('admin.olt.register');
+        Route::get('olt/{id}/monitoring', [\App\Http\Controllers\Admin\AdminOltController::class, 'monitoring'])->name('admin.olt.monitoring');
         
         // Debug Log Route (Temporary)
         Route::get('/view-laravel-log', function() {

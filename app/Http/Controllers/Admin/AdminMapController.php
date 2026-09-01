@@ -15,8 +15,9 @@ class AdminMapController extends Controller
         $totalOdc = Odc::whereNotNull('location')->where('location', '<>', '')->count();
         $totalOdp = Odp::whereNotNull('location')->where('location', '<>', '')->count();
         $totalPelanggan = Pelanggan::whereNotNull('location')->where('location', '<>', '')->count();
+        $odps = Odp::withCount('pelanggans')->orderBy('nama_odp', 'asc')->get();
 
-        return view('admin.mapping.index', compact('totalOdc', 'totalOdp', 'totalPelanggan'));
+        return view('admin.mapping.index', compact('totalOdc', 'totalOdp', 'totalPelanggan', 'odps'));
     }
 
     public function getCoordinates()
@@ -33,6 +34,7 @@ class AdminMapController extends Controller
                     'kode_pelanggan' => $row->kode_pelanggan,
                     'alamat' => $row->alamat,
                     'no_telp' => $row->no_telp,
+                    'id_odp' => $row->odp,
                     'odp_name' => $row->odpDetail->nama_odp ?? 'N/A',
                     'lat' => floatval(trim($coord_parts[0])),
                     'lng' => floatval(trim($coord_parts[1]))
@@ -41,5 +43,23 @@ class AdminMapController extends Controller
         }
 
         return response()->json($coordinates);
+    }
+
+    public function updateClientOdp(Request $request)
+    {
+        $request->validate([
+            'id_pelanggan' => 'required|integer',
+            'id_odp' => 'required|integer',
+        ]);
+
+        $pelanggan = Pelanggan::findOrFail($request->id_pelanggan);
+        $pelanggan->odp = $request->id_odp;
+        $pelanggan->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Koneksi ODP berhasil diperbarui',
+            'new_odp_name' => $pelanggan->odpDetail->nama_odp ?? 'N/A'
+        ]);
     }
 }

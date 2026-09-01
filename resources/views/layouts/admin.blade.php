@@ -999,6 +999,15 @@
                 </li>
             @endif
 
+            @if(Auth::user()->level == 'admin' || Auth::user()->level == 'noc' || Auth::user()->level == 'teknisi')
+                <li class="sidebar-menu-item {{ Str::startsWith($currRoute, 'olt.') || Str::startsWith($currRoute, 'admin.olt.') ? 'active' : '' }}">
+                    <a href="{{ route('olt.index') }}">
+                        <i class="fa-solid fa-server"></i>
+                        <span>Smart OLT</span>
+                    </a>
+                </li>
+            @endif
+
             @if(Auth::user()->hasMenuAccess('order_pemasangan'))
                 @php
                     $orderNotificationCount = 0;

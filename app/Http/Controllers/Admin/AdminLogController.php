@@ -13,15 +13,33 @@ class AdminLogController extends Controller
     {
         $search = $request->get('search');
         $level = $request->get('level');
+        $month = $request->get('month');
+        $year = $request->get('year');
         $page = $request->get('page', 1);
         $perPage = 10;
 
-        $allLogs = $this->parseLogs(1000);
+        $allLogs = $this->parseLogs();
 
         // Apply filters if present
         if (!empty($level)) {
             $allLogs = array_values(array_filter($allLogs, function ($log) use ($level) {
                 return strtolower($log['level']) === strtolower($level);
+            }));
+        }
+
+        if (!empty($month)) {
+            $allLogs = array_values(array_filter($allLogs, function ($log) use ($month) {
+                // Extract month from timestamp YYYY-MM-DD HH:MM:SS
+                $logMonth = substr($log['timestamp'], 5, 2);
+                return $logMonth === $month;
+            }));
+        }
+
+        if (!empty($year)) {
+            $allLogs = array_values(array_filter($allLogs, function ($log) use ($year) {
+                // Extract year from timestamp YYYY-MM-DD HH:MM:SS
+                $logYear = substr($log['timestamp'], 0, 4);
+                return $logYear === $year;
             }));
         }
 
@@ -45,10 +63,10 @@ class AdminLogController extends Controller
             ['path' => $request->url(), 'query' => $request->query()]
         );
 
-        return view('admin.logs.index', compact('paginatedLogs', 'search', 'level'));
+        return view('admin.logs.index', compact('paginatedLogs', 'search', 'level', 'month', 'year'));
     }
 
-    private function parseLogs($limit = 1000)
+    private function parseLogs()
     {
         $logPath = storage_path('logs/laravel.log');
         if (!file_exists($logPath)) {
@@ -57,17 +75,12 @@ class AdminLogController extends Controller
 
         try {
             $file = new \SplFileObject($logPath, 'r');
-            $file->seek(PHP_INT_MAX);
-            $totalLines = $file->key();
-            
-            // Read last 15,000 lines to ensure we capture at least 1,000 entries (accounting for stack traces)
-            $startLine = max(0, $totalLines - 15000);
-            $file->seek($startLine);
-            
             $lines = [];
             while (!$file->eof()) {
-                $lines[] = $file->current();
-                $file->next();
+                $line = $file->fgets();
+                if ($line !== false) {
+                    $lines[] = $line;
+                }
             }
             
             $entries = [];
@@ -97,10 +110,7 @@ class AdminLogController extends Controller
             }
             
             // Reverse so that the latest logs appear at the top
-            $entries = array_reverse($entries);
-            
-            // Slice to limit
-            return array_slice($entries, 0, $limit);
+            return array_reverse($entries);
         } catch (\Exception $e) {
             return [];
         }

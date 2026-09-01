@@ -104,11 +104,77 @@ class AdminTransaksiController extends Controller
         $todayPaidCount = $todayPaymentsQuery->count();
         $todayPaidAmount = $todayPaymentsQuery->sum('jml_bayar');
 
-        $blockedClientIds = DB::table('tb_tagihan')
+        // 1. Ambil status dari database sebagai fallback
+        $blockedClientIdsDB = DB::table('tb_tagihan')
             ->where('blokir_status', 1)
             ->pluck('id_pelanggan')
             ->unique()
             ->toArray();
+
+        // 2. Ambil status live dari Mikrotik agar lebih akurat
+        $blockedUsernames = [];
+        $blockedIps = [];
+        $routerSuccess = false;
+
+        try {
+            require_once base_path('include/routeros_api.php');
+            $miks = DB::table('tbl_mikrotik')->get();
+            foreach ($miks as $m) {
+                $API = new \RouterosAPI();
+                $API->timeout = 1;
+                $API->attempts = 1;
+                $API->delay = 0;
+                
+                if ($API->connect($m->ip, $m->username, $m->password)) {
+                    $routerSuccess = true;
+                    
+                    // Cek pelanggan PPPoE yang terisolir
+                    $secrets = $API->comm('/ppp/secret/print');
+                    if (is_array($secrets)) {
+                        foreach ($secrets as $s) {
+                            if (str_contains(strtolower($s['profile'] ?? ''), 'isolir') || ($s['disabled'] ?? 'false') === 'true') {
+                                $blockedUsernames[] = $s['name'];
+                            }
+                        }
+                    }
+
+                    // Cek pelanggan Statik yang terblokir di firewall
+                    $addressList = $API->comm('/ip/firewall/address-list/print');
+                    if (is_array($addressList)) {
+                        foreach ($addressList as $list) {
+                            $comment = strtolower($list['comment'] ?? '');
+                            if (str_contains($comment, 'blokir')) {
+                                $blockedIps[] = $list['address'] ?? '';
+                            }
+                        }
+                    }
+                    
+                    $API->disconnect();
+                }
+            }
+        } catch (\Exception $e) {}
+
+        if ($routerSuccess) {
+            // Jika router bisa diakses, gunakan data live dari router
+            $blockedClientIdsFromMikrotik = DB::table('tb_user')
+                ->whereIn('username', $blockedUsernames)
+                ->pluck('id_pelanggan')
+                ->toArray();
+                
+            $blockedClientIdsFromIp = DB::table('tb_pelanggan')
+                ->whereIn('ip_address', $blockedIps)
+                ->pluck('id_pelanggan')
+                ->toArray();
+                
+            $blockedClientIds = array_unique(array_merge($blockedClientIdsFromMikrotik, $blockedClientIdsFromIp));
+            
+            // Opsional: perbaiki tb_tagihan otomatis jika sinkronisasi berbeda
+            // Namun agar tidak memberatkan DB secara terus menerus pada fungsi view,
+            // kita gunakan array hasil live check ini untuk tampilan index.
+        } else {
+            // Fallback ke database jika mikrotik mati/offline
+            $blockedClientIds = $blockedClientIdsDB;
+        }
 
         return view('admin.transaksi.index', compact(
             'tagihan', 'search', 'status', 'pelanggan', 'selectedMonth', 'selectedYear',
@@ -676,12 +742,10 @@ class AdminTransaksiController extends Controller
         $tahun = $request->get('tahun', date('Y'));
         $bulantahun = $bulan . $tahun;
 
-        // Cek apakah PPN aktif
-        $ppn_aktif = false;
-        $paketSettings = DB::table('tbl_paketmikrotik')->first();
-        if ($paketSettings && isset($paketSettings->ppn) && $paketSettings->ppn === 'aktif') {
-            $ppn_aktif = true;
-        }
+        // Cek apakah PPN aktif dan dibebankan ke pelanggan
+        $settings = DB::table('tb_profile')->first();
+        $ppn_aktif = (($settings->tax_ppn_status ?? 'tidak') === 'aktif') && (($settings->tax_ppn_charged ?? 'ya') === 'ya');
+        $global_ppn_rate = (double)($settings->tax_ppn_rate ?? 11.00) / 100;
 
         // Cari pelanggan yang belum memiliki tagihan pada bulan & tahun tersebut
         $pelanggan = Pelanggan::with('paketDetail')
@@ -694,7 +758,7 @@ class AdminTransaksiController extends Controller
             })
             ->get();
 
-        return view('admin.transaksi.generate', compact('pelanggan', 'bulan', 'tahun', 'bulantahun', 'ppn_aktif'));
+        return view('admin.transaksi.generate', compact('pelanggan', 'bulan', 'tahun', 'bulantahun', 'ppn_aktif', 'global_ppn_rate'));
     }
 
     public function generate(Request $request)

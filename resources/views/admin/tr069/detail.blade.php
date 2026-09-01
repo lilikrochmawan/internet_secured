@@ -783,11 +783,19 @@
                 <div class="tr-details-list">
                     <div class="tr-details-item">
                         <span class="tr-details-label"><i class="fa-solid fa-broadcast-tower"></i> SSID WiFi 2.4 GHz</span>
-                        <span class="tr-details-value"><strong>{{ $cpe->wifi_ssid_24 ?: 'Tidak ada data' }}</strong></span>
+                        <span class="tr-details-value"><strong>{{ ($cpe->wifi_ssid_24 ?? null) ?: 'Tidak ada data' }}</strong></span>
+                    </div>
+                    <div class="tr-details-item">
+                        <span class="tr-details-label"><i class="fa-solid fa-key"></i> Password WiFi 2.4 GHz</span>
+                        <span class="tr-details-value"><strong style="color: #16a34a; font-family: monospace; font-size: 0.9rem;">{{ ($cpe->wifi_password ?? null) ?: 'Tidak ada data' }}</strong></span>
                     </div>
                     <div class="tr-details-item">
                         <span class="tr-details-label"><i class="fa-solid fa-broadcast-tower"></i> SSID WiFi 5 GHz</span>
-                        <span class="tr-details-value"><strong>{{ $cpe->wifi_ssid_5 ?: 'Tidak ada data / tidak mendukung' }}</strong></span>
+                        <span class="tr-details-value"><strong>{{ ($cpe->wifi_ssid_5 ?? null) ?: 'Tidak ada data / tidak mendukung' }}</strong></span>
+                    </div>
+                    <div class="tr-details-item">
+                        <span class="tr-details-label"><i class="fa-solid fa-key"></i> Password WiFi 5 GHz</span>
+                        <span class="tr-details-value"><strong style="color: #16a34a; font-family: monospace; font-size: 0.9rem;">{{ ($cpe->wifi_password_5 ?? null) ?: 'Tidak ada data / tidak mendukung' }}</strong></span>
                     </div>
                     <div class="tr-details-item">
                         <span class="tr-details-label"><i class="fa-solid fa-shield-halved"></i> Keamanan (Security)</span>
@@ -883,6 +891,16 @@
                     <i class="fa-solid fa-power-off"></i> Reboot ONT (Queue)
                 </button>
             </form>
+
+            @if(!empty($cpe->id_pelanggan))
+            <form method="POST" action="{{ route('admin.tr069.autoprovision') }}" onsubmit="return confirm('Apakah Anda yakin ingin melakukan setup otomatis WiFi & PPPoE untuk modem ini?')">
+                @csrf
+                <input type="hidden" name="id_cpe" value="{{ $cpe->id_cpe }}">
+                <button type="submit" class="tr-btn tr-btn-success" style="background-color: var(--success-color, #10b981); border-color: var(--success-color, #10b981); color: white;">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> Setup Otomatis (WiFi & PPPoE)
+                </button>
+            </form>
+            @endif
         </div>
 
         <div class="tr-grid">
@@ -906,17 +924,39 @@
 
                     <!-- Panel TR-098 -->
                     <div id="panel_tr098" class="param-panel">
-                        <div style="font-weight: 700; font-size: 0.85rem; margin-bottom: 12px; color: var(--tr-light-text-primary); border-bottom: 1px solid var(--tr-light-border); padding-bottom: 4px; text-transform: uppercase;">WiFi Settings</div>
-                        <div class="tr-form-group">
-                            <label for="tr098_ssid">SSID WiFi Name</label>
-                            <input type="text" name="tr098_ssid" id="tr098_ssid" class="tr-form-control" placeholder="Nama WiFi Baru">
+                        <div style="font-weight: 700; font-size: 0.85rem; margin-bottom: 12px; color: var(--tr-light-text-primary); border-bottom: 1px solid var(--tr-light-border); padding-bottom: 4px; text-transform: uppercase;">WiFi Settings (2.4 GHz & 5 GHz)</div>
+                        
+                        <!-- 2.4 GHz Band -->
+                        <div style="font-weight: 700; font-size: 0.8rem; margin-bottom: 8px; color: #4f46e5; display: flex; align-items: center; gap: 6px;">
+                            <i class="fa-solid fa-wifi"></i> Band 2.4 GHz
                         </div>
                         <div class="tr-form-group">
-                            <label for="tr098_password">WiFi Password</label>
-                            <input type="text" name="tr098_password" id="tr098_password" class="tr-form-control" placeholder="Password WiFi Baru">
+                            <label for="tr098_ssid">SSID WiFi Name 2.4 GHz</label>
+                            <input type="text" name="tr098_ssid" id="tr098_ssid" class="tr-form-control" value="{{ $cpe->wifi_ssid_24 ?? '' }}" placeholder="Nama WiFi 2.4G Baru">
+                            <span style="font-size: 0.75rem; color: #64748b; margin-top: 4px; display: block;">Aktif: <strong>{{ $cpe->wifi_ssid_24 ?? 'N/A (Belum Terdeteksi)' }}</strong></span>
+                        </div>
+                        <div class="tr-form-group">
+                            <label for="tr098_password">WiFi Password 2.4 GHz</label>
+                            <input type="text" name="tr098_password" id="tr098_password" class="tr-form-control" value="{{ $cpe->wifi_password ?? '' }}" placeholder="Password WiFi 2.4G Baru">
+                            <span style="font-size: 0.75rem; color: #64748b; margin-top: 4px; display: block;">Aktif: <strong style="color: #16a34a; font-family: monospace; font-size: 0.85rem;">{{ $cpe->wifi_password ?? 'N/A (Belum Terdeteksi)' }}</strong></span>
                         </div>
 
-                        <div style="font-weight: 700; font-size: 0.85rem; margin-top: 18px; margin-bottom: 12px; color: var(--tr-light-text-primary); border-bottom: 1px solid var(--tr-light-border); padding-bottom: 4px; text-transform: uppercase;">PPPoE Connection Settings</div>
+                        <!-- 5 GHz Band -->
+                        <div style="font-weight: 700; font-size: 0.8rem; margin-top: 18px; margin-bottom: 8px; color: #0891b2; display: flex; align-items: center; gap: 6px;">
+                            <i class="fa-solid fa-bolt"></i> Band 5 GHz
+                        </div>
+                        <div class="tr-form-group">
+                            <label for="tr098_ssid_5">SSID WiFi Name 5 GHz</label>
+                            <input type="text" name="tr098_ssid_5" id="tr098_ssid_5" class="tr-form-control" value="{{ $cpe->wifi_ssid_5 ?? '' }}" placeholder="Nama WiFi 5G Baru">
+                            <span style="font-size: 0.75rem; color: #64748b; margin-top: 4px; display: block;">Aktif: <strong>{{ $cpe->wifi_ssid_5 ?? 'N/A (Belum Terdeteksi/Mendukung)' }}</strong></span>
+                        </div>
+                        <div class="tr-form-group">
+                            <label for="tr098_password_5">WiFi Password 5 GHz</label>
+                            <input type="text" name="tr098_password_5" id="tr098_password_5" class="tr-form-control" value="{{ $cpe->wifi_password_5 ?? '' }}" placeholder="Password WiFi 5G Baru">
+                            <span style="font-size: 0.75rem; color: #64748b; margin-top: 4px; display: block;">Aktif: <strong style="color: #16a34a; font-family: monospace; font-size: 0.85rem;">{{ $cpe->wifi_password_5 ?? 'N/A (Belum Terdeteksi/Mendukung)' }}</strong></span>
+                        </div>
+
+                        <div style="font-weight: 700; font-size: 0.85rem; margin-top: 24px; margin-bottom: 12px; color: var(--tr-light-text-primary); border-bottom: 1px solid var(--tr-light-border); padding-bottom: 4px; text-transform: uppercase;">PPPoE Connection Settings</div>
                         <div class="tr-form-group">
                             <label for="tr098_pppoe_username">PPPoE Username</label>
                             <input type="text" name="tr098_pppoe_username" id="tr098_pppoe_username" class="tr-form-control" placeholder="Username PPPoE Baru">
@@ -935,17 +975,39 @@
 
                     <!-- Panel TR-181 -->
                     <div id="panel_tr181" class="param-panel" style="display:none;">
-                        <div style="font-weight: 700; font-size: 0.85rem; margin-bottom: 12px; color: var(--tr-light-text-primary); border-bottom: 1px solid var(--tr-light-border); padding-bottom: 4px; text-transform: uppercase;">WiFi Settings</div>
-                        <div class="tr-form-group">
-                            <label for="tr181_ssid">SSID WiFi Name</label>
-                            <input type="text" name="tr181_ssid" id="tr181_ssid" class="tr-form-control" placeholder="Nama WiFi Baru (TR-181)">
+                        <div style="font-weight: 700; font-size: 0.85rem; margin-bottom: 12px; color: var(--tr-light-text-primary); border-bottom: 1px solid var(--tr-light-border); padding-bottom: 4px; text-transform: uppercase;">WiFi Settings (2.4 GHz & 5 GHz)</div>
+                        
+                        <!-- 2.4 GHz Band -->
+                        <div style="font-weight: 700; font-size: 0.8rem; margin-bottom: 8px; color: #4f46e5; display: flex; align-items: center; gap: 6px;">
+                            <i class="fa-solid fa-wifi"></i> Band 2.4 GHz
                         </div>
                         <div class="tr-form-group">
-                            <label for="tr181_password">WiFi Password</label>
-                            <input type="text" name="tr181_password" id="tr181_password" class="tr-form-control" placeholder="Password WiFi Baru (TR-181)">
+                            <label for="tr181_ssid">SSID WiFi Name 2.4 GHz</label>
+                            <input type="text" name="tr181_ssid" id="tr181_ssid" class="tr-form-control" value="{{ $cpe->wifi_ssid_24 ?? '' }}" placeholder="Nama WiFi 2.4G Baru (TR-181)">
+                            <span style="font-size: 0.75rem; color: #64748b; margin-top: 4px; display: block;">Aktif: <strong>{{ $cpe->wifi_ssid_24 ?? 'N/A (Belum Terdeteksi)' }}</strong></span>
+                        </div>
+                        <div class="tr-form-group">
+                            <label for="tr181_password">WiFi Password 2.4 GHz</label>
+                            <input type="text" name="tr181_password" id="tr181_password" class="tr-form-control" value="{{ $cpe->wifi_password ?? '' }}" placeholder="Password WiFi 2.4G Baru (TR-181)">
+                            <span style="font-size: 0.75rem; color: #64748b; margin-top: 4px; display: block;">Aktif: <strong style="color: #16a34a; font-family: monospace; font-size: 0.85rem;">{{ $cpe->wifi_password ?? 'N/A (Belum Terdeteksi)' }}</strong></span>
                         </div>
 
-                        <div style="font-weight: 700; font-size: 0.85rem; margin-top: 18px; margin-bottom: 12px; color: var(--tr-light-text-primary); border-bottom: 1px solid var(--tr-light-border); padding-bottom: 4px; text-transform: uppercase;">PPPoE Connection Settings</div>
+                        <!-- 5 GHz Band -->
+                        <div style="font-weight: 700; font-size: 0.8rem; margin-top: 18px; margin-bottom: 8px; color: #0891b2; display: flex; align-items: center; gap: 6px;">
+                            <i class="fa-solid fa-bolt"></i> Band 5 GHz
+                        </div>
+                        <div class="tr-form-group">
+                            <label for="tr181_ssid_5">SSID WiFi Name 5 GHz</label>
+                            <input type="text" name="tr181_ssid_5" id="tr181_ssid_5" class="tr-form-control" value="{{ $cpe->wifi_ssid_5 ?? '' }}" placeholder="Nama WiFi 5G Baru (TR-181)">
+                            <span style="font-size: 0.75rem; color: #64748b; margin-top: 4px; display: block;">Aktif: <strong>{{ $cpe->wifi_ssid_5 ?? 'N/A (Belum Terdeteksi/Mendukung)' }}</strong></span>
+                        </div>
+                        <div class="tr-form-group">
+                            <label for="tr181_password_5">WiFi Password 5 GHz</label>
+                            <input type="text" name="tr181_password_5" id="tr181_password_5" class="tr-form-control" value="{{ $cpe->wifi_password_5 ?? '' }}" placeholder="Password WiFi 5G Baru (TR-181)">
+                            <span style="font-size: 0.75rem; color: #64748b; margin-top: 4px; display: block;">Aktif: <strong style="color: #16a34a; font-family: monospace; font-size: 0.85rem;">{{ $cpe->wifi_password_5 ?? 'N/A (Belum Terdeteksi/Mendukung)' }}</strong></span>
+                        </div>
+
+                        <div style="font-weight: 700; font-size: 0.85rem; margin-top: 24px; margin-bottom: 12px; color: var(--tr-light-text-primary); border-bottom: 1px solid var(--tr-light-border); padding-bottom: 4px; text-transform: uppercase;">PPPoE Connection Settings</div>
                         <div class="tr-form-group">
                             <label for="tr181_pppoe_username">PPPoE Username</label>
                             <input type="text" name="tr181_pppoe_username" id="tr181_pppoe_username" class="tr-form-control" placeholder="Username PPPoE Baru (TR-181)">

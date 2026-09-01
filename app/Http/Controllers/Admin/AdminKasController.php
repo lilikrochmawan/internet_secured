@@ -9,7 +9,7 @@ use Carbon\Carbon;
 
 class AdminKasController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $kas = DB::table('tb_kas')
             ->leftJoin('tb_tagihan', 'tb_tagihan.id_tagihan', '=', 'tb_kas.id_tagihan')
@@ -21,12 +21,95 @@ class AdminKasController extends Controller
         $total_keluar = DB::table('tb_kas')->sum('pengeluaran') ?? 0;
         $saldo = $total_masuk - $total_keluar;
 
+        // User selected month & year filter
+        $selectedYear = $request->get('filter_tahun', Carbon::now()->year);
+        $selectedMonth = $request->get('filter_bulan', Carbon::now()->month);
+        $selectedDate = Carbon::createFromDate((int)$selectedYear, (int)$selectedMonth, 1);
+
         $pemasukan_bulan_ini = DB::table('tb_kas')
-            ->whereMonth('tgl_kas', Carbon::now()->month)
-            ->whereYear('tgl_kas', Carbon::now()->year)
+            ->whereMonth('tgl_kas', $selectedDate->month)
+            ->whereYear('tgl_kas', $selectedDate->year)
             ->sum('penerimaan') ?? 0;
 
-        return view('admin.kas.index', compact('kas', 'total_masuk', 'total_keluar', 'saldo', 'pemasukan_bulan_ini'));
+        $lastMonth = $selectedDate->copy()->subMonth();
+        $pemasukan_bulan_lalu = DB::table('tb_kas')
+            ->whereMonth('tgl_kas', $lastMonth->month)
+            ->whereYear('tgl_kas', $lastMonth->year)
+            ->sum('penerimaan') ?? 0;
+
+        // Fetch tax settings from tb_profile
+        $settings = DB::table('tb_profile')->first();
+        $isPpnActive = (($settings->tax_ppn_status ?? 'tidak') === 'aktif');
+        $isPpnCharged = (($settings->tax_ppn_charged ?? 'ya') === 'ya');
+        $ppnPercent = (double)($settings->tax_ppn_rate ?? 11.00);
+        $bhpPercent = (double)($settings->tax_bhp_rate ?? 0.50);
+        $usoPercent = (double)($settings->tax_uso_rate ?? 1.25);
+
+        // All Time calculations
+        $allDpp = 0;
+        $allPpn = 0;
+        if ($isPpnActive) {
+            if ($isPpnCharged) {
+                $allDpp = $total_masuk;
+                $allPpn = $total_masuk * ($ppnPercent / 100);
+            } else {
+                $allDpp = $total_masuk / (1 + ($ppnPercent / 100));
+                $allPpn = $total_masuk - $allDpp;
+            }
+        } else {
+            $allDpp = $total_masuk;
+            $allPpn = 0;
+        }
+        $allBhp = (($settings->tax_bhp_status ?? 'aktif') === 'aktif') ? ($allDpp * ($bhpPercent / 100)) : 0;
+        $allUso = (($settings->tax_uso_status ?? 'aktif') === 'aktif') ? ($allDpp * ($usoPercent / 100)) : 0;
+        $allTotalTax = $allPpn + $allBhp + $allUso;
+
+        // Bulan Ini calculations
+        $monthDpp = 0;
+        $monthPpn = 0;
+        if ($isPpnActive) {
+            if ($isPpnCharged) {
+                $monthDpp = $pemasukan_bulan_ini;
+                $monthPpn = $pemasukan_bulan_ini * ($ppnPercent / 100);
+            } else {
+                $monthDpp = $pemasukan_bulan_ini / (1 + ($ppnPercent / 100));
+                $monthPpn = $pemasukan_bulan_ini - $monthDpp;
+            }
+        } else {
+            $monthDpp = $pemasukan_bulan_ini;
+            $monthPpn = 0;
+        }
+        $monthBhp = (($settings->tax_bhp_status ?? 'aktif') === 'aktif') ? ($monthDpp * ($bhpPercent / 100)) : 0;
+        $monthUso = (($settings->tax_uso_status ?? 'aktif') === 'aktif') ? ($monthDpp * ($usoPercent / 100)) : 0;
+        $monthTotalTax = $monthPpn + $monthBhp + $monthUso;
+
+        // Bulan Lalu calculations
+        $lastMonthDpp = 0;
+        $lastMonthPpn = 0;
+        if ($isPpnActive) {
+            if ($isPpnCharged) {
+                $lastMonthDpp = $pemasukan_bulan_lalu;
+                $lastMonthPpn = $pemasukan_bulan_lalu * ($ppnPercent / 100);
+            } else {
+                $lastMonthDpp = $pemasukan_bulan_lalu / (1 + ($ppnPercent / 100));
+                $lastMonthPpn = $pemasukan_bulan_lalu - $lastMonthDpp;
+            }
+        } else {
+            $lastMonthDpp = $pemasukan_bulan_lalu;
+            $lastMonthPpn = 0;
+        }
+        $lastMonthBhp = (($settings->tax_bhp_status ?? 'aktif') === 'aktif') ? ($lastMonthDpp * ($bhpPercent / 100)) : 0;
+        $lastMonthUso = (($settings->tax_uso_status ?? 'aktif') === 'aktif') ? ($lastMonthDpp * ($usoPercent / 100)) : 0;
+        $lastMonthTotalTax = $lastMonthPpn + $lastMonthBhp + $lastMonthUso;
+
+        return view('admin.kas.index', compact(
+            'kas', 'total_masuk', 'total_keluar', 'saldo', 'pemasukan_bulan_ini', 'pemasukan_bulan_lalu',
+            'settings', 'isPpnActive', 'ppnPercent', 'bhpPercent', 'usoPercent',
+            'allDpp', 'allPpn', 'allBhp', 'allUso', 'allTotalTax',
+            'monthDpp', 'monthPpn', 'monthBhp', 'monthUso', 'monthTotalTax',
+            'lastMonthDpp', 'lastMonthPpn', 'lastMonthBhp', 'lastMonthUso', 'lastMonthTotalTax', 'lastMonth',
+            'selectedMonth', 'selectedYear', 'selectedDate'
+        ));
     }
 
     public function store(Request $request)

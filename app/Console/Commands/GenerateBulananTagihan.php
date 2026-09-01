@@ -36,18 +36,15 @@ class GenerateBulananTagihan extends Command
         $this->info("Starting billing generation for period: {$bulan}-{$tahun} ({$bulantahun})...");
         Log::info("GenerateBulananTagihan: Starting monthly billing generation for period: {$bulantahun}");
 
-        // PPN setting
-        $ppn_aktif = false;
-        $paketSettings = DB::table('tbl_paketmikrotik')->first();
-        if ($paketSettings && isset($paketSettings->ppn) && $paketSettings->ppn === 'aktif') {
-            $ppn_aktif = true;
-        }
-
         // Global billing settings
         $settings = DB::table('tb_profile')->first();
         $tipe = $settings->tipe_jatuh_tempo ?? 'tanggal_tetap';
         $default_hari = $settings->hari_jatuh_tempo ?? 10;
         $sistem = $settings->sistem_billing ?? 'prabayar';
+
+        // PPN settings from tb_profile
+        $ppn_aktif = (($settings->tax_ppn_status ?? 'tidak') === 'aktif') && (($settings->tax_ppn_charged ?? 'ya') === 'ya');
+        $global_ppn_rate = (double)($settings->tax_ppn_rate ?? 11.00) / 100;
 
         // Find customers who do not have a bill for this month-year
         $pelanggans = Pelanggan::with('paketDetail')
@@ -76,6 +73,12 @@ class GenerateBulananTagihan extends Command
             } else {
                 $harga_paket = $plg->paketDetail->harga ?? 0;
                 $ppn_rate = $plg->paketDetail->ppn ?? 0;
+
+                if ($ppn_rate <= 0) {
+                    $ppn_rate = $global_ppn_rate;
+                } else if ($ppn_rate > 1) {
+                    $ppn_rate = $ppn_rate / 100;
+                }
                 
                 if ($ppn_aktif) {
                     $total_tagihan = $harga_paket + ($harga_paket * $ppn_rate);

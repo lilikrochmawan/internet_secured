@@ -272,6 +272,149 @@
     </div>
 </div>
 
+@if(auth()->user()->level !== 'kasir')
+    <!-- Section: Perhitungan Pajak & PNBP (BHP & USO) -->
+    <div style="background: linear-gradient(135deg, #1e293b, #0f172a); border-radius: 20px; padding: 22px; margin-bottom: 24px; color: white; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1);">
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 12px; margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
+            <div>
+                <h4 style="margin: 0; font-size: 1.05rem; font-weight: 700; color: #f8fafc; font-family: 'Outfit', sans-serif; display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-calculator" style="color: #38bdf8;"></i> Perhitungan Pajak & PNBP Terbayar
+                </h4>
+                <span style="font-size: 0.78rem; color: #94a3b8;">Kalkulasi estimasi pajak & PNBP berdasarkan total kas masuk.</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                <!-- Filter Form -->
+                <form action="{{ route('admin.kas.index') }}" method="GET" style="display: flex; gap: 6px; align-items: center; margin: 0; background: rgba(255,255,255,0.05); padding: 4px 8px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.08);">
+                    <span style="font-size: 0.75rem; color: #94a3b8; font-weight: 600; margin-right: 4px;"><i class="fa-solid fa-filter"></i> Periode:</span>
+                    <select name="filter_bulan" style="background: #1e293b; border: 1px solid rgba(255,255,255,0.15); color: #f8fafc; font-size: 0.75rem; padding: 3px 6px; border-radius: 6px; outline: none; cursor: pointer;">
+                        @for($m = 1; $m <= 12; $m++)
+                            <option value="{{ $m }}" {{ $selectedMonth == $m ? 'selected' : '' }}>
+                                {{ \Carbon\Carbon::create(2026, $m, 1)->translatedFormat('F') }}
+                            </option>
+                        @endfor
+                    </select>
+                    <select name="filter_tahun" style="background: #1e293b; border: 1px solid rgba(255,255,255,0.15); color: #f8fafc; font-size: 0.75rem; padding: 3px 6px; border-radius: 6px; outline: none; cursor: pointer;">
+                        @for($y = date('Y') - 5; $y <= date('Y') + 1; $y++)
+                            <option value="{{ $y }}" {{ $selectedYear == $y ? 'selected' : '' }}>
+                                {{ $y }}
+                            </option>
+                        @endfor
+                    </select>
+                    <button type="submit" style="background: #3b82f6; border: none; padding: 3px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; color: white; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+                        Cari
+                    </button>
+                    @if(request()->has('filter_bulan') || request()->has('filter_tahun'))
+                        <a href="{{ route('admin.kas.index') }}" style="background: #ef4444; padding: 3px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; color: white; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 4px;">
+                            Reset
+                        </a>
+                    @endif
+                </form>
+
+                <div style="display: flex; gap: 8px;">
+                    <span class="badge" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); font-size: 0.75rem; padding: 4px 10px; border-radius: 8px;">
+                        PPN: {{ $isPpnActive ? 'Aktif (' . $ppnPercent . '%)' : 'Tidak Aktif' }}
+                    </span>
+                    <span class="badge" style="background: rgba(251, 191, 36, 0.15); color: #fbbf24; border: 1px solid rgba(251, 191, 36, 0.3); font-size: 0.75rem; padding: 4px 10px; border-radius: 8px;">
+                        BHP: {{ $bhpPercent }}%
+                    </span>
+                    <span class="badge" style="background: rgba(244, 63, 94, 0.15); color: #fb7185; border: 1px solid rgba(244, 63, 94, 0.3); font-size: 0.75rem; padding: 4px 10px; border-radius: 8px;">
+                        USO: {{ $usoPercent }}%
+                    </span>
+                </div>
+            </div>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+            <!-- Column 1: Periode Terpilih -->
+            <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 18px;">
+                <h5 style="margin-top: 0; margin-bottom: 12px; color: #38bdf8; font-weight: 700; font-size: 0.95rem; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 6px;">
+                    <i class="fa-solid fa-calendar-day" style="margin-right: 6px;"></i> Periode: {{ $selectedDate->translatedFormat('F Y') }}
+                </h5>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <div style="display: flex; justify-content: space-between; font-size: 0.85rem;">
+                        <span style="color: #94a3b8;">DPP (Pemasukan Netto)</span>
+                        <strong style="color: #f8fafc;">Rp {{ number_format($monthDpp, 0, ',', '.') }}</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 0.85rem;">
+                        <span style="color: #94a3b8;">PPN ({{ $ppnPercent }}%)</span>
+                        <strong style="color: #38bdf8;">Rp {{ number_format($monthPpn, 0, ',', '.') }}</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 0.85rem;">
+                        <span style="color: #94a3b8;">BHP Telekomunikasi ({{ $bhpPercent }}%)</span>
+                        <strong style="color: #fbbf24;">Rp {{ number_format($monthBhp, 0, ',', '.') }}</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 0.85rem;">
+                        <span style="color: #94a3b8;">Kontribusi KPU/USO ({{ $usoPercent }}%)</span>
+                        <strong style="color: #fb7185;">Rp {{ number_format($monthUso, 0, ',', '.') }}</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 0.88rem; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 10px; margin-top: 4px;">
+                        <span style="color: #e2e8f0; font-weight: 600;">Total Pajak & PNBP Periode Ini</span>
+                        <strong style="color: #38bdf8; font-size: 1.05rem;">Rp {{ number_format($monthTotalTax, 0, ',', '.') }}</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Column 2: Bulan Lalu -->
+            <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 18px;">
+                <h5 style="margin-top: 0; margin-bottom: 12px; color: #fb923c; font-weight: 700; font-size: 0.95rem; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 6px;">
+                    <i class="fa-solid fa-calendar-days" style="margin-right: 6px;"></i> Periode: {{ $lastMonth->translatedFormat('F Y') }}
+                </h5>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <div style="display: flex; justify-content: space-between; font-size: 0.85rem;">
+                        <span style="color: #94a3b8;">DPP (Pemasukan Netto)</span>
+                        <strong style="color: #f8fafc;">Rp {{ number_format($lastMonthDpp, 0, ',', '.') }}</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 0.85rem;">
+                        <span style="color: #94a3b8;">PPN ({{ $ppnPercent }}%)</span>
+                        <strong style="color: #38bdf8;">Rp {{ number_format($lastMonthPpn, 0, ',', '.') }}</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 0.85rem;">
+                        <span style="color: #94a3b8;">BHP Telekomunikasi ({{ $bhpPercent }}%)</span>
+                        <strong style="color: #fbbf24;">Rp {{ number_format($lastMonthBhp, 0, ',', '.') }}</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 0.85rem;">
+                        <span style="color: #94a3b8;">Kontribusi KPU/USO ({{ $usoPercent }}%)</span>
+                        <strong style="color: #fb7185;">Rp {{ number_format($lastMonthUso, 0, ',', '.') }}</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 0.88rem; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 10px; margin-top: 4px;">
+                        <span style="color: #e2e8f0; font-weight: 600;">Total Pajak & PNBP Periode Lalu</span>
+                        <strong style="color: #fb923c; font-size: 1.05rem;">Rp {{ number_format($lastMonthTotalTax, 0, ',', '.') }}</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Column 3: All Time (Semua Transaksi) -->
+            <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 18px;">
+                <h5 style="margin-top: 0; margin-bottom: 12px; color: #10b981; font-weight: 700; font-size: 0.95rem; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 6px;">
+                    <i class="fa-solid fa-globe" style="margin-right: 6px;"></i> Akumulasi Semua Transaksi (All-Time)
+                </h5>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <div style="display: flex; justify-content: space-between; font-size: 0.85rem;">
+                        <span style="color: #94a3b8;">DPP (Pemasukan Netto)</span>
+                        <strong style="color: #f8fafc;">Rp {{ number_format($allDpp, 0, ',', '.') }}</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 0.85rem;">
+                        <span style="color: #94a3b8;">PPN ({{ $ppnPercent }}%)</span>
+                        <strong style="color: #38bdf8;">Rp {{ number_format($allPpn, 0, ',', '.') }}</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 0.85rem;">
+                        <span style="color: #94a3b8;">BHP Telekomunikasi ({{ $bhpPercent }}%)</span>
+                        <strong style="color: #fbbf24;">Rp {{ number_format($allBhp, 0, ',', '.') }}</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 0.85rem;">
+                        <span style="color: #94a3b8;">Kontribusi KPU/USO ({{ $usoPercent }}%)</span>
+                        <strong style="color: #fb7185;">Rp {{ number_format($allUso, 0, ',', '.') }}</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 0.88rem; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 10px; margin-top: 4px;">
+                        <span style="color: #e2e8f0; font-weight: 600;">Total Pajak & PNBP All-Time</span>
+                        <strong style="color: #10b981; font-size: 1.05rem;">Rp {{ number_format($allTotalTax, 0, ',', '.') }}</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@endif
+
 <!-- Card Cetak Laporan Keuangan (Kas) -->
 <div class="card">
     <div class="card-header">
