@@ -298,22 +298,29 @@ class AutoBlockPelanggan extends Command
             }
             $processedUnblockCustomerIds[] = $pelanggan->id_pelanggan;
 
-            // Cek status tagihan bulan berjalan
-            $currentBill = Tagihan::where('id_pelanggan', $pelanggan->id_pelanggan)
-                ->where('bulan_tahun', $currentPeriod)
+            $lastMonthPeriod = now()->subMonth()->format('mY');
+            $shouldUnblock = true;
+
+            // 1. Cek tagihan 1 bulan sebelumnya
+            $lastMonthBill = Tagihan::where('id_pelanggan', $pelanggan->id_pelanggan)
+                ->where('bulan_tahun', $lastMonthPeriod)
                 ->first();
 
-            $shouldUnblock = true;
-            if ($currentBill && $currentBill->status_bayar != 1) {
-                // Ambil jatuh tempo dari transaksi (tagihan), fallback ke pelanggan jika null/kosong
-                $jatuhTempo = $currentBill->jatuh_tempo;
-                if (is_null($jatuhTempo) || $jatuhTempo === '') {
-                    $jatuhTempo = $pelanggan->jatuh_tempo;
-                }
+            // Jika tagihan bulan lalu ada dan belum lunas, TETAP TERBLOKIR
+            if ($lastMonthBill && $lastMonthBill->status_bayar != 1) {
+                $shouldUnblock = false;
+            }
 
-                if (!empty($jatuhTempo)) {
-                    if (\Carbon\Carbon::parse($jatuhTempo)->lt($now)) {
-                        $shouldUnblock = false;
+            // 2. Jika bulan lalu lunas/aman, cek tagihan bulan berjalan
+            if ($shouldUnblock) {
+                $currentBill = Tagihan::where('id_pelanggan', $pelanggan->id_pelanggan)
+                    ->where('bulan_tahun', $currentPeriod)
+                    ->first();
+
+                if ($currentBill && $currentBill->status_bayar != 1) {
+                    $jatuhTempo = $currentBill->jatuh_tempo ?: $pelanggan->jatuh_tempo;
+                    if (!empty($jatuhTempo) && \Carbon\Carbon::parse($jatuhTempo)->lt($now)) {
+                        $shouldUnblock = false; // Sudah lewat jatuh tempo, tetap terblokir
                     }
                 }
             }
