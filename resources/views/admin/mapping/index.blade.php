@@ -536,6 +536,7 @@
             })
             .then(res => res.json())
             .then(pelanggan => {
+                pelangganCoordinates = pelanggan;
                 window.pelangganCoordinatesData = pelanggan;
                 renderMapElements();
             });
@@ -887,10 +888,11 @@
         var inputVal = document.getElementById('search-koordinat').value.trim();
         if (inputVal === '') return;
         
-        var parts = inputVal.split(',');
-        if (parts.length === 2) {
-            var lat = parseFloat(parts[0].trim());
-            var lng = parseFloat(parts[1].trim());
+        // Coba ekstrak dua angka desimal berurutan (bisa ada minus) dari input
+        var coords = inputVal.match(/-?\d+\.\d+/g);
+        if (coords && coords.length >= 2) {
+            var lat = parseFloat(coords[0]);
+            var lng = parseFloat(coords[1]);
             if (!isNaN(lat) && !isNaN(lng) && lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180) {
                 // Clear previous temp search marker if any
                 if (window.searchCoordMarker) {
@@ -920,12 +922,10 @@
                   `).openPopup();
                 
                 map.setView([lat, lng], 16);
-            } else {
-                alert("Koordinat tidak valid! Harap masukkan format 'latitude, longitude' (contoh: -7.5612, 110.7812)");
+                return;
             }
-        } else {
-            alert("Format koordinat salah! Harap masukkan 'latitude, longitude' (contoh: -7.5612, 110.7812)");
         }
+        alert("Koordinat tidak valid atau format salah! Harap masukkan 'latitude, longitude' (contoh: -7.5612, 110.7812) atau link Google Maps yang berisi koordinat.");
     }
 
     window.toggleMapLegend = function(e) {
