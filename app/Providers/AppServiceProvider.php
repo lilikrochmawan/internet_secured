@@ -63,6 +63,14 @@ class AppServiceProvider extends ServiceProvider
                 }
                 $view->with('jumlahKeluhanAktif', $jumlahKeluhanAktif);
             }
+
+            if (\Illuminate\Support\Facades\Schema::hasTable('tbl_waba_chat')) {
+                $unreadWabaCount = \Illuminate\Support\Facades\DB::table('tbl_waba_chat')
+                    ->where('tipe', 'incoming')
+                    ->where('status', 'received')
+                    ->count();
+                $view->with('unreadWabaCount', $unreadWabaCount);
+            }
         });
     }
 }

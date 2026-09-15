@@ -243,27 +243,14 @@ class AutoBlockPelanggan extends Command
                         $pesan = str_replace('$jatuh_tempo', \Carbon\Carbon::parse($tx->jatuh_tempo)->translatedFormat('d F Y') ?? $pelanggan->jatuh_tempo, $pesan);
                         $pesan = str_replace('$hari_ini', \Carbon\Carbon::now()->translatedFormat('d F Y'), $pesan);
 
-                        try {
-                            $response = \Illuminate\Support\Facades\Http::timeout(10)->withHeaders([
-                                'Authorization' => $tokenInfo->token
-                            ])->asForm()->post('https://api.fonnte.com/send', [
-                                'target' => $pelanggan->no_telp,
-                                'message' => $pesan,
-                                'countryCode' => '62'
-                            ]);
-
-                            $resData = $response->json();
-                            if ($response->successful() && isset($resData['status']) && $resData['status'] === true) {
-                                $this->info('Notifikasi WA pemblokiran terkirim ke: ' . $pelanggan->nama_pelanggan);
-                                Log::info('AutoBlockPelanggan: Notifikasi WA pemblokiran terkirim ke ' . $pelanggan->nama_pelanggan);
-                            } else {
-                                $reason = $resData['reason'] ?? $resData['message'] ?? 'Device Fonnte tidak aktif.';
-                                $this->warn('Gagal kirim WA pemblokiran ke ' . $pelanggan->nama_pelanggan . ': ' . $reason);
-                                Log::warning('AutoBlockPelanggan: Gagal kirim WA pemblokiran ke ' . $pelanggan->nama_pelanggan . ': ' . $reason);
-                            }
-                        } catch (\Exception $e) {
-                            $this->error('Exception kirim WA pemblokiran ke ' . $pelanggan->nama_pelanggan . ': ' . $e->getMessage());
-                            Log::error('AutoBlockPelanggan: Exception kirim WA pemblokiran ke ' . $pelanggan->nama_pelanggan . ': ' . $e->getMessage());
+                        $templateParams = $blokirSetting->template_params ? explode(',', $blokirSetting->template_params) : [];
+                        $isSent = app(\App\Services\WhatsAppService::class)->sendTemplateMessage($pelanggan->no_telp, $pesan, $blokirSetting->template_name ?? null, $templateParams, $blokirSetting->template_language ?? 'id');
+                        if ($isSent) {
+                            $this->info('Notifikasi WA pemblokiran terkirim ke: ' . $pelanggan->nama_pelanggan);
+                            Log::info('AutoBlockPelanggan: Notifikasi WA pemblokiran terkirim ke ' . $pelanggan->nama_pelanggan);
+                        } else {
+                            $this->warn('Gagal kirim WA pemblokiran ke ' . $pelanggan->nama_pelanggan . ': Periksa log sistem.');
+                            Log::warning('AutoBlockPelanggan: Gagal kirim WA pemblokiran ke ' . $pelanggan->nama_pelanggan);
                         }
 
                         // Jeda 5 detik antar pengiriman pesan WA untuk menghindari rate limit Fonnte

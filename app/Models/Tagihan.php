@@ -32,6 +32,7 @@ class Tagihan extends Model
         'lain_lain',
         'item_tagihan',
         'jatuh_tempo',
+        'metode_pembayaran',
     ];
 
     public function pelanggan()

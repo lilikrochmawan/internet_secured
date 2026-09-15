@@ -817,12 +817,12 @@
             </div>
         </div>
 
-        <!-- Card 3: Token WA Fonnte -->
+        <!-- Card 3: Konfigurasi WhatsApp Gateway -->
         <div class="card">
             <div class="card-header">
                 <div class="card-title">
                     <i class="fa-brands fa-whatsapp"></i>
-                    <span>Gateway Fonnte WhatsApp API</span>
+                    <span>Konfigurasi WhatsApp Gateway</span>
                 </div>
             </div>
             
@@ -831,7 +831,7 @@
                 
                 <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; border-bottom: 1px dashed var(--border-color); padding-bottom: 15px;">
                     <div>
-                        <strong style="color: #0f172a; font-size: 0.95rem; display: block;">Status Gateway Fonnte</strong>
+                        <strong style="color: #0f172a; font-size: 0.95rem; display: block;">Status Gateway WhatsApp</strong>
                         <small style="color: var(--text-gray); font-size: 0.8rem;">Aktifkan atau nonaktifkan pengiriman WhatsApp.</small>
                     </div>
                     <label class="switch">
@@ -841,17 +841,51 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="token">Token API Fonnte *</label>
-                    <input type="text" id="token" name="token" class="form-control" value="{{ $token->token ?? '' }}" required placeholder="Masukkan token fonnte Anda">
-                    <small style="color:var(--text-gray); margin-top:4px;">Token ini digunakan oleh server untuk mengirim notifikasi penagihan tagihan internet otomatis & manual ke no WhatsApp pelanggan.</small>
+                    <label for="wa_gateway">Pilih Provider WhatsApp *</label>
+                    <select id="wa_gateway" name="wa_gateway" class="form-control" style="padding: 10px 14px; height: auto; border-radius: 12px; font-size: 0.95rem; width: 100%; margin: 0; background-color: #f8fafc;" required onchange="toggleWaGateway()">
+                        <option value="fonnte" {{ ($token->wa_gateway ?? 'fonnte') === 'fonnte' ? 'selected' : '' }}>Fonnte API (Unofficial)</option>
+                        <option value="bablast" {{ ($token->wa_gateway ?? '') === 'bablast' ? 'selected' : '' }}>Bablast WABA (Official)</option>
+                    </select>
+                </div>
+
+                <div id="fonnte_config" style="display: {{ ($token->wa_gateway ?? 'fonnte') === 'fonnte' ? 'block' : 'none' }};">
+                    <div class="form-group">
+                        <label for="token">Token API Fonnte *</label>
+                        <input type="text" id="token" name="token" class="form-control" value="{{ $token->token ?? '' }}" placeholder="Masukkan token fonnte Anda">
+                        <small style="color:var(--text-gray); margin-top:4px;">Token ini digunakan oleh server untuk mengirim notifikasi tagihan ke no WhatsApp pelanggan via Fonnte.</small>
+                    </div>
+                </div>
+
+                <div id="bablast_config" style="display: {{ ($token->wa_gateway ?? '') === 'bablast' ? 'block' : 'none' }};">
+                    <div id="bablast_settings" class="gateway-settings">
+                        <label for="bablast_token">Token API Bablast (Bearer) *</label>
+                        <input type="text" id="bablast_token" name="bablast_token" class="form-control" value="{{ $token->bablast_token ?? '' }}" placeholder="Masukkan API Key Bablast Anda">
+                        <small class="form-text text-muted">Contoh: in1ghmCSnnFTza75JETP9...</small>
+                        <br>
+                        <label for="bablast_media_token" class="mt-2">Token API Bablast (Media) *</label>
+                        <input type="text" id="bablast_media_token" name="bablast_media_token" class="form-control" value="{{ $token->bablast_media_token ?? '' }}" placeholder="Masukkan Token untuk Download Media Bablast">
+                    </div>
+                    <small style="color:var(--text-gray); margin-top:4px;">Gunakan API Key WABA resmi dari panel Bablast.</small>
                 </div>
 
                 <div style="display:flex; justify-content:flex-end; margin-top:20px;">
                     <button type="submit" class="btn btn-primary">
-                        <i class="fa-solid fa-floppy-disk"></i> Simpan Token WA
+                        <i class="fa-solid fa-floppy-disk"></i> Simpan Konfigurasi WA
                     </button>
                 </div>
             </form>
+            <script>
+                function toggleWaGateway() {
+                    const gateway = document.getElementById('wa_gateway').value;
+                    if (gateway === 'fonnte') {
+                        document.getElementById('fonnte_config').style.display = 'block';
+                        document.getElementById('bablast_config').style.display = 'none';
+                    } else {
+                        document.getElementById('fonnte_config').style.display = 'none';
+                        document.getElementById('bablast_config').style.display = 'block';
+                    }
+                }
+            </script>
         </div>
 
         <!-- Card 4: Kredensial Midtrans Payment Gateway -->

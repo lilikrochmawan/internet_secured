@@ -436,10 +436,12 @@ class AdminMonitoringController extends Controller
                     $ipAddress = $ipActive;
                 }
 
-                if ($isActive && !in_array($ipActive, $isolirList) && $profile !== 'pppoe-isolir') {
-                    $status = 'aktif';
-                } elseif ((in_array($ipActive, $isolirList) && $ipActive != "") || $disabled == 'true' || $profile === 'pppoe-isolir') {
+                $isIsolir = (in_array($ipAddress, $isolirList) && $ipAddress != "") || $profile === 'pppoe-isolir';
+
+                if ($isIsolir) {
                     $status = 'terisolir';
+                } elseif ($isActive && $disabled !== 'true') {
+                    $status = 'aktif';
                 } else {
                     $status = 'tidak_aktif';
                 }
@@ -583,12 +585,14 @@ class AdminMonitoringController extends Controller
                     $ipAddress = $ipActive;
                 }
 
-                if ($isActive && !in_array($ipActive, $isolirList) && $profile !== 'pppoe-isolir') {
-                    $status = 'aktif';
-                    $sortPriority = 1;
-                } elseif ((in_array($ipActive, $isolirList) && $ipActive != "") || $disabled == 'true' || $profile === 'pppoe-isolir') {
+                $isIsolir = (in_array($ipAddress, $isolirList) && $ipAddress != "") || $profile === 'pppoe-isolir';
+
+                if ($isIsolir) {
                     $status = 'terisolir';
                     $sortPriority = 2;
+                } elseif ($isActive && $disabled !== 'true') {
+                    $status = 'aktif';
+                    $sortPriority = 1;
                 } else {
                     $status = 'tidak_aktif';
                     $sortPriority = 3;

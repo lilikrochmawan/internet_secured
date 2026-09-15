@@ -122,11 +122,35 @@
                 </select>
             </div>
             <div class="form-group">
-                <label for="pesan_notifikasi">Isi Pesan Notifikasi</label>
+                <label for="pesan_notifikasi">Isi Pesan Notifikasi (Untuk Fonnte / Unofficial)</label>
                 <textarea name="pesan_notifikasi" id="pesan_notifikasi" rows="7" class="form-control" placeholder="Tulis format notifikasi tagihan bulanan...">{{ $notif->pesan_notifikasi ?? '' }}</textarea>
             </div>
+
             
-            <div class="helper-box" id="help-notif">
+            <!-- Tambahan Khusus WABA (Bablast) -->
+            <details style="background: #f1f5f9; padding: 10px 15px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 15px;">
+                <summary style="color: #0f172a; font-weight: 600; cursor: pointer; font-size: 0.85rem; outline:none;"><i class="fa-brands fa-whatsapp"></i> Pengaturan Template Meta WABA (Khusus Pengguna Bablast)</summary>
+                <div style="margin-top: 15px;">
+                    <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 10px;">Isi pengaturan di bawah ini jika Anda menggunakan WABA (Bablast). Kosongkan jika menggunakan Fonnte.</p>
+                    
+                    <div style="margin-bottom: 10px;">
+                        <label style="font-size: 0.9rem; font-weight:600;">Nama Template</label>
+                        <input type="text" name="template_name" class="form-control" value="{{ $notif->template_name ?? '' }}" placeholder="cth: pemberitahuan_tagihan">
+                    </div>
+                    
+                    <div style="margin-bottom: 10px;">
+                        <label style="font-size: 0.9rem; font-weight:600;">Bahasa Template</label>
+                        <input type="text" name="template_language" class="form-control" value="{{ $notif->template_language ?? 'id' }}" placeholder="default: id">
+                    </div>
+
+                    <div>
+                        <label style="font-size: 0.9rem; font-weight:600; display:flex; justify-content:space-between; align-items:center;"><span>Urutan Variabel Template <span style="font-weight:normal; color:#64748b;">(pisahkan dengan koma)</span></span><button type="button" class="btn btn-sm btn-outline-info" onclick="fetchWabaImage(this)" style="font-size:11px; padding:2px 8px;" title="Cari link gambar header dari Meta">Cari Link Gambar Header</button></label>
+                        <input type="text" name="template_params" class="form-control" value="{{ $notif->template_params ?? '' }}" placeholder="cth: nama, tagihan, jatuh_tempo">
+                        <small style="color: #64748b; display: block; margin-top: 4px;">Ketikkan nama variabel dari daftar di bawah sesuai urutan <b>{{1}}, {{2}}</b> di template Meta.</small>
+                    </div>
+                </div>
+            </details>
+<div class="helper-box" id="help-notif">
                 <p style="margin-bottom:6px; font-weight: 600; color:var(--text-dark);">Variabel yang tersedia:</p>
                 <ul style="list-style: none; display:flex; flex-direction:column; gap:4px;">
                     <li><span class="helper-tag">$nama</span> : Nama Pelanggan</li>
@@ -166,7 +190,7 @@
                 </select>
             </div>
             <div class="form-group">
-                <label for="pesan_reminder">Isi Pesan Reminder</label>
+                <label for="pesan_reminder">Isi Pesan Reminder (Untuk Fonnte / Unofficial)</label>
                 <textarea name="pesan_reminder" id="pesan_reminder" rows="7" class="form-control" placeholder="Tulis format reminder tagihan...">{{ $reminder->pesan_reminder ?? '' }}</textarea>
             </div>
             
@@ -181,6 +205,29 @@
                 </ul>
             </div>
 
+            
+            <!-- Tambahan Khusus WABA (Bablast) -->
+            <details style="background: #f1f5f9; padding: 10px 15px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 15px;">
+                <summary style="color: #0f172a; font-weight: 600; cursor: pointer; font-size: 0.85rem; outline:none;"><i class="fa-brands fa-whatsapp"></i> Pengaturan Template Meta WABA (Khusus Pengguna Bablast)</summary>
+                <div style="margin-top: 15px;">
+                    <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 10px;">Isi pengaturan di bawah ini jika Anda menggunakan WABA (Bablast). Kosongkan jika menggunakan Fonnte.</p>
+                    
+                    <div style="margin-bottom: 10px;">
+                        <label style="font-size: 0.9rem; font-weight:600;">Nama Template</label>
+                        <input type="text" name="template_name" class="form-control" value="{{ $reminder->template_name ?? '' }}" placeholder="cth: nama_template">
+                    </div>
+                    
+                    <div style="margin-bottom: 10px;">
+                        <label style="font-size: 0.9rem; font-weight:600;">Bahasa Template</label>
+                        <input type="text" name="template_language" class="form-control" value="{{ $reminder->template_language ?? 'id' }}" placeholder="default: id">
+                    </div>
+
+                    <div>
+                        <label style="font-size: 0.9rem; font-weight:600; display:flex; justify-content:space-between; align-items:center;"><span>Urutan Variabel Template <span style="font-weight:normal; color:#64748b;">(pisahkan dengan koma)</span></span><button type="button" class="btn btn-sm btn-outline-info" onclick="fetchWabaImage(this)" style="font-size:11px; padding:2px 8px;" title="Cari link gambar header dari Meta">Cari Link Gambar Header</button></label>
+                        <input type="text" name="template_params" class="form-control" value="{{ $reminder->template_params ?? '' }}" placeholder="cth: nama, tagihan">
+                    </div>
+                </div>
+            </details>
             <div class="card-footer">
                 <button type="submit" class="btn btn-primary">
                     <i class="fa-solid fa-floppy-disk"></i> Simpan
@@ -213,7 +260,7 @@
 
 
             <div class="form-group">
-                <label for="pesan_blokir">Isi Pesan Isolir Otomatis</label>
+                <label for="pesan_blokir">Isi Pesan Isolir Otomatis (Untuk Fonnte / Unofficial)</label>
                 <textarea name="pesan_blokir" id="pesan_blokir" rows="5" class="form-control" placeholder="Tulis format notifikasi isolir otomatis...">{{ $blokir->pesan_blokir ?? '' }}</textarea>
             </div>
 
@@ -228,6 +275,29 @@
                 </ul>
             </div>
 
+            
+            <!-- Tambahan Khusus WABA (Bablast) -->
+            <details style="background: #f1f5f9; padding: 10px 15px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 15px;">
+                <summary style="color: #0f172a; font-weight: 600; cursor: pointer; font-size: 0.85rem; outline:none;"><i class="fa-brands fa-whatsapp"></i> Pengaturan Template Meta WABA (Khusus Pengguna Bablast)</summary>
+                <div style="margin-top: 15px;">
+                    <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 10px;">Isi pengaturan di bawah ini jika Anda menggunakan WABA (Bablast). Kosongkan jika menggunakan Fonnte.</p>
+                    
+                    <div style="margin-bottom: 10px;">
+                        <label style="font-size: 0.9rem; font-weight:600;">Nama Template</label>
+                        <input type="text" name="template_name" class="form-control" value="{{ $blokir->template_name ?? '' }}" placeholder="cth: nama_template">
+                    </div>
+                    
+                    <div style="margin-bottom: 10px;">
+                        <label style="font-size: 0.9rem; font-weight:600;">Bahasa Template</label>
+                        <input type="text" name="template_language" class="form-control" value="{{ $blokir->template_language ?? 'id' }}" placeholder="default: id">
+                    </div>
+
+                    <div>
+                        <label style="font-size: 0.9rem; font-weight:600; display:flex; justify-content:space-between; align-items:center;"><span>Urutan Variabel Template <span style="font-weight:normal; color:#64748b;">(pisahkan dengan koma)</span></span><button type="button" class="btn btn-sm btn-outline-info" onclick="fetchWabaImage(this)" style="font-size:11px; padding:2px 8px;" title="Cari link gambar header dari Meta">Cari Link Gambar Header</button></label>
+                        <input type="text" name="template_params" class="form-control" value="{{ $blokir->template_params ?? '' }}" placeholder="cth: nama, tagihan">
+                    </div>
+                </div>
+            </details>
             <div class="card-footer">
                 <button type="submit" class="btn btn-primary">
                     <i class="fa-solid fa-floppy-disk"></i> Simpan
@@ -250,7 +320,7 @@
         <form method="POST" action="{{ route('admin.custom_pesan.bayar') }}">
             @csrf
             <div class="form-group">
-                <label for="pesan_bayar">Pesan Bukti Pembayaran</label>
+                <label for="pesan_bayar">Pesan Bukti Pembayaran (Untuk Fonnte / Unofficial)</label>
                 <textarea name="pesan_bayar" id="pesan_bayar" rows="7" class="form-control" placeholder="Tulis format notifikasi bukti pembayaran...">{{ $notifbayar->pesan_bayar ?? '' }}</textarea>
             </div>
 
@@ -264,6 +334,29 @@
                 </ul>
             </div>
 
+            
+            <!-- Tambahan Khusus WABA (Bablast) -->
+            <details style="background: #f1f5f9; padding: 10px 15px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 15px;">
+                <summary style="color: #0f172a; font-weight: 600; cursor: pointer; font-size: 0.85rem; outline:none;"><i class="fa-brands fa-whatsapp"></i> Pengaturan Template Meta WABA (Khusus Pengguna Bablast)</summary>
+                <div style="margin-top: 15px;">
+                    <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 10px;">Isi pengaturan di bawah ini jika Anda menggunakan WABA (Bablast). Kosongkan jika menggunakan Fonnte.</p>
+                    
+                    <div style="margin-bottom: 10px;">
+                        <label style="font-size: 0.9rem; font-weight:600;">Nama Template</label>
+                        <input type="text" name="template_name" class="form-control" value="{{ $notifbayar->template_name ?? '' }}" placeholder="cth: nama_template">
+                    </div>
+                    
+                    <div style="margin-bottom: 10px;">
+                        <label style="font-size: 0.9rem; font-weight:600;">Bahasa Template</label>
+                        <input type="text" name="template_language" class="form-control" value="{{ $notifbayar->template_language ?? 'id' }}" placeholder="default: id">
+                    </div>
+
+                    <div>
+                        <label style="font-size: 0.9rem; font-weight:600; display:flex; justify-content:space-between; align-items:center;"><span>Urutan Variabel Template <span style="font-weight:normal; color:#64748b;">(pisahkan dengan koma)</span></span><button type="button" class="btn btn-sm btn-outline-info" onclick="fetchWabaImage(this)" style="font-size:11px; padding:2px 8px;" title="Cari link gambar header dari Meta">Cari Link Gambar Header</button></label>
+                        <input type="text" name="template_params" class="form-control" value="{{ $notifbayar->template_params ?? '' }}" placeholder="cth: nama, tagihan">
+                    </div>
+                </div>
+            </details>
             <div class="card-footer">
                 <button type="submit" class="btn btn-primary">
                     <i class="fa-solid fa-floppy-disk"></i> Simpan
@@ -286,7 +379,7 @@
         <form method="POST" action="{{ route('admin.custom_pesan.bukablokir') }}">
             @csrf
             <div class="form-group">
-                <label for="pesan_bukablokir">Pesan Re-aktifasi Akses</label>
+                <label for="pesan_bukablokir">Pesan Re-aktifasi Akses (Untuk Fonnte / Unofficial)</label>
                 <textarea name="pesan_bukablokir" id="pesan_bukablokir" rows="7" class="form-control" placeholder="Tulis format notifikasi unblock...">{{ $bukablokir->pesan_bukablokir ?? '' }}</textarea>
             </div>
 
@@ -299,6 +392,29 @@
                 </ul>
             </div>
 
+            
+            <!-- Tambahan Khusus WABA (Bablast) -->
+            <details style="background: #f1f5f9; padding: 10px 15px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 15px;">
+                <summary style="color: #0f172a; font-weight: 600; cursor: pointer; font-size: 0.85rem; outline:none;"><i class="fa-brands fa-whatsapp"></i> Pengaturan Template Meta WABA (Khusus Pengguna Bablast)</summary>
+                <div style="margin-top: 15px;">
+                    <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 10px;">Isi pengaturan di bawah ini jika Anda menggunakan WABA (Bablast). Kosongkan jika menggunakan Fonnte.</p>
+                    
+                    <div style="margin-bottom: 10px;">
+                        <label style="font-size: 0.9rem; font-weight:600;">Nama Template</label>
+                        <input type="text" name="template_name" class="form-control" value="{{ $bukablokir->template_name ?? '' }}" placeholder="cth: nama_template">
+                    </div>
+                    
+                    <div style="margin-bottom: 10px;">
+                        <label style="font-size: 0.9rem; font-weight:600;">Bahasa Template</label>
+                        <input type="text" name="template_language" class="form-control" value="{{ $bukablokir->template_language ?? 'id' }}" placeholder="default: id">
+                    </div>
+
+                    <div>
+                        <label style="font-size: 0.9rem; font-weight:600; display:flex; justify-content:space-between; align-items:center;"><span>Urutan Variabel Template <span style="font-weight:normal; color:#64748b;">(pisahkan dengan koma)</span></span><button type="button" class="btn btn-sm btn-outline-info" onclick="fetchWabaImage(this)" style="font-size:11px; padding:2px 8px;" title="Cari link gambar header dari Meta">Cari Link Gambar Header</button></label>
+                        <input type="text" name="template_params" class="form-control" value="{{ $bukablokir->template_params ?? '' }}" placeholder="cth: nama, tagihan">
+                    </div>
+                </div>
+            </details>
             <div class="card-footer">
                 <button type="submit" class="btn btn-primary">
                     <i class="fa-solid fa-floppy-disk"></i> Simpan
@@ -328,7 +444,7 @@
                 </select>
             </div>
             <div class="form-group">
-                <label for="pesan_promo">Isi Pesan Promo</label>
+                <label for="pesan_promo">Isi Pesan Promo (Untuk Fonnte / Unofficial)</label>
                 <textarea name="pesan_promo" id="pesan_promo" rows="7" class="form-control" placeholder="Tulis format notifikasi promo...">{{ $promo->pesan_promo ?? '' }}</textarea>
             </div>
             
@@ -344,6 +460,29 @@
                 </ul>
             </div>
 
+            
+            <!-- Tambahan Khusus WABA (Bablast) -->
+            <details style="background: #f1f5f9; padding: 10px 15px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 15px;">
+                <summary style="color: #0f172a; font-weight: 600; cursor: pointer; font-size: 0.85rem; outline:none;"><i class="fa-brands fa-whatsapp"></i> Pengaturan Template Meta WABA (Khusus Pengguna Bablast)</summary>
+                <div style="margin-top: 15px;">
+                    <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 10px;">Isi pengaturan di bawah ini jika Anda menggunakan WABA (Bablast). Kosongkan jika menggunakan Fonnte.</p>
+                    
+                    <div style="margin-bottom: 10px;">
+                        <label style="font-size: 0.9rem; font-weight:600;">Nama Template</label>
+                        <input type="text" name="template_name" class="form-control" value="{{ $promo->template_name ?? '' }}" placeholder="cth: nama_template">
+                    </div>
+                    
+                    <div style="margin-bottom: 10px;">
+                        <label style="font-size: 0.9rem; font-weight:600;">Bahasa Template</label>
+                        <input type="text" name="template_language" class="form-control" value="{{ $promo->template_language ?? 'id' }}" placeholder="default: id">
+                    </div>
+
+                    <div>
+                        <label style="font-size: 0.9rem; font-weight:600; display:flex; justify-content:space-between; align-items:center;"><span>Urutan Variabel Template <span style="font-weight:normal; color:#64748b;">(pisahkan dengan koma)</span></span><button type="button" class="btn btn-sm btn-outline-info" onclick="fetchWabaImage(this)" style="font-size:11px; padding:2px 8px;" title="Cari link gambar header dari Meta">Cari Link Gambar Header</button></label>
+                        <input type="text" name="template_params" class="form-control" value="{{ $promo->template_params ?? '' }}" placeholder="cth: nama, tagihan">
+                    </div>
+                </div>
+            </details>
             <div class="card-footer">
                 <button type="submit" class="btn btn-primary">
                     <i class="fa-solid fa-floppy-disk"></i> Simpan
@@ -390,7 +529,7 @@
                 </div>
 
                 <div class="form-group" style="margin-bottom:0;">
-                    <label for="pesan_npemasangan">Isi Pesan Pemasangan</label>
+                    <label for="pesan_npemasangan">Isi Pesan Pemasangan (Untuk Fonnte / Unofficial)</label>
                     <textarea name="pesan_npemasangan" id="pesan_npemasangan" rows="9" class="form-control" placeholder="Tulis format notifikasi pemasangan...">{{ $pemasangan->pesan_notif ?? '' }}</textarea>
                     
                     <button type="submit" class="btn btn-primary" style="margin-top: 14px; align-self: flex-start;">
@@ -416,5 +555,48 @@
             });
         });
     });
+
+    window.fetchWabaImage = function(btn) {
+        let container = btn.closest('div').parentElement;
+        let templateInput = container.querySelector('input[name="template_name"]');
+        if(!templateInput) {
+            templateInput = btn.closest('.card-body').querySelector('input[name="template_name"]');
+        }
+        let templateName = templateInput ? templateInput.value.trim() : '';
+        if(!templateName) {
+            alert('Silakan isi "Nama Template" terlebih dahulu agar sistem tahu template mana yang harus dicari.');
+            return;
+        }
+
+        let oldText = btn.innerHTML;
+        btn.innerHTML = 'Mencari...';
+        btn.disabled = true;
+
+        fetch('{{ route("admin.custom_pesan.fetch_waba_image") }}?template_name=' + encodeURIComponent(templateName))
+            .then(r => r.json())
+            .then(res => {
+                if(res.success) {
+                    let paramsInput = btn.closest('label').nextElementSibling;
+                    if(paramsInput && paramsInput.name === 'template_params') {
+                        let currentVal = paramsInput.value.trim();
+                        if(!currentVal.includes('http')) {
+                            paramsInput.value = res.link + (currentVal ? ',' + currentVal : '');
+                            alert('Link gambar berhasil ditemukan dari server Bablast dan otomatis ditambahkan ke depan parameter Anda!');
+                        } else {
+                            prompt('Link gambar ditemukan. Anda sepertinya sudah memasukkan link. Jika ingin menggantinya, gunakan link ini:', res.link);
+                        }
+                    } else {
+                        prompt('Link gambar berhasil ditemukan:', res.link);
+                    }
+                } else {
+                    alert('Gagal: ' + res.message);
+                }
+            })
+            .catch(e => alert('Terjadi kesalahan jaringan saat mencoba menghubungi server Bablast.'))
+            .finally(() => {
+                btn.innerHTML = oldText;
+                btn.disabled = false;
+            });
+    }
 </script>
 @endsection

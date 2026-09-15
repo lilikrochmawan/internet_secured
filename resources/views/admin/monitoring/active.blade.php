@@ -136,8 +136,8 @@
     }
 
     .badge-tidak-aktif {
-        background-color: #f1f5f9;
-        color: #475569;
+        background-color: #fef3c7;
+        color: #d97706;
     }
 
     .clients-table {
@@ -478,7 +478,7 @@
                                     </span>
                                 @else
                                     <span class="badge badge-tidak-aktif">
-                                        <i class="fa-solid fa-circle-notch" style="font-size:0.55rem; color:#64748b;"></i> Off
+                                        <i class="fa-solid fa-circle" style="font-size:0.55rem; color:#f59e0b;"></i> Off
                                     </span>
                                 @endif
                             </td>

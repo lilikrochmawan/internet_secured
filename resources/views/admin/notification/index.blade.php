@@ -320,12 +320,30 @@
                             </div>
                         </label>
                         <label class="channel-box" for="channel_wa">
-                            <input type="checkbox" name="channels[]" value="wa" id="channel_wa">
+                            <input type="checkbox" name="channels[]" value="wa" id="channel_wa" onchange="toggleTitleInput()">
                             <div>
                                 <strong style="display:block; font-size:0.9rem; color:var(--text-dark);">WhatsApp (Massal)</strong>
                                 <span style="font-size:0.75rem; color:var(--text-gray);">Kirim pesan WA ke semua pelanggan</span>
                             </div>
                         </label>
+                    </div>
+                </div>
+
+                <div id="waba_options_general" style="display:none; margin-bottom: 1rem; padding: 15px; border: 1px dashed #cbd5e1; border-radius: 8px; background-color: #f8fafc;">
+                    <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                        <input type="checkbox" name="use_waba" id="useWabaGeneral" style="margin-right: 8px;" onchange="toggleWabaFields('general')" {{ !empty($profile->waba_broadcast_template) ? 'checked' : '' }}>
+                        <label for="useWabaGeneral" style="font-weight: 600; margin: 0; color: #334155; font-size: 0.9rem;">Gunakan Template WABA Meta / Bablast</label>
+                    </div>
+                    <div id="waba_fields_general" style="display: {{ !empty($profile->waba_broadcast_template) ? 'block' : 'none' }}; margin-top: 10px;">
+                        <div style="margin-bottom: 10px;">
+                            <label style="font-size: 0.85rem; font-weight:600; color: #475569;">Nama Template WABA *</label>
+                            <input type="text" name="waba_template" id="waba_template_general" class="form-control" style="font-size: 0.9rem;" placeholder="Contoh: gangguan_jaringan" value="{{ $profile->waba_broadcast_template ?? '' }}">
+                        </div>
+                        <div>
+                            <label style="font-size: 0.85rem; font-weight:600; color: #475569;">Variabel Template (pisahkan koma)</label>
+                            <input type="text" name="waba_params" class="form-control" style="font-size: 0.9rem;" placeholder="Contoh: https://link-gambar.jpg, nama, $pesan">
+                            <small style="color: #64748b; font-size: 0.75rem;">Variabel yang didukung: <code>nama</code>, <code>$pesan</code> (mengambil isi teks di bawah), <code>odp</code>, <code>odc</code>, atau URL gambar statis.</small>
+                        </div>
                     </div>
                 </div>
 
@@ -409,6 +427,23 @@
                         </select>
                     </div>
 
+                    <div id="waba_options_odp" style="margin-bottom: 1rem; padding: 15px; border: 1px dashed #cbd5e1; border-radius: 8px; background-color: #f8fafc;">
+                        <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                            <input type="checkbox" name="use_waba" id="useWabaOdp" style="margin-right: 8px;" onchange="toggleWabaFields('odp')" {{ !empty($profile->waba_broadcast_template) ? 'checked' : '' }}>
+                            <label for="useWabaOdp" style="font-weight: 600; margin: 0; color: #334155; font-size: 0.9rem;">Gunakan Template WABA Meta / Bablast</label>
+                        </div>
+                        <div id="waba_fields_odp" style="display: {{ !empty($profile->waba_broadcast_template) ? 'block' : 'none' }}; margin-top: 10px;">
+                            <div style="margin-bottom: 10px;">
+                                <label style="font-size: 0.85rem; font-weight:600; color: #475569;">Nama Template WABA *</label>
+                                <input type="text" name="waba_template" id="waba_template_odp" class="form-control" style="font-size: 0.9rem;" placeholder="Contoh: gangguan_jaringan" value="{{ $profile->waba_broadcast_template ?? '' }}">
+                            </div>
+                            <div>
+                                <label style="font-size: 0.85rem; font-weight:600; color: #475569;">Variabel Template (pisahkan koma)</label>
+                                <input type="text" name="waba_params" id="waba_params_odp" class="form-control" style="font-size: 0.9rem;" placeholder="Contoh: https://link-gambar.jpg, nama, odp, $pesan">
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="form-group">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <label for="odp_message_template">Pesan Gangguan/Maintenance *</label>
@@ -477,6 +512,23 @@
                                 <option value="{{ $odc->id_odc }}">{{ $odc->nama_odc }}</option>
                             @endforeach
                         </select>
+                    </div>
+
+                    <div id="waba_options_odc" style="margin-bottom: 1rem; padding: 15px; border: 1px dashed #cbd5e1; border-radius: 8px; background-color: #f8fafc;">
+                        <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                            <input type="checkbox" name="use_waba" id="useWabaOdc" style="margin-right: 8px;" onchange="toggleWabaFields('odc')" {{ !empty($profile->waba_broadcast_template) ? 'checked' : '' }}>
+                            <label for="useWabaOdc" style="font-weight: 600; margin: 0; color: #334155; font-size: 0.9rem;">Gunakan Template WABA Meta / Bablast</label>
+                        </div>
+                        <div id="waba_fields_odc" style="display: {{ !empty($profile->waba_broadcast_template) ? 'block' : 'none' }}; margin-top: 10px;">
+                            <div style="margin-bottom: 10px;">
+                                <label style="font-size: 0.85rem; font-weight:600; color: #475569;">Nama Template WABA *</label>
+                                <input type="text" name="waba_template" id="waba_template_odc" class="form-control" style="font-size: 0.9rem;" placeholder="Contoh: gangguan_jaringan" value="{{ $profile->waba_broadcast_template ?? '' }}">
+                            </div>
+                            <div>
+                                <label style="font-size: 0.85rem; font-weight:600; color: #475569;">Variabel Template (pisahkan koma)</label>
+                                <input type="text" name="waba_params" id="waba_params_odc" class="form-control" style="font-size: 0.9rem;" placeholder="Contoh: https://link-gambar.jpg, nama, odp, odc, $pesan">
+                            </div>
+                        </div>
                     </div>
 
                     <div class="form-group">
@@ -597,6 +649,36 @@
         } else {
             titleGroup.style.display = 'none';
             titleInput.required = false;
+        }
+
+        const waChecked = document.getElementById('channel_wa').checked;
+        const wabaOptionsGeneral = document.getElementById('waba_options_general');
+        if (waChecked) {
+            wabaOptionsGeneral.style.display = 'block';
+        } else {
+            wabaOptionsGeneral.style.display = 'none';
+        }
+    }
+
+    function toggleWabaFields(type) {
+        let isChecked;
+        let fieldsDiv;
+        
+        if (type === 'general') {
+            isChecked = document.getElementById('useWabaGeneral').checked;
+            fieldsDiv = document.getElementById('waba_fields_general');
+        } else if (type === 'odp') {
+            isChecked = document.getElementById('useWabaOdp').checked;
+            fieldsDiv = document.getElementById('waba_fields_odp');
+        } else if (type === 'odc') {
+            isChecked = document.getElementById('useWabaOdc').checked;
+            fieldsDiv = document.getElementById('waba_fields_odc');
+        }
+        
+        if (isChecked) {
+            fieldsDiv.style.display = 'block';
+        } else {
+            fieldsDiv.style.display = 'none';
         }
     }
 

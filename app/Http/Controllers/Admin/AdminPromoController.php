@@ -160,7 +160,7 @@ class AdminPromoController extends Controller
                 $tokenInfo = DB::table('tbl_token')->where('id_token', 1)->where('status', 'aktif')->first();
                 $notifPromo = DB::table('tbl_notifpromo')->where('status_promo', 'aktif')->first();
 
-                if ($tokenInfo && !empty($tokenInfo->token) && $notifPromo && !empty($notifPromo->pesan_promo) && !empty($pelanggan->no_telp)) {
+                if ($tokenInfo && $notifPromo && !empty($notifPromo->pesan_promo) && !empty($pelanggan->no_telp)) {
                     $pesan = $notifPromo->pesan_promo;
                     $pesan = str_replace('$nama', $pelanggan->nama_pelanggan, $pesan);
                     $pesan = str_replace('$no_telp', $pelanggan->no_telp, $pesan);
@@ -173,13 +173,8 @@ class AdminPromoController extends Controller
                     $pesan = str_replace('$mulai_promo', $mulaiFormat, $pesan);
                     $pesan = str_replace('$selesai_promo', $selesaiFormat, $pesan);
 
-                    Http::timeout(10)->withHeaders([
-                        'Authorization' => $tokenInfo->token
-                    ])->asForm()->post('https://api.fonnte.com/send', [
-                        'target' => $pelanggan->no_telp,
-                        'message' => $pesan,
-                        'countryCode' => '62'
-                    ]);
+                    $templateParams = $notifPromo->template_params ? explode(',', $notifPromo->template_params) : [];
+                    app(\App\Services\WhatsAppService::class)->sendTemplateMessage($pelanggan->no_telp, $pesan, $notifPromo->template_name ?? null, $templateParams, $notifPromo->template_language ?? 'id');
                 }
             } catch (\Exception $e) {
                 Log::error('Promo WhatsApp Notification Error: ' . $e->getMessage());

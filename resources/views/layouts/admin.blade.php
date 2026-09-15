@@ -1061,15 +1061,52 @@
 
 
 
-            @if(Auth::user()->hasMenuAccess('custom_pesan'))
-                <li class="sidebar-menu-item {{ $currRoute == 'admin.custom_pesan.index' ? 'active' : '' }}">
-                    <a href="{{ route('admin.custom_pesan.index') }}"><i class="fa-solid fa-comment-dots"></i><span>Custom Pesan WA</span></a>
-                </li>
-            @endif
-
-            @if(Auth::user()->hasMenuAccess('broadcast'))
-                <li class="sidebar-menu-item {{ Str::startsWith($currRoute, 'admin.broadcast') ? 'active' : '' }}">
-                    <a href="{{ route('admin.broadcast.index') }}"><i class="fa-solid fa-bullhorn"></i><span>Broadcast Notifikasi</span></a>
+            @if(Auth::user()->hasMenuAccess('custom_pesan') || Auth::user()->hasMenuAccess('broadcast'))
+                @php
+                    $isWhatsappActive = in_array($currRoute, ['admin.custom_pesan.index', 'admin.waba_chat.index', 'admin.webhook_template.index']) || Str::startsWith($currRoute, 'admin.broadcast');
+                @endphp
+                <li class="sidebar-menu-item has-submenu {{ $isWhatsappActive ? 'active open' : '' }}">
+                    <a href="javascript:void(0)" class="submenu-toggle">
+                        <span class="submenu-label">
+                            <i class="fa-brands fa-whatsapp" style="font-size: 1.1rem; width: 24px; text-align: center;"></i>
+                            <span>Whatsapp</span>
+                        </span>
+                        <i class="fa-solid fa-chevron-down submenu-arrow"></i>
+                    </a>
+                    <ul class="submenu">
+                        @if(Auth::user()->hasMenuAccess('custom_pesan'))
+                        <li class="submenu-item {{ $currRoute == 'admin.waba_chat.index' ? 'active' : '' }}">
+                            <a href="{{ route('admin.waba_chat.index') }}">
+                                <i class="fa-solid fa-message"></i>
+                                <span>WABA Webhook</span>
+                                @if(isset($unreadWabaCount) && $unreadWabaCount > 0)
+                                    <span class="badge badge-danger" style="margin-left: 5px; background-color: #dc3545; color: white; border-radius: 50%; padding: 3px 6px; font-size: 0.75rem;">{{ $unreadWabaCount }}</span>
+                                @endif
+                            </a>
+                        </li>
+                        <li class="submenu-item {{ $currRoute == 'admin.custom_pesan.index' ? 'active' : '' }}">
+                            <a href="{{ route('admin.custom_pesan.index') }}">
+                                <i class="fa-solid fa-comment-dots"></i>
+                                <span>Custom Pesan WA</span>
+                            </a>
+                        </li>
+                        <li class="submenu-item {{ $currRoute == 'admin.webhook_template.index' ? 'active' : '' }}">
+                            <a href="{{ route('admin.webhook_template.index') }}">
+                                <i class="fa-solid fa-robot"></i>
+                                <span>Auto-Reply Webhook</span>
+                            </a>
+                        </li>
+                        @endif
+                        
+                        @if(Auth::user()->hasMenuAccess('broadcast'))
+                        <li class="submenu-item {{ Str::startsWith($currRoute, 'admin.broadcast') ? 'active' : '' }}">
+                            <a href="{{ route('admin.broadcast.index') }}">
+                                <i class="fa-solid fa-bullhorn"></i>
+                                <span>Broadcast Notifikasi</span>
+                            </a>
+                        </li>
+                        @endif
+                    </ul>
                 </li>
             @endif
 
@@ -1128,9 +1165,36 @@
                 </li>
             @endif
 
-            @if(Auth::user()->hasMenuAccess('kas'))
-                <li class="sidebar-menu-item {{ $currRoute == 'admin.kas.index' ? 'active' : '' }}">
-                    <a href="{{ route('admin.kas.index') }}"><i class="fa-solid fa-money-bill-transfer"></i><span>Kas Masuk/Keluar</span></a>
+            @if(Auth::user()->hasMenuAccess('kas') || Auth::user()->hasMenuAccess('transaksi'))
+                @php
+                    $isKasActive = Str::startsWith($currRoute, 'admin.kas') || $currRoute == 'admin.riwayat_transaksi.index';
+                @endphp
+                <li class="sidebar-menu-item has-submenu {{ $isKasActive ? 'active open' : '' }}">
+                    <a href="javascript:void(0)" class="submenu-toggle">
+                        <span class="submenu-label">
+                            <i class="fa-solid fa-book"></i>
+                            <span>Buku Kas</span>
+                        </span>
+                        <i class="fa-solid fa-chevron-down submenu-arrow"></i>
+                    </a>
+                    <ul class="submenu">
+                        @if(Auth::user()->hasMenuAccess('kas'))
+                        <li class="submenu-item {{ $currRoute == 'admin.kas.index' ? 'active' : '' }}">
+                            <a href="{{ route('admin.kas.index') }}">
+                                <i class="fa-solid fa-money-bill-transfer"></i>
+                                <span>Kas Masuk & Keluar</span>
+                            </a>
+                        </li>
+                        @endif
+                        @if(Auth::user()->hasMenuAccess('transaksi'))
+                        <li class="submenu-item {{ $currRoute == 'admin.riwayat_transaksi.index' ? 'active' : '' }}">
+                            <a href="{{ route('admin.riwayat_transaksi.index') }}">
+                                <i class="fa-solid fa-clock-rotate-left"></i>
+                                <span>Riwayat Transaksi</span>
+                            </a>
+                        </li>
+                        @endif
+                    </ul>
                 </li>
             @endif
 
@@ -1890,6 +1954,60 @@
             })();
         </script>
     @endif
+
+    <script>
+        function addCustomMapToggle(map, streetsLayer, satelliteLayer) {
+            var currentLayer = 'streets';
+            
+            var LayerToggleControl = L.Control.extend({
+                options: { position: 'bottomleft' },
+                onAdd: function (map) {
+                    var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
+                    container.style.width = '60px';
+                    container.style.height = '60px';
+                    container.style.backgroundColor = 'white';
+                    container.style.backgroundImage = 'url("https://mt1.google.com/vt/lyrs=y&x=105&y=66&z=7")';
+                    container.style.backgroundSize = 'cover';
+                    container.style.borderRadius = '8px';
+                    container.style.border = '2px solid white';
+                    container.style.cursor = 'pointer';
+                    container.style.boxShadow = '0 2px 6px rgba(0,0,0,0.3)';
+                    container.style.display = 'flex';
+                    container.style.alignItems = 'flex-end';
+                    container.style.justifyContent = 'center';
+                    container.style.paddingBottom = '4px';
+                    container.style.fontWeight = '600';
+                    container.style.color = 'white';
+                    container.style.fontFamily = 'Outfit, sans-serif';
+                    container.style.textShadow = '0 1px 3px rgba(0,0,0,0.8)';
+                    
+                    container.innerHTML = '<span style="font-size: 11px;"><i class="fa-solid fa-layer-group"></i> Satelit</span>';
+
+                    container.onclick = function() {
+                        if (currentLayer === 'streets') {
+                            map.removeLayer(streetsLayer);
+                            satelliteLayer.addTo(map);
+                            currentLayer = 'satellite';
+                            container.style.backgroundImage = 'url("https://mt1.google.com/vt/lyrs=m&x=105&y=66&z=7")';
+                            container.innerHTML = '<span style="font-size: 11px;"><i class="fa-solid fa-layer-group"></i> Map</span>';
+                        } else {
+                            map.removeLayer(satelliteLayer);
+                            streetsLayer.addTo(map);
+                            currentLayer = 'streets';
+                            container.style.backgroundImage = 'url("https://mt1.google.com/vt/lyrs=y&x=105&y=66&z=7")';
+                            container.innerHTML = '<span style="font-size: 11px;"><i class="fa-solid fa-layer-group"></i> Satelit</span>';
+                        }
+                    };
+
+                    L.DomEvent.disableClickPropagation(container);
+                    return container;
+                }
+            });
+
+            map.addControl(new LayerToggleControl());
+        }
+    </script>
+
     @yield('scripts')
 </body>
 </html>

@@ -340,12 +340,8 @@ class AdminPelangganController extends Controller
 
                 $tokenInfo = DB::table('tbl_token')->where('id_token', 1)->where('status', 'aktif')->first();
                 if ($tokenInfo) {
-                    Http::withHeaders([
-                        'Authorization' => $tokenInfo->token
-                    ])->asForm()->post('https://api.fonnte.com/send', [
-                        'target' => $no_telp,
-                        'message' => $pesan,
-                    ]);
+                    $templateParams = $notifikasi->template_params ? explode(',', $notifikasi->template_params) : [];
+                    app(\App\Services\WhatsAppService::class)->sendTemplateMessage($no_telp, $pesan, $notifikasi->template_name ?? null, $templateParams, $notifikasi->template_language ?? 'id');
                 }
             }
 
@@ -601,5 +597,63 @@ class AdminPelangganController extends Controller
         \Illuminate\Support\Facades\Log::info("Staff [" . auth()->user()->nama_user . "] (level: " . auth()->user()->level . ") MENGHAPUS pelanggan [" . $pelanggan->nama_pelanggan . "] (kode: " . $pelanggan->kode_pelanggan . ") dengan alasan: " . $request->alasan_hapus);
 
         return redirect()->route('admin.pelanggan.index')->with('success', 'Pelanggan berhasil dihapus!');
+    }
+
+    public function exportContacts()
+    {
+        $pelanggans = Pelanggan::with('paketDetail')->get();
+        
+        $settings = DB::table('tb_profile')->first();
+        $ppn_aktif = (($settings->tax_ppn_status ?? 'tidak') === 'aktif') && (($settings->tax_ppn_charged ?? 'ya') === 'ya');
+        $global_ppn_rate = (double)($settings->tax_ppn_rate ?? 11.00) / 100;
+
+        $filename = "kontak_pelanggan_" . date('Y-m-d') . ".csv";
+
+        $headers = array(
+            "Content-type"        => "text/csv",
+            "Content-Disposition" => "attachment; filename=$filename",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        );
+
+        $callback = function() use($pelanggans, $ppn_aktif, $global_ppn_rate) {
+            $file = fopen('php://output', 'w');
+            // Write standard headers based on requested format
+            fputcsv($file, ['Nama', 'Phone', 'Email', 'Jenis Kelamin', 'Variable1', 'Variable2']);
+
+            foreach ($pelanggans as $p) {
+                // Kalkulasi tagihan
+                $harga_paket = $p->paketDetail ? $p->paketDetail->harga : 0;
+                $ppn_rate = $p->paketDetail ? $p->paketDetail->ppn : 0;
+                
+                if ($ppn_rate <= 0) {
+                    $ppn_rate = $global_ppn_rate;
+                } else if ($ppn_rate > 1) {
+                    $ppn_rate = $ppn_rate / 100;
+                }
+
+                if ($ppn_aktif) {
+                    $jmlBayar = $harga_paket + ($harga_paket * $ppn_rate);
+                } else {
+                    $jmlBayar = $harga_paket;
+                }
+
+                $tagihanStr = 'Rp ' . number_format($jmlBayar, 0, ',', '.');
+                $jatuhTempoStr = \Carbon\Carbon::parse($p->jatuh_tempo)->translatedFormat('d F Y');
+
+                fputcsv($file, [
+                    $p->nama_pelanggan,
+                    $p->no_telp,
+                    '-', // Email
+                    '-', // Jenis Kelamin
+                    $tagihanStr, // Variable1 (Tagihan)
+                    $jatuhTempoStr // Variable2 (Jatuh Tempo)
+                ]);
+            }
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
     }
 }

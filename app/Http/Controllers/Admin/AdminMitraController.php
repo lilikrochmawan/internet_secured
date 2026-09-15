@@ -495,20 +495,7 @@ class AdminMitraController extends Controller
             $cleanTarget = '62' . substr($cleanTarget, 1);
         }
 
-        try {
-            $response = \Illuminate\Support\Facades\Http::withHeaders([
-                'Authorization' => $tokenInfo->token
-            ])->asForm()->post('https://api.fonnte.com/send', [
-                'target' => $cleanTarget,
-                'message' => $message,
-                'countryCode' => '62'
-            ]);
-
-            $resData = $response->json();
-            return ($response->successful() && isset($resData['status']) && $resData['status'] === true);
-        } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error('Fonnte API Notification Error: ' . $e->getMessage());
-            return false;
-        }
+        $waService = app(\App\Services\WhatsAppService::class);
+        return $waService->sendMessage($cleanTarget, $message);
     }
 }

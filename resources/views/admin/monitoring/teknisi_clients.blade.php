@@ -95,8 +95,8 @@
     }
 
     .badge-tidak-aktif {
-        background-color: #f1f5f9;
-        color: #475569;
+        background-color: #fef3c7;
+        color: #d97706;
     }
 
     .clients-table {
@@ -222,8 +222,8 @@
             </div>
 
             <div class="stat-card">
-                <div class="stat-icon icon-slate">
-                    <i class="fa-solid fa-circle-notch"></i>
+                <div class="stat-icon" style="background-color: #fef3c7; color: #d97706;">
+                    <i class="fa-solid fa-circle"></i>
                 </div>
                 <div class="stat-info">
                     <span class="stat-title">Total Tidak Aktif (Off)</span>
@@ -318,7 +318,7 @@
                                         </span>
                                     @else
                                         <span class="badge badge-tidak-aktif">
-                                            <i class="fa-solid fa-circle-notch" style="font-size:0.5rem; color:#64748b;"></i> Tidak Aktif
+                                            <i class="fa-solid fa-circle" style="font-size:0.5rem; color:#f59e0b;"></i> Tidak Aktif
                                         </span>
                                     @endif
                                 </td>

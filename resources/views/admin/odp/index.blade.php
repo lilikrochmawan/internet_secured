@@ -784,10 +784,20 @@
                 mapContainer.style.display = 'block';
                 if (!mapAddPicker) {
                     mapAddPicker = L.map('map-add-picker').setView([-6.200000, 106.816666], 13);
-                    L.tileLayer('https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+                    var streets = L.tileLayer('https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+                        maxZoom: 24,
+maxNativeZoom: 21,
                         subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
                         attribution: '&copy; Google Maps'
-                    }).addTo(mapAddPicker);
+                    });
+                    var satellite = L.tileLayer('https://{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+                        maxZoom: 24,
+maxNativeZoom: 21,
+                        subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+                        attribution: '&copy; Google Maps'
+                    });
+                    streets.addTo(mapAddPicker);
+                    addCustomMapToggle(mapAddPicker, streets, satellite);
 
                     mapAddPicker.on('click', function(e) {
                         var lat = e.latlng.lat.toFixed(6);
@@ -852,10 +862,20 @@
                 mapContainer.style.display = 'block';
                 if (!mapEditPicker) {
                     mapEditPicker = L.map('map-edit-picker').setView([-6.200000, 106.816666], 13);
-                    L.tileLayer('https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+                    var streets = L.tileLayer('https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+                        maxZoom: 24,
+maxNativeZoom: 21,
                         subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
                         attribution: '&copy; Google Maps'
-                    }).addTo(mapEditPicker);
+                    });
+                    var satellite = L.tileLayer('https://{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+                        maxZoom: 24,
+maxNativeZoom: 21,
+                        subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+                        attribution: '&copy; Google Maps'
+                    });
+                    streets.addTo(mapEditPicker);
+                    addCustomMapToggle(mapEditPicker, streets, satellite);
 
                     mapEditPicker.on('click', function(e) {
                         var lat = e.latlng.lat.toFixed(6);
@@ -1012,12 +1032,16 @@
 
         // Layers
         var googleStreets = L.tileLayer('https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
-            subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+            maxZoom: 24,
+maxNativeZoom: 21,
+                        subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
             attribution: '&copy; Google Maps'
         });
 
-        var googleSatellite = L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
-            subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+        var googleSatellite = L.tileLayer('https://{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+            maxZoom: 24,
+maxNativeZoom: 21,
+                        subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
             attribution: '&copy; Google Maps'
         });
 
@@ -1026,14 +1050,7 @@
         });
 
         googleStreets.addTo(map);
-
-        var baseLayers = {
-            "Google Maps (Jalan)": googleStreets,
-            "Google Maps (Satelit)": googleSatellite,
-            "OpenStreetMap": osm
-        };
-
-        L.control.layers(baseLayers).addTo(map);
+        addCustomMapToggle(map, googleStreets, googleSatellite);
         markerGroup = L.layerGroup().addTo(map);
 
         // Click map handler

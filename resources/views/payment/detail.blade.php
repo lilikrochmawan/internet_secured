@@ -432,13 +432,8 @@
             payButton.disabled = true;
             payButton.textContent = 'Menyiapkan pembayaran...';
 
-            const currentPath = window.location.pathname;
-            const chargeUrl = currentPath.includes('/payment/detail')
-                ? currentPath.replace(/\/payment\/detail$/, '/payment/charge')
-                : '/payment/charge';
-            const dashboardUrl = currentPath.includes('/payment/detail')
-                ? currentPath.replace(/\/payment\/detail$/, '/dashboard')
-                : '/dashboard';
+            const chargeUrl = '{{ route("payment.charge") }}';
+            const dashboardUrl = '{{ route("dashboard") }}';
 
             const selectedMethodEl = document.querySelector('input[name="payment_method"]:checked');
             const selectedMethod = selectedMethodEl ? selectedMethodEl.value : 'qris';
@@ -455,7 +450,13 @@
                     payment_method: selectedMethod
                 })
             })
-            .then(response => response.json())
+            .then(response => {
+                if (response.status === 401 || response.status === 419) {
+                    window.location.href = '{{ route("login") }}';
+                    throw new Error('Sesi Anda telah berakhir. Mengalihkan ke halaman login...');
+                }
+                return response.json();
+            })
             .then(data => {
                 if (data.token) {
                     window.snap.pay(data.token, {
@@ -477,7 +478,7 @@
                     });
                 } else {
                     let errorText = data.error || 'Gagal membuat transaksi Midtrans.';
-                    if (data.message) {
+                    if (data.message && data.message !== 'Unauthenticated.') {
                         errorText += '\n' + data.message;
                     }
                     if (data.response) {

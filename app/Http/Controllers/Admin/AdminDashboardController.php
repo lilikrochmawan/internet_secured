@@ -61,13 +61,91 @@ class AdminDashboardController extends Controller
 
         // 2. Status Pelanggan (Aktif, Terisolir, Non-aktif)
         $totalPelanggan = count($allowedPelangganIds);
-        $terisolirCount = Tagihan::whereNull('status_bayar')
-            ->where('blokir_status', 1)
-            ->whereIn('id_pelanggan', $allowedPelangganIds)
-            ->distinct('id_pelanggan')
-            ->count('id_pelanggan');
+        $terisolirCount = 0;
+        $nonaktifCount = 0;
+        $aktifCount = 0;
 
-        $bukaSementaraCount = Tagihan::whereNull('status_bayar')
+        $mikrotiks = DB::table('tbl_mikrotik')->get();
+        if ($mikrotiks->isNotEmpty() && $totalPelanggan > 0) {
+            require_once base_path('include/routeros_api.php');
+
+            $pelanggans = Pelanggan::with(['users'])->whereIn('id_pelanggan', $allowedPelangganIds)->get();
+            $pelangganMap = [];
+            foreach ($pelanggans as $p) {
+                foreach ($p->users as $u) {
+                    $pelangganMap[strtolower($u->username)] = $p;
+                }
+            }
+
+            $db_ips = DB::table('tb_pelanggan')->whereNotNull('ip_address')->where('ip_address', '<>', '')->pluck('ip_address')->toArray();
+            $db_ips_map = array_flip($db_ips);
+
+            foreach ($mikrotiks as $mikrotik) {
+                $API = new \RouterosAPI();
+                $API->timeout = 2;
+                $API->attempts = 1;
+                $API->delay = 0;
+                
+                if ($API->connect($mikrotik->ip, $mikrotik->username, $mikrotik->password)) {
+                    $pppSecrets = $API->comm("/ppp/secret/print", [
+                        ".proplist" => "name,remote-address,disabled,profile"
+                    ]) ?: [];
+                    $activeClients = $API->comm("/ppp/active/print", [
+                        ".proplist" => ".id,name,address"
+                    ]) ?: [];
+
+                    $isolirList = [];
+                    $dataAddressList = $API->comm("/ip/firewall/address-list/print", [
+                        "?list" => "blocked_clients"
+                    ]) ?: [];
+                    foreach ($dataAddressList as $list) {
+                        if (isset($list['address']) && isset($db_ips_map[$list['address']])) {
+                            if (isset($list['comment']) && strpos($list['comment'], 'Blokir Bulanan ') === 0) {
+                                $isolirList[] = $list['address'];
+                            }
+                        }
+                    }
+
+                    $activeClientsMap = [];
+                    foreach ($activeClients as $ac) {
+                        if (isset($ac['name'])) {
+                            $activeClientsMap[$ac['name']] = $ac;
+                        }
+                    }
+
+                    foreach ($pppSecrets as $secret) {
+                        $username = strtolower($secret['name'] ?? '');
+                        if (!isset($pelangganMap[$username])) {
+                            continue;
+                        }
+                        
+                        $disabled = $secret['disabled'] ?? 'false';
+                        $profile = $secret['profile'] ?? '';
+                        $ac = $activeClientsMap[$secret['name'] ?? ''] ?? null;
+                        $isActive = ($ac !== null);
+                        $ipActive = $ac ? ($ac['address'] ?? "") : "";
+
+                        $ipAddress = $ipActive !== "" ? $ipActive : ($secret['remote-address'] ?? '-');
+                        $isIsolir = (in_array($ipAddress, $isolirList) && $ipAddress != "") || $profile === 'pppoe-isolir';
+
+                        if ($isIsolir) {
+                            $terisolirCount++;
+                        } elseif ($isActive && $disabled !== 'true') {
+                            $aktifCount++;
+                        } else {
+                            $nonaktifCount++;
+                        }
+                    }
+                    $API->disconnect();
+                }
+            }
+        } else {
+            $aktifCount = $totalPelanggan;
+        }
+
+        $bukaSementaraCount = Tagihan::where(function($q) {
+                $q->whereNull('status_bayar')->orWhereIn('status_bayar', [0, '0', 'belum', '']);
+            })
             ->where('jatuh_tempo', '<', Carbon::now())
             ->where(function($q) {
                 $q->whereNull('blokir_status')->orWhere('blokir_status', '!=', 1);
@@ -75,15 +153,6 @@ class AdminDashboardController extends Controller
             ->whereIn('id_pelanggan', $allowedPelangganIds)
             ->distinct('id_pelanggan')
             ->count('id_pelanggan');
-
-        // Non-aktif: Pelanggan yang nunggak > 60 hari
-        $nonaktifCount = Tagihan::whereNull('status_bayar')
-            ->where('jatuh_tempo', '<', Carbon::now()->subDays(60))
-            ->whereIn('id_pelanggan', $allowedPelangganIds)
-            ->distinct('id_pelanggan')
-            ->count('id_pelanggan');
-
-        $aktifCount = max(0, $totalPelanggan - $terisolirCount - $nonaktifCount);
 
         // 2.a. Status Pembayaran
         $regularBelumBayar = Tagihan::where(function($q) {

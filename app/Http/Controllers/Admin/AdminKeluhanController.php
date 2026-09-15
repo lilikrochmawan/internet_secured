@@ -161,22 +161,7 @@ class AdminKeluhanController extends Controller
                    . "{$keluhan->masalah}\n\n"
                    . "Terimakasih atas kepercayaan Anda menggunakan layanan internet kami.";
 
-            try {
-                $response = \Illuminate\Support\Facades\Http::withHeaders([
-                    'Authorization' => $tokenInfo->token
-                ])->asForm()->post('https://api.fonnte.com/send', [
-                    'target' => $keluhan->no_wa,
-                    'message' => $pesan,
-                    'countryCode' => '62'
-                ]);
-                
-                $resData = $response->json();
-                if ($response->successful() && isset($resData['status']) && $resData['status'] === true) {
-                    $waSent = true;
-                }
-            } catch (\Exception $e) {
-                \Illuminate\Support\Facades\Log::error('Fonnte API Error Keluhan Selesai: ' . $e->getMessage());
-            }
+            $waSent = app(\App\Services\WhatsAppService::class)->sendMessage($keluhan->no_wa, $pesan);
         }
 
         $successMsg = 'Keluhan berhasil diselesaikan dan dicatat penyebab/masalahnya!';
@@ -348,22 +333,7 @@ class AdminKeluhanController extends Controller
                    . "{$keluhan->masalah}\n\n"
                    . "Terimakasih atas kepercayaan Anda menggunakan layanan internet kami.";
 
-            try {
-                $response = \Illuminate\Support\Facades\Http::withHeaders([
-                    'Authorization' => $tokenInfo->token
-                ])->asForm()->post('https://api.fonnte.com/send', [
-                    'target' => $keluhan->no_wa,
-                    'message' => $pesan,
-                    'countryCode' => '62'
-                ]);
-                
-                $resData = $response->json();
-                if ($response->successful() && isset($resData['status']) && $resData['status'] === true) {
-                    $waSent = true;
-                }
-            } catch (\Exception $e) {
-                \Illuminate\Support\Facades\Log::error('Fonnte API Error Keluhan Verifikasi Selesai: ' . $e->getMessage());
-            }
+            $waSent = app(\App\Services\WhatsAppService::class)->sendMessage($keluhan->no_wa, $pesan);
         }
 
         $successMsg = 'Tiket berhasil diverifikasi dan diselesaikan!';
@@ -440,21 +410,7 @@ class AdminKeluhanController extends Controller
                     . "Nomor pengaduan anda sudah dibuat oleh petugas NOC kami dengan nomor ticket {$nomorTiket} mohon menunggu teknisi akan segera memproses. Terima Kasih.\n\n"
                     . "Jangan Balas Pesan Ini Pesan Otomatis";
 
-                try {
-                    $response = \Illuminate\Support\Facades\Http::withHeaders([
-                        'Authorization' => $tokenInfo->token
-                    ])->asForm()->post('https://api.fonnte.com/send', [
-                        'target' => $pelanggan->no_telp,
-                        'message' => $pesan,
-                        'countryCode' => '62'
-                    ]);
-                    $resData = $response->json();
-                    if ($response->successful() && isset($resData['status']) && $resData['status'] === true) {
-                        $waSent = true;
-                    }
-                } catch (\Exception $e) {
-                    \Illuminate\Support\Facades\Log::error('Fonnte API Error Keluhan Dibuat NOC: ' . $e->getMessage());
-                }
+                $waSent = app(\App\Services\WhatsAppService::class)->sendMessage($pelanggan->no_telp, $pesan);
             }
         }
 
@@ -487,21 +443,7 @@ class AdminKeluhanController extends Controller
             $cleanTarget = '62' . substr($cleanTarget, 1);
         }
 
-        try {
-            $response = \Illuminate\Support\Facades\Http::withHeaders([
-                'Authorization' => $tokenInfo->token
-            ])->asForm()->post('https://api.fonnte.com/send', [
-                'target' => $cleanTarget,
-                'message' => $message,
-                'countryCode' => '62'
-            ]);
-
-            $resData = $response->json();
-            return ($response->successful() && isset($resData['status']) && $resData['status'] === true);
-        } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error('Fonnte API Notification Error: ' . $e->getMessage());
-            return false;
-        }
+        return app(\App\Services\WhatsAppService::class)->sendMessage($cleanTarget, $message);
     }
 }
 

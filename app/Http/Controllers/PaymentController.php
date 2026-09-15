@@ -585,7 +585,7 @@ class PaymentController extends Controller
                 $row_token = DB::table('tbl_token')->where('id_token', 1)->where('status', 'aktif')->first();
                 $bayar = DB::table('tbl_notifbayar')->first();
 
-                if ($row_token && !empty($row_token->token) && $bayar && !empty($bayar->pesan_bayar)) {
+                if ($row_token && $bayar && !empty($bayar->pesan_bayar)) {
                     $sekarangs = date('d F Y H:i:s');
                     $pesanBayar = $bayar->pesan_bayar;
                     $pesanBayar = str_replace('$nama', $data_tagihan->nama_pelanggan, $pesanBayar);
@@ -593,13 +593,8 @@ class PaymentController extends Controller
                     $pesanBayar = str_replace('$harinin', $sekarangs, $pesanBayar);
                     $pesanBayar = str_replace('$no_telp', $data_tagihan->no_telp, $pesanBayar);
 
-                    Http::withHeaders([
-                        'Authorization' => $row_token->token
-                    ])->post('https://api.fonnte.com/send', [
-                        'target' => $data_tagihan->no_telp,
-                        'message' => $pesanBayar,
-                        'countryCode' => '62'
-                    ]);
+                    $templateParams = $bayar->template_params ? explode(',', $bayar->template_params) : [];
+                    app(\App\Services\WhatsAppService::class)->sendTemplateMessage($data_tagihan->no_telp, $pesanBayar, $bayar->template_name ?? null, $templateParams, $bayar->template_language ?? 'id');
                 }
             } catch (\Exception $e) {
                 Log::error('Midtrans Webhook WhatsApp Notification Error: ' . $e->getMessage());

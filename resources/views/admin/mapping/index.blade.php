@@ -482,10 +482,19 @@
     function initMasterMap() {
         map = L.map('master-map').setView([-2.548926, 118.014863], 5);
         var googleStreets = L.tileLayer('https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
-            subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+            maxZoom: 24,
+maxNativeZoom: 21,
+                        subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+            attribution: '&copy; Google Maps'
+        });
+        var googleSatellite = L.tileLayer('https://{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+            maxZoom: 24,
+maxNativeZoom: 21,
+                        subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
             attribution: '&copy; Google Maps'
         });
         googleStreets.addTo(map);
+        addCustomMapToggle(map, googleStreets, googleSatellite);
         odcLayerGroup = L.layerGroup().addTo(map);
         odpLayerGroup = L.layerGroup().addTo(map);
         pelangganLayerGroup = L.layerGroup().addTo(map);

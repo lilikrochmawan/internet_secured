@@ -300,17 +300,7 @@ class AdminOrderPemasanganController extends Controller
 
                 foreach ($teknisiList as $t) {
                     if (!empty($t->phone_number)) {
-                        try {
-                            \Illuminate\Support\Facades\Http::withHeaders([
-                                'Authorization' => $tokenInfo->token
-                            ])->asForm()->post('https://api.fonnte.com/send', [
-                                'target' => $t->phone_number,
-                                'message' => $pesan,
-                                'countryCode' => '62'
-                            ]);
-                        } catch (\Exception $e) {
-                            \Illuminate\Support\Facades\Log::error('Fonnte API Error Order Pemasangan All: ' . $e->getMessage());
-                        }
+                        app(\App\Services\WhatsAppService::class)->sendMessage($t->phone_number, $pesan);
                     }
                 }
             } else {
@@ -329,17 +319,7 @@ class AdminOrderPemasanganController extends Controller
                            . "• *Jadwal:* {$jadwalPasang}\n\n"
                            . "Silakan segera diproses dan laporkan dokumentasi jika sudah selesai dipasang. Terima kasih!";
 
-                    try {
-                        \Illuminate\Support\Facades\Http::withHeaders([
-                            'Authorization' => $tokenInfo->token
-                        ])->asForm()->post('https://api.fonnte.com/send', [
-                            'target' => $teknisi->phone_number,
-                            'message' => $pesan,
-                            'countryCode' => '62'
-                        ]);
-                    } catch (\Exception $e) {
-                        \Illuminate\Support\Facades\Log::error('Fonnte API Error Order Pemasangan Specific: ' . $e->getMessage());
-                    }
+                    app(\App\Services\WhatsAppService::class)->sendMessage($teknisi->phone_number, $pesan);
                 }
             }
         }
@@ -610,14 +590,9 @@ class AdminOrderPemasanganController extends Controller
                     $pesan = str_replace('$password', $password, $pesan);
 
                     $tokenInfo = DB::table('tbl_token')->where('id_token', 1)->where('status', 'aktif')->first();
-                    if ($tokenInfo && !empty($tokenInfo->token)) {
-                        \Illuminate\Support\Facades\Http::withHeaders([
-                            'Authorization' => $tokenInfo->token
-                        ])->asForm()->post('https://api.fonnte.com/send', [
-                            'target' => $no_telp,
-                            'message' => $pesan,
-                            'countryCode' => '62'
-                        ]);
+                    if ($tokenInfo) {
+                        $templateParams = $notifikasi->template_params ? explode(',', $notifikasi->template_params) : [];
+                        app(\App\Services\WhatsAppService::class)->sendTemplateMessage($no_telp, $pesan, $notifikasi->template_name ?? null, $templateParams, $notifikasi->template_language ?? 'id');
                     }
                 }
             }

@@ -132,30 +132,30 @@ class SendAutoBillingNotifications extends Command
             $pesan = str_replace('$tagihan', number_format($tx->jml_bayar, 0, ',', '.'), $pesan);
             $pesan = str_replace('$hari_ini', Carbon::now()->translatedFormat('d F Y'), $pesan);
 
-            try {
-                $response = Http::timeout(10)->withHeaders([
-                    'Authorization' => $tokenInfo->token
-                ])->asForm()->post('https://api.fonnte.com/send', [
-                    'target' => $pelanggan->no_telp,
-                    'message' => $pesan,
-                    'countryCode' => '62'
-                ]);
-
-                $resData = $response->json();
-                if ($response->successful() && isset($resData['status']) && $resData['status'] === true) {
-                    $tx->update(['terkirim' => 'terkirim']);
-                    $successCount++;
-                    $this->info("Berhasil mengirim notifikasi tagihan ke {$pelanggan->nama_pelanggan} ({$pelanggan->no_telp})");
-                } else {
-                    $failCount++;
-                    $reason = $resData['reason'] ?? $resData['message'] ?? 'Device Fonnte terputus atau token tidak valid';
-                    $this->error("Gagal mengirim notifikasi ke {$pelanggan->nama_pelanggan}: {$reason}");
-                    Log::error("SendAutoBillingNotifications: Gagal mengirim ke {$pelanggan->nama_pelanggan}. Fonnte: {$reason}");
+            // Menyiapkan Parameter Template WABA
+            $templateParams = [];
+            if (!empty($notifSetting->template_name) && !empty($notifSetting->template_params)) {
+                $paramsList = explode(',', $notifSetting->template_params);
+                foreach ($paramsList as $param) {
+                    $param = trim($param);
+                    if ($param === 'nama') $templateParams[] = $pelanggan->nama_pelanggan;
+                    elseif ($param === 'no_telp') $templateParams[] = $pelanggan->no_telp;
+                    elseif ($param === 'jatuh_tempo') $templateParams[] = Carbon::parse($tx->jatuh_tempo)->translatedFormat('d F Y') ?? $pelanggan->jatuh_tempo;
+                    elseif ($param === 'tagihan') $templateParams[] = number_format($tx->jml_bayar, 0, ',', '.');
+                    elseif ($param === 'hari_ini') $templateParams[] = Carbon::now()->translatedFormat('d F Y');
+                    else $templateParams[] = $param; // fallback to whatever string is typed
                 }
-            } catch (\Exception $e) {
+            }
+
+            $isSent = app(\App\Services\WhatsAppService::class)->sendTemplateMessage($pelanggan->no_telp, $pesan, $notifSetting->template_name ?? null, $templateParams);
+            if ($isSent) {
+                $tx->update(['terkirim' => 'terkirim']);
+                $successCount++;
+                $this->info("Berhasil mengirim notifikasi tagihan ke {$pelanggan->nama_pelanggan} ({$pelanggan->no_telp})");
+            } else {
                 $failCount++;
-                $this->error("Exception saat mengirim ke {$pelanggan->nama_pelanggan}: " . $e->getMessage());
-                Log::error("SendAutoBillingNotifications: Exception ke {$pelanggan->nama_pelanggan}: " . $e->getMessage());
+                $this->error("Gagal mengirim notifikasi ke {$pelanggan->nama_pelanggan}: Periksa log sistem.");
+                Log::error("SendAutoBillingNotifications: Gagal mengirim ke {$pelanggan->nama_pelanggan}.");
             }
         }
 

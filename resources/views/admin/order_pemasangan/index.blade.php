@@ -1729,11 +1729,20 @@
             
             if (odpMapInstance === null) {
                 odpMapInstance = L.map('odpMap').setView([clientLat, clientLng], 15);
-                L.tileLayer('https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
-                    maxZoom: 20,
-                    subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+                var streets = L.tileLayer('https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+                                        maxZoom: 24,
+maxNativeZoom: 21,
+                        subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
                     attribution: '&copy; Google Maps'
-                }).addTo(odpMapInstance);
+                });
+                var satellite = L.tileLayer('https://{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+                                        maxZoom: 24,
+maxNativeZoom: 21,
+                        subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+                    attribution: '&copy; Google Maps'
+                });
+                streets.addTo(odpMapInstance);
+                addCustomMapToggle(odpMapInstance, streets, satellite);
             } else {
                 odpMapInstance.setView([clientLat, clientLng], 15);
                 if (clientMarker) {

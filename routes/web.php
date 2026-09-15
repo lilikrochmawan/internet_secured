@@ -34,6 +34,7 @@ use App\Http\Controllers\Admin\AdminPaketController;
 use App\Http\Controllers\Admin\AdminPromoController;
 use App\Http\Controllers\Admin\AdminTransaksiController;
 use App\Http\Controllers\Admin\AdminKasController;
+use App\Http\Controllers\Admin\AdminRiwayatTransaksiController;
 use App\Http\Controllers\Admin\AdminKeluhanController;
 use App\Http\Controllers\Admin\AdminPenggunaController;
 use App\Http\Controllers\Admin\AdminPengaturanController;
@@ -65,6 +66,7 @@ Route::prefix('administrator')->group(function () {
 
         // CRUD Pelanggan
         Route::get('/pelanggan', [AdminPelangganController::class, 'index'])->name('admin.pelanggan.index');
+        Route::get('/pelanggan/export', [AdminPelangganController::class, 'exportContacts'])->name('admin.pelanggan.export');
         Route::get('/pelanggan/mikrotik-secrets', [AdminPelangganController::class, 'getMikrotikSecrets'])->name('admin.pelanggan.mikrotik_secrets');
         Route::post('/pelanggan', [AdminPelangganController::class, 'store'])->name('admin.pelanggan.store');
         Route::post('/pelanggan/update', [AdminPelangganController::class, 'update'])->name('admin.pelanggan.update');
@@ -114,6 +116,10 @@ Route::prefix('administrator')->group(function () {
         Route::post('/kas', [AdminKasController::class, 'store'])->name('admin.kas.store');
         Route::post('/kas/update', [AdminKasController::class, 'update'])->name('admin.kas.update');
         Route::post('/kas/delete', [AdminKasController::class, 'destroy'])->name('admin.kas.destroy');
+
+        // Riwayat Transaksi
+        Route::get('/riwayat-transaksi', [AdminRiwayatTransaksiController::class, 'index'])->name('admin.riwayat_transaksi.index');
+        Route::get('/riwayat-transaksi/laporan', [AdminRiwayatTransaksiController::class, 'laporan'])->name('admin.riwayat_transaksi.laporan');
 
         // Keluhan
         Route::get('/keluhan', [AdminKeluhanController::class, 'index'])->name('admin.keluhan.index');
@@ -190,6 +196,10 @@ Route::prefix('administrator')->group(function () {
         Route::post('/tr069/auto-link', [AdminAcsController::class, 'autoLink'])->name('admin.tr069.autolink');
 
         // Custom Pesan WhatsApp Templates
+        Route::get('/waba-chat', [App\Http\Controllers\Admin\AdminWabaChatController::class, 'index'])->name('admin.waba_chat.index');
+        Route::get('/waba-chat/media', [App\Http\Controllers\Admin\AdminWabaChatController::class, 'fetchMedia'])->name('admin.waba_chat.media');
+        Route::get('/waba-chat/load/{no_telp}', [App\Http\Controllers\Admin\AdminWabaChatController::class, 'loadMessages'])->name('admin.waba_chat.load');
+        Route::post('/waba-chat/reply', [App\Http\Controllers\Admin\AdminWabaChatController::class, 'reply'])->name('admin.waba_chat.reply');
         Route::get('/custom-pesan', [AdminCustomPesanController::class, 'index'])->name('admin.custom_pesan.index');
         Route::post('/custom-pesan/notif', [AdminCustomPesanController::class, 'updateNotif'])->name('admin.custom_pesan.notif');
         Route::post('/custom-pesan/bayar', [AdminCustomPesanController::class, 'updateBayar'])->name('admin.custom_pesan.bayar');
@@ -198,6 +208,13 @@ Route::prefix('administrator')->group(function () {
         Route::post('/custom-pesan/bukablokir', [AdminCustomPesanController::class, 'updateBukaBlokir'])->name('admin.custom_pesan.bukablokir');
         Route::post('/custom-pesan/reminder', [AdminCustomPesanController::class, 'updateReminder'])->name('admin.custom_pesan.reminder');
         Route::post('/custom-pesan/promo', [AdminCustomPesanController::class, 'updatePromo'])->name('admin.custom_pesan.promo');
+        Route::get('/custom-pesan/fetch-waba-image', [AdminCustomPesanController::class, 'fetchWabaImage'])->name('admin.custom_pesan.fetch_waba_image');
+        
+        // Webhook Template
+        Route::get('/webhook-template', [App\Http\Controllers\Admin\AdminWebhookTemplateController::class, 'index'])->name('admin.webhook_template.index');
+        Route::post('/webhook-template/update', [App\Http\Controllers\Admin\AdminWebhookTemplateController::class, 'update'])->name('admin.webhook_template.update');
+        Route::post('/webhook-template/store', [App\Http\Controllers\Admin\AdminWebhookTemplateController::class, 'store'])->name('admin.webhook_template.store');
+        Route::delete('/webhook-template/{id}', [App\Http\Controllers\Admin\AdminWebhookTemplateController::class, 'destroy'])->name('admin.webhook_template.destroy');
 
         // Broadcast Notifikasi & ODP/ODC Maintenance
         Route::get('/broadcast', [AdminNotificationController::class, 'index'])->name('admin.broadcast.index');

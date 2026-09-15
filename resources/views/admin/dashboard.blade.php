@@ -832,7 +832,7 @@
                     labels: ['Aktif', 'Terisolir', 'Non-aktif'],
                     datasets: [{
                         data: [{{ $aktifCount }}, {{ $terisolirCount }}, {{ $nonaktifCount }}],
-                        backgroundColor: ['#10b981', '#f59e0b', '#ef4444'],
+                        backgroundColor: ['#10b981', '#ef4444', '#f59e0b'],
                         borderWidth: 2,
                         hoverOffset: 4
                     }]
