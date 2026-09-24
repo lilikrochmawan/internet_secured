@@ -593,7 +593,19 @@ class PaymentController extends Controller
                     $pesanBayar = str_replace('$harinin', $sekarangs, $pesanBayar);
                     $pesanBayar = str_replace('$no_telp', $data_tagihan->no_telp, $pesanBayar);
 
-                    $templateParams = $bayar->template_params ? explode(',', $bayar->template_params) : [];
+                    $templateParams = [];
+                    if (!empty($bayar->template_params)) {
+                        $paramsList = explode(',', $bayar->template_params);
+                        foreach ($paramsList as $param) {
+                            $param = trim($param);
+                            if ($param === 'nama') $templateParams[] = $data_tagihan->nama_pelanggan ?? $data_tagihan->nama ?? '';
+                            elseif ($param === 'no_telp') $templateParams[] = $data_tagihan->no_telp ?? '';
+                            elseif ($param === 'jatuh_tempo') $templateParams[] = \Carbon\Carbon::parse($data_tagihan->jatuh_tempo ?? $data_tagihan->jatuh_tempo)->translatedFormat('d F Y');
+                                elseif ($param === 'tagihan') $templateParams[] = number_format($data_tagihan->jml_bayar, 0, ',', '.');
+                            elseif ($param === 'hari_ini') $templateParams[] = \Carbon\Carbon::now()->translatedFormat('d F Y');
+                            else $templateParams[] = $param;
+                        }
+                    }
                     app(\App\Services\WhatsAppService::class)->sendTemplateMessage($data_tagihan->no_telp, $pesanBayar, $bayar->template_name ?? null, $templateParams, $bayar->template_language ?? 'id');
                 }
             } catch (\Exception $e) {
@@ -602,5 +614,30 @@ class PaymentController extends Controller
         }
 
         return response('OK', 200);
+    }
+
+    public function printInvoice($id)
+    {
+        $user = \Illuminate\Support\Facades\Auth::user();
+        $pelanggan = $user->pelanggan;
+        
+        if (!$pelanggan) {
+            abort(404, 'Pelanggan tidak ditemukan.');
+        }
+
+        $pelangganIds = $this->tagihanService->getPelangganIdsByPhone($pelanggan->no_telp);
+
+        $tagihan = \App\Models\Tagihan::with(['pelanggan.paketDetail'])->whereIn('id_pelanggan', $pelangganIds)->findOrFail($id);
+
+        $profile = \Illuminate\Support\Facades\DB::table('tb_profile')->first();
+        if ($profile && !isset($profile->telepon)) {
+            $profile->telepon = $profile->telpon ?? '';
+        }
+
+        if (empty($tagihan->no_invoice)) {
+            $tagihan->no_invoice = 'INV/' . $tagihan->bulan_tahun . '/' . str_pad($tagihan->id_tagihan, 4, '0', STR_PAD_LEFT);
+        }
+
+        return view('admin.transaksi.print_invoice', compact('tagihan', 'profile'));
     }
 }

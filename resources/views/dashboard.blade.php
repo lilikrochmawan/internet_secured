@@ -587,6 +587,24 @@
             color: var(--danger-color);
         }
 
+        .download-invoice-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--primary-color);
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .download-invoice-btn:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
         .no-invoices {
             text-align: left;
             color: var(--text-dim);
@@ -985,13 +1003,18 @@
                                         <p class="invoice-date">Periode: {{ $inv->bulan_tahun }}</p>
                                     </div>
                                 </div>
-                                <div class="invoice-item-right">
-                                    <p class="invoice-amount">{{ 'Rp ' . number_format($inv->jml_bayar, 0, ',', '.') }}</p>
-                                    @if($inv->status_bayar == 1)
-                                        <span class="status-badge status-badge-paid">Lunas</span>
-                                    @else
-                                        <span class="status-badge status-badge-unpaid">Belum Lunas</span>
-                                    @endif
+                                <div class="invoice-item-right" style="display: flex; align-items: center; gap: 10px;">
+                                    <div>
+                                        <p class="invoice-amount" style="text-align: right;">{{ 'Rp ' . number_format($inv->jml_bayar, 0, ',', '.') }}</p>
+                                        @if($inv->status_bayar == 1)
+                                            <span class="status-badge status-badge-paid">Lunas</span>
+                                        @else
+                                            <span class="status-badge status-badge-unpaid">Belum Lunas</span>
+                                        @endif
+                                    </div>
+                                    <a href="{{ route('payment.invoice', $inv->id_tagihan) }}" target="_blank" class="download-invoice-btn" title="Download Invoice">
+                                        <i class="fa-solid fa-download"></i>
+                                    </a>
                                 </div>
                             </div>
                         @empty

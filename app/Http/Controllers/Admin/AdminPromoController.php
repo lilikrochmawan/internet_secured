@@ -173,7 +173,19 @@ class AdminPromoController extends Controller
                     $pesan = str_replace('$mulai_promo', $mulaiFormat, $pesan);
                     $pesan = str_replace('$selesai_promo', $selesaiFormat, $pesan);
 
-                    $templateParams = $notifPromo->template_params ? explode(',', $notifPromo->template_params) : [];
+                    $templateParams = [];
+                    if (!empty($notifPromo->template_params)) {
+                        $paramsList = explode(',', $notifPromo->template_params);
+                        foreach ($paramsList as $param) {
+                            $param = trim($param);
+                            if ($param === 'nama') $templateParams[] = $pelanggan->nama_pelanggan ?? $pelanggan->nama ?? '';
+                            elseif ($param === 'no_telp') $templateParams[] = $pelanggan->no_telp ?? '';
+                            elseif ($param === 'jatuh_tempo') $templateParams[] = \Carbon\Carbon::parse($pelanggan->jatuh_tempo)->translatedFormat('d F Y');
+                                elseif ($param === 'tagihan') $templateParams[] = '0';
+                            elseif ($param === 'hari_ini') $templateParams[] = \Carbon\Carbon::now()->translatedFormat('d F Y');
+                            else $templateParams[] = $param;
+                        }
+                    }
                     app(\App\Services\WhatsAppService::class)->sendTemplateMessage($pelanggan->no_telp, $pesan, $notifPromo->template_name ?? null, $templateParams, $notifPromo->template_language ?? 'id');
                 }
             } catch (\Exception $e) {

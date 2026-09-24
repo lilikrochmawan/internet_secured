@@ -16,6 +16,7 @@ Route::middleware(['auth', 'client'])->group(function () {
     Route::get('/dashboard', [AuthController::class, 'dashboard'])->name('dashboard');
     Route::get('/dashboard/router-stats', [AuthController::class, 'getRouterStats'])->name('dashboard.router_stats');
     Route::get('/payment/detail', [PaymentController::class, 'detail'])->name('payment.detail');
+    Route::get('/payment/invoice/{id}', [PaymentController::class, 'printInvoice'])->name('payment.invoice');
     Route::post('/payment/charge', [PaymentController::class, 'charge'])->name('payment.charge');
     Route::get('/jaringan/status', [NetworkStatusController::class, 'index'])->name('network.status');
     Route::post('/jaringan/status/wifi', [NetworkStatusController::class, 'updateWifi'])->name('network.wifi.update');

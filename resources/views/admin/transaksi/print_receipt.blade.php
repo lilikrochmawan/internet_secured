@@ -432,20 +432,6 @@
             </div>
         </div>
 
-        <!-- Signature Section -->
-        <div class="signature-section">
-            <div class="signature-box">
-                <p class="signature-title">Pelanggan,</p>
-                <div class="signature-line"></div>
-                <p><strong>{{ $tagihan->pelanggan->nama_pelanggan ?? 'Nama Pelanggan' }}</strong></p>
-            </div>
-            
-            <div class="signature-box">
-                <p class="signature-title">Penerima Pembayaran,</p>
-                <div class="signature-line"></div>
-                <p><strong>{{ $tagihan->penerima->nama_user ?? 'Staff Administrasi' }}</strong></p>
-            </div>
-        </div>
     </div>
 
     <!-- Auto-print on load -->

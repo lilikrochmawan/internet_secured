@@ -243,7 +243,19 @@ class AutoBlockPelanggan extends Command
                         $pesan = str_replace('$jatuh_tempo', \Carbon\Carbon::parse($tx->jatuh_tempo)->translatedFormat('d F Y') ?? $pelanggan->jatuh_tempo, $pesan);
                         $pesan = str_replace('$hari_ini', \Carbon\Carbon::now()->translatedFormat('d F Y'), $pesan);
 
-                        $templateParams = $blokirSetting->template_params ? explode(',', $blokirSetting->template_params) : [];
+                        $templateParams = [];
+                    if (!empty($blokirSetting->template_params)) {
+                        $paramsList = explode(',', $blokirSetting->template_params);
+                        foreach ($paramsList as $param) {
+                            $param = trim($param);
+                            if ($param === 'nama') $templateParams[] = $pelanggan->nama_pelanggan ?? $pelanggan->nama ?? '';
+                            elseif ($param === 'no_telp') $templateParams[] = $pelanggan->no_telp ?? '';
+                            elseif ($param === 'jatuh_tempo') $templateParams[] = \Carbon\Carbon::parse($tagihan->jatuh_tempo ?? $pelanggan->jatuh_tempo)->translatedFormat('d F Y');
+                                elseif ($param === 'tagihan') $templateParams[] = number_format($tagihan->jml_bayar, 0, ',', '.');
+                            elseif ($param === 'hari_ini') $templateParams[] = \Carbon\Carbon::now()->translatedFormat('d F Y');
+                            else $templateParams[] = $param;
+                        }
+                    }
                         $isSent = app(\App\Services\WhatsAppService::class)->sendTemplateMessage($pelanggan->no_telp, $pesan, $blokirSetting->template_name ?? null, $templateParams, $blokirSetting->template_language ?? 'id');
                         if ($isSent) {
                             $this->info('Notifikasi WA pemblokiran terkirim ke: ' . $pelanggan->nama_pelanggan);

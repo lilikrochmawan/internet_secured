@@ -1397,7 +1397,7 @@ maxNativeZoom: 21,
                     errMsg = "Only secure origins are allowed. Halaman ini diakses melalui HTTP biasa, sedangkan Google Chrome hanya mengizinkan akses GPS pada koneksi aman (HTTPS). Silakan akses website via HTTPS atau pilih lokasi secara manual di peta.";
                 }
                 alert("Gagal mengambil GPS: " + errMsg);
-            }, { enableHighAccuracy: true });
+            }, { enableHighAccuracy: true, maximumAge: 0, timeout: 20000 });
         } else {
             alert("Geolocation tidak didukung browser ini.");
         }
@@ -1475,7 +1475,7 @@ maxNativeZoom: 21,
                     errMsg = "Only secure origins are allowed. Halaman ini diakses melalui HTTP biasa, sedangkan Google Chrome hanya mengizinkan akses GPS pada koneksi aman (HTTPS). Silakan akses website via HTTPS atau pilih lokasi secara manual di peta.";
                 }
                 alert("Gagal mengambil GPS: " + errMsg);
-            }, { enableHighAccuracy: true });
+            }, { enableHighAccuracy: true, maximumAge: 0, timeout: 20000 });
         } else {
             alert("Geolocation tidak didukung browser ini.");
         }

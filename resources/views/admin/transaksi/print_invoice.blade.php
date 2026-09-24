@@ -530,20 +530,6 @@
             <p style="margin-top: 10px; font-weight: 600; color: var(--primary-color);">Terima kasih atas kepercayaan Anda menggunakan layanan {{ $profile->nama_sekolah ?? 'Indotel' }}</p>
         </div>
 
-        <!-- Signature Section -->
-        <div class="signature-section">
-            <div class="signature-box">
-                <p class="signature-title">Pelanggan,</p>
-                <div class="signature-line"></div>
-                <p><strong>{{ $tagihan->pelanggan->nama_pelanggan ?? 'Nama Pelanggan' }}</strong></p>
-            </div>
-            
-            <div class="signature-box">
-                <p class="signature-title">Petugas Layanan,</p>
-                <div class="signature-line"></div>
-                <p><strong>{{ Auth::user()->nama_user ?? 'Kasir / Admin' }}</strong></p>
-            </div>
-        </div>
     </div>
 
     <!-- Auto-print on load -->

@@ -340,7 +340,19 @@ class AdminPelangganController extends Controller
 
                 $tokenInfo = DB::table('tbl_token')->where('id_token', 1)->where('status', 'aktif')->first();
                 if ($tokenInfo) {
-                    $templateParams = $notifikasi->template_params ? explode(',', $notifikasi->template_params) : [];
+                    $templateParams = [];
+                    if (!empty($notifikasi->template_params)) {
+                        $paramsList = explode(',', $notifikasi->template_params);
+                        foreach ($paramsList as $param) {
+                            $param = trim($param);
+                            if ($param === 'nama') $templateParams[] = $pelanggan->nama_pelanggan ?? $pelanggan->nama ?? '';
+                            elseif ($param === 'no_telp') $templateParams[] = $pelanggan->no_telp ?? '';
+                            elseif ($param === 'jatuh_tempo') $templateParams[] = \Carbon\Carbon::parse($pelanggan->jatuh_tempo)->translatedFormat('d F Y');
+                                elseif ($param === 'tagihan') $templateParams[] = '0';
+                            elseif ($param === 'hari_ini') $templateParams[] = \Carbon\Carbon::now()->translatedFormat('d F Y');
+                            else $templateParams[] = $param;
+                        }
+                    }
                     app(\App\Services\WhatsAppService::class)->sendTemplateMessage($no_telp, $pesan, $notifikasi->template_name ?? null, $templateParams, $notifikasi->template_language ?? 'id');
                 }
             }

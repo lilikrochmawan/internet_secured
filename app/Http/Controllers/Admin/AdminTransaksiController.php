@@ -403,11 +403,23 @@ class AdminTransaksiController extends Controller
                     $sekarangs = date('d F Y H:i:s');
                     $pesanBayar = $bayar->pesan_bayar;
                     $pesanBayar = str_replace('$nama', $pelanggan->nama_pelanggan, $pesanBayar);
-                    $pesanBayar = str_replace('$tagihan', number_format($tagihan->jml_bayar, 0, ',', '.'), $pesanBayar);
+                    $pesanBayar = str_replace('$tagihan', number_format($tagihan->jml_bayar ?? $tx->jml_bayar ?? 0, 0, ',', '.'), $pesanBayar);
                     $pesanBayar = str_replace('$harinin', $sekarangs, $pesanBayar);
                     $pesanBayar = str_replace('$no_telp', $pelanggan->no_telp, $pesanBayar);
 
-                    $templateParams = $bayar->template_params ? explode(',', $bayar->template_params) : [];
+                    $templateParams = [];
+                    if (!empty($bayar->template_params)) {
+                        $paramsList = explode(',', $bayar->template_params);
+                        foreach ($paramsList as $param) {
+                            $param = trim($param);
+                            if ($param === 'nama') $templateParams[] = $pelanggan->nama_pelanggan ?? $pelanggan->nama ?? '';
+                            elseif ($param === 'no_telp') $templateParams[] = $pelanggan->no_telp ?? '';
+                            elseif ($param === 'jatuh_tempo') $templateParams[] = \Carbon\Carbon::parse($tagihan->jatuh_tempo ?? $tx->jatuh_tempo ?? $pelanggan->jatuh_tempo)->translatedFormat('d F Y');
+                                elseif ($param === 'tagihan') $templateParams[] = number_format($tagihan->jml_bayar ?? $tx->jml_bayar ?? 0, 0, ',', '.');
+                            elseif ($param === 'hari_ini') $templateParams[] = \Carbon\Carbon::now()->translatedFormat('d F Y');
+                            else $templateParams[] = $param;
+                        }
+                    }
                     app(\App\Services\WhatsAppService::class)->sendTemplateMessage($pelanggan->no_telp, $pesanBayar, $bayar->template_name ?? null, $templateParams, $bayar->template_language ?? 'id');
                 }
             } catch (\Exception $e) {
@@ -415,7 +427,7 @@ class AdminTransaksiController extends Controller
             }
         }
 
-        \Illuminate\Support\Facades\Log::info("Staff [" . auth()->user()->nama_user . "] (level: " . auth()->user()->level . ") MENCATAT PEMBAYARAN tagihan pelanggan [" . ($pelanggan->nama_pelanggan ?? 'Unknown') . "] (kode: " . ($pelanggan->kode_pelanggan ?? '-') . ") sebesar Rp " . number_format($tagihan->jml_bayar, 0, ',', '.') . " untuk periode [" . $tagihan->bulan_tahun . "].");
+        \Illuminate\Support\Facades\Log::info("Staff [" . auth()->user()->nama_user . "] (level: " . auth()->user()->level . ") MENCATAT PEMBAYARAN tagihan pelanggan [" . ($pelanggan->nama_pelanggan ?? 'Unknown') . "] (kode: " . ($pelanggan->kode_pelanggan ?? '-') . ") sebesar Rp " . number_format($tagihan->jml_bayar ?? $tx->jml_bayar ?? 0, 0, ',', '.') . " untuk periode [" . $tagihan->bulan_tahun . "].");
 
         return redirect()->route('admin.transaksi.index')->with('success', 'Pembayaran tagihan berhasil dicatat!');
     }
@@ -477,7 +489,7 @@ class AdminTransaksiController extends Controller
         // Hapus dari tb_kas
         DB::table('tb_kas')->where('id_tagihan', $tagihan->id_tagihan)->delete();
 
-        \Illuminate\Support\Facades\Log::info("Staff [" . auth()->user()->nama_user . "] (level: " . auth()->user()->level . ") MEMBATALKAN PEMBAYARAN tagihan pelanggan [" . ($pelanggan->nama_pelanggan ?? 'Unknown') . "] (kode: " . ($pelanggan->kode_pelanggan ?? '-') . ") sebesar Rp " . number_format($tagihan->jml_bayar, 0, ',', '.') . " untuk periode [" . $tagihan->bulan_tahun . "].");
+        \Illuminate\Support\Facades\Log::info("Staff [" . auth()->user()->nama_user . "] (level: " . auth()->user()->level . ") MEMBATALKAN PEMBAYARAN tagihan pelanggan [" . ($pelanggan->nama_pelanggan ?? 'Unknown') . "] (kode: " . ($pelanggan->kode_pelanggan ?? '-') . ") sebesar Rp " . number_format($tagihan->jml_bayar ?? $tx->jml_bayar ?? 0, 0, ',', '.') . " untuk periode [" . $tagihan->bulan_tahun . "].");
 
         return redirect()->route('admin.transaksi.index')->with('success', 'Pembayaran tagihan berhasil dibatalkan!');
     }
@@ -554,9 +566,21 @@ class AdminTransaksiController extends Controller
             if ($blokirSetting && $blokirSetting->status_blokir === 'aktif' && $tokenInfo && !empty($tokenInfo->token) && !empty($pelanggan->no_telp)) {
                 $pesan = $blokirSetting->pesan_blokir;
                 $pesan = str_replace('$nama', $pelanggan->nama_pelanggan, $pesan);
-                $pesan = str_replace('$tagihan', number_format($tagihan->jml_bayar, 0, ',', '.'), $pesan);
+                $pesan = str_replace('$tagihan', number_format($tagihan->jml_bayar ?? $tx->jml_bayar ?? 0, 0, ',', '.'), $pesan);
 
-                $templateParams = $blokirSetting->template_params ? explode(',', $blokirSetting->template_params) : [];
+                $templateParams = [];
+                    if (!empty($blokirSetting->template_params)) {
+                        $paramsList = explode(',', $blokirSetting->template_params);
+                        foreach ($paramsList as $param) {
+                            $param = trim($param);
+                            if ($param === 'nama') $templateParams[] = $pelanggan->nama_pelanggan ?? $pelanggan->nama ?? '';
+                            elseif ($param === 'no_telp') $templateParams[] = $pelanggan->no_telp ?? '';
+                            elseif ($param === 'jatuh_tempo') $templateParams[] = \Carbon\Carbon::parse($tagihan->jatuh_tempo ?? $tx->jatuh_tempo ?? $pelanggan->jatuh_tempo)->translatedFormat('d F Y');
+                                elseif ($param === 'tagihan') $templateParams[] = number_format($tagihan->jml_bayar ?? $tx->jml_bayar ?? 0, 0, ',', '.');
+                            elseif ($param === 'hari_ini') $templateParams[] = \Carbon\Carbon::now()->translatedFormat('d F Y');
+                            else $templateParams[] = $param;
+                        }
+                    }
                 $isSent = app(\App\Services\WhatsAppService::class)->sendTemplateMessage($pelanggan->no_telp, $pesan, $blokirSetting->template_name ?? null, $templateParams, $blokirSetting->template_language ?? 'id');
                 if ($isSent) {
                     $waMessage = ' & Notifikasi WhatsApp terkirim!';
@@ -696,8 +720,8 @@ class AdminTransaksiController extends Controller
         $pesan = $notifSetting->pesan_notifikasi;
         $pesan = str_replace('$nama', $pelanggan->nama_pelanggan, $pesan);
         $pesan = str_replace('$no_telp', $pelanggan->no_telp, $pesan);
-        $pesan = str_replace('$jatuh_tempo', \Carbon\Carbon::parse($tagihan->jatuh_tempo ?? $pelanggan->jatuh_tempo)->translatedFormat('d F Y'), $pesan);
-        $pesan = str_replace('$tagihan', number_format($tagihan->jml_bayar, 0, ',', '.'), $pesan);
+        $pesan = str_replace('$jatuh_tempo', \Carbon\Carbon::parse($tagihan->jatuh_tempo ?? $tx->jatuh_tempo ?? $pelanggan->jatuh_tempo)->translatedFormat('d F Y'), $pesan);
+        $pesan = str_replace('$tagihan', number_format($tagihan->jml_bayar ?? $tx->jml_bayar ?? 0, 0, ',', '.'), $pesan);
         $pesan = str_replace('$hari_ini', \Carbon\Carbon::now()->translatedFormat('d F Y'), $pesan);
 
         // Menyiapkan Parameter Template WABA
@@ -708,8 +732,8 @@ class AdminTransaksiController extends Controller
                 $param = trim($param);
                 if ($param === 'nama') $templateParams[] = $pelanggan->nama_pelanggan;
                 elseif ($param === 'no_telp') $templateParams[] = $pelanggan->no_telp;
-                elseif ($param === 'jatuh_tempo') $templateParams[] = \Carbon\Carbon::parse($tagihan->jatuh_tempo ?? $pelanggan->jatuh_tempo)->translatedFormat('d F Y');
-                elseif ($param === 'tagihan') $templateParams[] = number_format($tagihan->jml_bayar, 0, ',', '.');
+                elseif ($param === 'jatuh_tempo') $templateParams[] = \Carbon\Carbon::parse($tagihan->jatuh_tempo ?? $tx->jatuh_tempo ?? $pelanggan->jatuh_tempo)->translatedFormat('d F Y');
+                elseif ($param === 'tagihan') $templateParams[] = number_format($tagihan->jml_bayar ?? $tx->jml_bayar ?? 0, 0, ',', '.');
                 elseif ($param === 'hari_ini') $templateParams[] = \Carbon\Carbon::now()->translatedFormat('d F Y');
                 else $templateParams[] = $param; 
             }
@@ -917,12 +941,24 @@ class AdminTransaksiController extends Controller
         $pesan = $reminderSetting->pesan_reminder;
         $pesan = str_replace('$nama', $pelanggan->nama_pelanggan, $pesan);
         $pesan = str_replace('$no_telp', $pelanggan->no_telp, $pesan);
-        $pesan = str_replace('$tagihan', number_format($tagihan->jml_bayar, 0, ',', '.'), $pesan);
+        $pesan = str_replace('$tagihan', number_format($tagihan->jml_bayar ?? $tx->jml_bayar ?? 0, 0, ',', '.'), $pesan);
         $pesan = str_replace('$jatuh_tempo', Carbon::parse($tagihan->jatuh_tempo)->translatedFormat('d F Y') ?? $pelanggan->jatuh_tempo, $pesan);
         $pesan = str_replace('$sekarang_format', Carbon::now()->translatedFormat('d F Y H:i') . ' WIB', $pesan);
 
         // Kirim via WhatsApp Service
-        $templateParams = $reminderSetting->template_params ? explode(',', $reminderSetting->template_params) : [];
+        $templateParams = [];
+                    if (!empty($reminderSetting->template_params)) {
+                        $paramsList = explode(',', $reminderSetting->template_params);
+                        foreach ($paramsList as $param) {
+                            $param = trim($param);
+                            if ($param === 'nama') $templateParams[] = $pelanggan->nama_pelanggan ?? $pelanggan->nama ?? '';
+                            elseif ($param === 'no_telp') $templateParams[] = $pelanggan->no_telp ?? '';
+                            elseif ($param === 'jatuh_tempo') $templateParams[] = \Carbon\Carbon::parse($tagihan->jatuh_tempo ?? $tx->jatuh_tempo ?? $pelanggan->jatuh_tempo)->translatedFormat('d F Y');
+                            elseif ($param === 'tagihan') $templateParams[] = number_format($tagihan->jml_bayar ?? $tx->jml_bayar ?? 0, 0, ',', '.');
+                            elseif ($param === 'hari_ini') $templateParams[] = \Carbon\Carbon::now()->translatedFormat('d F Y');
+                            else $templateParams[] = $param;
+                        }
+                    }
         $isSent = app(\App\Services\WhatsAppService::class)->sendTemplateMessage($pelanggan->no_telp, $pesan, $reminderSetting->template_name ?? null, $templateParams, $reminderSetting->template_language ?? 'id');
 
         if ($isSent) {
@@ -1115,7 +1151,19 @@ class AdminTransaksiController extends Controller
             $pesan = str_replace('$jatuh_tempo', Carbon::parse($tx->jatuh_tempo)->translatedFormat('d F Y') ?? $pelanggan->jatuh_tempo, $pesan);
             $pesan = str_replace('$sekarang_format', Carbon::now()->translatedFormat('d F Y H:i') . ' WIB', $pesan);
 
-            $templateParams = $reminderSetting->template_params ? explode(',', $reminderSetting->template_params) : [];
+            $templateParams = [];
+                    if (!empty($reminderSetting->template_params)) {
+                        $paramsList = explode(',', $reminderSetting->template_params);
+                        foreach ($paramsList as $param) {
+                            $param = trim($param);
+                            if ($param === 'nama') $templateParams[] = $pelanggan->nama_pelanggan ?? $pelanggan->nama ?? '';
+                            elseif ($param === 'no_telp') $templateParams[] = $pelanggan->no_telp ?? '';
+                            elseif ($param === 'jatuh_tempo') $templateParams[] = \Carbon\Carbon::parse($tagihan->jatuh_tempo ?? $tx->jatuh_tempo ?? $pelanggan->jatuh_tempo)->translatedFormat('d F Y');
+                            elseif ($param === 'tagihan') $templateParams[] = number_format($tagihan->jml_bayar ?? $tx->jml_bayar ?? 0, 0, ',', '.');
+                            elseif ($param === 'hari_ini') $templateParams[] = \Carbon\Carbon::now()->translatedFormat('d F Y');
+                            else $templateParams[] = $param;
+                        }
+                    }
             $isSent = app(\App\Services\WhatsAppService::class)->sendTemplateMessage($pelanggan->no_telp, $pesan, $reminderSetting->template_name ?? null, $templateParams, $reminderSetting->template_language ?? 'id');
 
             if ($isSent) {
@@ -1290,7 +1338,19 @@ class AdminTransaksiController extends Controller
                     $pesan = str_replace('$nama', $pelanggan->nama_pelanggan, $pesan);
                     $pesan = str_replace('$tagihan', number_format($tx->jml_bayar, 0, ',', '.'), $pesan);
 
-                    $templateParams = $blokirSetting->template_params ? explode(',', $blokirSetting->template_params) : [];
+                    $templateParams = [];
+                    if (!empty($blokirSetting->template_params)) {
+                        $paramsList = explode(',', $blokirSetting->template_params);
+                        foreach ($paramsList as $param) {
+                            $param = trim($param);
+                            if ($param === 'nama') $templateParams[] = $pelanggan->nama_pelanggan ?? $pelanggan->nama ?? '';
+                            elseif ($param === 'no_telp') $templateParams[] = $pelanggan->no_telp ?? '';
+                            elseif ($param === 'jatuh_tempo') $templateParams[] = \Carbon\Carbon::parse($tagihan->jatuh_tempo ?? $tx->jatuh_tempo ?? $pelanggan->jatuh_tempo)->translatedFormat('d F Y');
+                                elseif ($param === 'tagihan') $templateParams[] = number_format($tagihan->jml_bayar ?? $tx->jml_bayar ?? 0, 0, ',', '.');
+                            elseif ($param === 'hari_ini') $templateParams[] = \Carbon\Carbon::now()->translatedFormat('d F Y');
+                            else $templateParams[] = $param;
+                        }
+                    }
                     $isSent = app(\App\Services\WhatsAppService::class)->sendTemplateMessage($pelanggan->no_telp, $pesan, $blokirSetting->template_name ?? null, $templateParams, $blokirSetting->template_language ?? 'id');
                     if ($isSent) {
                         $waSent = true;

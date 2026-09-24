@@ -1408,7 +1408,7 @@
             }, function (error) {
                 console.error("Gagal mendapatkan lokasi:", error);
                 alert("Gagal mendapatkan lokasi GPS HP: " + error.message);
-            }, { enableHighAccuracy: true });
+            }, { enableHighAccuracy: true, maximumAge: 0, timeout: 20000 });
         } else {
             alert("Geolocation tidak didukung oleh browser ini.");
         }
@@ -2226,7 +2226,7 @@ maxNativeZoom: 21,
             }, function (error) {
                 console.error("Gagal mendapatkan lokasi:", error);
                 alert("Gagal mendapatkan lokasi GPS HP: " + error.message);
-            }, { enableHighAccuracy: true });
+            }, { enableHighAccuracy: true, maximumAge: 0, timeout: 20000 });
         } else {
             alert("Geolocation tidak didukung oleh browser ini.");
         }
