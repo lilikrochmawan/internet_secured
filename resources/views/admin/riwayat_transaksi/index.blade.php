@@ -417,7 +417,7 @@
         
         <!-- Pagination -->
         <div style="margin-top: 20px;">
-            {{ $riwayat->links() }}
+            {{ $riwayat->appends(request()->query())->links('pagination::bootstrap-5') }}
         </div>
     </div>
 </div>

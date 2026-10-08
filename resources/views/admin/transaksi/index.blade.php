@@ -96,6 +96,13 @@
     .table tr.row-lunas:hover {
         background-color: #dcfce7 !important;
     }
+    
+    .table tr.row-piutang {
+        background-color: #fef08a !important; /* yellow */
+    }
+    .table tr.row-piutang:hover {
+        background-color: #fde047 !important;
+    }
 
     .badge {
         display: inline-flex;
@@ -562,7 +569,7 @@
             </thead>
             <tbody>
                 @forelse($tagihan as $index => $tx)
-                    <tr class="{{ $tx->status_bayar == 1 ? 'row-lunas' : '' }}">
+                    <tr class="{{ $tx->status_bayar == 1 ? 'row-lunas' : ($tx->status_bayar == 2 ? 'row-piutang' : '') }}">
                         <td>{{ $index + 1 }}</td>
                         <td>
                             <strong>{{ $tx->pelanggan->nama_pelanggan ?? 'N/A' }}</strong><br>
@@ -611,6 +618,8 @@
                         <td>
                             @if($tx->status_bayar == 1)
                                 <span class="badge badge-success">Lunas</span>
+                            @elseif($tx->status_bayar == 2)
+                                <span class="badge badge-warning" style="background-color: #fef08a; color: #b45309; border: 1px solid #fde047;">Piutang</span>
                             @else
                                 <span class="badge badge-danger">Belum Bayar</span>
                             @endif
@@ -626,7 +635,7 @@
                         <td>
                             @if(in_array($tx->id_pelanggan, $blockedClientIds))
                                 <span class="badge badge-danger">Terblokir</span>
-                            @elseif($tx->status_bayar == 1)
+                            @elseif(in_array($tx->status_bayar, [1, 2]))
                                 <span class="badge badge-success">Aktif</span>
                             @else
                                 @php
@@ -660,14 +669,32 @@
                         <td>
                             <div style="display: flex; gap: 6px; justify-content: center; flex-wrap: wrap;">
                                 @if($tx->status_bayar != 1)
+                                    @php
+                                        $hasPiutang = false;
+                                        if ($tx->id_pelanggan) {
+                                            $hasPiutang = App\Models\Tagihan::where('id_pelanggan', $tx->id_pelanggan)->where('status_bayar', 2)->exists();
+                                        }
+                                        $confirmMsg = $hasPiutang ? 'PERHATIAN: Pelanggan ini masih memiliki tunggakan PIUTANG!\n\nCatat pembayaran tagihan manual untuk pelanggan ini?' : 'Catat pembayaran tagihan manual untuk pelanggan ini?';
+                                    @endphp
                                     <!-- Aksi Pembayaran Manual -->
-                                    <form action="{{ route('admin.transaksi.bayar') }}" method="POST" onsubmit="return confirm('Catat pembayaran tagihan manual untuk pelanggan ini?')">
+                                    <form action="{{ route('admin.transaksi.bayar') }}" method="POST" onsubmit="return confirm('{{ $confirmMsg }}')">
                                         @csrf
                                         <input type="hidden" name="id_tagihan" value="{{ $tx->id_tagihan }}">
                                         <button type="submit" class="btn btn-success">
                                             <i class="fa-solid fa-money-bill-wave"></i> Bayar
                                         </button>
                                     </form>
+
+                                    @if($tx->status_bayar == 0 || $tx->status_bayar === null)
+                                    <!-- Aksi Piutang -->
+                                    <form action="{{ route('admin.transaksi.set_piutang') }}" method="POST" onsubmit="return confirm('Ubah tagihan ini menjadi Piutang?')">
+                                        @csrf
+                                        <input type="hidden" name="id_tagihan" value="{{ $tx->id_tagihan }}">
+                                        <button type="submit" class="btn btn-warning" style="background-color: #fef08a; color: #b45309; border: 1px solid #fde047;">
+                                            <i class="fa-solid fa-book-open"></i> Piutang
+                                        </button>
+                                    </form>
+                                    @endif
 
                                     <!-- Aksi Cetak Invoice -->
                                     <a href="{{ route('admin.transaksi.print_invoice', $tx->id_tagihan) }}" target="_blank" class="btn btn-info" style="background-color: #eff6ff; color: #2563eb; border: 1px solid #dbeafe;">

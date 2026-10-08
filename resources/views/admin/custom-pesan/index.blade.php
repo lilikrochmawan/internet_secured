@@ -532,6 +532,29 @@
                     <label for="pesan_npemasangan">Isi Pesan Pemasangan (Untuk Fonnte / Unofficial)</label>
                     <textarea name="pesan_npemasangan" id="pesan_npemasangan" rows="9" class="form-control" placeholder="Tulis format notifikasi pemasangan...">{{ $pemasangan->pesan_notif ?? '' }}</textarea>
                     
+                    <!-- Tambahan Khusus WABA (Bablast) -->
+                    <details style="background: #f1f5f9; padding: 10px 15px; border-radius: 8px; border: 1px solid #e2e8f0; margin-top: 15px; margin-bottom: 15px;">
+                        <summary style="color: #0f172a; font-weight: 600; cursor: pointer; font-size: 0.85rem; outline:none;"><i class="fa-brands fa-whatsapp"></i> Pengaturan Template Meta WABA (Khusus Pengguna Bablast)</summary>
+                        <div style="margin-top: 15px;">
+                            <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 10px;">Isi pengaturan di bawah ini jika Anda menggunakan WABA (Bablast). Kosongkan jika menggunakan Fonnte.</p>
+                            
+                            <div style="margin-bottom: 10px;">
+                                <label style="font-size: 0.9rem; font-weight:600;">Nama Template</label>
+                                <input type="text" name="template_name" class="form-control" value="{{ $pemasangan->template_name ?? '' }}" placeholder="cth: nama_template">
+                            </div>
+                            
+                            <div style="margin-bottom: 10px;">
+                                <label style="font-size: 0.9rem; font-weight:600;">Bahasa Template</label>
+                                <input type="text" name="template_language" class="form-control" value="{{ $pemasangan->template_language ?? 'id' }}" placeholder="default: id">
+                            </div>
+
+                            <div>
+                                <label style="font-size: 0.9rem; font-weight:600; display:flex; justify-content:space-between; align-items:center;"><span>Urutan Variabel Template <span style="font-weight:normal; color:#64748b;">(pisahkan dengan koma)</span></span><button type="button" class="btn btn-sm btn-outline-info" onclick="fetchWabaImage(this)" style="font-size:11px; padding:2px 8px;" title="Cari link gambar header dari Meta">Cari Link Gambar Header</button></label>
+                                <input type="text" name="template_params" class="form-control" value="{{ $pemasangan->template_params ?? '' }}" placeholder="cth: nama, paket">
+                            </div>
+                        </div>
+                    </details>
+
                     <button type="submit" class="btn btn-primary" style="margin-top: 14px; align-self: flex-start;">
                         <i class="fa-solid fa-floppy-disk"></i> Simpan Pemasangan
                     </button>

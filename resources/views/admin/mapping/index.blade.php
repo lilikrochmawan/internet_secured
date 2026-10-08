@@ -302,7 +302,8 @@
 
 @section('content')
 <!-- Stats Cards -->
-<div class="stats-grid">
+<div class="stats-grid" @if(Auth::user()->level == 'sales') style="grid-template-columns: 1fr;" @endif>
+    @if(Auth::user()->level != 'sales')
     <!-- Card ODC -->
     <div class="stat-card">
         <div class="stat-info">
@@ -313,6 +314,7 @@
             <i class="fa-solid fa-circle-nodes"></i>
         </div>
     </div>
+    @endif
 
     <!-- Card ODP -->
     <div class="stat-card">
@@ -325,6 +327,7 @@
         </div>
     </div>
 
+    @if(Auth::user()->level != 'sales')
     <!-- Card Pelanggan -->
     <div class="stat-card">
         <div class="stat-info">
@@ -335,6 +338,7 @@
             <i class="fa-solid fa-user-group"></i>
         </div>
     </div>
+    @endif
 </div>
 
 <!-- Map Card -->
@@ -369,8 +373,8 @@
     <div class="filter-panel">
         <span style="font-size: 0.85rem; font-weight: 700; color: var(--text-dark); margin-right: 8px;">Tampilkan:</span>
         
-        <label style="display:flex; align-items:center; gap:6px; font-size:0.85rem; font-weight:600; cursor:pointer; color:#1e293b;">
-            <input type="checkbox" id="chk-odc" checked style="width:16px; height:16px; accent-color:#2563eb;">
+        <label style="display:{{ Auth::user()->level == 'sales' ? 'none' : 'flex' }}; align-items:center; gap:6px; font-size:0.85rem; font-weight:600; cursor:pointer; color:#1e293b;">
+            <input type="checkbox" id="chk-odc" {{ Auth::user()->level == 'sales' ? '' : 'checked' }} style="width:16px; height:16px; accent-color:#2563eb;">
             <span>ODC (Biru)</span>
         </label>
         
@@ -379,13 +383,13 @@
             <span>ODP (Hijau)</span>
         </label>
         
-        <label style="display:flex; align-items:center; gap:6px; font-size:0.85rem; font-weight:600; cursor:pointer; color:#1e293b;">
-            <input type="checkbox" id="chk-pelanggan" checked style="width:16px; height:16px; accent-color:#8b5cf6;">
+        <label style="display:{{ Auth::user()->level == 'sales' ? 'none' : 'flex' }}; align-items:center; gap:6px; font-size:0.85rem; font-weight:600; cursor:pointer; color:#1e293b;">
+            <input type="checkbox" id="chk-pelanggan" {{ Auth::user()->level == 'sales' ? '' : 'checked' }} style="width:16px; height:16px; accent-color:#8b5cf6;">
             <span>Pelanggan (Ungu)</span>
         </label>
 
-        <label style="display:flex; align-items:center; gap:6px; font-size:0.85rem; font-weight:700; cursor:pointer; color:#4f46e5; margin-left: 10px;">
-            <input type="checkbox" id="chk-topology" checked style="width:16px; height:16px; accent-color:#4f46e5;">
+        <label style="display:{{ Auth::user()->level == 'sales' ? 'none' : 'flex' }}; align-items:center; gap:6px; font-size:0.85rem; font-weight:700; cursor:pointer; color:#4f46e5; margin-left: 10px;">
+            <input type="checkbox" id="chk-topology" {{ Auth::user()->level == 'sales' ? '' : 'checked' }} style="width:16px; height:16px; accent-color:#4f46e5;">
             <span>Jalur Topologi (ODC &rarr; ODP &rarr; Client)</span>
         </label>
     </div>
@@ -593,19 +597,25 @@ maxNativeZoom: 21,
         if (document.getElementById('chk-odp').checked) {
             odpCoordinates.forEach(o => {
                 var clientsHtml = "";
-                if (o.clients && o.clients.length > 0) {
+                @if(Auth::user()->level == 'sales')
                     clientsHtml = `<div style="margin-top: 8px; border-top: 1px solid #e2e8f0; padding-top: 6px;">
-                        <strong style="color: #475569; font-size: 0.8rem;">Client Terhubung (${o.clients.length}):</strong>
-                        <ul style="margin: 4px 0 0 0; padding-left: 16px; font-size: 0.8rem; color: #475569; max-height: 100px; overflow-y: auto;">`;
-                    o.clients.forEach(c => {
-                        clientsHtml += `<li><strong>${c.nama}</strong> (${c.kode})</li>`;
-                    });
-                    clientsHtml += `</ul></div>`;
-                } else {
-                    clientsHtml = `<div style="margin-top: 8px; border-top: 1px solid #e2e8f0; padding-top: 6px; font-style: italic; font-size: 0.8rem; color: #94a3b8;">
-                        Belum ada client terhubung.
+                        <strong style="color: #475569; font-size: 0.8rem;">Client Terhubung: ${o.clients ? o.clients.length : 0} Pelanggan</strong>
                     </div>`;
-                }
+                @else
+                    if (o.clients && o.clients.length > 0) {
+                        clientsHtml = `<div style="margin-top: 8px; border-top: 1px solid #e2e8f0; padding-top: 6px;">
+                            <strong style="color: #475569; font-size: 0.8rem;">Client Terhubung (${o.clients.length}):</strong>
+                            <ul style="margin: 4px 0 0 0; padding-left: 16px; font-size: 0.8rem; color: #475569; max-height: 100px; overflow-y: auto;">`;
+                        o.clients.forEach(c => {
+                            clientsHtml += `<li><strong>${c.nama}</strong> (${c.kode})</li>`;
+                        });
+                        clientsHtml += `</ul></div>`;
+                    } else {
+                        clientsHtml = `<div style="margin-top: 8px; border-top: 1px solid #e2e8f0; padding-top: 6px; font-style: italic; font-size: 0.8rem; color: #94a3b8;">
+                            Belum ada client terhubung.
+                        </div>`;
+                    }
+                @endif
 
                 var marker = L.marker([o.lat, o.lng], {
                     icon: L.icon({

@@ -971,21 +971,21 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="paket">Pilih Paket Internet *</label>
-                    <select id="paket" name="paket" class="form-control" required>
-                        <option value="">-- Pilih Paket --</option>
-                        @foreach($pakets as $p)
-                            <option value="{{ $p->id_paket }}">{{ $p->nama_paket }} ({{ $p->harga }} / Bulan)</option>
+                    <label for="id_mikrotik">Pilih Router Mikrotik *</label>
+                    <select id="id_mikrotik" name="id_mikrotik" class="form-control" required onchange="filterPaketByMikrotik(this.value)">
+                        <option value="">-- Pilih Mikrotik --</option>
+                        @foreach($mikrotiks as $m)
+                            <option value="{{ $m->id_mikrotik }}">{{ $m->nama_mikrotik }} ({{ $m->ip }})</option>
                         @endforeach
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label for="id_mikrotik">Pilih Router Mikrotik *</label>
-                    <select id="id_mikrotik" name="id_mikrotik" class="form-control" required>
-                        <option value="">-- Pilih Mikrotik --</option>
-                        @foreach($mikrotiks as $m)
-                            <option value="{{ $m->id_mikrotik }}">{{ $m->nama_mikrotik }} ({{ $m->ip }})</option>
+                    <label for="paket">Pilih Paket Internet *</label>
+                    <select id="paket" name="paket" class="form-control" required disabled>
+                        <option value="">-- Pilih Mikrotik Terlebih Dahulu --</option>
+                        @foreach($pakets as $p)
+                            <option value="{{ $p->id_paket }}" data-profile="{{ $p->id_pmikrotik }}">{{ $p->nama_paket }} ({{ $p->harga }} / Bulan)</option>
                         @endforeach
                     </select>
                 </div>
@@ -1185,7 +1185,12 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="alamat_pemasangan_modal">Alamat Pemasangan *</label>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                        <label for="alamat_pemasangan_modal" style="margin-bottom: 0;">Alamat Pemasangan *</label>
+                        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="copyAlamatKTPModal()" style="padding: 2px 8px; font-size: 12px;">
+                            <i class="fa-solid fa-copy"></i> Sama dengan KTP
+                        </button>
+                    </div>
                     <textarea id="alamat_pemasangan_modal" name="alamat_pemasangan" class="form-control" rows="2" required placeholder="Alamat lengkap titik pemasangan">{{ old('alamat_pemasangan') }}</textarea>
                 </div>
 
@@ -1646,12 +1651,12 @@
         
         document.getElementById('no_telp_approve').value = order.no_telp || '';
         
-        // Pre-select the requested package
-        if (order.paket) {
-            document.getElementById('paket').value = order.paket;
-        } else {
-            document.getElementById('paket').value = '';
-        }
+        // Store requested package for later pre-selection
+        window.requestedPaket = order.paket || '';
+        document.getElementById('id_mikrotik').value = '';
+        const paketSelect = document.getElementById('paket');
+        paketSelect.innerHTML = '<option value="">-- Pilih Mikrotik Terlebih Dahulu --</option>';
+        paketSelect.disabled = true;
 
         // Reset ODP custom dropdown selection
         document.getElementById('approve_odp_id').value = '';
@@ -2217,6 +2222,15 @@ maxNativeZoom: 21,
         document.getElementById('addOrderModal').classList.remove('active');
     }
 
+    function copyAlamatKTPModal() {
+        var alamatKTP = document.getElementById('alamat_ktp_modal').value;
+        if (alamatKTP.trim() !== '') {
+            document.getElementById('alamat_pemasangan_modal').value = alamatKTP;
+        } else {
+            alert('Alamat KTP masih kosong. Silakan isi terlebih dahulu.');
+        }
+    }
+
     function getGPSCoordinatesModal() {
         if ('geolocation' in navigator) {
             navigator.geolocation.getCurrentPosition(function (position) {
@@ -2230,6 +2244,59 @@ maxNativeZoom: 21,
         } else {
             alert("Geolocation tidak didukung oleh browser ini.");
         }
+    }
+    window.allPakets = [
+        @foreach($pakets as $p)
+        { id: "{{ $p->id_paket }}", nama: "{{ $p->nama_paket }}", harga: "{{ number_format($p->harga, 0, ',', '.') }}", profile: "{{ $p->id_pmikrotik }}" },
+        @endforeach
+    ];
+
+    function filterPaketByMikrotik(mikrotikId) {
+        const paketSelect = document.getElementById('paket');
+        if (!mikrotikId) {
+            paketSelect.disabled = true;
+            paketSelect.innerHTML = '<option value="">-- Pilih Mikrotik Terlebih Dahulu --</option>';
+            return;
+        }
+
+        paketSelect.disabled = true;
+        paketSelect.innerHTML = '<option value="">Sedang memuat profil...</option>';
+
+        fetch('{{ route("admin.paket.get_mikrotik_profiles") }}?device_id=' + mikrotikId)
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    const profiles = data.profiles; // array of strings
+                    let html = '<option value="">-- Pilih Paket --</option>';
+                    let count = 0;
+                    window.allPakets.forEach(p => {
+                        // Check if the package's profile exists in this mikrotik's profiles
+                        if (profiles.includes(p.profile)) {
+                            html += `<option value="${p.id}">${p.nama} (${p.harga} / Bulan)</option>`;
+                            count++;
+                        }
+                    });
+
+                    if (count === 0) {
+                        html = '<option value="">-- Tidak ada paket yang sesuai di Mikrotik ini --</option>';
+                    }
+                    
+                    paketSelect.innerHTML = html;
+                    paketSelect.disabled = (count === 0);
+
+                    // Re-select the requested paket if available
+                    if (window.requestedPaket) {
+                        paketSelect.value = window.requestedPaket;
+                    }
+                } else {
+                    paketSelect.innerHTML = '<option value="">Gagal memuat profil</option>';
+                    alert(data.message || 'Gagal memuat profil Mikrotik.');
+                }
+            })
+            .catch(err => {
+                paketSelect.innerHTML = '<option value="">Error memuat profil</option>';
+                alert('Terjadi kesalahan saat memuat profil: ' + err.message);
+            });
     }
 </script>
 @endsection

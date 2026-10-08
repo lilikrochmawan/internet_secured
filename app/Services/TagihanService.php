@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 
 class TagihanService
 {
-    private const UNPAID_STATUS = [0, '0', 'belum', ''];
+    private const UNPAID_STATUS = [0, '0', 'belum', '', 2, '2'];
 
     public function getPelangganIdsByPhone(?string $noTelp): array
     {
@@ -42,6 +42,8 @@ class TagihanService
                 })
         )->sum(DB::raw('COALESCE(jml_bayar, 0) - COALESCE(terbayar, 0)'));
     }
+
+    public function sumPiutang(array $pelangganIds): int { if ($pelangganIds === []) return 0; return (int) $this->applyUnpaidFilter(Tagihan::whereIn('id_pelanggan', $pelangganIds)->where('status_bayar', 2))->sum(DB::raw('COALESCE(jml_bayar, 0) - COALESCE(terbayar, 0)')); }
 
     public function sumUnpaidManual(array $pelangganIds): int
     {
@@ -77,7 +79,9 @@ class TagihanService
                         ->where('bulan_tahun', $targetMonth);
                     })
                     // Invoice manual: semua yang belum lunas
-                    ->orWhere('manual_invoice', 1);
+                    ->orWhere('manual_invoice', 1)
+                    // Piutang
+                    ->orWhere('status_bayar', 2);
                 })
         )
             ->orderBy('id_pelanggan')

@@ -1185,6 +1185,12 @@
                                 <span>Kas Masuk & Keluar</span>
                             </a>
                         </li>
+                        <li class="submenu-item {{ $currRoute == 'admin.piutang.index' ? 'active' : '' }}">
+                            <a href="{{ route('admin.piutang.index') }}">
+                                <i class="fa-solid fa-book-open"></i>
+                                <span>Piutang</span>
+                            </a>
+                        </li>
                         @endif
                         @if(Auth::user()->hasMenuAccess('transaksi'))
                         <li class="submenu-item {{ $currRoute == 'admin.riwayat_transaksi.index' ? 'active' : '' }}">

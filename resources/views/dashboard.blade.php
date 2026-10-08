@@ -915,7 +915,7 @@
 
                         <!-- Due Dates Details in Indonesian -->
                         @php
-                            $firstUnpaid = collect($invoices)->where('status_bayar', 0)->first();
+                            $firstUnpaid = collect($invoices)->where('status_bayar', '!=', 1)->first();
                             $dueDateStr = $firstUnpaid ? \Carbon\Carbon::parse($firstUnpaid->jatuh_tempo)->translatedFormat('d F Y') : '-';
                             $suspendDateStr = $firstUnpaid ? \Carbon\Carbon::parse($firstUnpaid->jatuh_tempo)->translatedFormat('d F Y') : '-';
                         @endphp
@@ -1008,6 +1008,8 @@
                                         <p class="invoice-amount" style="text-align: right;">{{ 'Rp ' . number_format($inv->jml_bayar, 0, ',', '.') }}</p>
                                         @if($inv->status_bayar == 1)
                                             <span class="status-badge status-badge-paid">Lunas</span>
+                                        @elseif($inv->status_bayar == 2)
+                                            <span class="status-badge" style="background-color: #fef08a; color: #b45309;">Piutang</span>
                                         @else
                                             <span class="status-badge status-badge-unpaid">Belum Lunas</span>
                                         @endif

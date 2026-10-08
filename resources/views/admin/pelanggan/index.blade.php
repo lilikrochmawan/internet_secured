@@ -497,7 +497,15 @@
         <div class="modal-body">
             <form id="addPelangganForm" action="{{ route('admin.pelanggan.store') }}" method="POST">
                 @csrf
-                <input type="hidden" name="id_mikrotik" value="{{ $selected_device_id }}">
+                <div class="form-group">
+                    <label for="add_id_mikrotik">Pilih Router Mikrotik *</label>
+                    <select id="add_id_mikrotik" name="id_mikrotik" class="form-control" required onchange="onMikrotikChange('add', this.value)">
+                        <option value="">-- Pilih Mikrotik --</option>
+                        @foreach($mikrotiks as $m)
+                            <option value="{{ $m->id_mikrotik }}" {{ $selected_device_id == $m->id_mikrotik ? 'selected' : '' }}>{{ $m->nama_mikrotik ?: 'Router #' . $m->id_mikrotik }} ({{ $m->ip }})</option>
+                        @endforeach
+                    </select>
+                </div>
 
                 @if($checkUser && $checkUser->status == 'ya')
                     <div class="form-group" style="background:#f8fafc; padding:12px; border-radius:12px; border: 1px dashed #cbd5e1;">
@@ -591,7 +599,7 @@
                         <label for="paket">Paket Langganan *</label>
                         <select id="paket" name="paket" class="form-control" required>
                             @foreach($pakets as $paket)
-                                <option value="{{ $paket->id_paket }}">{{ $paket->nama_paket }} (Rp {{ number_format($paket->harga, 0, ',', '.') }})</option>
+                                <option value="{{ $paket->id_paket }}" data-profile="{{ $paket->id_pmikrotik }}">{{ $paket->nama_paket }} (Rp {{ number_format($paket->harga, 0, ',', '.') }})</option>
                             @endforeach
                         </select>
                     </div>
@@ -733,7 +741,7 @@
                         <label for="edit_paket">Paket Langganan *</label>
                         <select id="edit_paket" name="paket" class="form-control" required>
                             @foreach($pakets as $paket)
-                                <option value="{{ $paket->id_paket }}">{{ $paket->nama_paket }}</option>
+                                <option value="{{ $paket->id_paket }}" data-profile="{{ $paket->id_pmikrotik }}">{{ $paket->nama_paket }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -751,7 +759,7 @@
 
                 <div class="form-group">
                     <label for="edit_id_mikrotik">Pilih Router Mikrotik *</label>
-                    <select id="edit_id_mikrotik" name="id_mikrotik" class="form-control" required>
+                    <select id="edit_id_mikrotik" name="id_mikrotik" class="form-control" required onchange="onMikrotikChange('edit', this.value)">
                         @foreach($mikrotiks as $m)
                             <option value="{{ $m->id_mikrotik }}">{{ $m->nama_mikrotik ?: 'Router #' . $m->id_mikrotik }} ({{ $m->ip }})</option>
                         @endforeach
@@ -979,12 +987,17 @@
         document.getElementById('edit_alamat').value = pelanggan.alamat || '';
         document.getElementById('edit_no_telp').value = pelanggan.no_telp;
         document.getElementById('edit_ip_address').value = pelanggan.ip_address || '';
-        document.getElementById('edit_paket').value = pelanggan.paket;
+        
+        window.requestedEditPaket = pelanggan.paket;
+        
         document.getElementById('edit_nama_perangkat').value = pelanggan.id_perangkat || 'NULL';
         document.getElementById('edit_odp').value = pelanggan.odp || 'NULL';
         syncCustomOdpText('edit');
         
-        document.getElementById('edit_id_mikrotik').value = pelanggan.id_mikrotik || 1;
+        const mikrotikVal = pelanggan.id_mikrotik || 1;
+        document.getElementById('edit_id_mikrotik').value = mikrotikVal;
+        onMikrotikChange('edit', mikrotikVal);
+        
         document.getElementById('edit_mapping').value = pelanggan.location || '';
         document.getElementById('edit_jatuh_tempo').value = pelanggan.jatuh_tempo ? pelanggan.jatuh_tempo.substring(0, 10) : '';
         
@@ -1196,14 +1209,17 @@
     }
 
     let secretsLoaded = false;
-    function loadMikrotikSecretsAsync() {
+    let currentLoadedDeviceId = null;
+    function loadMikrotikSecretsAsync(forcedDeviceId = null) {
         const container = document.getElementById('custom_secret_select');
         if (!container) return; // Feature not active
         
         const optionsList = document.getElementById('custom_secret_options');
         const loadingStatus = document.getElementById('secrets_loading_status');
         
-        if (secretsLoaded) return;
+        const deviceId = forcedDeviceId || document.getElementById('add_id_mikrotik').value || "{{ $selected_device_id }}";
+        
+        if (secretsLoaded && currentLoadedDeviceId === deviceId) return;
 
         if (loadingStatus) {
             loadingStatus.style.display = 'block';
@@ -1216,7 +1232,6 @@
             if (idx > 0) opt.remove();
         });
 
-        const deviceId = "{{ $selected_device_id }}";
         const url = "{{ route('admin.pelanggan.mikrotik_secrets') }}?device_id=" + deviceId;
 
         fetch(url)
@@ -1236,6 +1251,7 @@
                     });
                     
                     secretsLoaded = true;
+                    currentLoadedDeviceId = deviceId;
                 } else {
                     if (loadingStatus) {
                         loadingStatus.innerHTML = '<i class="fa-solid fa-circle-xmark" style="color:#dc2626; margin-right:6px;"></i> ' + data.message;
@@ -1690,6 +1706,75 @@ maxNativeZoom: 21,
         } catch (err) {
             console.error(err);
             this.submit();
+        }
+    });
+    window.allPakets = [
+        @foreach($pakets as $p)
+        { id: "{{ $p->id_paket }}", nama: "{{ $p->nama_paket }}", harga: "{{ number_format($p->harga, 0, ',', '.') }}", profile: "{{ $p->id_pmikrotik }}" },
+        @endforeach
+    ];
+
+    function onMikrotikChange(type, deviceId) {
+        if (type === 'add') {
+            secretsLoaded = false;
+            loadMikrotikSecretsAsync(deviceId);
+        }
+        
+        const paketSelect = document.getElementById(type === 'add' ? 'paket' : 'edit_paket');
+        
+        if (!deviceId) {
+            paketSelect.disabled = true;
+            paketSelect.innerHTML = '<option value="">-- Pilih Mikrotik Terlebih Dahulu --</option>';
+            return;
+        }
+
+        const oldValue = paketSelect.value;
+        paketSelect.disabled = true;
+        paketSelect.innerHTML = '<option value="">Sedang memuat profil...</option>';
+
+        fetch('{{ route("admin.paket.get_mikrotik_profiles") }}?device_id=' + deviceId)
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    const profiles = data.profiles; // array of strings
+                    let html = (type === 'add') ? '<option value="">-- Pilih Paket --</option>' : '';
+                    let count = 0;
+                    window.allPakets.forEach(p => {
+                        // Check if the package's profile exists in this mikrotik's profiles
+                        if (profiles.includes(p.profile)) {
+                            const isSelected = (p.id == oldValue) ? 'selected' : '';
+                            html += `<option value="${p.id}" ${isSelected}>${p.nama} (Rp ${p.harga})</option>`;
+                            count++;
+                        }
+                    });
+
+                    if (count === 0) {
+                        html = '<option value="">-- Tidak ada paket yang sesuai di Mikrotik ini --</option>';
+                    }
+                    
+                    paketSelect.innerHTML = html;
+                    paketSelect.disabled = (count === 0);
+                    
+                    if (type === 'edit' && window.requestedEditPaket) {
+                        paketSelect.value = window.requestedEditPaket;
+                        window.requestedEditPaket = null; // reset it
+                    }
+                } else {
+                    paketSelect.innerHTML = '<option value="">Gagal memuat profil</option>';
+                    alert(data.message || 'Gagal memuat profil Mikrotik.');
+                }
+            })
+            .catch(err => {
+                paketSelect.innerHTML = '<option value="">Error memuat profil</option>';
+                alert('Terjadi kesalahan saat memuat profil: ' + err.message);
+            });
+    }
+
+    // Initialize paket on load if device id is set
+    document.addEventListener('DOMContentLoaded', function() {
+        const addMikrotik = document.getElementById('add_id_mikrotik');
+        if (addMikrotik && addMikrotik.value) {
+            onMikrotikChange('add', addMikrotik.value);
         }
     });
 </script>

@@ -75,7 +75,7 @@ class AuthController extends Controller
 
         $tagihanBulanIni = $this->tagihanService->sumUnpaidBulanIni($pelangganIds);
         $tagihanManual = $this->tagihanService->sumUnpaidManual($pelangganIds);
-        $tagihanTotal = $tagihanBulanIni + $tagihanManual;
+        $tagihanTotal = $tagihanBulanIni + $tagihanManual + $this->tagihanService->sumPiutang($pelangganIds);
         $jumlahAkunGabung = count($pelangganIds);
 
         $paketRekomendasi = Paket::where(function ($query) {
@@ -145,7 +145,7 @@ class AuthController extends Controller
         $pelangganIds = $this->tagihanService->getPelangganIdsByPhone($pelanggan->no_telp);
         $tagihanBulanIni = $this->tagihanService->sumUnpaidBulanIni($pelangganIds);
         $tagihanManual = $this->tagihanService->sumUnpaidManual($pelangganIds);
-        $tagihanTotal = $tagihanBulanIni + $tagihanManual;
+        $tagihanTotal = $tagihanBulanIni + $tagihanManual + $this->tagihanService->sumPiutang($pelangganIds);
         
         // Status layanan diisolir jika ada tagihan yang status blokirnya aktif (blokir_status = 1)
         $isBlocked = \App\Models\Tagihan::whereIn('id_pelanggan', $pelangganIds)

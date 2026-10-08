@@ -35,6 +35,7 @@ use App\Http\Controllers\Admin\AdminPaketController;
 use App\Http\Controllers\Admin\AdminPromoController;
 use App\Http\Controllers\Admin\AdminTransaksiController;
 use App\Http\Controllers\Admin\AdminKasController;
+use App\Http\Controllers\Admin\AdminPiutangController;
 use App\Http\Controllers\Admin\AdminRiwayatTransaksiController;
 use App\Http\Controllers\Admin\AdminKeluhanController;
 use App\Http\Controllers\Admin\AdminPenggunaController;
@@ -99,6 +100,7 @@ Route::prefix('administrator')->group(function () {
         Route::get('/transaksi/generate', [AdminTransaksiController::class, 'showGenerate'])->name('admin.transaksi.show_generate');
         Route::post('/transaksi/generate', [AdminTransaksiController::class, 'generate'])->name('admin.transaksi.generate');
         Route::post('/transaksi/bayar', [AdminTransaksiController::class, 'bayar'])->name('admin.transaksi.bayar');
+        Route::post('/transaksi/set-piutang', [AdminTransaksiController::class, 'setPiutang'])->name('admin.transaksi.set_piutang');
         Route::post('/transaksi/batal', [AdminTransaksiController::class, 'batal'])->name('admin.transaksi.batal');
         Route::post('/transaksi/blokir', [AdminTransaksiController::class, 'blokir'])->name('admin.transaksi.blokir');
         Route::post('/transaksi/unblokir', [AdminTransaksiController::class, 'unblokir'])->name('admin.transaksi.unblokir');
@@ -117,6 +119,9 @@ Route::prefix('administrator')->group(function () {
         Route::post('/kas', [AdminKasController::class, 'store'])->name('admin.kas.store');
         Route::post('/kas/update', [AdminKasController::class, 'update'])->name('admin.kas.update');
         Route::post('/kas/delete', [AdminKasController::class, 'destroy'])->name('admin.kas.destroy');
+
+        // Piutang
+        Route::get('/piutang', [AdminPiutangController::class, 'index'])->name('admin.piutang.index');
 
         // Riwayat Transaksi
         Route::get('/riwayat-transaksi', [AdminRiwayatTransaksiController::class, 'index'])->name('admin.riwayat_transaksi.index');

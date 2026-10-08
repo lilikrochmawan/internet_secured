@@ -214,6 +214,28 @@ class AdminTransaksiController extends Controller
         return response()->json($transactions);
     }
 
+    public function setPiutang(Request $request)
+    {
+        $request->validate([
+            'id_tagihan' => 'required|integer',
+        ]);
+
+        $tagihan = Tagihan::findOrFail($request->id_tagihan);
+        
+        if ($tagihan->status_bayar == 1) {
+            return back()->with('error', 'Tagihan sudah lunas, tidak dapat diubah menjadi piutang.');
+        }
+
+        $tagihan->update([
+            'status_bayar' => 2, // 2 = Piutang
+        ]);
+
+        $pelanggan = \App\Models\Pelanggan::find($tagihan->id_pelanggan);
+        \Illuminate\Support\Facades\Log::info("Staff [" . auth()->user()->nama_user . "] (level: " . auth()->user()->level . ") MENCATAT PIUTANG untuk tagihan pelanggan [" . ($pelanggan->nama_pelanggan ?? 'Unknown') . "] (kode: " . ($pelanggan->kode_pelanggan ?? '-') . ") sebesar Rp " . number_format($tagihan->jml_bayar ?? 0, 0, ',', '.') . " untuk periode [" . $tagihan->bulan_tahun . "].");
+
+        return back()->with('success', 'Tagihan berhasil dicatat sebagai Piutang.');
+    }
+
     public function bayar(Request $request)
     {
         $request->validate([
@@ -403,7 +425,7 @@ class AdminTransaksiController extends Controller
                     $sekarangs = date('d F Y H:i:s');
                     $pesanBayar = $bayar->pesan_bayar;
                     $pesanBayar = str_replace('$nama', $pelanggan->nama_pelanggan, $pesanBayar);
-                    $pesanBayar = str_replace('$tagihan', number_format($tagihan->jml_bayar ?? $tx->jml_bayar ?? 0, 0, ',', '.'), $pesanBayar);
+                    $pesanBayar = str_replace('$tagihan', number_format($tagihan->jml_bayar ??  0, 0, ',', '.'), $pesanBayar);
                     $pesanBayar = str_replace('$harinin', $sekarangs, $pesanBayar);
                     $pesanBayar = str_replace('$no_telp', $pelanggan->no_telp, $pesanBayar);
 
@@ -414,8 +436,8 @@ class AdminTransaksiController extends Controller
                             $param = trim($param);
                             if ($param === 'nama') $templateParams[] = $pelanggan->nama_pelanggan ?? $pelanggan->nama ?? '';
                             elseif ($param === 'no_telp') $templateParams[] = $pelanggan->no_telp ?? '';
-                            elseif ($param === 'jatuh_tempo') $templateParams[] = \Carbon\Carbon::parse($tagihan->jatuh_tempo ?? $tx->jatuh_tempo ?? $pelanggan->jatuh_tempo)->translatedFormat('d F Y');
-                                elseif ($param === 'tagihan') $templateParams[] = number_format($tagihan->jml_bayar ?? $tx->jml_bayar ?? 0, 0, ',', '.');
+                            elseif ($param === 'jatuh_tempo') $templateParams[] = \Carbon\Carbon::parse($tagihan->jatuh_tempo ?? $pelanggan->jatuh_tempo)->translatedFormat('d F Y');
+                                elseif ($param === 'tagihan') $templateParams[] = number_format($tagihan->jml_bayar ?? 0, 0, ',', '.');
                             elseif ($param === 'hari_ini') $templateParams[] = \Carbon\Carbon::now()->translatedFormat('d F Y');
                             else $templateParams[] = $param;
                         }
@@ -427,9 +449,9 @@ class AdminTransaksiController extends Controller
             }
         }
 
-        \Illuminate\Support\Facades\Log::info("Staff [" . auth()->user()->nama_user . "] (level: " . auth()->user()->level . ") MENCATAT PEMBAYARAN tagihan pelanggan [" . ($pelanggan->nama_pelanggan ?? 'Unknown') . "] (kode: " . ($pelanggan->kode_pelanggan ?? '-') . ") sebesar Rp " . number_format($tagihan->jml_bayar ?? $tx->jml_bayar ?? 0, 0, ',', '.') . " untuk periode [" . $tagihan->bulan_tahun . "].");
+        \Illuminate\Support\Facades\Log::info("Staff [" . auth()->user()->nama_user . "] (level: " . auth()->user()->level . ") MENCATAT PEMBAYARAN tagihan pelanggan [" . ($pelanggan->nama_pelanggan ?? 'Unknown') . "] (kode: " . ($pelanggan->kode_pelanggan ?? '-') . ") sebesar Rp " . number_format($tagihan->jml_bayar ?? 0, 0, ',', '.') . " untuk periode [" . $tagihan->bulan_tahun . "].");
 
-        return redirect()->route('admin.transaksi.index')->with('success', 'Pembayaran tagihan berhasil dicatat!');
+        return back()->with('success', 'Pembayaran tagihan berhasil dicatat!');
     }
 
     public function batal(Request $request)
@@ -489,7 +511,7 @@ class AdminTransaksiController extends Controller
         // Hapus dari tb_kas
         DB::table('tb_kas')->where('id_tagihan', $tagihan->id_tagihan)->delete();
 
-        \Illuminate\Support\Facades\Log::info("Staff [" . auth()->user()->nama_user . "] (level: " . auth()->user()->level . ") MEMBATALKAN PEMBAYARAN tagihan pelanggan [" . ($pelanggan->nama_pelanggan ?? 'Unknown') . "] (kode: " . ($pelanggan->kode_pelanggan ?? '-') . ") sebesar Rp " . number_format($tagihan->jml_bayar ?? $tx->jml_bayar ?? 0, 0, ',', '.') . " untuk periode [" . $tagihan->bulan_tahun . "].");
+        \Illuminate\Support\Facades\Log::info("Staff [" . auth()->user()->nama_user . "] (level: " . auth()->user()->level . ") MEMBATALKAN PEMBAYARAN tagihan pelanggan [" . ($pelanggan->nama_pelanggan ?? 'Unknown') . "] (kode: " . ($pelanggan->kode_pelanggan ?? '-') . ") sebesar Rp " . number_format($tagihan->jml_bayar ?? 0, 0, ',', '.') . " untuk periode [" . $tagihan->bulan_tahun . "].");
 
         return redirect()->route('admin.transaksi.index')->with('success', 'Pembayaran tagihan berhasil dibatalkan!');
     }
@@ -566,7 +588,7 @@ class AdminTransaksiController extends Controller
             if ($blokirSetting && $blokirSetting->status_blokir === 'aktif' && $tokenInfo && !empty($tokenInfo->token) && !empty($pelanggan->no_telp)) {
                 $pesan = $blokirSetting->pesan_blokir;
                 $pesan = str_replace('$nama', $pelanggan->nama_pelanggan, $pesan);
-                $pesan = str_replace('$tagihan', number_format($tagihan->jml_bayar ?? $tx->jml_bayar ?? 0, 0, ',', '.'), $pesan);
+                $pesan = str_replace('$tagihan', number_format($tagihan->jml_bayar ??  0, 0, ',', '.'), $pesan);
 
                 $templateParams = [];
                     if (!empty($blokirSetting->template_params)) {
@@ -575,8 +597,8 @@ class AdminTransaksiController extends Controller
                             $param = trim($param);
                             if ($param === 'nama') $templateParams[] = $pelanggan->nama_pelanggan ?? $pelanggan->nama ?? '';
                             elseif ($param === 'no_telp') $templateParams[] = $pelanggan->no_telp ?? '';
-                            elseif ($param === 'jatuh_tempo') $templateParams[] = \Carbon\Carbon::parse($tagihan->jatuh_tempo ?? $tx->jatuh_tempo ?? $pelanggan->jatuh_tempo)->translatedFormat('d F Y');
-                                elseif ($param === 'tagihan') $templateParams[] = number_format($tagihan->jml_bayar ?? $tx->jml_bayar ?? 0, 0, ',', '.');
+                            elseif ($param === 'jatuh_tempo') $templateParams[] = \Carbon\Carbon::parse($tagihan->jatuh_tempo ?? $pelanggan->jatuh_tempo)->translatedFormat('d F Y');
+                                elseif ($param === 'tagihan') $templateParams[] = number_format($tagihan->jml_bayar ?? 0, 0, ',', '.');
                             elseif ($param === 'hari_ini') $templateParams[] = \Carbon\Carbon::now()->translatedFormat('d F Y');
                             else $templateParams[] = $param;
                         }
@@ -721,7 +743,7 @@ class AdminTransaksiController extends Controller
         $pesan = str_replace('$nama', $pelanggan->nama_pelanggan, $pesan);
         $pesan = str_replace('$no_telp', $pelanggan->no_telp, $pesan);
         $pesan = str_replace('$jatuh_tempo', \Carbon\Carbon::parse($tagihan->jatuh_tempo ?? $tx->jatuh_tempo ?? $pelanggan->jatuh_tempo)->translatedFormat('d F Y'), $pesan);
-        $pesan = str_replace('$tagihan', number_format($tagihan->jml_bayar ?? $tx->jml_bayar ?? 0, 0, ',', '.'), $pesan);
+        $pesan = str_replace('$tagihan', number_format($tagihan->jml_bayar ??  0, 0, ',', '.'), $pesan);
         $pesan = str_replace('$hari_ini', \Carbon\Carbon::now()->translatedFormat('d F Y'), $pesan);
 
         // Menyiapkan Parameter Template WABA
@@ -732,8 +754,8 @@ class AdminTransaksiController extends Controller
                 $param = trim($param);
                 if ($param === 'nama') $templateParams[] = $pelanggan->nama_pelanggan;
                 elseif ($param === 'no_telp') $templateParams[] = $pelanggan->no_telp;
-                elseif ($param === 'jatuh_tempo') $templateParams[] = \Carbon\Carbon::parse($tagihan->jatuh_tempo ?? $tx->jatuh_tempo ?? $pelanggan->jatuh_tempo)->translatedFormat('d F Y');
-                elseif ($param === 'tagihan') $templateParams[] = number_format($tagihan->jml_bayar ?? $tx->jml_bayar ?? 0, 0, ',', '.');
+                elseif ($param === 'jatuh_tempo') $templateParams[] = \Carbon\Carbon::parse($tagihan->jatuh_tempo ?? $pelanggan->jatuh_tempo)->translatedFormat('d F Y');
+                elseif ($param === 'tagihan') $templateParams[] = number_format($tagihan->jml_bayar ?? 0, 0, ',', '.');
                 elseif ($param === 'hari_ini') $templateParams[] = \Carbon\Carbon::now()->translatedFormat('d F Y');
                 else $templateParams[] = $param; 
             }
@@ -941,7 +963,7 @@ class AdminTransaksiController extends Controller
         $pesan = $reminderSetting->pesan_reminder;
         $pesan = str_replace('$nama', $pelanggan->nama_pelanggan, $pesan);
         $pesan = str_replace('$no_telp', $pelanggan->no_telp, $pesan);
-        $pesan = str_replace('$tagihan', number_format($tagihan->jml_bayar ?? $tx->jml_bayar ?? 0, 0, ',', '.'), $pesan);
+        $pesan = str_replace('$tagihan', number_format($tagihan->jml_bayar ??  0, 0, ',', '.'), $pesan);
         $pesan = str_replace('$jatuh_tempo', Carbon::parse($tagihan->jatuh_tempo)->translatedFormat('d F Y') ?? $pelanggan->jatuh_tempo, $pesan);
         $pesan = str_replace('$sekarang_format', Carbon::now()->translatedFormat('d F Y H:i') . ' WIB', $pesan);
 
@@ -953,8 +975,8 @@ class AdminTransaksiController extends Controller
                             $param = trim($param);
                             if ($param === 'nama') $templateParams[] = $pelanggan->nama_pelanggan ?? $pelanggan->nama ?? '';
                             elseif ($param === 'no_telp') $templateParams[] = $pelanggan->no_telp ?? '';
-                            elseif ($param === 'jatuh_tempo') $templateParams[] = \Carbon\Carbon::parse($tagihan->jatuh_tempo ?? $tx->jatuh_tempo ?? $pelanggan->jatuh_tempo)->translatedFormat('d F Y');
-                            elseif ($param === 'tagihan') $templateParams[] = number_format($tagihan->jml_bayar ?? $tx->jml_bayar ?? 0, 0, ',', '.');
+                            elseif ($param === 'jatuh_tempo') $templateParams[] = \Carbon\Carbon::parse($tagihan->jatuh_tempo ?? $pelanggan->jatuh_tempo)->translatedFormat('d F Y');
+                            elseif ($param === 'tagihan') $templateParams[] = number_format($tagihan->jml_bayar ?? 0, 0, ',', '.');
                             elseif ($param === 'hari_ini') $templateParams[] = \Carbon\Carbon::now()->translatedFormat('d F Y');
                             else $templateParams[] = $param;
                         }
@@ -1158,8 +1180,8 @@ class AdminTransaksiController extends Controller
                             $param = trim($param);
                             if ($param === 'nama') $templateParams[] = $pelanggan->nama_pelanggan ?? $pelanggan->nama ?? '';
                             elseif ($param === 'no_telp') $templateParams[] = $pelanggan->no_telp ?? '';
-                            elseif ($param === 'jatuh_tempo') $templateParams[] = \Carbon\Carbon::parse($tagihan->jatuh_tempo ?? $tx->jatuh_tempo ?? $pelanggan->jatuh_tempo)->translatedFormat('d F Y');
-                            elseif ($param === 'tagihan') $templateParams[] = number_format($tagihan->jml_bayar ?? $tx->jml_bayar ?? 0, 0, ',', '.');
+                            elseif ($param === 'jatuh_tempo') $templateParams[] = \Carbon\Carbon::parse($tagihan->jatuh_tempo ?? $pelanggan->jatuh_tempo)->translatedFormat('d F Y');
+                            elseif ($param === 'tagihan') $templateParams[] = number_format($tagihan->jml_bayar ?? 0, 0, ',', '.');
                             elseif ($param === 'hari_ini') $templateParams[] = \Carbon\Carbon::now()->translatedFormat('d F Y');
                             else $templateParams[] = $param;
                         }
@@ -1345,8 +1367,8 @@ class AdminTransaksiController extends Controller
                             $param = trim($param);
                             if ($param === 'nama') $templateParams[] = $pelanggan->nama_pelanggan ?? $pelanggan->nama ?? '';
                             elseif ($param === 'no_telp') $templateParams[] = $pelanggan->no_telp ?? '';
-                            elseif ($param === 'jatuh_tempo') $templateParams[] = \Carbon\Carbon::parse($tagihan->jatuh_tempo ?? $tx->jatuh_tempo ?? $pelanggan->jatuh_tempo)->translatedFormat('d F Y');
-                                elseif ($param === 'tagihan') $templateParams[] = number_format($tagihan->jml_bayar ?? $tx->jml_bayar ?? 0, 0, ',', '.');
+                            elseif ($param === 'jatuh_tempo') $templateParams[] = \Carbon\Carbon::parse($tagihan->jatuh_tempo ?? $pelanggan->jatuh_tempo)->translatedFormat('d F Y');
+                                elseif ($param === 'tagihan') $templateParams[] = number_format($tagihan->jml_bayar ?? 0, 0, ',', '.');
                             elseif ($param === 'hari_ini') $templateParams[] = \Carbon\Carbon::now()->translatedFormat('d F Y');
                             else $templateParams[] = $param;
                         }

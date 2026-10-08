@@ -13,6 +13,9 @@ Route::post('/login', [ApiAuthController::class, 'login']);
 // Bablast Webhook Route (Public)
 Route::post('/bablast/webhook', [\App\Http\Controllers\Api\BablastWebhookController::class, 'handle']);
 
+// Fonnte Webhook Route (Public)
+Route::post('/fonnte/webhook', [\App\Http\Controllers\Api\BablastWebhookController::class, 'handle']);
+
 Route::middleware([ApiAuthMiddleware::class])->group(function () {
     Route::post('/logout', [ApiAuthController::class, 'logout']);
     

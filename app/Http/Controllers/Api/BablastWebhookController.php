@@ -15,10 +15,15 @@ class BablastWebhookController extends Controller
 {
     public function handle(Request $request)
     {
-        // Tangkap seluruh payload dari Bablast
+        // Tangkap seluruh payload dari webhook
         $payload = $request->all();
         
-        // Cek Event
+        // Fonnte Webhook Logic
+        if (isset($payload['sender']) && isset($payload['message'])) {
+            return $this->handleIncomingMessage($payload);
+        }
+
+        // Cek Event Bablast
         $event = $payload['event'] ?? null;
         
         if (in_array($event, ['messages_incoming', 'incoming_message'])) {
@@ -28,7 +33,7 @@ class BablastWebhookController extends Controller
         }
         
         // Log event lain yang mungkin terjadi
-        Log::info('Bablast Webhook (Other Event):', $payload);
+        Log::info('Webhook (Other Event):', $payload);
         return response()->json(['status' => 'ignored']);
     }
 
@@ -38,9 +43,9 @@ class BablastWebhookController extends Controller
         file_put_contents(storage_path('logs/bablast_payload.log'), json_encode($payload) . "\n\n", FILE_APPEND);
 
         // Ekstrak pengirim dan pesan
-        // Bablast WABA payload format
-        $from = $payload['data']['from_phone'] ?? $payload['data']['from'] ?? $payload['from'] ?? $payload['phone'] ?? null;
-        $messageText = $payload['data']['content'] ?? $payload['data']['message']['text']['body'] ?? $payload['data']['message'] ?? $payload['message'] ?? $payload['text'] ?? '';
+        // Support for Bablast and Fonnte
+        $from = $payload['sender'] ?? $payload['data']['from_phone'] ?? $payload['data']['from'] ?? $payload['from'] ?? $payload['phone'] ?? null;
+        $messageText = $payload['text'] ?? $payload['data']['content'] ?? $payload['data']['message']['text']['body'] ?? $payload['data']['message'] ?? $payload['message'] ?? '';
         
         if (!$from) {
             Log::warning('Bablast Webhook: Pengirim tidak ditemukan', $payload);

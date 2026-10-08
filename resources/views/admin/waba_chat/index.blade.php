@@ -224,6 +224,43 @@
         background: #f9fafb;
         color: #6b7280;
     }
+    .btn-back-chat {
+        display: none;
+    }
+    
+    @media (max-width: 768px) {
+        .chat-app {
+            height: calc(100vh - 120px);
+            border-radius: 8px;
+            flex-direction: column;
+        }
+        .chat-sidebar {
+            width: 100%;
+            height: 100%;
+        }
+        .chat-main {
+            display: none !important;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .chat-app.chat-active .chat-sidebar {
+            display: none !important;
+        }
+        .chat-app.chat-active .chat-main {
+            display: flex !important;
+        }
+        
+        .btn-back-chat {
+            display: block;
+            background: none;
+            border: none;
+            color: #374151;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 4px 8px;
+        }
+    }
 </style>
 @endsection
 
@@ -265,6 +302,7 @@
     <!-- Right Main: Chat Area -->
     <div class="chat-main" id="chat-pane" style="display: none;">
         <div class="chat-header">
+            <button class="btn-back-chat" onclick="closeChatMobile()"><i class="fa-solid fa-arrow-left"></i></button>
             <i class="fa-solid fa-circle-user" style="font-size: 2rem; color: #9ca3af;"></i>
             <div>
                 <div class="chat-header-name" id="active-chat-name">Nama Pelanggan</div>
@@ -336,7 +374,14 @@
         document.getElementById('chat-messages').appendChild(bubble);
     }
 
+    function closeChatMobile() {
+        document.querySelector('.chat-app').classList.remove('chat-active');
+    }
+
     function loadChat(no_telp) {
+        // Mobile UI switch
+        document.querySelector('.chat-app').classList.add('chat-active');
+        
         // Highlight active contact
         document.querySelectorAll('.contact-item').forEach(el => el.classList.remove('active'));
         document.getElementById('contact-' + no_telp).classList.add('active');

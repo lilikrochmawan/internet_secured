@@ -121,9 +121,9 @@ class AutoBlockPelanggan extends Command
                 ->where('bulan_tahun', $currentPeriod)
                 ->first();
 
-            if ($currentMonthBill && $currentMonthBill->status_bayar == 1) {
-                $this->info("Pelanggan {$pelanggan->nama_pelanggan} memiliki tagihan menunggak, tetapi tagihan bulan berjalan ({$currentPeriod}) sudah lunas. Lewati blokir.");
-                Log::info("AutoBlockPelanggan: Pelanggan {$pelanggan->nama_pelanggan} memiliki tagihan menunggak, tetapi tagihan bulan berjalan ({$currentPeriod}) sudah lunas. Lewati blokir.");
+            if ($currentMonthBill && in_array($currentMonthBill->status_bayar, [1, 2])) {
+                $this->info("Pelanggan {$pelanggan->nama_pelanggan} memiliki tagihan menunggak, tetapi tagihan bulan berjalan ({$currentPeriod}) sudah lunas/piutang. Lewati blokir.");
+                Log::info("AutoBlockPelanggan: Pelanggan {$pelanggan->nama_pelanggan} memiliki tagihan menunggak, tetapi tagihan bulan berjalan ({$currentPeriod}) sudah lunas/piutang. Lewati blokir.");
                 continue;
             }
 
@@ -306,7 +306,7 @@ class AutoBlockPelanggan extends Command
                 ->first();
 
             // Jika tagihan bulan lalu ada dan belum lunas, TETAP TERBLOKIR
-            if ($lastMonthBill && $lastMonthBill->status_bayar != 1) {
+            if ($lastMonthBill && !in_array($lastMonthBill->status_bayar, [1, 2])) {
                 $shouldUnblock = false;
             }
 
@@ -316,7 +316,7 @@ class AutoBlockPelanggan extends Command
                     ->where('bulan_tahun', $currentPeriod)
                     ->first();
 
-                if ($currentBill && $currentBill->status_bayar != 1) {
+                if ($currentBill && !in_array($currentBill->status_bayar, [1, 2])) {
                     $jatuhTempo = $currentBill->jatuh_tempo ?: $pelanggan->jatuh_tempo;
                     if (!empty($jatuhTempo) && \Carbon\Carbon::parse($jatuhTempo)->lt($now)) {
                         $shouldUnblock = false; // Sudah lewat jatuh tempo, tetap terblokir
