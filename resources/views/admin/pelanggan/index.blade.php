@@ -1234,8 +1234,11 @@
 
         const url = "{{ route('admin.pelanggan.mikrotik_secrets') }}?device_id=" + deviceId;
 
-        fetch(url)
-            .then(response => response.json())
+        fetch(url, { headers: { 'Accept': 'application/json' } })
+            .then(response => {
+                if (!response.ok) throw new Error('HTTP ' + response.status);
+                return response.json();
+            })
             .then(data => {
                 if (data.success) {
                     if (loadingStatus) loadingStatus.style.display = 'none';
@@ -1732,8 +1735,15 @@ maxNativeZoom: 21,
         paketSelect.disabled = true;
         paketSelect.innerHTML = '<option value="">Sedang memuat profil...</option>';
 
-        fetch('{{ route("admin.paket.get_mikrotik_profiles") }}?device_id=' + deviceId)
-            .then(res => res.json())
+        fetch('{{ route("admin.paket.get_mikrotik_profiles") }}?device_id=' + deviceId, {
+            headers: {
+                'Accept': 'application/json'
+            }
+        })
+            .then(res => {
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                return res.json();
+            })
             .then(data => {
                 if (data.success) {
                     const profiles = data.profiles; // array of strings

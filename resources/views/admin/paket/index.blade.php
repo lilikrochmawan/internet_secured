@@ -433,8 +433,13 @@
                 this.disabled = true;
                 this.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Load...';
 
-                fetch(`{{ route('admin.paket.get_mikrotik_profiles') }}?device_id=${deviceId}`)
-                    .then(res => res.json())
+                fetch(`{{ route('admin.paket.get_mikrotik_profiles') }}?device_id=${deviceId}`, {
+                    headers: { 'Accept': 'application/json' }
+                })
+                    .then(res => {
+                        if (!res.ok) throw new Error('HTTP ' + res.status);
+                        return res.json();
+                    })
                     .then(data => {
                         this.disabled = false;
                         this.innerHTML = 'Load';

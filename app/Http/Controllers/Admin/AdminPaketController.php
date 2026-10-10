@@ -80,32 +80,39 @@ class AdminPaketController extends Controller
             ]);
         }
 
-        require_once base_path('include/routeros_api.php');
-        $API = new \RouterosAPI();
-        $API->timeout = 5;
-        $API->attempts = 1;
-        $API->delay = 0;
+        try {
+            require_once base_path('include/routeros_api.php');
+            $API = new \RouterosAPI();
+            $API->timeout = 5;
+            $API->attempts = 1;
+            $API->delay = 0;
 
-        if ($API->connect($mikrotik->ip, $mikrotik->username, $mikrotik->password)) {
-            $profiles = $API->comm("/ppp/profile/print") ?: [];
-            $API->disconnect();
+            if ($API->connect($mikrotik->ip, $mikrotik->username, $mikrotik->password)) {
+                $profiles = $API->comm("/ppp/profile/print") ?: [];
+                $API->disconnect();
 
-            $profileNames = [];
-            foreach ($profiles as $profile) {
-                if (isset($profile['name'])) {
-                    $profileNames[] = $profile['name'];
+                $profileNames = [];
+                foreach ($profiles as $profile) {
+                    if (isset($profile['name'])) {
+                        $profileNames[] = $profile['name'];
+                    }
                 }
+
+                return response()->json([
+                    'success' => true,
+                    'profiles' => $profileNames
+                ]);
             }
 
             return response()->json([
-                'success' => true,
-                'profiles' => $profileNames
+                'success' => false,
+                'message' => "Gagal terhubung ke router Mikrotik \"" . ($mikrotik->nama_mikrotik ?? 'Router') . "\" (" . $mikrotik->ip . ")."
             ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => "Terjadi kesalahan sistem: " . $e->getMessage()
+            ], 500);
         }
-
-        return response()->json([
-            'success' => false,
-            'message' => "Gagal terhubung ke router Mikrotik \"" . ($mikrotik->nama_mikrotik ?? 'Router') . "\" (" . $mikrotik->ip . ")."
-        ]);
     }
 }

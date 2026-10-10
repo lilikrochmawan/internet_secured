@@ -2262,8 +2262,13 @@ maxNativeZoom: 21,
         paketSelect.disabled = true;
         paketSelect.innerHTML = '<option value="">Sedang memuat profil...</option>';
 
-        fetch('{{ route("admin.paket.get_mikrotik_profiles") }}?device_id=' + mikrotikId)
-            .then(res => res.json())
+        fetch('{{ route("admin.paket.get_mikrotik_profiles") }}?device_id=' + mikrotikId, {
+            headers: { 'Accept': 'application/json' }
+        })
+            .then(res => {
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                return res.json();
+            })
             .then(data => {
                 if (data.success) {
                     const profiles = data.profiles; // array of strings

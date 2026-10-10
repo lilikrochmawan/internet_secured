@@ -59,8 +59,21 @@ class AdminMiddleware
             $menuKey = 'custom_pesan';
         } elseif (preg_match('/^broadcast/', $subPath)) {
             $menuKey = 'broadcast';
+        } elseif (preg_match('/^pelanggan\/mikrotik-secrets/', $subPath) || preg_match('/^pelanggan\/check-phone/', $subPath)) {
+            // Check if user has access to pelanggan OR order_pemasangan
+            if ($user->hasMenuAccess('pelanggan') || $user->hasMenuAccess('order_pemasangan')) {
+                $menuKey = null;
+            } else {
+                $menuKey = 'pelanggan';
+            }
         } elseif (preg_match('/^pelanggan/', $subPath)) {
             $menuKey = 'pelanggan';
+        } elseif (preg_match('/^paket\/get-mikrotik-profiles/', $subPath)) {
+            if ($user->hasMenuAccess('paket') || $user->hasMenuAccess('pelanggan') || $user->hasMenuAccess('order_pemasangan')) {
+                $menuKey = null;
+            } else {
+                $menuKey = 'paket';
+            }
         } elseif (preg_match('/^paket/', $subPath)) {
             $menuKey = 'paket';
         } elseif (preg_match('/^ont/', $subPath)) {
