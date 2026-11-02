@@ -15,7 +15,7 @@ class GenerateBulananTagihan extends Command
      *
      * @var string
      */
-    protected $signature = 'app:generate-bulanan-tagihan {--month= : Bulan format MM} {--year= : Tahun format YYYY}';
+    protected $signature = 'app:generate-bulanan-tagihan {--month= : Bulan format MM} {--year= : Tahun format YYYY} {--only-type= : Batasi generate hanya jika tipe jatuh tempo sistem sesuai (tanggal_pasang / tanggal_tetap)}';
 
     /**
      * The console command description.
@@ -33,14 +33,22 @@ class GenerateBulananTagihan extends Command
         $tahun = $this->option('year') ?: date('Y');
         $bulantahun = $bulan . $tahun;
 
-        $this->info("Starting billing generation for period: {$bulan}-{$tahun} ({$bulantahun})...");
-        Log::info("GenerateBulananTagihan: Starting monthly billing generation for period: {$bulantahun}");
-
         // Global billing settings
         $settings = DB::table('tb_profile')->first();
         $tipe = $settings->tipe_jatuh_tempo ?? 'tanggal_tetap';
         $default_hari = $settings->hari_jatuh_tempo ?? 10;
         $sistem = $settings->sistem_billing ?? 'prabayar';
+
+        // Validasi filter tipe jika dioperasikan khusus (misal: hanya untuk sistem tanggal_pasang di tgl 25)
+        $onlyType = $this->option('only-type');
+        if ($onlyType && $onlyType !== $tipe) {
+            $this->info("Generate tagihan dilewati: Pengaturan tipe jatuh tempo sistem adalah '{$tipe}', sedangkan job ini khusus untuk '{$onlyType}'.");
+            Log::info("GenerateBulananTagihan: Skipped. System billing type is '{$tipe}', expected '{$onlyType}'.");
+            return Command::SUCCESS;
+        }
+
+        $this->info("Starting billing generation for period: {$bulan}-{$tahun} ({$bulantahun}) [Tipe: {$tipe}]...");
+        Log::info("GenerateBulananTagihan: Starting monthly billing generation for period: {$bulantahun} [Tipe: {$tipe}]");
 
         // PPN settings from tb_profile
         $ppn_aktif = (($settings->tax_ppn_status ?? 'tidak') === 'aktif') && (($settings->tax_ppn_charged ?? 'ya') === 'ya');
@@ -104,7 +112,9 @@ class GenerateBulananTagihan extends Command
             $due_month = $target_date->month;
 
             $due_day = $default_hari;
-            if (!empty($plg->jatuh_tempo)) {
+            if ($tipe === 'tanggal_tetap') {
+                $due_day = $default_hari;
+            } elseif (!empty($plg->jatuh_tempo)) {
                 $due_day = (int) date('d', strtotime($plg->jatuh_tempo));
             } elseif ($tipe === 'tanggal_pasang' && !empty($plg->tgl_pemasangan)) {
                 $due_day = (int) date('d', strtotime($plg->tgl_pemasangan));

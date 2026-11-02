@@ -32,10 +32,11 @@ class TagihanService
         }
 
         $targetMonth = $currentMonth ?: date('mY');
+        $allowedMonths = array_unique([$targetMonth, date('mY', strtotime('+1 month'))]);
 
         return (int) $this->applyUnpaidFilter(
             Tagihan::whereIn('id_pelanggan', $pelangganIds)
-                ->where('bulan_tahun', $targetMonth)
+                ->whereIn('bulan_tahun', $allowedMonths)
                 ->where(function (Builder $query) {
                     $query->where('manual_invoice', 0)
                         ->orWhereNull('manual_invoice');
@@ -64,19 +65,20 @@ class TagihanService
         }
 
         $targetMonth = $currentMonth ?: date('mY');
+        $allowedMonths = array_unique([$targetMonth, date('mY', strtotime('+1 month'))]);
 
         // Ambil tagihan reguler bulan target + semua invoice manual belum lunas
         return $this->applyUnpaidFilter(
             Tagihan::with('pelanggan')
                 ->whereIn('id_pelanggan', $pelangganIds)
-                ->where(function (Builder $query) use ($targetMonth) {
+                ->where(function (Builder $query) use ($targetMonth, $allowedMonths) {
                     // Tagihan reguler: hanya untuk bulan ini
-                    $query->where(function (Builder $q) use ($targetMonth) {
+                    $query->where(function (Builder $q) use ($allowedMonths) {
                         $q->where(function (Builder $inner) {
                             $inner->where('manual_invoice', 0)
                                   ->orWhereNull('manual_invoice');
                         })
-                        ->where('bulan_tahun', $targetMonth);
+                        ->whereIn('bulan_tahun', $allowedMonths);
                     })
                     // Invoice manual: semua yang belum lunas
                     ->orWhere('manual_invoice', 1)

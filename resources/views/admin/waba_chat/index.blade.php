@@ -144,11 +144,34 @@
         border-top-right-radius: 0;
     }
     .msg-time {
-        font-size: 0.7rem;
-        color: #6b7280;
+        font-size: 0.72rem;
+        color: #64748b;
         text-align: right;
-        margin-top: 4px;
-        display: block;
+        margin-top: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+    }
+    .chat-date-separator {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 14px 0 8px 0;
+        width: 100%;
+        clear: both;
+    }
+    .chat-date-badge {
+        background: #ffffff;
+        color: #475569;
+        font-size: 0.75rem;
+        font-weight: 600;
+        padding: 5px 14px;
+        border-radius: 12px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        border: 1px solid #e2e8f0;
+        display: inline-flex;
+        align-items: center;
+        letter-spacing: 0.2px;
     }
     
     .chat-input-area {
@@ -281,8 +304,20 @@
             @forelse($contacts as $contact)
                 <div class="contact-item" onclick="loadChat('{{ $contact->no_telp }}')" id="contact-{{ $contact->no_telp }}">
                     <div class="contact-name">
-                        {{ $contact->nama ?? 'Tidak Dikenal' }}
-                        <span class="contact-time">{{ \Carbon\Carbon::parse($contact->last_message_time)->format('H:i') }}</span>
+                        <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 180px;" title="{{ $contact->nama ?? 'Tidak Dikenal' }}">{{ $contact->nama ?? 'Tidak Dikenal' }}</span>
+                        @php
+                            $lastTime = \Carbon\Carbon::parse($contact->last_message_time);
+                            if ($lastTime->isToday()) {
+                                $displayTime = $lastTime->format('H:i');
+                            } elseif ($lastTime->isYesterday()) {
+                                $displayTime = 'Kemarin';
+                            } elseif ($lastTime->isCurrentYear()) {
+                                $displayTime = $lastTime->translatedFormat('d M');
+                            } else {
+                                $displayTime = $lastTime->format('d/m/Y');
+                            }
+                        @endphp
+                        <span class="contact-time" title="{{ $lastTime->translatedFormat('d F Y H:i') }}">{{ $displayTime }}</span>
                     </div>
                     <div class="contact-msg-row">
                         <div class="contact-msg">{{ $contact->latest_pesan }}</div>
@@ -346,10 +381,66 @@
 
 @section('scripts')
 <script>
-    function formatDate(dateString) {
-        const date = new Date(dateString);
-        return date.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+    function parseChatDate(dateString) {
+        if (!dateString) return new Date();
+        const safe = typeof dateString === 'string' ? dateString.replace(' ', 'T') : dateString;
+        const d = new Date(safe);
+        return isNaN(d.getTime()) ? new Date() : d;
     }
+
+    function getDateKey(dateString) {
+        const d = parseChatDate(dateString);
+        const y = d.getFullYear();
+        const m = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${y}-${m}-${day}`;
+    }
+
+    function formatDateDivider(dateString) {
+        const d = parseChatDate(dateString);
+        const now = new Date();
+        
+        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const msgDate = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+        const diffMs = today - msgDate;
+        const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24));
+        
+        if (diffDays === 0) {
+            return 'Hari Ini';
+        } else if (diffDays === 1) {
+            return 'Kemarin';
+        } else {
+            return d.toLocaleDateString('id-ID', {
+                weekday: 'long',
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+            });
+        }
+    }
+
+    function formatTimeWithDate(dateString) {
+        const d = parseChatDate(dateString);
+        const day = String(d.getDate()).padStart(2, '0');
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const year = d.getFullYear();
+        const hours = String(d.getHours()).padStart(2, '0');
+        const minutes = String(d.getMinutes()).padStart(2, '0');
+        
+        return `${day}/${month}/${year} ${hours}.${minutes}`;
+    }
+
+    function formatFullDateTime(dateString) {
+        const d = parseChatDate(dateString);
+        return d.toLocaleDateString('id-ID', {
+            weekday: 'long',
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+        }) + ' pukul ' + d.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    }
+
+    let lastChatDate = null;
 
     function scrollToBottom() {
         const messagesDiv = document.getElementById('chat-messages');
@@ -360,6 +451,15 @@
         const isIncoming = msg.tipe === 'incoming';
         const bubbleClass = isIncoming ? 'msg-incoming' : 'msg-outgoing';
         
+        const dateKey = getDateKey(msg.created_at);
+        if (dateKey !== lastChatDate) {
+            lastChatDate = dateKey;
+            const divider = document.createElement('div');
+            divider.className = 'chat-date-separator';
+            divider.innerHTML = `<span class="chat-date-badge"><i class="fa-regular fa-calendar-days" style="margin-right: 5px; color: #64748b;"></i>${formatDateDivider(msg.created_at)}</span>`;
+            document.getElementById('chat-messages').appendChild(divider);
+        }
+
         const bubble = document.createElement('div');
         bubble.className = `message-bubble ${bubbleClass}`;
         
@@ -369,7 +469,8 @@
             mediaHtml = `<div style="margin-bottom: 6px;"><a href="${proxyUrl}" target="_blank"><img src="${proxyUrl}" style="max-width: 100%; max-height: 250px; border-radius: 8px; object-fit: cover;" alt="Media" onerror="this.outerHTML='<a href=\\'${proxyUrl}\\' target=\\'_blank\\' style=\\'color:#25D366; text-decoration:none;\\'><i class=\\'fa-solid fa-paperclip\\'></i> Buka Lampiran</a>'"></a></div>`;
         }
         
-        bubble.innerHTML = `${mediaHtml}<div style="word-wrap: break-word;">${msg.pesan.replace(/\\n/g, '<br>')}</div> <span class="msg-time">${formatDate(msg.created_at)}</span>`;
+        const safePesan = (msg.pesan || '').replace(/\\n/g, '<br>');
+        bubble.innerHTML = `${mediaHtml}<div style="word-wrap: break-word;">${safePesan}</div><span class="msg-time" title="${formatFullDateTime(msg.created_at)}"><i class="fa-regular fa-clock" style="font-size: 0.65rem; opacity: 0.6; margin-right: 3px;"></i>${formatTimeWithDate(msg.created_at)}</span>`;
         
         document.getElementById('chat-messages').appendChild(bubble);
     }
@@ -405,6 +506,7 @@
                     document.getElementById('active-chat-phone').innerText = '+' + data.contact.no_telp;
                     
                     document.getElementById('chat-messages').innerHTML = '';
+                    lastChatDate = null;
                     data.messages.forEach(msg => {
                         appendMessage(msg);
                     });

@@ -87,7 +87,8 @@ class SendAutoBillingNotifications extends Command
                 ->get();
         } else {
             // Tipe Jatuh Tempo: tanggal_pasang
-            // Ambil tagihan yang jatuh temponya tepat auto_h_minus hari dari hari ini
+            // Ambil tagihan yang jatuh temponya dalam rentang hari ini s/d H-minus hari ke depan yang belum pernah terkirim
+            $today = Carbon::today()->toDateString();
             $targetDate = Carbon::today()->addDays($auto_h_minus)->toDateString();
             
             $bills = Tagihan::with('pelanggan')
@@ -95,7 +96,8 @@ class SendAutoBillingNotifications extends Command
                 ->where(function($q) {
                     $q->whereNull('terkirim')->orWhere('terkirim', '<>', 'terkirim');
                 })
-                ->whereDate('jatuh_tempo', $targetDate)
+                ->whereDate('jatuh_tempo', '<=', $targetDate)
+                ->whereDate('jatuh_tempo', '>=', $today)
                 ->get();
         }
 
