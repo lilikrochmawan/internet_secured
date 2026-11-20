@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Log;
 
 class WhatsAppService
 {
+    public ?string $lastMessageId = null;
     public function sendMessage(string $target, string $message, ?string $mediaUrl = null): bool
     {
         $tokenInfo = WaToken::find(1);
@@ -143,6 +144,11 @@ class WhatsAppService
             ])->post('https://api.bablast.id/waba/send', $payload);
 
             $resData = $response->json();
+            $this->lastMessageId = $resData['data']['message_id'] 
+                ?? $resData['data']['id'] 
+                ?? $resData['message_id'] 
+                ?? $resData['id'] 
+                ?? null;
 
             if (!$response->successful() || (isset($resData['success']) && $resData['success'] === false)) {
                 $reason = $resData['message'] ?? 'Bablast error atau device offline.';
@@ -223,6 +229,11 @@ class WhatsAppService
             ])->post('https://api.bablast.id/waba/send-template', $payload);
 
             $resData = $response->json();
+            $this->lastMessageId = $resData['data']['message_id'] 
+                ?? $resData['data']['id'] 
+                ?? $resData['message_id'] 
+                ?? $resData['id'] 
+                ?? null;
 
             if (!$response->successful() || (isset($resData['success']) && $resData['success'] === false)) {
                 $reason = $resData['message'] ?? 'Bablast Template error.';

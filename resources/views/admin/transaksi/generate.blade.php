@@ -200,7 +200,9 @@
                                     $ppn_rate = $ppn_rate / 100;
                                 }
                                 
-                                if ($ppn_aktif) {
+                                if ($harga_paket == 0 || strtolower($plg->paketDetail->nama_paket ?? '') === 'free') {
+                                    $total_tagihan = 0;
+                                } elseif ($ppn_aktif) {
                                     $total_tagihan = $harga_paket + ($harga_paket * $ppn_rate);
                                 } else {
                                     $total_tagihan = $harga_paket;
@@ -215,9 +217,17 @@
                                 </td>
                                 <td><span style="font-family: monospace;">{{ $plg->kode_pelanggan }}</span></td>
                                 <td>{{ $plg->paketDetail->nama_paket ?? '-' }}</td>
-                                <td>Rp {{ number_format($harga_paket, 0, ',', '.') }} @if($ppn_aktif && $ppn_rate > 0) <small style="color: #6366f1;">+ PPN {{ round($ppn_rate * 100, 2) }}%</small> @endif</td>
                                 <td>
-                                    <input type="text" name="harga[]" value="{{ $total_tagihan }}" class="form-control" style="width: 130px; font-weight: bold; background-color: #f8fafc;" readonly>
+                                    @if($total_tagihan == 0)
+                                        <span class="badge" style="background:#dcfce7; color:#15803d; border:1px solid #bbf7d0; font-size:0.75rem; padding:4px 8px; border-radius:8px;">
+                                            <i class="fa-solid fa-gift"></i> Paket Free (Rp 0)
+                                        </span>
+                                    @else
+                                        Rp {{ number_format($harga_paket, 0, ',', '.') }} @if($ppn_aktif && $ppn_rate > 0) <small style="color: #6366f1;">+ PPN {{ round($ppn_rate * 100, 2) }}%</small> @endif
+                                    @endif
+                                </td>
+                                <td>
+                                    <input type="text" name="harga[]" value="{{ $total_tagihan }}" class="form-control" style="width: 130px; font-weight: bold; background-color: {{ $total_tagihan == 0 ? '#f0fdf4' : '#f8fafc' }}; color: {{ $total_tagihan == 0 ? '#15803d' : 'inherit' }};" readonly>
                                 </td>
                             </tr>
                         @endforeach

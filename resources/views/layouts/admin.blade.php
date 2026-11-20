@@ -1167,7 +1167,7 @@
 
             @if(Auth::user()->hasMenuAccess('kas') || Auth::user()->hasMenuAccess('transaksi'))
                 @php
-                    $isKasActive = Str::startsWith($currRoute, 'admin.kas') || $currRoute == 'admin.riwayat_transaksi.index';
+                    $isKasActive = Str::startsWith($currRoute, 'admin.kas') || Str::startsWith($currRoute, 'admin.saldo') || $currRoute == 'admin.riwayat_transaksi.index';
                 @endphp
                 <li class="sidebar-menu-item has-submenu {{ $isKasActive ? 'active open' : '' }}">
                     <a href="javascript:void(0)" class="submenu-toggle">
@@ -1183,6 +1183,12 @@
                             <a href="{{ route('admin.kas.index') }}">
                                 <i class="fa-solid fa-money-bill-transfer"></i>
                                 <span>Kas Masuk & Keluar</span>
+                            </a>
+                        </li>
+                        <li class="submenu-item {{ Str::startsWith($currRoute, 'admin.saldo') ? 'active' : '' }}">
+                            <a href="{{ route('admin.saldo.index') }}">
+                                <i class="fa-solid fa-wallet"></i>
+                                <span>Top Up Saldo</span>
                             </a>
                         </li>
                         <li class="submenu-item {{ $currRoute == 'admin.piutang.index' ? 'active' : '' }}">

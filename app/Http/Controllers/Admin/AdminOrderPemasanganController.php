@@ -37,9 +37,12 @@ class AdminOrderPemasanganController extends Controller
             $branches = DB::table('tb_branch')->get();
             $subBranches = DB::table('tb_sub_branch')->get();
             $teknisis = User::where('level', 'teknisi')->get()->map(function($tek) {
-                $tek->has_active_order = OrderPemasangan::where('id_teknisi', $tek->id)
+                $tek->active_orders_count = OrderPemasangan::where('id_teknisi', $tek->id)
                     ->whereIn('status', ['approved', 'installed'])
-                    ->exists();
+                    ->count();
+                // Maksimal 2 order pemasangan aktif
+                $tek->has_max_active_orders = ($tek->active_orders_count >= 2);
+                $tek->has_active_order = $tek->has_max_active_orders;
                 return $tek;
             });
 
@@ -260,11 +263,12 @@ class AdminOrderPemasanganController extends Controller
         ]);
 
         if ($request->id_teknisi > 0) {
-            $hasActive = OrderPemasangan::where('id_teknisi', $request->id_teknisi)
+            $activeCount = OrderPemasangan::where('id_teknisi', $request->id_teknisi)
+                ->where('id', '!=', $request->id_order)
                 ->whereIn('status', ['approved', 'installed'])
-                ->exists();
-            if ($hasActive) {
-                return back()->withErrors(['error' => 'Teknisi tersebut masih memiliki order pemasangan yang aktif atau menunggu verifikasi admin!']);
+                ->count();
+            if ($activeCount >= 2) {
+                return back()->withErrors(['error' => 'Teknisi tersebut sudah mencapai batas maksimal 2 order pemasangan yang aktif atau menunggu verifikasi admin!']);
             }
         }
 
@@ -517,12 +521,12 @@ class AdminOrderPemasanganController extends Controller
             'id_order' => 'required|integer|exists:tbl_order_pemasangan,id',
         ]);
 
-        // Make sure technician doesn't have active order
-        $hasActive = OrderPemasangan::where('id_teknisi', Auth::id())
+        // Make sure technician doesn't have more than 2 active orders
+        $activeCount = OrderPemasangan::where('id_teknisi', Auth::id())
             ->whereIn('status', ['approved', 'installed'])
-            ->exists();
-        if ($hasActive) {
-            return back()->withErrors(['error' => 'Anda masih memiliki order pemasangan yang aktif atau menunggu verifikasi admin!']);
+            ->count();
+        if ($activeCount >= 2) {
+            return back()->withErrors(['error' => 'Anda sudah memiliki 2 order pemasangan yang aktif atau menunggu verifikasi admin! Selesaikan order Anda terlebih dahulu sebelum mengambil order baru.']);
         }
 
         $order = OrderPemasangan::findOrFail($request->id_order);

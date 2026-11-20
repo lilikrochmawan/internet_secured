@@ -457,7 +457,7 @@
     </div>
 
     <!-- Stats Summary Cards -->
-    <div class="stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 20px; margin-bottom: 20px;">
+    <div class="stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 16px; margin-top: 20px; margin-bottom: 20px;">
         <!-- Card 1: Total -->
         <div style="background: white; border: 1px solid #e2e8f0; padding: 18px; border-radius: 16px; display: flex; align-items: center; gap: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
             <div style="width: 48px; height: 48px; border-radius: 12px; background: #eff6ff; display: flex; align-items: center; justify-content: center; color: #2563eb; font-size: 1.4rem;">
@@ -476,13 +476,13 @@
             </div>
         </div>
 
-        <!-- Card 2: Sudah Bayar (Lunas) -->
+        <!-- Card 2: Sudah Bayar (Lunas Total) -->
         <div style="background: white; border: 1px solid #e2e8f0; padding: 18px; border-radius: 16px; display: flex; align-items: center; gap: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
             <div style="width: 48px; height: 48px; border-radius: 12px; background: #ecfdf5; display: flex; align-items: center; justify-content: center; color: #10b981; font-size: 1.4rem;">
                 <i class="fa-solid fa-circle-check"></i>
             </div>
             <div>
-                <span style="font-size: 0.85rem; color: #64748b; font-weight: 500; display: block;">Sudah Bayar (Lunas)</span>
+                <span style="font-size: 0.85rem; color: #64748b; font-weight: 500; display: block;">Total Lunas</span>
                 <strong style="font-size: 1.25rem; color: #10b981; display: block;">
                     @if(auth()->user()->level === 'kasir')
                         Rp ••••• <i class="fa-solid fa-eye-slash" style="color: #94a3b8; font-size: 0.9rem; margin-left: 6px;" title="Akses Terbatas"></i>
@@ -494,7 +494,43 @@
             </div>
         </div>
 
-        <!-- Card 3: Belum Bayar -->
+        <!-- Card 3: Terbayar Non-Saldo (Tunai/Transfer/Midtrans) -->
+        <div style="background: white; border: 1px solid #e2e8f0; border-left: 4px solid #0284c7; padding: 18px; border-radius: 16px; display: flex; align-items: center; gap: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+            <div style="width: 48px; height: 48px; border-radius: 12px; background: #e0f2fe; display: flex; align-items: center; justify-content: center; color: #0284c7; font-size: 1.4rem;">
+                <i class="fa-solid fa-money-bill-wave"></i>
+            </div>
+            <div>
+                <span style="font-size: 0.85rem; color: #64748b; font-weight: 500; display: block;">Terbayar Non-Saldo</span>
+                <strong style="font-size: 1.25rem; color: #0284c7; display: block;">
+                    @if(auth()->user()->level === 'kasir')
+                        Rp ••••• <i class="fa-solid fa-eye-slash" style="color: #94a3b8; font-size: 0.9rem; margin-left: 6px;" title="Akses Terbatas"></i>
+                    @else
+                        Rp {{ number_format($paidViaNonSaldoAmount ?? $paidAmount, 0, ',', '.') }}
+                    @endif
+                </strong>
+                <span style="font-size: 0.78rem; color: #38bdf8;">Tunai / Bank / Gateway ({{ $paidViaNonSaldoCount ?? $paidCount }})</span>
+            </div>
+        </div>
+
+        <!-- Card 4: Terbayar via Saldo Pelanggan -->
+        <div style="background: white; border: 1px solid #e2e8f0; border-left: 4px solid #7c3aed; padding: 18px; border-radius: 16px; display: flex; align-items: center; gap: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+            <div style="width: 48px; height: 48px; border-radius: 12px; background: #f5f3ff; display: flex; align-items: center; justify-content: center; color: #7c3aed; font-size: 1.4rem;">
+                <i class="fa-solid fa-wallet"></i>
+            </div>
+            <div>
+                <span style="font-size: 0.85rem; color: #64748b; font-weight: 500; display: block;">Terbayar via Saldo</span>
+                <strong style="font-size: 1.25rem; color: #7c3aed; display: block;">
+                    @if(auth()->user()->level === 'kasir')
+                        Rp ••••• <i class="fa-solid fa-eye-slash" style="color: #94a3b8; font-size: 0.9rem; margin-left: 6px;" title="Akses Terbatas"></i>
+                    @else
+                        Rp {{ number_format($paidViaSaldoAmount ?? 0, 0, ',', '.') }}
+                    @endif
+                </strong>
+                <span style="font-size: 0.78rem; color: #a78bfa;">Potong Saldo ({{ $paidViaSaldoCount ?? 0 }} Transaksi)</span>
+            </div>
+        </div>
+
+        <!-- Card 5: Belum Bayar -->
         <div style="background: white; border: 1px solid #e2e8f0; padding: 18px; border-radius: 16px; display: flex; align-items: center; gap: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
             <div style="width: 48px; height: 48px; border-radius: 12px; background: #fef2f2; display: flex; align-items: center; justify-content: center; color: #ef4444; font-size: 1.4rem;">
                 <i class="fa-solid fa-circle-exclamation"></i>
@@ -512,7 +548,7 @@
             </div>
         </div>
 
-        <!-- Card 4: Pendapatan Hari Ini -->
+        <!-- Card 6: Pendapatan Hari Ini -->
         <div style="background: white; border: 1px solid #e2e8f0; padding: 18px; border-radius: 16px; display: flex; align-items: center; gap: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
             <div style="width: 48px; height: 48px; border-radius: 12px; background: #fef3c7; display: flex; align-items: center; justify-content: center; color: #d97706; font-size: 1.4rem;">
                 <i class="fa-solid fa-hand-holding-dollar"></i>
@@ -614,7 +650,45 @@
                                 <span style="color: var(--text-gray); font-style: italic;">-</span>
                             @endif
                         </td>
-                        <td><strong>Rp {{ number_format($tx->jml_bayar, 0, ',', '.') }}</strong></td>
+                        <td>
+                            <strong>Rp {{ number_format($tx->jml_bayar, 0, ',', '.') }}</strong>
+                            @if($tx->status_bayar == 1)
+                                @if($tx->jml_bayar == 0 || $tx->metode_pembayaran === 'Free')
+                                    <div style="margin-top: 4px;">
+                                        <span class="badge" style="background:#dcfce7; color:#15803d; border:1px solid #bbf7d0; font-size:0.72rem; padding:2px 6px; display:inline-flex; align-items:center; gap:3px;">
+                                            <i class="fa-solid fa-gift"></i> Paket Free (Otomatis Lunas)
+                                        </span>
+                                    </div>
+                                @else
+                                @php
+                                    $bSaldo = (int) ($tx->bayar_saldo ?? ($tx->metode_pembayaran === 'Saldo' ? $tx->jml_bayar : 0));
+                                    $bNonSaldo = (int) ($tx->bayar_non_saldo ?? max(0, $tx->jml_bayar - $bSaldo));
+                                @endphp
+                                @if($bSaldo > 0 && $bNonSaldo == 0)
+                                    <div style="margin-top: 4px;">
+                                        <span class="badge" style="background:#ede9fe; color:#6d28d9; border:1px solid #ddd6fe; font-size:0.72rem; padding:2px 6px; display:inline-flex; align-items:center; gap:3px;">
+                                            <i class="fa-solid fa-wallet"></i> Saldo: Rp {{ number_format($bSaldo, 0, ',', '.') }}
+                                        </span>
+                                    </div>
+                                @elseif($bSaldo > 0 && $bNonSaldo > 0)
+                                    <div style="margin-top: 4px; display:flex; flex-direction:column; gap:2px;">
+                                        <span class="badge" style="background:#ede9fe; color:#6d28d9; border:1px solid #ddd6fe; font-size:0.72rem; padding:2px 6px; display:inline-flex; align-items:center; gap:3px;">
+                                            <i class="fa-solid fa-wallet"></i> Saldo: Rp {{ number_format($bSaldo, 0, ',', '.') }}
+                                        </span>
+                                        <span class="badge" style="background:#ecfdf5; color:#047857; border:1px solid #a7f3d0; font-size:0.72rem; padding:2px 6px; display:inline-flex; align-items:center; gap:3px;">
+                                            <i class="fa-solid fa-money-bill-wave"></i> Non-Saldo: Rp {{ number_format($bNonSaldo, 0, ',', '.') }}
+                                        </span>
+                                    </div>
+                                @elseif($bNonSaldo > 0)
+                                    <div style="margin-top: 4px;">
+                                        <span class="badge" style="background:#f1f5f9; color:#475569; border:1px solid #e2e8f0; font-size:0.72rem; padding:2px 6px; display:inline-flex; align-items:center; gap:3px;">
+                                            <i class="fa-solid fa-money-bill"></i> Non-Saldo: Rp {{ number_format($bNonSaldo, 0, ',', '.') }}
+                                        </span>
+                                    </div>
+                                @endif
+                                @endif
+                            @endif
+                        </td>
                         <td>
                             @if($tx->status_bayar == 1)
                                 <span class="badge badge-success">Lunas</span>
@@ -680,10 +754,21 @@
                                     <form action="{{ route('admin.transaksi.bayar') }}" method="POST" onsubmit="return confirm('{{ $confirmMsg }}')">
                                         @csrf
                                         <input type="hidden" name="id_tagihan" value="{{ $tx->id_tagihan }}">
-                                        <button type="submit" class="btn btn-success">
+                                        <button type="submit" class="btn btn-success" title="Bayar Manual (Tunai)">
                                             <i class="fa-solid fa-money-bill-wave"></i> Bayar
                                         </button>
                                     </form>
+
+                                    @if($tx->pelanggan && ($tx->pelanggan->saldo ?? 0) >= $tx->jml_bayar)
+                                    <form action="{{ route('admin.transaksi.bayar') }}" method="POST" onsubmit="return confirm('Gunakan Saldo Pelanggan (Tersedia: Rp {{ number_format($tx->pelanggan->saldo, 0, ',', '.') }}) untuk melunasi tagihan ini?')">
+                                        @csrf
+                                        <input type="hidden" name="id_tagihan" value="{{ $tx->id_tagihan }}">
+                                        <input type="hidden" name="metode_pembayaran" value="Saldo">
+                                        <button type="submit" class="btn" style="background:#ede9fe; color:#6d28d9; border:1px solid #ddd6fe; font-weight:600;" title="Bayar Menggunakan Saldo Pelanggan (Saldo: Rp {{ number_format($tx->pelanggan->saldo, 0, ',', '.') }})">
+                                            <i class="fa-solid fa-wallet"></i> Saldo
+                                        </button>
+                                    </form>
+                                    @endif
 
                                     @if($tx->status_bayar == 0 || $tx->status_bayar === null)
                                     <!-- Aksi Piutang -->

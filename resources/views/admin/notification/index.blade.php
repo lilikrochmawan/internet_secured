@@ -276,6 +276,66 @@
         color: #4f46e5;
         border-color: #a5b4fc;
     }
+
+    /* WABA Preset & Custom Styling */
+    .waba-preset-btn {
+        background-color: #f1f5f9;
+        border: 1px solid #cbd5e1;
+        color: #334155;
+        font-size: 0.8rem;
+        font-weight: 600;
+        padding: 6px 12px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    .waba-preset-btn:hover, .waba-preset-btn.active {
+        background-color: #e0e7ff;
+        border-color: #4f46e5;
+        color: #4f46e5;
+    }
+    .quick-chip {
+        display: inline-block;
+        font-size: 0.75rem;
+        padding: 4px 9px;
+        border-radius: 6px;
+        background-color: #ffffff;
+        border: 1px solid #cbd5e1;
+        color: #475569;
+        cursor: pointer;
+        transition: all 0.15s;
+        margin-right: 4px;
+        margin-top: 4px;
+        user-select: none;
+    }
+    .quick-chip:hover {
+        background-color: #ede9fe;
+        color: #6d28d9;
+        border-color: #c4b5fd;
+    }
+    /* WhatsApp Bubble Preview Card */
+    .wa-preview-card {
+        background-color: #e5ddd5;
+        background-image: radial-gradient(#d4cbbe 1px, transparent 1px);
+        background-size: 16px 16px;
+        border-radius: 14px;
+        padding: 16px;
+        border: 1px solid #cbd5e1;
+        margin-top: 14px;
+    }
+    .wa-bubble {
+        background-color: #ffffff;
+        border-radius: 10px 10px 10px 2px;
+        padding: 14px 16px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+        font-family: 'Inter', sans-serif;
+        font-size: 0.85rem;
+        line-height: 1.45;
+        color: #111b21;
+        max-width: 100%;
+        position: relative;
+    }
+
 </style>
 @endsection
 
@@ -329,20 +389,124 @@
                     </div>
                 </div>
 
-                <div id="waba_options_general" style="display:none; margin-bottom: 1rem; padding: 15px; border: 1px dashed #cbd5e1; border-radius: 8px; background-color: #f8fafc;">
-                    <div style="display: flex; align-items: center; margin-bottom: 10px;">
-                        <input type="checkbox" name="use_waba" id="useWabaGeneral" style="margin-right: 8px;" onchange="toggleWabaFields('general')" {{ !empty($profile->waba_broadcast_template) ? 'checked' : '' }}>
-                        <label for="useWabaGeneral" style="font-weight: 600; margin: 0; color: #334155; font-size: 0.9rem;">Gunakan Template WABA Meta / Bablast</label>
-                    </div>
-                    <div id="waba_fields_general" style="display: {{ !empty($profile->waba_broadcast_template) ? 'block' : 'none' }}; margin-top: 10px;">
-                        <div style="margin-bottom: 10px;">
-                            <label style="font-size: 0.85rem; font-weight:600; color: #475569;">Nama Template WABA *</label>
-                            <input type="text" name="waba_template" id="waba_template_general" class="form-control" style="font-size: 0.9rem;" placeholder="Contoh: gangguan_jaringan" value="{{ $profile->waba_broadcast_template ?? '' }}">
+                <div id="waba_options_general" style="margin-bottom: 1.25rem; padding: 16px; border: 1px solid #c7d2fe; border-radius: 14px; background: linear-gradient(to bottom, #f8fafc, #ffffff); box-shadow: 0 2px 8px rgba(79, 70, 229, 0.05);">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+                        <div style="display: flex; align-items: center;">
+                            <input type="checkbox" name="use_waba" id="useWabaGeneral" style="margin-right: 10px; width: 18px; height: 18px; cursor: pointer; accent-color: #25d366;" onchange="toggleWabaFields('general')" checked>
+                            <label for="useWabaGeneral" style="font-weight: 700; margin: 0; color: #1e293b; font-size: 0.95rem; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                                <i class="fa-brands fa-whatsapp" style="color: #25d366; font-size: 1.15rem;"></i>
+                                Gunakan Template WABA Meta / Bablast
+                            </label>
                         </div>
-                        <div>
-                            <label style="font-size: 0.85rem; font-weight:600; color: #475569;">Variabel Template (pisahkan koma)</label>
-                            <input type="text" name="waba_params" class="form-control" style="font-size: 0.9rem;" placeholder="Contoh: https://link-gambar.jpg, nama, $pesan">
-                            <small style="color: #64748b; font-size: 0.75rem;">Variabel yang didukung: <code>nama</code>, <code>$pesan</code> (mengambil isi teks di bawah), <code>odp</code>, <code>odc</code>, atau URL gambar statis.</small>
+                        <span style="font-size: 0.75rem; background: #dcfce7; color: #166534; font-weight: 700; padding: 2px 8px; border-radius: 20px; border: 1px solid #bbf7d0;">
+                            Official Meta WhatsApp
+                        </span>
+                    </div>
+
+                    <div id="waba_fields_general" style="display: block; margin-top: 14px; border-top: 1px dashed #cbd5e1; padding-top: 14px;">
+                        <!-- Pilihan Cepat Template Preset -->
+                        <div style="margin-bottom: 14px;">
+                            <label style="font-size: 0.82rem; font-weight: 700; color: #475569; display: block; margin-bottom: 6px;">
+                                Pilihan Cepat Template:
+                            </label>
+                            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                                <button type="button" class="waba-preset-btn preset-btn-gangguan active" onclick="applyWabaPreset('general', 'gangguan')">
+                                    <i class="fa-solid fa-triangle-exclamation" style="color: #ea580c;"></i> Template Gangguan (Meta Approved: 'gangguan')
+                                </button>
+                                <button type="button" class="waba-preset-btn preset-btn-pemeliharaan" onclick="applyWabaPreset('general', 'pemeliharaan')">
+                                    <i class="fa-solid fa-screwdriver-wrench" style="color: #2563eb;"></i> Template Pemeliharaan ('pemeliharaan')
+                                </button>
+                                <button type="button" class="waba-preset-btn preset-btn-custom" onclick="applyWabaPreset('general', 'custom')">
+                                    <i class="fa-solid fa-sliders"></i> Kustom
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Nama Template WABA -->
+                        <div class="form-group" style="margin-bottom: 12px;">
+                            <label for="waba_template_general" style="font-size: 0.85rem; font-weight: 600; color: #334155;">
+                                Nama Template WABA (Meta / Bablast) *
+                            </label>
+                            <input type="text" name="waba_template" id="waba_template_general" class="form-control" style="font-size: 0.9rem;" placeholder="Contoh: gangguan" value="gangguan" oninput="updateWabaPreview('general')">
+                            <small style="color: #64748b; font-size: 0.74rem;">Harus sesuai dengan nama template yang telah disetujui (APPROVED) di WhatsApp Business Platform / Bablast.</small>
+                        </div>
+
+                        <!-- Input Penyebab Gangguan / Eror (Akibat {{2}}) -->
+                        <div class="form-group" style="margin-bottom: 12px;">
+                            <label for="waba_penyebab_general" style="font-size: 0.85rem; font-weight: 600; color: #334155;">
+                                Penyebab Gangguan / Eror (Variabel {{2}}) *
+                            </label>
+                            <input type="text" name="waba_penyebab" id="waba_penyebab_general" class="form-control" style="font-size: 0.9rem;" placeholder="Contoh: Putusnya kabel fiber optik (FO)" value="Putusnya kabel fiber optik (FO)" oninput="updateWabaPreview('general')">
+                            <div style="margin-top: 4px;">
+                                <span style="font-size: 0.72rem; color: #64748b; font-weight: 600;">Pilih Cepat:</span>
+                                <span class="quick-chip" onclick="quickFill('waba_penyebab_general', 'Putusnya kabel fiber optik (FO)', 'general')">Kabel FO Putus</span>
+                                <span class="quick-chip" onclick="quickFill('waba_penyebab_general', 'Pemeliharaan rutin perangkat jaringan', 'general')">Pemeliharaan Rutin</span>
+                                <span class="quick-chip" onclick="quickFill('waba_penyebab_general', 'Gangguan link upstream provider', 'general')">Link Upstream</span>
+                                <span class="quick-chip" onclick="quickFill('waba_penyebab_general', 'Mati listrik di area server/distribusi', 'general')">Mati Listrik</span>
+                                <span class="quick-chip" onclick="quickFill('waba_penyebab_general', 'Perbaikan teknis darurat', 'general')">Perbaikan Darurat</span>
+                            </div>
+                        </div>
+
+                        <!-- 2 Kolom: Waktu Mulai & Estimasi Selesai -->
+                        <div class="form-row-2" style="gap: 12px; margin-bottom: 12px;">
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <label for="waba_waktu_mulai_general" style="font-size: 0.85rem; font-weight: 600; color: #334155;">
+                                        Hari, Tanggal & Waktu Mulai (Variabel {{3}}) *
+                                    </label>
+                                    <button type="button" class="btn" onclick="setCurrentTime('waba_waktu_mulai_general', 'general')" style="padding: 2px 8px; font-size: 0.72rem; background: #e0e7ff; color: #4338ca; border-radius: 6px; cursor: pointer; border: none; font-weight: 600;">
+                                        ⚡ Waktu Sekarang
+                                    </button>
+                                </div>
+                                <input type="text" name="waba_waktu_mulai" id="waba_waktu_mulai_general" class="form-control" style="font-size: 0.9rem;" placeholder="Contoh: Jumat, 13 Nov 2026 14:00 WIB" oninput="updateWabaPreview('general')">
+                            </div>
+
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label for="waba_estimasi_general" style="font-size: 0.85rem; font-weight: 600; color: #334155;">
+                                    Estimasi Pengerjaan / Status Selesai (Variabel {{4}})
+                                </label>
+                                <input type="text" name="waba_estimasi" id="waba_estimasi_general" class="form-control" style="font-size: 0.9rem;" placeholder="Contoh: 1 - 2 Jam / Hari ini pkl 21:00 WIB" value="Dalam proses perbaikan oleh tim teknis" oninput="updateWabaPreview('general')">
+                                <div style="margin-top: 4px;">
+                                    <span class="quick-chip" onclick="quickFill('waba_estimasi_general', '1 - 2 Jam', 'general')">1-2 Jam</span>
+                                    <span class="quick-chip" onclick="quickFill('waba_estimasi_general', '2 - 4 Jam', 'general')">2-4 Jam</span>
+                                    <span class="quick-chip" onclick="quickFill('waba_estimasi_general', 'Hari ini pkl 21:00 WIB', 'general')">Pkl 21:00</span>
+                                    <span class="quick-chip" onclick="quickFill('waba_estimasi_general', 'Dalam proses perbaikan oleh tim teknis', 'general')">Proses Teknisi</span>
+                                    <span class="quick-chip" onclick="quickFill('waba_estimasi_general', 'Hingga selesai perbaikan', 'general')">Hingga Selesai</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Urutan Parameter WABA -->
+                        <div class="form-group" style="margin-bottom: 12px;">
+                            <label for="waba_params_general" style="font-size: 0.85rem; font-weight: 600; color: #334155;">
+                                Urutan Variabel Template WABA (pisahkan koma) *
+                            </label>
+                            <input type="text" name="waba_params" id="waba_params_general" class="form-control" style="font-size: 0.9rem;" placeholder="nama, penyebab, waktu_mulai" value="nama, penyebab, waktu_mulai" oninput="updateWabaPreview('general')">
+                            <div style="margin-top: 4px; display: flex; align-items: center; gap: 4px; flex-wrap: wrap;">
+                                <small style="color: #64748b; font-size: 0.74rem;">Tambah variabel:</small>
+                                <span class="var-badge" onclick="appendWabaParam('waba_params_general', 'nama', 'general')">+ nama</span>
+                                <span class="var-badge" onclick="appendWabaParam('waba_params_general', 'penyebab', 'general')">+ penyebab</span>
+                                <span class="var-badge" onclick="appendWabaParam('waba_params_general', 'waktu_mulai', 'general')">+ waktu_mulai</span>
+                                <span class="var-badge" onclick="appendWabaParam('waba_params_general', 'estimasi', 'general')">+ estimasi</span>
+                                <span class="var-badge" onclick="appendWabaParam('waba_params_general', 'odp', 'general')">+ odp</span>
+                                <span class="var-badge" onclick="appendWabaParam('waba_params_general', 'odc', 'general')">+ odc</span>
+                                <span class="var-badge" onclick="appendWabaParam('waba_params_general', '$pesan', 'general')">+ $pesan</span>
+                            </div>
+                        </div>
+
+                        <!-- WhatsApp Real-Time Live Preview -->
+                        <div class="wa-preview-card">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                <span style="font-size: 0.78rem; font-weight: 700; color: #075e54; display: flex; align-items: center; gap: 5px;">
+                                    <i class="fa-brands fa-whatsapp" style="font-size: 0.95rem;"></i> Pratinjau WhatsApp Pelanggan (Template WABA)
+                                </span>
+                                <button type="button" class="btn btn-primary" onclick="syncToTextarea('general')" style="padding: 4px 10px; font-size: 0.75rem; border-radius: 8px; background: #075e54; color: white;">
+                                    <i class="fa-solid fa-copy"></i> Sinkronkan ke Kotak Pesan Teks
+                                </button>
+                            </div>
+                            <div class="wa-bubble" id="wa_preview_body_general">
+                                <!-- Rendered dynamically by updateWabaPreview('general') -->
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -356,7 +520,10 @@
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <label for="pesan_informasi">Isi Pesan Notifikasi *</label>
                         <div style="display: flex; gap: 6px;">
-                            <span class="var-badge" onclick="insertVar('pesan_informasi', '$nama')">+ Nama Pelanggan</span>
+                            <span class="var-badge" onclick="insertVar('pesan_informasi', '$nama')">+ Nama</span>
+<span class="var-badge" onclick="insertVar('pesan_informasi', '$penyebab')">+ Penyebab/Eror</span>
+<span class="var-badge" onclick="insertVar('pesan_informasi', '$waktu_mulai')">+ Waktu Mulai</span>
+<span class="var-badge" onclick="insertVar('pesan_informasi', '$estimasi')">+ Estimasi</span>
                         </div>
                     </div>
                     <textarea name="pesan" id="pesan_informasi" rows="8" class="form-control" placeholder="Tulis isi pengumuman atau pesan broadcast..." required style="resize: vertical; font-family: inherit; line-height: 1.5;"></textarea>
@@ -427,22 +594,127 @@
                         </select>
                     </div>
 
-                    <div id="waba_options_odp" style="margin-bottom: 1rem; padding: 15px; border: 1px dashed #cbd5e1; border-radius: 8px; background-color: #f8fafc;">
-                        <div style="display: flex; align-items: center; margin-bottom: 10px;">
-                            <input type="checkbox" name="use_waba" id="useWabaOdp" style="margin-right: 8px;" onchange="toggleWabaFields('odp')" {{ !empty($profile->waba_broadcast_template) ? 'checked' : '' }}>
-                            <label for="useWabaOdp" style="font-weight: 600; margin: 0; color: #334155; font-size: 0.9rem;">Gunakan Template WABA Meta / Bablast</label>
+                    <div id="waba_options_odp" style="margin-bottom: 1.25rem; padding: 16px; border: 1px solid #c7d2fe; border-radius: 14px; background: linear-gradient(to bottom, #f8fafc, #ffffff); box-shadow: 0 2px 8px rgba(79, 70, 229, 0.05);">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+                        <div style="display: flex; align-items: center;">
+                            <input type="checkbox" name="use_waba" id="useWabaOdp" style="margin-right: 10px; width: 18px; height: 18px; cursor: pointer; accent-color: #25d366;" onchange="toggleWabaFields('odp')" checked>
+                            <label for="useWabaOdp" style="font-weight: 700; margin: 0; color: #1e293b; font-size: 0.95rem; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                                <i class="fa-brands fa-whatsapp" style="color: #25d366; font-size: 1.15rem;"></i>
+                                Gunakan Template WABA Meta / Bablast
+                            </label>
                         </div>
-                        <div id="waba_fields_odp" style="display: {{ !empty($profile->waba_broadcast_template) ? 'block' : 'none' }}; margin-top: 10px;">
-                            <div style="margin-bottom: 10px;">
-                                <label style="font-size: 0.85rem; font-weight:600; color: #475569;">Nama Template WABA *</label>
-                                <input type="text" name="waba_template" id="waba_template_odp" class="form-control" style="font-size: 0.9rem;" placeholder="Contoh: gangguan_jaringan" value="{{ $profile->waba_broadcast_template ?? '' }}">
+                        <span style="font-size: 0.75rem; background: #dcfce7; color: #166534; font-weight: 700; padding: 2px 8px; border-radius: 20px; border: 1px solid #bbf7d0;">
+                            Official Meta WhatsApp
+                        </span>
+                    </div>
+
+                    <div id="waba_fields_odp" style="display: block; margin-top: 14px; border-top: 1px dashed #cbd5e1; padding-top: 14px;">
+                        <!-- Pilihan Cepat Template Preset -->
+                        <div style="margin-bottom: 14px;">
+                            <label style="font-size: 0.82rem; font-weight: 700; color: #475569; display: block; margin-bottom: 6px;">
+                                Pilihan Cepat Template:
+                            </label>
+                            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                                <button type="button" class="waba-preset-btn preset-btn-gangguan active" onclick="applyWabaPreset('odp', 'gangguan')">
+                                    <i class="fa-solid fa-triangle-exclamation" style="color: #ea580c;"></i> Template Gangguan (Meta Approved: 'gangguan')
+                                </button>
+                                <button type="button" class="waba-preset-btn preset-btn-pemeliharaan" onclick="applyWabaPreset('odp', 'pemeliharaan')">
+                                    <i class="fa-solid fa-screwdriver-wrench" style="color: #2563eb;"></i> Template Pemeliharaan ('pemeliharaan')
+                                </button>
+                                <button type="button" class="waba-preset-btn preset-btn-custom" onclick="applyWabaPreset('odp', 'custom')">
+                                    <i class="fa-solid fa-sliders"></i> Kustom
+                                </button>
                             </div>
-                            <div>
-                                <label style="font-size: 0.85rem; font-weight:600; color: #475569;">Variabel Template (pisahkan koma)</label>
-                                <input type="text" name="waba_params" id="waba_params_odp" class="form-control" style="font-size: 0.9rem;" placeholder="Contoh: https://link-gambar.jpg, nama, odp, $pesan">
+                        </div>
+
+                        <!-- Nama Template WABA -->
+                        <div class="form-group" style="margin-bottom: 12px;">
+                            <label for="waba_template_odp" style="font-size: 0.85rem; font-weight: 600; color: #334155;">
+                                Nama Template WABA (Meta / Bablast) *
+                            </label>
+                            <input type="text" name="waba_template" id="waba_template_odp" class="form-control" style="font-size: 0.9rem;" placeholder="Contoh: gangguan" value="gangguan" oninput="updateWabaPreview('odp')">
+                            <small style="color: #64748b; font-size: 0.74rem;">Harus sesuai dengan nama template yang telah disetujui (APPROVED) di WhatsApp Business Platform / Bablast.</small>
+                        </div>
+
+                        <!-- Input Penyebab Gangguan / Eror (Akibat {{2}}) -->
+                        <div class="form-group" style="margin-bottom: 12px;">
+                            <label for="waba_penyebab_odp" style="font-size: 0.85rem; font-weight: 600; color: #334155;">
+                                Penyebab Gangguan / Eror (Variabel {{2}}) *
+                            </label>
+                            <input type="text" name="waba_penyebab" id="waba_penyebab_odp" class="form-control" style="font-size: 0.9rem;" placeholder="Contoh: Putusnya kabel fiber optik (FO)" value="Putusnya kabel fiber optik (FO)" oninput="updateWabaPreview('odp')">
+                            <div style="margin-top: 4px;">
+                                <span style="font-size: 0.72rem; color: #64748b; font-weight: 600;">Pilih Cepat:</span>
+                                <span class="quick-chip" onclick="quickFill('waba_penyebab_odp', 'Putusnya kabel fiber optik (FO)', 'odp')">Kabel FO Putus</span>
+                                <span class="quick-chip" onclick="quickFill('waba_penyebab_odp', 'Pemeliharaan rutin perangkat jaringan', 'odp')">Pemeliharaan Rutin</span>
+                                <span class="quick-chip" onclick="quickFill('waba_penyebab_odp', 'Gangguan link upstream provider', 'odp')">Link Upstream</span>
+                                <span class="quick-chip" onclick="quickFill('waba_penyebab_odp', 'Mati listrik di area server/distribusi', 'odp')">Mati Listrik</span>
+                                <span class="quick-chip" onclick="quickFill('waba_penyebab_odp', 'Perbaikan teknis darurat', 'odp')">Perbaikan Darurat</span>
+                            </div>
+                        </div>
+
+                        <!-- 2 Kolom: Waktu Mulai & Estimasi Selesai -->
+                        <div class="form-row-2" style="gap: 12px; margin-bottom: 12px;">
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <label for="waba_waktu_mulai_odp" style="font-size: 0.85rem; font-weight: 600; color: #334155;">
+                                        Hari, Tanggal & Waktu Mulai (Variabel {{3}}) *
+                                    </label>
+                                    <button type="button" class="btn" onclick="setCurrentTime('waba_waktu_mulai_odp', 'odp')" style="padding: 2px 8px; font-size: 0.72rem; background: #e0e7ff; color: #4338ca; border-radius: 6px; cursor: pointer; border: none; font-weight: 600;">
+                                        ⚡ Waktu Sekarang
+                                    </button>
+                                </div>
+                                <input type="text" name="waba_waktu_mulai" id="waba_waktu_mulai_odp" class="form-control" style="font-size: 0.9rem;" placeholder="Contoh: Jumat, 13 Nov 2026 14:00 WIB" oninput="updateWabaPreview('odp')">
+                            </div>
+
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label for="waba_estimasi_odp" style="font-size: 0.85rem; font-weight: 600; color: #334155;">
+                                    Estimasi Pengerjaan / Status Selesai (Variabel {{4}})
+                                </label>
+                                <input type="text" name="waba_estimasi" id="waba_estimasi_odp" class="form-control" style="font-size: 0.9rem;" placeholder="Contoh: 1 - 2 Jam / Hari ini pkl 21:00 WIB" value="Dalam proses perbaikan oleh tim teknis" oninput="updateWabaPreview('odp')">
+                                <div style="margin-top: 4px;">
+                                    <span class="quick-chip" onclick="quickFill('waba_estimasi_odp', '1 - 2 Jam', 'odp')">1-2 Jam</span>
+                                    <span class="quick-chip" onclick="quickFill('waba_estimasi_odp', '2 - 4 Jam', 'odp')">2-4 Jam</span>
+                                    <span class="quick-chip" onclick="quickFill('waba_estimasi_odp', 'Hari ini pkl 21:00 WIB', 'odp')">Pkl 21:00</span>
+                                    <span class="quick-chip" onclick="quickFill('waba_estimasi_odp', 'Dalam proses perbaikan oleh tim teknis', 'odp')">Proses Teknisi</span>
+                                    <span class="quick-chip" onclick="quickFill('waba_estimasi_odp', 'Hingga selesai perbaikan', 'odp')">Hingga Selesai</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Urutan Parameter WABA -->
+                        <div class="form-group" style="margin-bottom: 12px;">
+                            <label for="waba_params_odp" style="font-size: 0.85rem; font-weight: 600; color: #334155;">
+                                Urutan Variabel Template WABA (pisahkan koma) *
+                            </label>
+                            <input type="text" name="waba_params" id="waba_params_odp" class="form-control" style="font-size: 0.9rem;" placeholder="nama, penyebab, waktu_mulai" value="nama, penyebab, waktu_mulai" oninput="updateWabaPreview('odp')">
+                            <div style="margin-top: 4px; display: flex; align-items: center; gap: 4px; flex-wrap: wrap;">
+                                <small style="color: #64748b; font-size: 0.74rem;">Tambah variabel:</small>
+                                <span class="var-badge" onclick="appendWabaParam('waba_params_odp', 'nama', 'odp')">+ nama</span>
+                                <span class="var-badge" onclick="appendWabaParam('waba_params_odp', 'penyebab', 'odp')">+ penyebab</span>
+                                <span class="var-badge" onclick="appendWabaParam('waba_params_odp', 'waktu_mulai', 'odp')">+ waktu_mulai</span>
+                                <span class="var-badge" onclick="appendWabaParam('waba_params_odp', 'estimasi', 'odp')">+ estimasi</span>
+                                <span class="var-badge" onclick="appendWabaParam('waba_params_odp', 'odp', 'odp')">+ odp</span>
+                                <span class="var-badge" onclick="appendWabaParam('waba_params_odp', 'odc', 'odp')">+ odc</span>
+                                <span class="var-badge" onclick="appendWabaParam('waba_params_odp', '$pesan', 'odp')">+ $pesan</span>
+                            </div>
+                        </div>
+
+                        <!-- WhatsApp Real-Time Live Preview -->
+                        <div class="wa-preview-card">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                <span style="font-size: 0.78rem; font-weight: 700; color: #075e54; display: flex; align-items: center; gap: 5px;">
+                                    <i class="fa-brands fa-whatsapp" style="font-size: 0.95rem;"></i> Pratinjau WhatsApp Pelanggan (Template WABA)
+                                </span>
+                                <button type="button" class="btn btn-primary" onclick="syncToTextarea('odp')" style="padding: 4px 10px; font-size: 0.75rem; border-radius: 8px; background: #075e54; color: white;">
+                                    <i class="fa-solid fa-copy"></i> Sinkronkan ke Kotak Pesan Teks
+                                </button>
+                            </div>
+                            <div class="wa-bubble" id="wa_preview_body_odp">
+                                <!-- Rendered dynamically by updateWabaPreview('odp') -->
                             </div>
                         </div>
                     </div>
+                </div>
 
                     <div class="form-group">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -514,22 +786,127 @@
                         </select>
                     </div>
 
-                    <div id="waba_options_odc" style="margin-bottom: 1rem; padding: 15px; border: 1px dashed #cbd5e1; border-radius: 8px; background-color: #f8fafc;">
-                        <div style="display: flex; align-items: center; margin-bottom: 10px;">
-                            <input type="checkbox" name="use_waba" id="useWabaOdc" style="margin-right: 8px;" onchange="toggleWabaFields('odc')" {{ !empty($profile->waba_broadcast_template) ? 'checked' : '' }}>
-                            <label for="useWabaOdc" style="font-weight: 600; margin: 0; color: #334155; font-size: 0.9rem;">Gunakan Template WABA Meta / Bablast</label>
+                    <div id="waba_options_odc" style="margin-bottom: 1.25rem; padding: 16px; border: 1px solid #c7d2fe; border-radius: 14px; background: linear-gradient(to bottom, #f8fafc, #ffffff); box-shadow: 0 2px 8px rgba(79, 70, 229, 0.05);">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+                        <div style="display: flex; align-items: center;">
+                            <input type="checkbox" name="use_waba" id="useWabaOdc" style="margin-right: 10px; width: 18px; height: 18px; cursor: pointer; accent-color: #25d366;" onchange="toggleWabaFields('odc')" checked>
+                            <label for="useWabaOdc" style="font-weight: 700; margin: 0; color: #1e293b; font-size: 0.95rem; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                                <i class="fa-brands fa-whatsapp" style="color: #25d366; font-size: 1.15rem;"></i>
+                                Gunakan Template WABA Meta / Bablast
+                            </label>
                         </div>
-                        <div id="waba_fields_odc" style="display: {{ !empty($profile->waba_broadcast_template) ? 'block' : 'none' }}; margin-top: 10px;">
-                            <div style="margin-bottom: 10px;">
-                                <label style="font-size: 0.85rem; font-weight:600; color: #475569;">Nama Template WABA *</label>
-                                <input type="text" name="waba_template" id="waba_template_odc" class="form-control" style="font-size: 0.9rem;" placeholder="Contoh: gangguan_jaringan" value="{{ $profile->waba_broadcast_template ?? '' }}">
+                        <span style="font-size: 0.75rem; background: #dcfce7; color: #166534; font-weight: 700; padding: 2px 8px; border-radius: 20px; border: 1px solid #bbf7d0;">
+                            Official Meta WhatsApp
+                        </span>
+                    </div>
+
+                    <div id="waba_fields_odc" style="display: block; margin-top: 14px; border-top: 1px dashed #cbd5e1; padding-top: 14px;">
+                        <!-- Pilihan Cepat Template Preset -->
+                        <div style="margin-bottom: 14px;">
+                            <label style="font-size: 0.82rem; font-weight: 700; color: #475569; display: block; margin-bottom: 6px;">
+                                Pilihan Cepat Template:
+                            </label>
+                            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                                <button type="button" class="waba-preset-btn preset-btn-gangguan active" onclick="applyWabaPreset('odc', 'gangguan')">
+                                    <i class="fa-solid fa-triangle-exclamation" style="color: #ea580c;"></i> Template Gangguan (Meta Approved: 'gangguan')
+                                </button>
+                                <button type="button" class="waba-preset-btn preset-btn-pemeliharaan" onclick="applyWabaPreset('odc', 'pemeliharaan')">
+                                    <i class="fa-solid fa-screwdriver-wrench" style="color: #2563eb;"></i> Template Pemeliharaan ('pemeliharaan')
+                                </button>
+                                <button type="button" class="waba-preset-btn preset-btn-custom" onclick="applyWabaPreset('odc', 'custom')">
+                                    <i class="fa-solid fa-sliders"></i> Kustom
+                                </button>
                             </div>
-                            <div>
-                                <label style="font-size: 0.85rem; font-weight:600; color: #475569;">Variabel Template (pisahkan koma)</label>
-                                <input type="text" name="waba_params" id="waba_params_odc" class="form-control" style="font-size: 0.9rem;" placeholder="Contoh: https://link-gambar.jpg, nama, odp, odc, $pesan">
+                        </div>
+
+                        <!-- Nama Template WABA -->
+                        <div class="form-group" style="margin-bottom: 12px;">
+                            <label for="waba_template_odc" style="font-size: 0.85rem; font-weight: 600; color: #334155;">
+                                Nama Template WABA (Meta / Bablast) *
+                            </label>
+                            <input type="text" name="waba_template" id="waba_template_odc" class="form-control" style="font-size: 0.9rem;" placeholder="Contoh: gangguan" value="gangguan" oninput="updateWabaPreview('odc')">
+                            <small style="color: #64748b; font-size: 0.74rem;">Harus sesuai dengan nama template yang telah disetujui (APPROVED) di WhatsApp Business Platform / Bablast.</small>
+                        </div>
+
+                        <!-- Input Penyebab Gangguan / Eror (Akibat {{2}}) -->
+                        <div class="form-group" style="margin-bottom: 12px;">
+                            <label for="waba_penyebab_odc" style="font-size: 0.85rem; font-weight: 600; color: #334155;">
+                                Penyebab Gangguan / Eror (Variabel {{2}}) *
+                            </label>
+                            <input type="text" name="waba_penyebab" id="waba_penyebab_odc" class="form-control" style="font-size: 0.9rem;" placeholder="Contoh: Putusnya kabel fiber optik (FO)" value="Putusnya kabel fiber optik (FO)" oninput="updateWabaPreview('odc')">
+                            <div style="margin-top: 4px;">
+                                <span style="font-size: 0.72rem; color: #64748b; font-weight: 600;">Pilih Cepat:</span>
+                                <span class="quick-chip" onclick="quickFill('waba_penyebab_odc', 'Putusnya kabel fiber optik (FO)', 'odc')">Kabel FO Putus</span>
+                                <span class="quick-chip" onclick="quickFill('waba_penyebab_odc', 'Pemeliharaan rutin perangkat jaringan', 'odc')">Pemeliharaan Rutin</span>
+                                <span class="quick-chip" onclick="quickFill('waba_penyebab_odc', 'Gangguan link upstream provider', 'odc')">Link Upstream</span>
+                                <span class="quick-chip" onclick="quickFill('waba_penyebab_odc', 'Mati listrik di area server/distribusi', 'odc')">Mati Listrik</span>
+                                <span class="quick-chip" onclick="quickFill('waba_penyebab_odc', 'Perbaikan teknis darurat', 'odc')">Perbaikan Darurat</span>
+                            </div>
+                        </div>
+
+                        <!-- 2 Kolom: Waktu Mulai & Estimasi Selesai -->
+                        <div class="form-row-2" style="gap: 12px; margin-bottom: 12px;">
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <label for="waba_waktu_mulai_odc" style="font-size: 0.85rem; font-weight: 600; color: #334155;">
+                                        Hari, Tanggal & Waktu Mulai (Variabel {{3}}) *
+                                    </label>
+                                    <button type="button" class="btn" onclick="setCurrentTime('waba_waktu_mulai_odc', 'odc')" style="padding: 2px 8px; font-size: 0.72rem; background: #e0e7ff; color: #4338ca; border-radius: 6px; cursor: pointer; border: none; font-weight: 600;">
+                                        ⚡ Waktu Sekarang
+                                    </button>
+                                </div>
+                                <input type="text" name="waba_waktu_mulai" id="waba_waktu_mulai_odc" class="form-control" style="font-size: 0.9rem;" placeholder="Contoh: Jumat, 13 Nov 2026 14:00 WIB" oninput="updateWabaPreview('odc')">
+                            </div>
+
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label for="waba_estimasi_odc" style="font-size: 0.85rem; font-weight: 600; color: #334155;">
+                                    Estimasi Pengerjaan / Status Selesai (Variabel {{4}})
+                                </label>
+                                <input type="text" name="waba_estimasi" id="waba_estimasi_odc" class="form-control" style="font-size: 0.9rem;" placeholder="Contoh: 1 - 2 Jam / Hari ini pkl 21:00 WIB" value="Dalam proses perbaikan oleh tim teknis" oninput="updateWabaPreview('odc')">
+                                <div style="margin-top: 4px;">
+                                    <span class="quick-chip" onclick="quickFill('waba_estimasi_odc', '1 - 2 Jam', 'odc')">1-2 Jam</span>
+                                    <span class="quick-chip" onclick="quickFill('waba_estimasi_odc', '2 - 4 Jam', 'odc')">2-4 Jam</span>
+                                    <span class="quick-chip" onclick="quickFill('waba_estimasi_odc', 'Hari ini pkl 21:00 WIB', 'odc')">Pkl 21:00</span>
+                                    <span class="quick-chip" onclick="quickFill('waba_estimasi_odc', 'Dalam proses perbaikan oleh tim teknis', 'odc')">Proses Teknisi</span>
+                                    <span class="quick-chip" onclick="quickFill('waba_estimasi_odc', 'Hingga selesai perbaikan', 'odc')">Hingga Selesai</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Urutan Parameter WABA -->
+                        <div class="form-group" style="margin-bottom: 12px;">
+                            <label for="waba_params_odc" style="font-size: 0.85rem; font-weight: 600; color: #334155;">
+                                Urutan Variabel Template WABA (pisahkan koma) *
+                            </label>
+                            <input type="text" name="waba_params" id="waba_params_odc" class="form-control" style="font-size: 0.9rem;" placeholder="nama, penyebab, waktu_mulai" value="nama, penyebab, waktu_mulai" oninput="updateWabaPreview('odc')">
+                            <div style="margin-top: 4px; display: flex; align-items: center; gap: 4px; flex-wrap: wrap;">
+                                <small style="color: #64748b; font-size: 0.74rem;">Tambah variabel:</small>
+                                <span class="var-badge" onclick="appendWabaParam('waba_params_odc', 'nama', 'odc')">+ nama</span>
+                                <span class="var-badge" onclick="appendWabaParam('waba_params_odc', 'penyebab', 'odc')">+ penyebab</span>
+                                <span class="var-badge" onclick="appendWabaParam('waba_params_odc', 'waktu_mulai', 'odc')">+ waktu_mulai</span>
+                                <span class="var-badge" onclick="appendWabaParam('waba_params_odc', 'estimasi', 'odc')">+ estimasi</span>
+                                <span class="var-badge" onclick="appendWabaParam('waba_params_odc', 'odp', 'odc')">+ odp</span>
+                                <span class="var-badge" onclick="appendWabaParam('waba_params_odc', 'odc', 'odc')">+ odc</span>
+                                <span class="var-badge" onclick="appendWabaParam('waba_params_odc', '$pesan', 'odc')">+ $pesan</span>
+                            </div>
+                        </div>
+
+                        <!-- WhatsApp Real-Time Live Preview -->
+                        <div class="wa-preview-card">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                <span style="font-size: 0.78rem; font-weight: 700; color: #075e54; display: flex; align-items: center; gap: 5px;">
+                                    <i class="fa-brands fa-whatsapp" style="font-size: 0.95rem;"></i> Pratinjau WhatsApp Pelanggan (Template WABA)
+                                </span>
+                                <button type="button" class="btn btn-primary" onclick="syncToTextarea('odc')" style="padding: 4px 10px; font-size: 0.75rem; border-radius: 8px; background: #075e54; color: white;">
+                                    <i class="fa-solid fa-copy"></i> Sinkronkan ke Kotak Pesan Teks
+                                </button>
+                            </div>
+                            <div class="wa-bubble" id="wa_preview_body_odc">
+                                <!-- Rendered dynamically by updateWabaPreview('odc') -->
                             </div>
                         </div>
                     </div>
+                </div>
 
                     <div class="form-group">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -638,6 +1015,145 @@
         }
     }
 
+    
+    function getIndonesianDateTime() {
+        const now = new Date();
+        const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+        const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+        const day = days[now.getDay()];
+        const date = now.getDate();
+        const month = months[now.getMonth()];
+        const year = now.getFullYear();
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        return `${day}, ${date} ${month} ${year} ${hours}:${minutes} WIB`;
+    }
+
+    function setCurrentTime(inputId, type) {
+        const el = document.getElementById(inputId);
+        if (el) {
+            el.value = getIndonesianDateTime();
+            updateWabaPreview(type);
+        }
+    }
+
+    function quickFill(inputId, val, type) {
+        const el = document.getElementById(inputId);
+        if (el) {
+            el.value = val;
+            updateWabaPreview(type);
+        }
+    }
+
+    function appendWabaParam(inputId, paramName, type) {
+        const el = document.getElementById(inputId);
+        if (!el) return;
+        let val = el.value.trim();
+        let parts = val ? val.split(',').map(s => s.trim()) : [];
+        if (!parts.includes(paramName)) {
+            parts.push(paramName);
+            el.value = parts.join(', ');
+            updateWabaPreview(type);
+        }
+    }
+
+    function applyWabaPreset(type, preset) {
+        const tplInput = document.getElementById('waba_template_' + type);
+        const paramsInput = document.getElementById('waba_params_' + type);
+        const penyebabInput = document.getElementById('waba_penyebab_' + type);
+        const waktuInput = document.getElementById('waba_waktu_mulai_' + type);
+        const estimasiInput = document.getElementById('waba_estimasi_' + type);
+
+        const container = document.getElementById('waba_fields_' + type);
+        if (container) {
+            container.querySelectorAll('.waba-preset-btn').forEach(b => b.classList.remove('active'));
+            const activeBtn = container.querySelector('.preset-btn-' + preset);
+            if (activeBtn) activeBtn.classList.add('active');
+        }
+
+        if (preset === 'gangguan') {
+            if (tplInput) tplInput.value = 'gangguan';
+            if (paramsInput) paramsInput.value = 'nama, penyebab, waktu_mulai';
+            if (penyebabInput && !penyebabInput.value) penyebabInput.value = 'Putusnya kabel fiber optik (FO)';
+            if (waktuInput && !waktuInput.value) waktuInput.value = getIndonesianDateTime();
+            if (estimasiInput && !estimasiInput.value) estimasiInput.value = 'Dalam proses perbaikan oleh tim teknis';
+        } else if (preset === 'pemeliharaan') {
+            if (tplInput) tplInput.value = 'pemeliharaan';
+            if (paramsInput) paramsInput.value = 'nama, penyebab, waktu_mulai, estimasi';
+            if (penyebabInput && !penyebabInput.value) penyebabInput.value = 'Pemeliharaan rutin perangkat jaringan berkala';
+            if (waktuInput && !waktuInput.value) waktuInput.value = getIndonesianDateTime();
+            if (estimasiInput && !estimasiInput.value) estimasiInput.value = '2 - 3 Jam';
+        }
+
+        updateWabaPreview(type);
+    }
+
+    function updateWabaPreview(type) {
+        const penyebab = document.getElementById('waba_penyebab_' + type)?.value || 'Putusnya kabel fiber optik (FO)';
+        const waktuMulai = document.getElementById('waba_waktu_mulai_' + type)?.value || getIndonesianDateTime();
+        const estimasi = document.getElementById('waba_estimasi_' + type)?.value || 'Dalam proses perbaikan oleh tim teknis';
+        const previewEl = document.getElementById('wa_preview_body_' + type);
+        if (!previewEl) return;
+
+        let scopeText = '';
+        if (type === 'odp') {
+            const selectOdp = document.getElementById('select_odp');
+            const odpText = selectOdp && selectOdp.selectedIndex > 0 ? selectOdp.options[selectOdp.selectedIndex].text.split(' (')[0] : 'ODP Terkait';
+            scopeText = ` pada area <strong>${odpText}</strong>`;
+        } else if (type === 'odc') {
+            const selectOdc = document.getElementById('select_odc');
+            const odcText = selectOdc && selectOdc.selectedIndex > 0 ? selectOdc.options[selectOdc.selectedIndex].text : 'ODC Terkait';
+            scopeText = ` pada area distribusi <strong>${odcText}</strong>`;
+        }
+
+        previewEl.innerHTML = `
+            <div style="font-weight:700; color:#0f172a; margin-bottom:8px; border-bottom:1px solid #e2e8f0; padding-bottom:6px; font-size:0.86rem; text-transform:uppercase; display:flex; justify-content:space-between; align-items:center;">
+                <span>📢 PEMBERITAHUAN GANGGUAN LAYANAN INTERNET</span>
+                <span style="font-size:0.7rem; background:#fee2e2; color:#b91c1c; padding:2px 6px; border-radius:4px; font-weight:700;">WABA</span>
+            </div>
+            <p style="margin:0 0 8px 0; color:#1e293b;">Yth. Pelanggan <strong>[Nama Pelanggan]</strong></p>
+            <p style="margin:0 0 10px 0; color:#1e293b;">
+                Kami informasikan bahwa saat ini sedang terjadi kendala akses internet${scopeText} akibat <strong style="color:#b91c1c;">${penyebab}</strong>.
+            </p>
+            <div style="background:#f8fafc; border-left:3px solid #3b82f6; padding:8px 12px; margin-bottom:10px; border-radius:4px; font-size:0.82rem; line-height:1.5;">
+                <div>• <strong>Waktu Mulai:</strong> ${waktuMulai}</div>
+                <div>• <strong>Status Penanganan:</strong> ${estimasi}</div>
+            </div>
+            <p style="margin:0; font-size:0.8rem; color:#475569;">
+                Kami memohon maaf yang sebesar-besarnya atas terganggunya aktivitas Anda.
+            </p>
+            <div style="text-align:right; font-size:0.7rem; color:#94a3b8; margin-top:6px;">
+                17:26 <i class="fa-solid fa-check-double" style="color:#38bdf8;"></i>
+            </div>
+        `;
+    }
+
+    function syncToTextarea(type) {
+        const penyebab = document.getElementById('waba_penyebab_' + type)?.value || '$penyebab';
+        const waktuMulai = document.getElementById('waba_waktu_mulai_' + type)?.value || '$waktu_mulai';
+        const estimasi = document.getElementById('waba_estimasi_' + type)?.value || '$estimasi';
+
+        let targetId = 'pesan_informasi';
+        let scopeStr = '';
+        if (type === 'odp') {
+            targetId = 'odp_message_template';
+            scopeStr = ' pada area $odp';
+        } else if (type === 'odc') {
+            targetId = 'odc_message_template';
+            scopeStr = ' pada area perangkat $odc';
+        }
+
+        const msg = `Pemberitahuan: Yth. Pelanggan Bapak/Ibu $nama.\n\nKami informasikan bahwa saat ini sedang terjadi kendala akses internet${scopeStr} akibat ${penyebab}.\n\n• Waktu Mulai: ${waktuMulai}\n• Status Penanganan: ${estimasi}\n\nKami memohon maaf yang sebesar-besarnya atas terganggunya aktivitas Anda. Terima kasih atas pengertiannya.`;
+
+        const textarea = document.getElementById(targetId);
+        if (textarea) {
+            textarea.value = msg;
+            textarea.style.backgroundColor = '#ecfdf5';
+            setTimeout(() => { textarea.style.backgroundColor = 'transparent'; }, 1500);
+            alert('Isi pesan berhasil disinkronkan ke kotak teks notifikasi!');
+        }
+    }
+
     function toggleTitleInput() {
         const appChecked = document.getElementById('channel_app').checked;
         const titleGroup = document.getElementById('title_group');
@@ -698,6 +1214,16 @@
 
     document.addEventListener("DOMContentLoaded", function () {
         toggleTitleInput();
+
+        // Initial setup for WABA preview and date
+        ['general', 'odp', 'odc'].forEach(type => {
+            const timeEl = document.getElementById('waba_waktu_mulai_' + type);
+            if (timeEl && !timeEl.value) {
+                timeEl.value = getIndonesianDateTime();
+            }
+            updateWabaPreview(type);
+        });
+
 
         $('#select_odp').select2({
             placeholder: '-- Pilih ODP --',

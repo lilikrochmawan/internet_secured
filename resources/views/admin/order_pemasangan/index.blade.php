@@ -396,6 +396,25 @@
         align-items: center !important;
         justify-content: center !important;
     }
+
+    /* KTP Scanner Styling */
+    @keyframes ktpScanLine {
+        0% { top: 0%; opacity: 0.9; }
+        50% { top: 96%; opacity: 1; }
+        100% { top: 0%; opacity: 0.9; }
+    }
+    .ktp-tab-btn.active {
+        background: white !important;
+        color: #4f46e5 !important;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.08) !important;
+    }
+    .ktp-tab-btn:not(.active) {
+        background: transparent !important;
+        color: #64748b !important;
+    }
+    .ktp-tab-btn:hover:not(.active) {
+        color: #1e293b !important;
+    }
 </style>
 @endsection
 
@@ -734,20 +753,20 @@
                                          @if($row->status === 'approved')
                                              @if($row->id_teknisi === 0)
                                                  @php
-                                                     $techHasActive = \App\Models\OrderPemasangan::where('id_teknisi', Auth::id())
+                                                     $techActiveCount = \App\Models\OrderPemasangan::where('id_teknisi', Auth::id())
                                                          ->whereIn('status', ['approved', 'installed'])
-                                                         ->exists();
+                                                         ->count();
                                                  @endphp
-                                                 @if($techHasActive)
-                                                     <button type="button" class="btn btn-primary" style="padding: 6px 12px; font-size: 0.8rem; border-radius: 8px; width: 100%; justify-content: center; opacity: 0.5; cursor: not-allowed;" disabled title="Selesaikan order aktif Anda terlebih dahulu sebelum mengambil order baru!">
-                                                         <i class="fa-solid fa-hand-holding-hand"></i> Ambil Order (Ada Order Aktif)
+                                                 @if($techActiveCount >= 2)
+                                                     <button type="button" class="btn btn-primary" style="padding: 6px 12px; font-size: 0.8rem; border-radius: 8px; width: 100%; justify-content: center; opacity: 0.5; cursor: not-allowed;" disabled title="Anda sudah memiliki 2 order pemasangan aktif! Selesaikan terlebih dahulu sebelum mengambil order baru.">
+                                                         <i class="fa-solid fa-hand-holding-hand"></i> Ambil Order (Maks 2 Order Aktif)
                                                      </button>
                                                  @else
                                                      <form action="{{ route('admin.order_pemasangan.claim') }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin mengambil order pemasangan ini?')">
                                                          @csrf
                                                          <input type="hidden" name="id_order" value="{{ $row->id }}">
                                                          <button type="submit" class="btn btn-primary" style="padding: 6px 12px; font-size: 0.8rem; border-radius: 8px; width: 100%; justify-content: center; background: linear-gradient(135deg, #0ea5e9, #0284c7);">
-                                                             <i class="fa-solid fa-hand-holding-hand"></i> Ambil Order
+                                                             <i class="fa-solid fa-hand-holding-hand"></i> Ambil Order {{ $techActiveCount == 1 ? '(Slot 2/2)' : '' }}
                                                          </button>
                                                      </form>
                                                  @endif
@@ -818,8 +837,17 @@
                         <option value="">-- Pilih Teknisi --</option>
                         <option value="0">-- Semua Teknisi (All) --</option>
                         @foreach($teknisis as $tek)
-                            <option value="{{ $tek->id }}" {{ isset($tek->has_active_order) && $tek->has_active_order ? 'disabled style=color:var(--text-gray);' : '' }}>
-                                {{ $tek->nama_user }} ({{ $tek->username }}) {!! isset($tek->has_active_order) && $tek->has_active_order ? '— [Ada Order Aktif]' : '' !!}
+                            @php
+                                $actCount = $tek->active_orders_count ?? (isset($tek->has_active_order) && $tek->has_active_order ? 2 : 0);
+                                $isMax = $actCount >= 2;
+                            @endphp
+                            <option value="{{ $tek->id }}" {{ $isMax ? 'disabled style=color:var(--text-gray);' : '' }}>
+                                {{ $tek->nama_user }} ({{ $tek->username }})
+                                @if($isMax)
+                                    — [Penuh: 2 Order Aktif]
+                                @elseif($actCount == 1)
+                                    — [1 Order Aktif (Sisa 1 Slot)]
+                                @endif
                             </option>
                         @endforeach
                     </select>
@@ -1150,6 +1178,23 @@
             <button class="modal-close" onclick="closeAddOrderModal()" style="color: white; border: none; background: none; font-size: 1.2rem; cursor: pointer;">&times;</button>
         </div>
         <div class="modal-body" style="padding: 24px; max-height: 80vh; overflow-y: auto;">
+            
+            <!-- Banner Pindai e-KTP Otomatis -->
+            <div style="background: linear-gradient(135deg, #eff6ff 0%, #e0e7ff 100%); border: 1px dashed #6366f1; border-radius: 12px; padding: 12px 16px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div style="width: 38px; height: 38px; border-radius: 10px; background: #4f46e5; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);">
+                        <i class="fa-solid fa-id-card"></i>
+                    </div>
+                    <div>
+                        <div style="font-weight: 700; color: #1e1b4b; font-size: 0.9rem;">Pindai e-KTP Otomatis</div>
+                        <div style="font-size: 0.78rem; color: #4338ca;">Pindai foto KTP untuk mengisi NIK, Nama & Alamat secara otomatis.</div>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-sm btn-primary" onclick="openKtpScanModal()" style="font-weight: 600; font-size: 0.82rem; border-radius: 8px; white-space: nowrap; padding: 7px 14px; background: #4f46e5; border-color: #4f46e5; box-shadow: 0 2px 6px rgba(79, 70, 229, 0.25);">
+                    <i class="fa-solid fa-camera"></i> Pindai KTP
+                </button>
+            </div>
+
             <form action="{{ route('admin.order_pemasangan.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="form-group">
@@ -1212,7 +1257,16 @@
 
                 <div class="form-group">
                     <label for="foto_ktp_modal">Upload Foto KTP *</label>
-                    <input type="file" id="foto_ktp_modal" name="foto_ktp" class="form-control" required accept="image/*">
+                    <input type="file" id="foto_ktp_modal" name="foto_ktp" class="form-control" required accept="image/*" onchange="if(this.files && this.files[0]) updateKtpInputPreview(this.files[0]);">
+                    <!-- Preview Thumbnail KTP -->
+                    <div id="ktp_preview_container" style="display: none; margin-top: 10px;">
+                        <div style="position: relative; display: inline-block;">
+                            <img id="ktp_preview_img" src="" alt="Preview KTP" style="max-height: 140px; border-radius: 10px; border: 1px solid #cbd5e1; box-shadow: 0 2px 8px rgba(0,0,0,0.08); display: block;">
+                            <span style="position: absolute; top: 6px; left: 6px; background: #16a34a; color: white; padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; box-shadow: 0 2px 4px rgba(0,0,0,0.2); display: flex; align-items: center; gap: 4px;">
+                                <i class="fa-solid fa-circle-check"></i> Foto KTP Terlampir
+                            </span>
+                        </div>
+                    </div>
                     <small style="color:var(--text-gray);">Maksimal ukuran file 5 MB (Format: jpeg, png, webp).</small>
                 </div>
 
@@ -1223,6 +1277,199 @@
                     </button>
                 </div>
             </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Scanner e-KTP (OCR Pelanggan Baru) -->
+<div class="modal" id="ktpScannerModal" style="z-index: 10020;">
+    <div class="modal-content" style="width: min(640px, 95vw); max-width: 640px;">
+        <div class="modal-header" style="background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); color: white; padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 10;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <div style="background: rgba(255,255,255,0.2); width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem;">
+                    <i class="fa-solid fa-id-card"></i>
+                </div>
+                <div>
+                    <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.15rem; font-weight: 700; margin: 0; line-height: 1.2;">Pindai e-KTP Pelanggan</h3>
+                    <p style="margin: 0; font-size: 0.78rem; opacity: 0.9; font-weight: 400;">Otomatis isi NIK, Nama Lengkap & Alamat KTP</p>
+                </div>
+            </div>
+            <button class="modal-close" onclick="cancelKtpScan()" type="button" style="color: white; border: none; background: rgba(255,255,255,0.15); width: 32px; height: 32px; border-radius: 50%; font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s;">&times;</button>
+        </div>
+        <div class="modal-body" style="padding: 20px; max-height: 84vh; overflow-y: auto;">
+            
+            <div id="ktp_source_selection">
+            <!-- Pilihan Utama: Kamera HP Langsung (Jernih & Fokus Otomatis) -->
+            <div style="background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%); padding: 14px 16px; border-radius: 14px; margin-bottom: 14px; color: white; box-shadow: 0 4px 14px rgba(49, 46, 129, 0.2);">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                    <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(56, 189, 248, 0.2); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; color: #38bdf8; flex-shrink: 0;">
+                        <i class="fa-solid fa-camera"></i>
+                    </div>
+                    <div>
+                        <div style="font-weight: 700; font-size: 0.92rem; line-height: 1.2;">Kamera HP Bawaan (Paling Jernih & Presisi)</div>
+                        <div style="font-size: 0.74rem; color: #cbd5e1;">Gunakan kamera ponsel untuk foto tajam tanpa bayangan / blur.</div>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-primary" onclick="document.getElementById('ktp_native_cam').click()" style="width: 100%; justify-content: center; background: #38bdf8; color: #0f172a; border: none; font-weight: 700; font-size: 0.9rem; padding: 11px 16px; border-radius: 10px; box-shadow: 0 4px 12px rgba(56, 189, 248, 0.35);">
+                    <i class="fa-solid fa-camera-retro"></i> Buka Kamera HP & Ambil Foto KTP
+                </button>
+                <input type="file" id="ktp_native_cam" accept="image/*" capture="environment" style="display: none;" onchange="handleKtpFileSelected(this)">
+            </div>
+
+            <!-- Separator Opsi Lain -->
+            <div style="display: flex; align-items: center; justify-content: center; margin: 10px 0 12px 0; position: relative;">
+                <span style="background: white; padding: 0 12px; color: #94a3b8; font-size: 0.74rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; z-index: 1;">Atau Pilih Sumber Lain</span>
+                <div style="position: absolute; left: 0; right: 0; height: 1px; background: #e2e8f0;"></div>
+            </div>
+
+            <!-- Tab Source Pilihan (Kamera Live vs Upload Galeri) -->
+            <div style="display: flex; background: #f1f5f9; padding: 4px; border-radius: 12px; margin-bottom: 14px; gap: 4px;">
+                <button type="button" id="tab_scan_camera" class="ktp-tab-btn" onclick="switchKtpSource('camera')" style="flex: 1; padding: 8px; border-radius: 8px; border: none; font-weight: 600; font-size: 0.82rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s;">
+                    <i class="fa-solid fa-video"></i> Kamera Live (Webcam)
+                </button>
+                <button type="button" id="tab_scan_upload" class="ktp-tab-btn" onclick="switchKtpSource('upload')" style="flex: 1; padding: 8px; border-radius: 8px; border: none; font-weight: 600; font-size: 0.82rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s;">
+                    <i class="fa-solid fa-images"></i> Pilih dari Galeri
+                </button>
+            </div>
+            </div>
+
+            <!-- Panel 1: Kamera Viewfinder Live -->
+            <div id="ktp_panel_camera" style="display: none;">
+                <div style="position: relative; width: 100%; aspect-ratio: 16/10; max-height: 280px; background: #020617; border-radius: 14px; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                    <video id="ktp_video" playsinline autoplay muted style="width: 100%; height: 100%; object-fit: cover;"></video>
+                    
+                    <!-- Guide Frame KTP Overlay (Jernih tanpa bayangan gelap) -->
+                    <div id="ktp_guide_frame" style="position: absolute; inset: 12px; border: 2px solid rgba(56, 189, 248, 0.7); border-radius: 12px; pointer-events: none; display: flex; flex-direction: column; justify-content: space-between; padding: 8px;">
+                        <div style="display: flex; justify-content: space-between; width: 100%;">
+                            <span style="border-top: 4px solid #38bdf8; border-left: 4px solid #38bdf8; width: 20px; height: 20px; border-top-left-radius: 6px;"></span>
+                            <span style="background: rgba(15, 23, 42, 0.75); color: #38bdf8; font-size: 0.72rem; font-weight: 700; padding: 2px 10px; border-radius: 20px; backdrop-filter: blur(4px);">
+                                <i class="fa-solid fa-id-card"></i> Posisikan e-KTP di dalam kotak
+                            </span>
+                            <span style="border-top: 4px solid #38bdf8; border-right: 4px solid #38bdf8; width: 20px; height: 20px; border-top-right-radius: 6px;"></span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; width: 100%;">
+                            <span style="border-bottom: 4px solid #38bdf8; border-left: 4px solid #38bdf8; width: 20px; height: 20px; border-bottom-left-radius: 6px;"></span>
+                            <span style="color: white; font-size: 0.72rem; text-shadow: 0 1px 3px rgba(0,0,0,0.9); font-weight: 500;">
+                                Dekatkan hingga teks KTP terbaca jelas
+                            </span>
+                            <span style="border-bottom: 4px solid #38bdf8; border-right: 4px solid #38bdf8; width: 20px; height: 20px; border-bottom-right-radius: 6px;"></span>
+                        </div>
+                    </div>
+
+                    <!-- Kamera error placeholder -->
+                    <div id="ktp_camera_error" style="display: none; position: absolute; inset: 0; background: #1e293b; color: white; padding: 20px; text-align: center; flex-direction: column; align-items: center; justify-content: center;">
+                        <i class="fa-solid fa-triangle-exclamation" style="font-size: 2rem; color: #f59e0b; margin-bottom: 8px;"></i>
+                        <p style="margin: 0; font-size: 0.85rem;" id="ktp_camera_error_msg">Kamera tidak aktif atau izin ditolak.</p>
+                        <div style="display: flex; gap: 8px; margin-top: 12px;">
+                            <button type="button" class="btn btn-sm btn-outline-light" onclick="initKtpCamera()" style="font-size: 0.8rem; border-radius: 8px;">
+                                <i class="fa-solid fa-rotate-right"></i> Coba Lagi
+                            </button>
+                            <button type="button" class="btn btn-sm btn-primary" onclick="document.getElementById('ktp_native_cam').click()" style="font-size: 0.8rem; border-radius: 8px;">
+                                <i class="fa-solid fa-camera"></i> Buka Kamera HP
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Camera Controls -->
+                <div style="display: flex; gap: 8px; justify-content: center; align-items: center; margin-top: 10px;">
+                    <button type="button" id="btn_switch_camera" class="btn btn-outline-secondary btn-sm" onclick="toggleCameraFacing()" style="border-radius: 10px; padding: 7px 12px; display: inline-flex; align-items: center; gap: 6px; font-size: 0.82rem;">
+                        <i class="fa-solid fa-camera-rotate"></i> Putar Kamera
+                    </button>
+                    <button type="button" class="btn btn-primary" onclick="captureKtpPhoto()" style="background: #4f46e5; border-color: #4f46e5; border-radius: 10px; padding: 8px 20px; font-weight: 700; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.35);">
+                        <i class="fa-solid fa-circle-dot"></i> Jepret & Pindai
+                    </button>
+                </div>
+            </div>
+
+            <!-- Panel 2: Upload File View -->
+            <div id="ktp_panel_upload" style="display: none;">
+                <div id="ktp_dropzone" onclick="document.getElementById('ktp_file_input').click()" style="border: 2px dashed #cbd5e1; border-radius: 14px; padding: 28px 20px; text-align: center; cursor: pointer; background: #f8fafc; transition: all 0.2s;">
+                    <div style="background: #e0e7ff; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px auto; color: #4f46e5; font-size: 1.4rem;">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                    </div>
+                    <div style="font-weight: 600; color: #1e293b; font-size: 0.92rem; margin-bottom: 4px;">Pilih Foto e-KTP dari Galeri / File</div>
+                    <div style="font-size: 0.76rem; color: #64748b;">Klik di sini untuk memilih foto KTP (JPG, PNG, WEBP)</div>
+                </div>
+                <input type="file" id="ktp_file_input" accept="image/*" style="display: none;" onchange="handleKtpFileSelected(this)">
+            </div>
+
+            <!-- Preview Image & Processing Area -->
+            <div id="ktp_preview_section" style="display: none; margin-top: 14px;">
+                <div style="position: relative; border-radius: 12px; overflow: hidden; border: 1px solid #e2e8f0; background: #0f172a; max-height: 250px; display: flex; align-items: center; justify-content: center;">
+                    <img id="ktp_captured_img" src="" alt="Pratinjau KTP" style="max-height: 250px; width: 100%; object-fit: contain;">
+                </div>
+
+                <!-- Preview Controls: Rotate & Retake -->
+                <div style="display: flex; gap: 8px; justify-content: center; margin-top: 8px;">
+                    <button type="button" onclick="rotateKtpPhoto()" class="btn btn-sm btn-outline-secondary" style="font-size: 0.78rem; border-radius: 8px; padding: 5px 12px; display: inline-flex; align-items: center; gap: 6px;">
+                        <i class="fa-solid fa-rotate-right"></i> Putar Foto 90°
+                    </button>
+                    <button type="button" onclick="retakeKtpPhoto()" class="btn btn-sm btn-outline-danger" style="font-size: 0.78rem; border-radius: 8px; padding: 5px 12px; display: inline-flex; align-items: center; gap: 6px;">
+                        <i class="fa-solid fa-arrow-rotate-left"></i> Foto Ulang
+                    </button>
+                </div>
+
+                <!-- OCR Progress Indicator -->
+                <div id="ktp_ocr_progress_box" style="display: none; margin-top: 12px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px 16px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                        <span style="font-size: 0.82rem; font-weight: 600; color: #475569; display: inline-flex; align-items: center; gap: 8px;">
+                            <i class="fa-solid fa-circle-notch fa-spin text-primary"></i> <span id="ktp_ocr_status_text">Membaca teks e-KTP (OCR)...</span>
+                        </span>
+                        <span id="ktp_ocr_percent" style="font-size: 0.82rem; font-weight: 700; color: #4f46e5;">0%</span>
+                    </div>
+                    <div style="width: 100%; height: 6px; background: #e2e8f0; border-radius: 10px; overflow: hidden;">
+                        <div id="ktp_ocr_progress_bar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #4f46e5, #06b6d4); transition: width 0.3s ease;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- OCR Extracted Results Card -->
+            <div id="ktp_result_card" style="display: none; margin-top: 14px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 14px; padding: 16px;">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                    <div style="font-weight: 700; color: #166534; font-size: 0.88rem; display: flex; align-items: center; gap: 6px;">
+                        <i class="fa-solid fa-circle-check" style="color: #16a34a;"></i> Hasil Ekstraksi Data KTP
+                    </div>
+                    <span style="font-size: 0.72rem; color: #15803d; background: #dcfce7; padding: 2px 8px; border-radius: 12px; font-weight: 600;">
+                        Bisa dikoreksi jika perlu
+                    </span>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <div>
+                        <label style="font-size: 0.78rem; font-weight: 600; color: #334155; margin-bottom: 2px; display: block;">NIK Pelanggan (16 Digit):</label>
+                        <div style="position: relative;">
+                            <input type="text" id="scan_nik_result" class="form-control" style="font-size: 0.95rem; font-weight: 700; letter-spacing: 0.5px; border-radius: 8px;" placeholder="16 digit NIK">
+                            <span id="scan_nik_badge" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-size: 0.72rem; font-weight: 700; padding: 2px 6px; border-radius: 4px;"></span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label style="font-size: 0.78rem; font-weight: 600; color: #334155; margin-bottom: 2px; display: block;">Nama Lengkap:</label>
+                        <input type="text" id="scan_nama_result" class="form-control" style="font-size: 0.9rem; font-weight: 600; border-radius: 8px;" placeholder="Nama lengkap sesuai KTP">
+                    </div>
+
+                    <div>
+                        <label style="font-size: 0.78rem; font-weight: 600; color: #334155; margin-bottom: 2px; display: block;">Alamat KTP:</label>
+                        <textarea id="scan_alamat_result" class="form-control" rows="2" style="font-size: 0.85rem; border-radius: 8px;" placeholder="Alamat lengkap sesuai KTP"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- OCR Notice -->
+            <div id="ktp_ocr_hint" style="display: none; margin-top: 10px; font-size: 0.76rem; color: #64748b; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 8px 12px;">
+                <i class="fa-solid fa-circle-info text-info"></i> Pastikan data NIK, Nama, dan Alamat di atas sudah sesuai sebelum menekan tombol terapkan.
+            </div>
+
+            <!-- Action Buttons -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 18px; gap: 10px; padding-top: 14px; border-top: 1px solid #e2e8f0;">
+                <button type="button" class="btn btn-secondary" onclick="cancelKtpScan()" style="border-radius: 10px; padding: 9px 18px; font-size: 0.85rem;">
+                    <i class="fa-solid fa-xmark"></i> Batal / Isi Manual
+                </button>
+                <button type="button" id="btn_apply_ktp" class="btn btn-primary" onclick="applyKtpDataToForm()" disabled style="border-radius: 10px; padding: 9px 20px; font-size: 0.88rem; font-weight: 700; display: inline-flex; align-items: center; gap: 8px; opacity: 0.6; cursor: not-allowed; background: #16a34a; border-color: #16a34a;">
+                    <i class="fa-solid fa-check"></i> Gunakan Data Ini & Lanjut
+                </button>
+            </div>
         </div>
     </div>
 </div>
@@ -2216,9 +2463,11 @@ maxNativeZoom: 21,
     });
     function openAddOrderModal() {
         document.getElementById('addOrderModal').classList.add('active');
+        openKtpScanModal();
     }
 
     function closeAddOrderModal() {
+        cancelKtpScan();
         document.getElementById('addOrderModal').classList.remove('active');
     }
 
@@ -2304,4 +2553,748 @@ maxNativeZoom: 21,
             });
     }
 </script>
+
+    <!-- Tesseract OCR Library -->
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+    <script>
+    let ktpCameraStream = null;
+    let currentFacingMode = 'environment';
+    let currentKtpSource = 'none';
+    window.currentKtpFile = null;
+    window.ktpRotation = 0;
+    window.lastRawSourceImg = null;
+
+    function openKtpScanModal() {
+        const modal = document.getElementById('ktpScannerModal');
+        if (modal) {
+            modal.classList.add('active');
+            window.ktpRotation = 0;
+            const srcSec = document.getElementById('ktp_source_selection');
+            if (srcSec) srcSec.style.display = 'block';
+
+            if (window.innerWidth >= 992) {
+                switchKtpSource('camera');
+            } else {
+                switchKtpSource('none');
+            }
+        }
+    }
+
+    function cancelKtpScan() {
+        stopKtpCamera();
+        const scannerModal = document.getElementById('ktpScannerModal');
+        if (scannerModal) {
+            scannerModal.classList.remove('active');
+        }
+        const addModal = document.getElementById('addOrderModal');
+        if (addModal && !addModal.classList.contains('active')) {
+            addModal.classList.add('active');
+        }
+    }
+
+    function switchKtpSource(source) {
+        currentKtpSource = source;
+        const btnCamera = document.getElementById('tab_scan_camera');
+        const btnUpload = document.getElementById('tab_scan_upload');
+        const panelCamera = document.getElementById('ktp_panel_camera');
+        const panelUpload = document.getElementById('ktp_panel_upload');
+        const previewSec = document.getElementById('ktp_preview_section');
+
+        if (previewSec && previewSec.style.display !== 'none') {
+            return;
+        }
+
+        if (source === 'camera') {
+            if (btnCamera) btnCamera.classList.add('active');
+            if (btnUpload) btnUpload.classList.remove('active');
+            if (panelCamera) panelCamera.style.display = 'block';
+            if (panelUpload) panelUpload.style.display = 'none';
+            initKtpCamera();
+        } else if (source === 'upload') {
+            if (btnCamera) btnCamera.classList.remove('active');
+            if (btnUpload) btnUpload.classList.add('active');
+            if (panelCamera) panelCamera.style.display = 'none';
+            if (panelUpload) panelUpload.style.display = 'block';
+            stopKtpCamera();
+        } else {
+            if (btnCamera) btnCamera.classList.remove('active');
+            if (btnUpload) btnUpload.classList.remove('active');
+            if (panelCamera) panelCamera.style.display = 'none';
+            if (panelUpload) panelUpload.style.display = 'none';
+            stopKtpCamera();
+        }
+    }
+
+    async function initKtpCamera() {
+        stopKtpCamera();
+        const video = document.getElementById('ktp_video');
+        const errBox = document.getElementById('ktp_camera_error');
+        const errMsg = document.getElementById('ktp_camera_error_msg');
+        const guideFrame = document.getElementById('ktp_guide_frame');
+
+        if (errBox) errBox.style.display = 'none';
+        if (guideFrame) guideFrame.style.display = 'flex';
+
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            if (errBox && errMsg) {
+                errMsg.textContent = 'Browser ini tidak mendukung akses kamera langsung. Silakan gunakan tombol Buka Kamera HP di atas.';
+                errBox.style.display = 'flex';
+            }
+            return;
+        }
+
+        try {
+            const constraints = {
+                video: {
+                    facingMode: { ideal: currentFacingMode },
+                    width: { min: 1280, ideal: 1920 },
+                    height: { min: 720, ideal: 1080 }
+                },
+                audio: false
+            };
+
+            let stream;
+            try {
+                stream = await navigator.mediaDevices.getUserMedia(constraints);
+            } catch (fallbackErr) {
+                stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+            }
+
+            ktpCameraStream = stream;
+            if (video) {
+                video.srcObject = stream;
+                await video.play();
+
+                const track = stream.getVideoTracks()[0];
+                if (track && track.applyConstraints) {
+                    try {
+                        await track.applyConstraints({
+                            advanced: [{ focusMode: 'continuous' }]
+                        });
+                    } catch (e) {}
+                }
+            }
+        } catch (err) {
+            console.error('KTP Camera Error:', err);
+            if (errBox && errMsg) {
+                errMsg.textContent = 'Gagal mengakses kamera: ' + (err.message || 'Izin kamera ditolak.');
+                errBox.style.display = 'flex';
+            }
+        }
+    }
+
+    function stopKtpCamera() {
+        if (ktpCameraStream) {
+            ktpCameraStream.getTracks().forEach(track => track.stop());
+            ktpCameraStream = null;
+        }
+        const video = document.getElementById('ktp_video');
+        if (video) video.srcObject = null;
+    }
+
+    function toggleCameraFacing() {
+        currentFacingMode = (currentFacingMode === 'environment') ? 'user' : 'environment';
+        initKtpCamera();
+    }
+
+    function captureKtpPhoto() {
+        const video = document.getElementById('ktp_video');
+        if (!video || !video.videoWidth) {
+            alert('Kamera belum siap atau tidak aktif. Silakan tunggu atau gunakan tombol Kamera HP.');
+            return;
+        }
+
+        const guide = document.getElementById('ktp_guide_frame');
+        let cropX = 0, cropY = 0, cropW = video.videoWidth, cropH = video.videoHeight;
+
+        if (guide && video.clientWidth && video.clientHeight) {
+            const videoRect = video.getBoundingClientRect();
+            const guideRect = guide.getBoundingClientRect();
+
+            const scaleX = video.videoWidth / videoRect.width;
+            const scaleY = video.videoHeight / videoRect.height;
+
+            const relX = Math.max(0, guideRect.left - videoRect.left);
+            const relY = Math.max(0, guideRect.top - videoRect.top);
+            const relW = Math.min(videoRect.width - relX, guideRect.width);
+            const relH = Math.min(videoRect.height - relY, guideRect.height);
+
+            cropX = Math.round(relX * scaleX);
+            cropY = Math.round(relY * scaleY);
+            cropW = Math.round(relW * scaleX);
+            cropH = Math.round(relH * scaleY);
+        }
+
+        const canvas = document.createElement('canvas');
+        canvas.width = cropW;
+        canvas.height = cropH;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(video, cropX, cropY, cropW, cropH, 0, 0, cropW, cropH);
+
+        canvas.toBlob(function(blob) {
+            const file = new File([blob], "ktp_scan_" + Date.now() + ".jpg", { type: "image/jpeg" });
+            window.currentKtpFile = file;
+
+            const img = document.getElementById('ktp_captured_img');
+            const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
+            if (img) img.src = dataUrl;
+
+            // Hide source selection buttons so preview and results are immediately visible without scrolling
+            const srcSec = document.getElementById('ktp_source_selection');
+            if (srcSec) srcSec.style.display = 'none';
+            document.getElementById('ktp_panel_camera').style.display = 'none';
+            document.getElementById('ktp_preview_section').style.display = 'block';
+            stopKtpCamera();
+
+            const tempImg = new Image();
+            tempImg.onload = function() {
+                window.lastRawSourceImg = tempImg;
+                window.ktpRotation = 0;
+                const processedCanvas = preprocessKtpCanvas(tempImg, 0);
+                processKtpOcr(processedCanvas);
+            };
+            tempImg.src = dataUrl;
+        }, 'image/jpeg', 0.95);
+    }
+
+    function handleKtpFileSelected(input) {
+        if (input.files && input.files[0]) {
+            const file = input.files[0];
+            window.currentKtpFile = file;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.getElementById('ktp_captured_img');
+                img.src = e.target.result;
+
+                const srcSec = document.getElementById('ktp_source_selection');
+                if (srcSec) srcSec.style.display = 'none';
+                document.getElementById('ktp_panel_camera').style.display = 'none';
+                document.getElementById('ktp_panel_upload').style.display = 'none';
+                document.getElementById('ktp_preview_section').style.display = 'block';
+                stopKtpCamera();
+
+                const tempImg = new Image();
+                tempImg.onload = function() {
+                    window.lastRawSourceImg = tempImg;
+                    window.ktpRotation = 0;
+                    const processedCanvas = preprocessKtpCanvas(tempImg, 0);
+                    processKtpOcr(processedCanvas);
+                };
+                tempImg.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function rotateKtpPhoto() {
+        if (!window.lastRawSourceImg) return;
+        window.ktpRotation = (window.ktpRotation + 90) % 360;
+
+        const displayCanvas = document.createElement('canvas');
+        const origW = window.lastRawSourceImg.naturalWidth || window.lastRawSourceImg.width;
+        const origH = window.lastRawSourceImg.naturalHeight || window.lastRawSourceImg.height;
+
+        const isRotated = (window.ktpRotation % 180 !== 0);
+        displayCanvas.width = isRotated ? origH : origW;
+        displayCanvas.height = isRotated ? origW : origH;
+
+        const ctx = displayCanvas.getContext('2d');
+        ctx.translate(displayCanvas.width / 2, displayCanvas.height / 2);
+        ctx.rotate((window.ktpRotation * Math.PI) / 180);
+        ctx.drawImage(window.lastRawSourceImg, -origW / 2, -origH / 2);
+
+        const rotatedDataUrl = displayCanvas.toDataURL('image/jpeg', 0.95);
+        document.getElementById('ktp_captured_img').src = rotatedDataUrl;
+
+        displayCanvas.toBlob(function(blob) {
+            window.currentKtpFile = new File([blob], "ktp_scan_rot_" + Date.now() + ".jpg", { type: "image/jpeg" });
+        }, 'image/jpeg', 0.95);
+
+        const processedCanvas = preprocessKtpCanvas(window.lastRawSourceImg, window.ktpRotation);
+        processKtpOcr(processedCanvas);
+    }
+
+    function retakeKtpPhoto() {
+        document.getElementById('ktp_preview_section').style.display = 'none';
+        document.getElementById('ktp_result_card').style.display = 'none';
+        document.getElementById('ktp_ocr_progress_box').style.display = 'none';
+        document.getElementById('ktp_ocr_hint').style.display = 'none';
+        const applyBtn = document.getElementById('btn_apply_ktp');
+        applyBtn.disabled = true;
+        applyBtn.style.opacity = '0.6';
+        applyBtn.style.cursor = 'not-allowed';
+
+        window.ktpRotation = 0;
+        window.lastRawSourceImg = null;
+
+        const srcSec = document.getElementById('ktp_source_selection');
+        if (srcSec) srcSec.style.display = 'block';
+
+        if (currentKtpSource === 'camera') {
+            document.getElementById('ktp_panel_camera').style.display = 'block';
+            initKtpCamera();
+        } else if (currentKtpSource === 'upload') {
+            document.getElementById('ktp_panel_upload').style.display = 'block';
+            document.getElementById('ktp_file_input').value = '';
+        } else {
+            document.getElementById('ktp_native_cam').click();
+        }
+    }
+
+    function preprocessKtpCanvas(sourceElement, rotateDeg = 0) {
+        const canvas = document.createElement('canvas');
+        let origWidth = sourceElement.naturalWidth || sourceElement.videoWidth || sourceElement.width;
+        let origHeight = sourceElement.naturalHeight || sourceElement.videoHeight || sourceElement.height;
+
+        let width = (rotateDeg % 180 === 0) ? origWidth : origHeight;
+        let height = (rotateDeg % 180 === 0) ? origHeight : origWidth;
+
+        // Scale to optimal OCR resolution (max 1800px)
+        const maxDim = 1800;
+        if (width > maxDim || height > maxDim) {
+            if (width > height) {
+                height = Math.round((height * maxDim) / width);
+                width = maxDim;
+            } else {
+                width = Math.round((width * maxDim) / height);
+                height = maxDim;
+            }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+
+        if (rotateDeg !== 0) {
+            ctx.translate(width / 2, height / 2);
+            ctx.rotate((rotateDeg * Math.PI) / 180);
+            const drawW = (rotateDeg % 180 === 0) ? width : height;
+            const drawH = (rotateDeg % 180 === 0) ? height : width;
+            ctx.drawImage(sourceElement, -drawW / 2, -drawH / 2, drawW, drawH);
+            ctx.setTransform(1, 0, 0, 1, 0, 0);
+        } else {
+            ctx.drawImage(sourceElement, 0, 0, width, height);
+        }
+
+        try {
+            const imgData = ctx.getImageData(0, 0, width, height);
+            const d = imgData.data;
+
+            // Preserve full grayscale gradients with balanced contrast curve
+            // DO NOT convert to hard 1-bit black/white, because Leptonica/Tesseract internal engine
+            // uses grayscale anti-aliasing to distinguish character strokes under variable lighting!
+            for (let i = 0; i < d.length; i += 4) {
+                const r = d[i], g = d[i + 1], b = d[i + 2];
+                let gray = 0.299 * r + 0.587 * g + 0.114 * b;
+                
+                // Moderate contrast boost (1.35x)
+                gray = ((gray - 128) * 1.35) + 128;
+                if (gray < 0) gray = 0;
+                if (gray > 255) gray = 255;
+
+                d[i] = gray;
+                d[i + 1] = gray;
+                d[i + 2] = gray;
+            }
+            ctx.putImageData(imgData, 0, 0);
+        } catch (e) {
+            console.warn('Canvas pre-processing skipped:', e);
+        }
+
+        return canvas;
+    }
+
+    async function processKtpOcr(canvas) {
+        const progressBox = document.getElementById('ktp_ocr_progress_box');
+        const progressBar = document.getElementById('ktp_ocr_progress_bar');
+        const progressPercent = document.getElementById('ktp_ocr_percent');
+        const statusText = document.getElementById('ktp_ocr_status_text');
+        const resultCard = document.getElementById('ktp_result_card');
+        const applyBtn = document.getElementById('btn_apply_ktp');
+        const hintBox = document.getElementById('ktp_ocr_hint');
+
+        progressBox.style.display = 'block';
+        progressBar.style.width = '15%';
+        progressPercent.textContent = '15%';
+        statusText.textContent = 'Memindai teks e-KTP...';
+
+        try {
+            if (typeof Tesseract === 'undefined') {
+                throw new Error('Pustaka OCR Tesseract sedang memuat atau tidak tersedia.');
+            }
+
+            const { data: { text } } = await Tesseract.recognize(
+                canvas,
+                'ind+eng',
+                {
+                    logger: m => {
+                        if (m.status === 'recognizing text') {
+                            const pct = Math.round(m.progress * 100);
+                            progressBar.style.width = Math.max(20, pct) + '%';
+                            progressPercent.textContent = Math.max(20, pct) + '%';
+                            statusText.textContent = 'Mengekstrak karakter (' + pct + '%)...';
+                        }
+                    }
+                }
+            );
+
+            console.log('--- RAW OCR RESULT ---');
+            console.log(text);
+
+            progressBar.style.width = '100%';
+            progressPercent.textContent = '100%';
+            statusText.textContent = 'Pemindaian selesai!';
+
+            const parsed = parseKtpOcr(text);
+
+            document.getElementById('scan_nik_result').value = parsed.nik || '';
+            document.getElementById('scan_nama_result').value = parsed.nama || '';
+            document.getElementById('scan_alamat_result').value = parsed.alamat || '';
+
+            validateScanNikBadge(parsed.nik);
+
+            resultCard.style.display = 'block';
+            hintBox.style.display = 'block';
+
+            applyBtn.disabled = false;
+            applyBtn.style.opacity = '1';
+            applyBtn.style.cursor = 'pointer';
+
+        } catch (err) {
+            console.error('OCR Error:', err);
+            statusText.textContent = 'Pemindaian selesai (hasil dapat disesuaikan manual).';
+            progressBar.style.background = '#64748b';
+            
+            resultCard.style.display = 'block';
+            hintBox.style.display = 'block';
+            applyBtn.disabled = false;
+            applyBtn.style.opacity = '1';
+            applyBtn.style.cursor = 'pointer';
+        }
+    }
+
+    function cleanName(val) {
+        if (!val) return '';
+        let cleaned = val.trim();
+
+        // 1. Strip label patterns like 'Nama :', 'NAMA :', 'Narna :', 'N ama :', etc.
+        cleaned = cleaned.replace(/^(?:N[a|A|4][m|rn|M][a|A|4]|N\s*ama|Narna|Hama|Mama|Name)[\s:\.;\-_]*/i, '');
+        
+        // 2. Strip leading colon, dashes, symbols
+        cleaned = cleaned.replace(/^[:\s\-_\.]+/, '');
+
+        // 3. Strip trailing fields if merged (Tempat/Tgl Lahir, Gol Darah, etc.)
+        cleaned = cleaned.replace(/\b(?:TEMPAT|TGL|LAHIR|GOL|DARAH|JENIS|KELAMIN|AGAMA|WNI|ISLAM|NIK|KTP)\b.*$/i, '');
+
+        // 4. Tokenize and remove noise words
+        let tokens = cleaned.split(/\s+/).filter(Boolean);
+        let validTokens = [];
+        const noiseWords = ['ENG', 'INA', 'IDN', 'LAKI', 'PEREMPUAN', 'PROV', 'KAB', 'KOTA', 'REPUBLIK', 'INDONESIA'];
+        for (let t of tokens) {
+            let upper = t.toUpperCase().replace(/[^A-Z]/g, '');
+            if (noiseWords.includes(upper)) continue;
+            if (upper.length === 1 && validTokens.length > 0) continue;
+            validTokens.push(t);
+        }
+        cleaned = validTokens.join(' ');
+        cleaned = cleaned.replace(/[^a-zA-Z\s\.,'\-]/g, '').trim();
+
+        // 5. Fix common ligature misread: 'LI' read as 'U' (e.g. ULIK -> LILIK)
+        cleaned = cleaned.replace(/^ULIK([A-Z])/i, 'LILIK $1').replace(/^ULIK\b/i, 'LILIK');
+
+        return cleaned;
+    }
+
+    function extractNama(lines, nikLineIdx) {
+        // Strategy 1: Look for explicit 'Nama' label on any line
+        const namaLabelRegex = /(?:N[a|A|4][m|rn|M][a|A|4]|N\s*ama|Narna|Hama|Mama|Name)[\s:\.;\-_]*/i;
+        for (let i = 0; i < lines.length; i++) {
+            let line = lines[i].trim();
+            if (namaLabelRegex.test(line)) {
+                let extracted = cleanName(line);
+                if (extracted.length >= 3) {
+                    return extracted;
+                }
+                // If the line only contained the label 'Nama :' with no value, check the NEXT line!
+                if (i + 1 < lines.length) {
+                    let nextLine = lines[i + 1].trim();
+                    if (!/tempat|tgl|lahir|jenis|alamat|nik|agama|prov/i.test(nextLine)) {
+                        let nextExtracted = cleanName(nextLine);
+                        if (nextExtracted.length >= 3) {
+                            return nextExtracted;
+                        }
+                    }
+                }
+            }
+        }
+
+        // Strategy 2: Positional detection between NIK and Tempat Lahir / Alamat
+        // In every Indonesian e-KTP, the name is strictly located after NIK and before Lahir/Alamat
+        if (nikLineIdx !== -1) {
+            for (let i = nikLineIdx + 1; i < Math.min(lines.length, nikLineIdx + 4); i++) {
+                let line = lines[i].trim();
+                // Skip pure digit lines or NIK residue
+                if (/^\d+$/.test(line.replace(/\s/g, ''))) continue;
+                // Stop if reached Tempat Lahir / Alamat / Jenis Kelamin
+                if (/tempat|tgl|lahir|jenis|kelamin|alamat|gol/i.test(line)) break;
+                
+                let candidate = cleanName(line);
+                if (candidate.length >= 3) {
+                    return candidate;
+                }
+            }
+        }
+
+        // Strategy 3: Look for line with colon that has a person's name format (2-4 uppercase words)
+        for (let i = 1; i < Math.min(lines.length, 7); i++) {
+            let line = lines[i].trim();
+            if (/tempat|tgl|lahir|jenis|alamat|nik|prov|kab|kota|agama/i.test(line)) continue;
+            if (/^\d+$/.test(line.replace(/\s/g, ''))) continue;
+            let candidate = cleanName(line);
+            if (candidate.length >= 3 && candidate.split(' ').length >= 1) {
+                return candidate;
+            }
+        }
+
+        return '';
+    }
+
+    function cleanAddressPart(val, type) {
+        if (!val) return '';
+        let cleaned = val.replace(/^[:\s\-_\+\.]+/, '').trim();
+
+        if (type === 'jalan') {
+            cleaned = cleaned.replace(/\s+[A-Z]{1,2}\s+\d.*$/, '');
+            cleaned = cleaned.replace(/[^\w\s\.,\/\-]/g, '').trim();
+        } else if (type === 'kelurahan' || type === 'kecamatan') {
+            let words = cleaned.split(/\s+/).filter(Boolean);
+            let validWords = [];
+            for (let w of words) {
+                let cleanW = w.replace(/[^A-Za-z]/g, '');
+                if (cleanW.length < 2) continue;
+                if (/^[a-z]+$/.test(w) && cleanW.length <= 3) continue;
+                if (validWords.length > 0 && cleanW.length <= 2) continue;
+                if (/^(AGAMA|STATUS|KAWIN|WNI|PEKERJAAN|BERLAKU)$/i.test(cleanW)) break;
+                validWords.push(cleanW.toUpperCase());
+                if (validWords.length >= 2) break;
+            }
+            cleaned = validWords.join(' ');
+        }
+        return cleaned;
+    }
+
+    function parseKtpOcr(rawText) {
+        let result = { nik: '', nama: '', alamat: '' };
+        if (!rawText) return result;
+
+        const lines = rawText.split('\n').map(l => l.trim()).filter(Boolean);
+
+        // 1. EXTRACT NIK (16 Digits)
+        let nikLineIdx = -1;
+        const digit16 = rawText.replace(/[^\d\s]/g, ' ').match(/\b\d{16}\b/);
+        if (digit16) {
+            result.nik = digit16[0];
+            nikLineIdx = lines.findIndex(l => l.includes(result.nik) || /N[I|!1l\s]*K/i.test(l));
+        } else {
+            for (let i = 0; i < lines.length; i++) {
+                let line = lines[i];
+                if (/N[I|!1l\s]*K/i.test(line)) {
+                    let clean = line.replace(/N[I|!1l\s]*K/i, '')
+                                    .replace(/[:\s\-=._]/g, '')
+                                    .replace(/[oO]/g, '0')
+                                    .replace(/[dD]/g, '0')
+                                    .replace(/[iIl|!]/g, '1')
+                                    .replace(/[bB]/g, '8')
+                                    .replace(/[sS]/g, '5')
+                                    .replace(/[zZ]/g, '2')
+                                    .replace(/\D/g, '');
+                    if (clean.length >= 16) {
+                        result.nik = clean.slice(0, 16);
+                        nikLineIdx = i;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (nikLineIdx === -1) {
+            nikLineIdx = lines.findIndex(l => /N[I|!1l\s]*K/i.test(l));
+        }
+
+        // 2. EXTRACT NAMA (Multi-strategy)
+        result.nama = extractNama(lines, nikLineIdx);
+
+        // 3. EXTRACT ALAMAT (Jalan, RT/RW, Kelurahan, Kecamatan)
+        let jalan = '';
+        let rtrw = '';
+        let kel = '';
+        let kec = '';
+
+        for (let i = 0; i < lines.length; i++) {
+            let line = lines[i];
+
+            if (!jalan && /(?:ALAMAT|Alamat|AL4MAT)[\s:\.;\-_]+/i.test(line)) {
+                let val = line.replace(/.*(?:ALAMAT|Alamat|AL4MAT)[\s:\.;\-_]+/i, '').trim();
+                jalan = cleanAddressPart(val, 'jalan');
+                if (!jalan && i + 1 < lines.length && !/rt|rw|kel|kec/i.test(lines[i + 1])) {
+                    jalan = cleanAddressPart(lines[i + 1], 'jalan');
+                }
+            }
+
+            if (!rtrw && /(?:RT[\s\/\.]*RW|RT\/RW|RTRW)[\s:\.;\-_]+/i.test(line)) {
+                let match = line.match(/(\d{1,3}\s*[\/\-]\s*\d{1,3})/);
+                if (match) {
+                    rtrw = 'RT/RW ' + match[1].replace(/\s+/g, '');
+                }
+            }
+
+            if (!kel && /(?:Kel[\/\s\.]*Desa|Kelurahan[\/\s\.]*Desa|Kelurahan|Desa)[\s:\.;\-_]+/i.test(line)) {
+                let val = line.replace(/.*(?:Kel[\/\s\.]*Desa|Kelurahan[\/\s\.]*Desa|Kelurahan|Desa)[\s:\.;\-_]+/i, '').trim();
+                let cleanedKel = cleanAddressPart(val, 'kelurahan');
+                if (cleanedKel) kel = 'Kel. ' + cleanedKel;
+            }
+
+            if (!kec && /(?:Kecamatan|Kec)[\s:\.;\-_]+/i.test(line)) {
+                let val = line.replace(/.*(?:Kecamatan|Kec)[\s:\.;\-_]+/i, '').trim();
+                let cleanedKec = cleanAddressPart(val, 'kecamatan');
+                if (cleanedKec) kec = 'Kec. ' + cleanedKec;
+            }
+        }
+
+        let alamatParts = [jalan, rtrw, kel, kec].filter(Boolean);
+        result.alamat = alamatParts.join(', ');
+
+        return result;
+    }
+
+    function validateScanNikBadge(nik) {
+        const badge = document.getElementById('scan_nik_badge');
+        if (!badge) return;
+        const cleanNik = (nik || '').replace(/\D/g, '');
+        if (cleanNik.length === 16) {
+            badge.textContent = '✓ 16 Digit';
+            badge.style.background = '#dcfce7';
+            badge.style.color = '#15803d';
+        } else if (cleanNik.length > 0) {
+            badge.textContent = cleanNik.length + ' Digit';
+            badge.style.background = '#fef3c7';
+            badge.style.color = '#b45309';
+        } else {
+            badge.textContent = 'Belum terdeteksi';
+            badge.style.background = '#fee2e2';
+            badge.style.color = '#b91c1c';
+        }
+    }
+
+    function applyKtpDataToForm() {
+        const nik = document.getElementById('scan_nik_result').value.trim();
+        const nama = document.getElementById('scan_nama_result').value.trim();
+        const alamat = document.getElementById('scan_alamat_result').value.trim();
+
+        if (nik) document.getElementById('nik_modal').value = nik;
+        if (nama) document.getElementById('nama_modal').value = nama;
+        if (alamat) document.getElementById('alamat_ktp_modal').value = alamat;
+
+        if (window.currentKtpFile) {
+            try {
+                const dt = new DataTransfer();
+                dt.items.add(window.currentKtpFile);
+                const fileInput = document.getElementById('foto_ktp_modal');
+                fileInput.files = dt.files;
+            } catch (err) {
+                console.warn('DataTransfer not supported:', err);
+            }
+            updateKtpInputPreview(window.currentKtpFile);
+        }
+
+        stopKtpCamera();
+        const scannerModal = document.getElementById('ktpScannerModal');
+        if (scannerModal) scannerModal.classList.remove('active');
+
+        const addModal = document.getElementById('addOrderModal');
+        if (addModal) addModal.classList.add('active');
+
+        const telpInput = document.getElementById('no_telp_modal');
+        if (telpInput) telpInput.focus();
+
+        showKtpToast('Data e-KTP berhasil diterapkan ke formulir!');
+    }
+
+    function updateKtpInputPreview(file) {
+        const container = document.getElementById('ktp_preview_container');
+        const img = document.getElementById('ktp_preview_img');
+        if (container && img && file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                img.src = e.target.result;
+                container.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function showKtpToast(message) {
+        const toast = document.createElement('div');
+        toast.style.position = 'fixed';
+        toast.style.bottom = '24px';
+        toast.style.right = '24px';
+        toast.style.background = '#1e293b';
+        toast.style.color = '#f8fafc';
+        toast.style.padding = '12px 20px';
+        toast.style.borderRadius = '10px';
+        toast.style.boxShadow = '0 10px 25px -5px rgba(0,0,0,0.3)';
+        toast.style.zIndex = '10050';
+        toast.style.fontSize = '0.9rem';
+        toast.style.display = 'flex';
+        toast.style.alignItems = 'center';
+        toast.style.gap = '10px';
+        toast.style.animation = 'fadeIn 0.3s ease';
+        toast.innerHTML = '<i class="fa-solid fa-circle-check" style="color: #4ade80; font-size: 1.1rem;"></i> <span>' + message + '</span>';
+        document.body.appendChild(toast);
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transition = 'opacity 0.5s ease';
+            setTimeout(() => toast.remove(), 500);
+        }, 4000);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const nikInput = document.getElementById('scan_nik_result');
+        if (nikInput) {
+            nikInput.addEventListener('input', function() {
+                validateScanNikBadge(this.value);
+            });
+        }
+
+        const dropzone = document.getElementById('ktp_dropzone');
+        if (dropzone) {
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropzone.addEventListener(eventName, (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    dropzone.style.borderColor = '#4f46e5';
+                    dropzone.style.background = '#eef2ff';
+                }, false);
+            });
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropzone.addEventListener(eventName, (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    dropzone.style.borderColor = '#cbd5e1';
+                    dropzone.style.background = '#f8fafc';
+                }, false);
+            });
+            dropzone.addEventListener('drop', (e) => {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                if (files && files.length > 0) {
+                    const input = document.getElementById('ktp_file_input');
+                    input.files = files;
+                    handleKtpFileSelected(input);
+                }
+            }, false);
+        }
+    });
+    </script>
 @endsection

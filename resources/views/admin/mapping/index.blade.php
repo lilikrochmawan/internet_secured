@@ -439,6 +439,79 @@
         </form>
     </div>
 </div>
+
+<!-- Modal Edit ODC Terhubung untuk ODP -->
+<div id="editOdpOdcModal" class="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 9999; justify-content: center; align-items: center;">
+    <div style="background: white; border-radius: 12px; padding: 24px; width: min(440px, 92%); box-shadow: 0 10px 25px rgba(0,0,0,0.15);">
+        <h3 style="margin-top: 0; margin-bottom: 16px; font-family: 'Outfit', sans-serif; display: flex; align-items: center; gap: 8px; color: #1e293b;">
+            <i class="fa-solid fa-server" style="color: #2563eb;"></i>
+            Ubah ODC Terhubung
+        </h3>
+        <p style="font-size: 0.9rem; color: #64748b; margin-bottom: 20px;">
+            ODP: <strong id="edit_odp_nama_title" style="color: #10b981;">-</strong>
+        </p>
+        
+        <form id="editOdpOdcForm">
+            @csrf
+            <input type="hidden" name="id_odp" id="edit_odp_odc_id_odp">
+            
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label style="display: block; font-weight: 500; margin-bottom: 8px; font-size: 0.9rem;">Pilih ODC Induk Terhubung:</label>
+                <select name="id_odc" id="edit_odp_odc_select" class="form-control" style="width: 100%;" required>
+                    <option value="">-- Pilih ODC --</option>
+                    @foreach($allOdcs as $o)
+                        <option value="{{ $o->id_odc }}">{{ $o->nama_odc }} ({{ ucfirst($o->jenis_odc ?? 'ODC') }} - {{ $o->perangkat_odc }})</option>
+                    @endforeach
+                </select>
+            </div>
+            
+            <div style="display: flex; justify-content: flex-end; gap: 12px;">
+                <button type="button" onclick="closeEditOdpOdcModal()" class="btn" style="background: #f1f5f9; color: #475569; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer;">Batal</button>
+                <button type="submit" id="btnSaveOdpOdc" class="btn btn-primary" style="padding: 8px 16px; border-radius: 8px; background: #2563eb;">
+                    <i class="fa-solid fa-save"></i> Simpan
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal Edit ODC Induk untuk ODC -->
+<div id="editOdcParentModal" class="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 9999; justify-content: center; align-items: center;">
+    <div style="background: white; border-radius: 12px; padding: 24px; width: min(440px, 92%); box-shadow: 0 10px 25px rgba(0,0,0,0.15);">
+        <h3 style="margin-top: 0; margin-bottom: 16px; font-family: 'Outfit', sans-serif; display: flex; align-items: center; gap: 8px; color: #1e293b;">
+            <i class="fa-solid fa-sitemap" style="color: #7c3aed;"></i>
+            Ubah ODC Induk
+        </h3>
+        <p style="font-size: 0.9rem; color: #64748b; margin-bottom: 20px;">
+            ODC: <strong id="edit_odc_nama_title" style="color: #2563eb;">-</strong>
+        </p>
+        
+        <form id="editOdcParentForm">
+            @csrf
+            <input type="hidden" name="id_odc" id="edit_odc_parent_id_odc">
+            
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label style="display: block; font-weight: 500; margin-bottom: 8px; font-size: 0.9rem;">Pilih ODC Induk:</label>
+                <select name="parent_id" id="edit_odc_parent_select" class="form-control" style="width: 100%;">
+                    <option value="">-- Tanpa Induk (Jadikan ODC Utama / Pusat) --</option>
+                    @foreach($allOdcs as $o)
+                        <option value="{{ $o->id_odc }}" id="opt_parent_odc_{{ $o->id_odc }}">{{ $o->nama_odc }} ({{ ucfirst($o->jenis_odc ?? 'ODC') }})</option>
+                    @endforeach
+                </select>
+                <small style="color: #64748b; font-size: 0.78rem; display: block; margin-top: 6px;">
+                    *Jika memilih ODC Induk, tipe otomatis Distribusi. Jika tanpa induk, otomatis ODC Utama.
+                </small>
+            </div>
+            
+            <div style="display: flex; justify-content: flex-end; gap: 12px;">
+                <button type="button" onclick="closeEditOdcParentModal()" class="btn" style="background: #f1f5f9; color: #475569; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer;">Batal</button>
+                <button type="submit" id="btnSaveOdcParent" class="btn btn-primary" style="padding: 8px 16px; border-radius: 8px; background: #7c3aed;">
+                    <i class="fa-solid fa-save"></i> Simpan
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 @endsection
 
 @section('scripts')
@@ -455,7 +528,22 @@
             width: '100%',
             allowClear: true
         });
+        $('#edit_odp_odc_select').select2({
+            dropdownParent: $('#editOdpOdcModal'),
+            placeholder: '-- Pilih ODC --',
+            width: '100%'
+        });
+        $('#edit_odc_parent_select').select2({
+            dropdownParent: $('#editOdcParentModal'),
+            placeholder: '-- Pilih ODC Induk --',
+            width: '100%'
+        });
     });
+
+    function escapeQuotes(str) {
+        if (!str) return '';
+        return String(str).replace(/'/g, "\\'");
+    }
 
     document.addEventListener("DOMContentLoaded", function () {
         initMasterMap();
@@ -577,9 +665,11 @@ maxNativeZoom: 21,
                         shadowSize: [41, 41]
                     })
                 }).bindPopup(`
-                    <div style="font-family:'Inter',sans-serif; font-size:0.85rem; line-height:1.4;">
+                    <div style="font-family:'Inter',sans-serif; font-size:0.85rem; line-height:1.4; min-width: 210px;">
                         <h4 style="font-family:'Outfit',sans-serif; margin:0 0 6px 0; color:#2563eb; font-size:0.95rem;">[ODC] ${o.nama_odc}</h4>
-                        <strong>Jenis ODC:</strong> <span style="font-weight:700;">${typeLabel}</span><br>
+                        <strong>Jenis ODC:</strong> <span style="font-weight:700;" id="odc-type-text-${o.id_odc}">${typeLabel}</span><br>
+                        <strong>ODC Induk:</strong> <span id="odc-parent-text-${o.id_odc}">${o.parent_nama_odc || (o.jenis_odc === 'utama' ? 'Pusat (Tidak menginduk)' : '-')}</span>
+                        <i class="fa-solid fa-pencil" style="color: #7c3aed; cursor: pointer; margin-left: 6px; background: #ede9fe; padding: 3px 6px; border-radius: 4px; font-size: 0.75rem;" onclick="openEditOdcParentModal(${o.id_odc}, ${o.parent_id || 'null'}, '${escapeQuotes(o.nama_odc)}')" title="Ubah ODC Induk"></i><br>
                         <strong>Perangkat:</strong> ${o.perangkat_odc}<br>
                         <strong>Kapasitas Port:</strong> ${o.port_odc} Port<br>
                         <strong>Redaman:</strong> <span style="color:#ea580c; font-weight:600;">${o.redaman || '-'}</span><br>
@@ -627,9 +717,10 @@ maxNativeZoom: 21,
                         shadowSize: [41, 41]
                     })
                 }).bindPopup(`
-                    <div style="font-family:'Inter',sans-serif; font-size:0.85rem; line-height:1.4; min-width: 210px;">
+                    <div style="font-family:'Inter',sans-serif; font-size:0.85rem; line-height:1.4; min-width: 220px;">
                         <h4 style="font-family:'Outfit',sans-serif; margin:0 0 6px 0; color:#10b981; font-size:0.95rem;">[ODP] ${o.nama_odp}</h4>
-                        <strong>ODC Induk:</strong> ${o.nama_odc}<br>
+                        <strong>ODC Induk:</strong> <span id="odp-odc-text-${o.id_odp}">${o.nama_odc}</span>
+                        <i class="fa-solid fa-pencil" style="color: #2563eb; cursor: pointer; margin-left: 6px; background: #dbeafe; padding: 3px 6px; border-radius: 4px; font-size: 0.75rem;" onclick="openEditOdpOdcModal(${o.id_odp}, ${o.id_odc || 'null'}, '${escapeQuotes(o.nama_odp)}')" title="Ubah ODC Terhubung"></i><br>
                         <strong>Kapasitas Port:</strong> ${o.port_odp} Port<br>
                         <strong>Redaman ODP:</strong> <span style="color:#ea580c; font-weight:600;">${o.redaman}</span><br>
                         ${clientsHtml}
@@ -671,9 +762,9 @@ maxNativeZoom: 21,
 
         // 4. Draw Lines (Topology)
         if (document.getElementById('chk-topology').checked) {
-            // Draw ODC Utama -> ODC Distribusi lines
+            // Draw ODC Induk -> Sub ODC lines
             odcCoordinates.forEach(o => {
-                if (o.jenis_odc === 'distribusi' && o.parent_id) {
+                if (o.parent_id) {
                     var parentCoord = odcIdMap[o.parent_id];
                     if (parentCoord && document.getElementById('chk-odc').checked) {
                         var polyline = L.polyline([[o.lat, o.lng], parentCoord], {
@@ -701,7 +792,7 @@ maxNativeZoom: 21,
                         lineLayerGroup.addLayer(polyline);
                     }
                 } else {
-                    var odcCoord = odcMap[odp.nama_odc];
+                    var odcCoord = (odp.id_odc && odcIdMap[odp.id_odc]) ? odcIdMap[odp.id_odc] : odcMap[odp.nama_odc];
                     if (odcCoord && document.getElementById('chk-odc').checked && document.getElementById('chk-odp').checked) {
                         var polyline = L.polyline([[odp.lat, odp.lng], odcCoord], {
                             color: '#6366f1',
@@ -780,6 +871,146 @@ maxNativeZoom: 21,
             } else { alert(data.message || 'Gagal memperbarui ODP'); }
         })
         .finally(() => { btn.innerHTML = originalBtnText; btn.disabled = false; });
+    });
+
+    // Handlers Modal Edit ODC Terhubung untuk ODP
+    function openEditOdpOdcModal(idOdp, currentOdcId, namaOdp) {
+        document.getElementById('edit_odp_odc_id_odp').value = idOdp;
+        document.getElementById('edit_odp_nama_title').textContent = namaOdp;
+        if (typeof $ !== 'undefined') {
+            $('#edit_odp_odc_select').val(currentOdcId || '').trigger('change');
+        } else {
+            document.getElementById('edit_odp_odc_select').value = currentOdcId || '';
+        }
+        document.getElementById('editOdpOdcModal').style.display = 'flex';
+    }
+
+    function closeEditOdpOdcModal() {
+        document.getElementById('editOdpOdcModal').style.display = 'none';
+    }
+
+    document.getElementById('editOdpOdcForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        var form = this;
+        var btn = document.getElementById('btnSaveOdpOdc');
+        var originalBtnText = btn.innerHTML;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...';
+        btn.disabled = true;
+
+        fetch("{{ route('admin.mapping.update_odp_odc') }}", {
+            method: 'POST',
+            body: new FormData(form),
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                var idOdp = document.getElementById('edit_odp_odc_id_odp').value;
+                var textEl = document.getElementById('odp-odc-text-' + idOdp);
+                if (textEl) {
+                    textEl.textContent = data.new_odc_name;
+                    textEl.style.backgroundColor = '#dbeafe';
+                    setTimeout(() => { textEl.style.backgroundColor = 'transparent'; }, 2000);
+                }
+                var item = odpCoordinates.find(x => x.id_odp == idOdp);
+                if (item) {
+                    item.id_odc = data.id_odc;
+                    item.nama_odc = data.new_odc_name;
+                    item.has_ratio = 0;
+                    item.parent_odp_name = null;
+                }
+                renderMapElements();
+                closeEditOdpOdcModal();
+            } else {
+                alert(data.message || 'Gagal memperbarui ODC terhubung');
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            alert('Terjadi kesalahan koneksi.');
+        })
+        .finally(() => {
+            btn.innerHTML = originalBtnText;
+            btn.disabled = false;
+        });
+    });
+
+    // Handlers Modal Edit ODC Induk untuk ODC
+    function openEditOdcParentModal(idOdc, currentParentId, namaOdc) {
+        document.getElementById('edit_odc_parent_id_odc').value = idOdc;
+        document.getElementById('edit_odc_nama_title').textContent = namaOdc;
+
+        // Hide self from parent options
+        var parentSelect = document.getElementById('edit_odc_parent_select');
+        Array.from(parentSelect.options).forEach(opt => {
+            if (opt.value == idOdc) {
+                opt.style.display = 'none';
+                opt.disabled = true;
+            } else {
+                opt.style.display = 'block';
+                opt.disabled = false;
+            }
+        });
+
+        if (typeof $ !== 'undefined') {
+            $('#edit_odc_parent_select').val(currentParentId || '').trigger('change');
+        } else {
+            parentSelect.value = currentParentId || '';
+        }
+        document.getElementById('editOdcParentModal').style.display = 'flex';
+    }
+
+    function closeEditOdcParentModal() {
+        document.getElementById('editOdcParentModal').style.display = 'none';
+    }
+
+    document.getElementById('editOdcParentForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        var form = this;
+        var btn = document.getElementById('btnSaveOdcParent');
+        var originalBtnText = btn.innerHTML;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...';
+        btn.disabled = true;
+
+        fetch("{{ route('admin.mapping.update_odc_parent') }}", {
+            method: 'POST',
+            body: new FormData(form),
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                var idOdc = document.getElementById('edit_odc_parent_id_odc').value;
+                var textEl = document.getElementById('odc-parent-text-' + idOdc);
+                if (textEl) {
+                    textEl.textContent = data.new_parent_name;
+                    textEl.style.backgroundColor = '#ede9fe';
+                    setTimeout(() => { textEl.style.backgroundColor = 'transparent'; }, 2000);
+                }
+                var typeEl = document.getElementById('odc-type-text-' + idOdc);
+                if (typeEl) {
+                    typeEl.textContent = data.jenis_odc === 'utama' ? 'Utama (Main)' : 'Distribusi';
+                }
+                var item = odcCoordinates.find(x => x.id_odc == idOdc);
+                if (item) {
+                    item.parent_id = data.parent_id;
+                    item.parent_nama_odc = data.parent_nama_odc;
+                    item.jenis_odc = data.jenis_odc;
+                }
+                renderMapElements();
+                closeEditOdcParentModal();
+            } else {
+                alert(data.message || 'Gagal memperbarui ODC Induk');
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            alert('Terjadi kesalahan koneksi.');
+        })
+        .finally(() => {
+            btn.innerHTML = originalBtnText;
+            btn.disabled = false;
+        });
     });
 
     function setupGeolocation() {

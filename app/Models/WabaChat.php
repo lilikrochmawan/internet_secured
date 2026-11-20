@@ -12,6 +12,7 @@ class WabaChat extends Model
     protected $table = 'tbl_waba_chat';
 
     protected $fillable = [
+        'message_id',
         'no_telp',
         'nama',
         'pesan',

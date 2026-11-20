@@ -33,6 +33,8 @@ class Tagihan extends Model
         'item_tagihan',
         'jatuh_tempo',
         'metode_pembayaran',
+        'bayar_saldo',
+        'bayar_non_saldo',
     ];
 
     public function pelanggan()

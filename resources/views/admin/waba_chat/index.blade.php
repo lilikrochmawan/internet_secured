@@ -289,8 +289,11 @@
 
 @section('content')
 <div class="content-header" style="margin-bottom: 16px;">
-    <div class="header-left">
+    <div class="header-left" style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
         <h1 class="page-title"><i class="fa-brands fa-whatsapp"></i> Chat WABA Webhook</h1>
+        <button type="button" id="toggle-sound-btn" onclick="toggleSoundNotification()" class="btn btn-sm btn-outline-success" style="border-radius: 20px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; background: #fff; border: 1px solid #10b981; color: #059669; cursor: pointer; transition: all 0.2s;" title="Klik untuk mengaktifkan / menonaktifkan suara notifikasi">
+            <i class="fa-solid fa-volume-high" id="sound-icon"></i> <span id="sound-text">Suara: Aktif</span>
+        </button>
     </div>
 </div>
 
@@ -381,6 +384,90 @@
 
 @section('scripts')
 <script>
+    // Audio notification & Web Audio API
+    let soundEnabled = localStorage.getItem('waba_chat_sound') !== 'disabled';
+    let audioCtx = null;
+
+    function initAudioContext() {
+        if (!audioCtx) {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (audioCtx && audioCtx.state === 'suspended') {
+            audioCtx.resume();
+        }
+    }
+
+    function toggleSoundNotification() {
+        soundEnabled = !soundEnabled;
+        localStorage.setItem('waba_chat_sound', soundEnabled ? 'enabled' : 'disabled');
+        updateSoundButtonUI();
+        if (soundEnabled) {
+            initAudioContext();
+            playWhatsAppSound();
+        }
+    }
+
+    function updateSoundButtonUI() {
+        const btn = document.getElementById('toggle-sound-btn');
+        const icon = document.getElementById('sound-icon');
+        const text = document.getElementById('sound-text');
+        if (!btn || !icon || !text) return;
+
+        if (soundEnabled) {
+            btn.style.borderColor = '#10b981';
+            btn.style.color = '#059669';
+            icon.className = 'fa-solid fa-volume-high';
+            text.innerText = 'Suara: Aktif';
+        } else {
+            btn.style.borderColor = '#9ca3af';
+            btn.style.color = '#6b7280';
+            icon.className = 'fa-solid fa-volume-xmark';
+            text.innerText = 'Suara: Senyap';
+        }
+    }
+
+    function playWhatsAppSound() {
+        if (!soundEnabled) return;
+        try {
+            initAudioContext();
+            if (!audioCtx) return;
+
+            const now = audioCtx.currentTime;
+
+            // Note 1 (800Hz - soft bell ding)
+            const osc1 = audioCtx.createOscillator();
+            const gain1 = audioCtx.createGain();
+            osc1.type = 'sine';
+            osc1.frequency.setValueAtTime(800, now);
+            gain1.gain.setValueAtTime(0.25, now);
+            gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+            osc1.connect(gain1);
+            gain1.connect(audioCtx.destination);
+            osc1.start(now);
+            osc1.stop(now + 0.12);
+
+            // Note 2 (1200Hz - bright bell chime)
+            const osc2 = audioCtx.createOscillator();
+            const gain2 = audioCtx.createGain();
+            osc2.type = 'sine';
+            osc2.frequency.setValueAtTime(1200, now + 0.08);
+            gain2.gain.setValueAtTime(0.35, now + 0.08);
+            gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+            osc2.connect(gain2);
+            gain2.connect(audioCtx.destination);
+            osc2.start(now + 0.08);
+            osc2.stop(now + 0.5);
+        } catch (e) {
+            console.error('Audio playback error:', e);
+        }
+    }
+
+    // Unlock Audio Context on first user click anywhere
+    document.addEventListener('click', function unlockAudio() {
+        initAudioContext();
+        document.removeEventListener('click', unlockAudio);
+    }, { once: true });
+
     function parseChatDate(dateString) {
         if (!dateString) return new Date();
         const safe = typeof dateString === 'string' ? dateString.replace(' ', 'T') : dateString;
@@ -441,10 +528,35 @@
     }
 
     let lastChatDate = null;
+    let currentMaxChatId = 0;
+    let lastIncomingId = {{ \App\Models\WabaChat::where('tipe', 'incoming')->max('id') ?? 0 }};
+    let isPolling = false;
 
     function scrollToBottom() {
         const messagesDiv = document.getElementById('chat-messages');
         messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+
+    function renderMessageStatus(msg) {
+        if (msg.tipe !== 'outgoing') {
+            return '';
+        }
+
+        const status = (msg.status || 'sent').toLowerCase();
+
+        if (status === 'read') {
+            // Centang 2 Biru (Sudah dibaca)
+            return '<i class="fa-solid fa-check-double" style="color: #53bdeb; margin-left: 5px; font-size: 0.85rem;" title="Sudah Dibaca"></i>';
+        } else if (status === 'delivered') {
+            // Centang 2 Abu-abu (Terkirim & Diterima di perangkat)
+            return '<i class="fa-solid fa-check-double" style="color: #8696a0; margin-left: 5px; font-size: 0.85rem;" title="Terkirim & Diterima"></i>';
+        } else if (status === 'failed') {
+            // Gagal Terkirim
+            return '<i class="fa-solid fa-circle-exclamation" style="color: #ef4444; margin-left: 5px; font-size: 0.8rem;" title="Gagal Terkirim"></i>';
+        } else {
+            // Centang 1 Abu-abu (Pesan terkirim, belum diterima)
+            return '<i class="fa-solid fa-check" style="color: #8696a0; margin-left: 5px; font-size: 0.85rem;" title="Pesan Terkirim (Belum Diterima)"></i>';
+        }
     }
 
     function appendMessage(msg) {
@@ -470,9 +582,14 @@
         }
         
         const safePesan = (msg.pesan || '').replace(/\\n/g, '<br>');
-        bubble.innerHTML = `${mediaHtml}<div style="word-wrap: break-word;">${safePesan}</div><span class="msg-time" title="${formatFullDateTime(msg.created_at)}"><i class="fa-regular fa-clock" style="font-size: 0.65rem; opacity: 0.6; margin-right: 3px;"></i>${formatTimeWithDate(msg.created_at)}</span>`;
+        const statusHtml = renderMessageStatus(msg);
+        bubble.innerHTML = `${mediaHtml}<div style="word-wrap: break-word;">${safePesan}</div><span class="msg-time" title="${formatFullDateTime(msg.created_at)}"><i class="fa-regular fa-clock" style="font-size: 0.65rem; opacity: 0.6; margin-right: 3px;"></i>${formatTimeWithDate(msg.created_at)}<span class="msg-status-icon" id="msg-status-${msg.id}">${statusHtml}</span></span>`;
         
         document.getElementById('chat-messages').appendChild(bubble);
+
+        if (msg.id && msg.id > currentMaxChatId) {
+            currentMaxChatId = msg.id;
+        }
     }
 
     function closeChatMobile() {
@@ -485,12 +602,13 @@
         
         // Highlight active contact
         document.querySelectorAll('.contact-item').forEach(el => el.classList.remove('active'));
-        document.getElementById('contact-' + no_telp).classList.add('active');
+        const activeItem = document.getElementById('contact-' + no_telp);
+        if (activeItem) activeItem.classList.add('active');
         
         document.getElementById('no-chat-placeholder').style.display = 'none';
         document.getElementById('chat-pane').style.display = 'flex';
         document.getElementById('current_no_telp').value = no_telp;
-        document.getElementById('chat-messages').innerHTML = '<div style="text-align:center; padding: 20px; color:#6b7280;">Memuat riwayat...</div>';
+        document.getElementById('chat-messages').innerHTML = '<div style="text-align:center; padding: 20px; color:#6b7280;"><i class="fa-solid fa-spinner fa-spin"></i> Memuat riwayat...</div>';
         
         // Remove unread badge visually since we are reading it
         const badge = document.getElementById('badge-' + no_telp);
@@ -507,6 +625,7 @@
                     
                     document.getElementById('chat-messages').innerHTML = '';
                     lastChatDate = null;
+                    currentMaxChatId = 0;
                     data.messages.forEach(msg => {
                         appendMessage(msg);
                     });
@@ -584,7 +703,113 @@
             alert('Terjadi kesalahan jaringan');
         });
     }
-    
+
+    // Auto-polling for real-time refresh & notifications
+    function pollWabaUpdates() {
+        if (isPolling) return;
+        isPolling = true;
+
+        const activePhone = document.getElementById('current_no_telp').value;
+        const url = `{{ route('admin.waba_chat.poll') }}?no_telp=${encodeURIComponent(activePhone)}&last_id=${currentMaxChatId}&last_incoming_id=${lastIncomingId}`;
+
+        fetch(url)
+            .then(res => res.json())
+            .then(data => {
+                isPolling = false;
+                if (data.status !== 'success') return;
+
+                // 1. Play sound notification if new incoming message arrives
+                if (data.has_new_incoming) {
+                    playWhatsAppSound();
+                }
+                if (data.latest_incoming_id) {
+                    lastIncomingId = data.latest_incoming_id;
+                }
+
+                // 2. Update sidebar badge
+                updateSidebarBadge(data.total_unread);
+
+                // 3. Update Left Contact List
+                if (data.contacts && data.contacts.length > 0) {
+                    renderContactList(data.contacts, activePhone);
+                }
+
+                // 4. Update Chat Room in real-time
+                if (activePhone && data.new_messages && data.new_messages.length > 0) {
+                    data.new_messages.forEach(msg => {
+                        appendMessage(msg);
+                    });
+                    scrollToBottom();
+                }
+
+                // 5. Update outgoing message checkmark statuses (centang 1 -> 2 -> biru)
+                if (activePhone && data.updated_statuses && data.updated_statuses.length > 0) {
+                    data.updated_statuses.forEach(item => {
+                        const el = document.getElementById(`msg-status-${item.id}`);
+                        if (el) {
+                            el.innerHTML = renderMessageStatus({ tipe: 'outgoing', status: item.status });
+                        }
+                    });
+                }
+            })
+            .catch(err => {
+                isPolling = false;
+            });
+    }
+
+    function renderContactList(contacts, activePhone) {
+        const listDiv = document.querySelector('.contact-list');
+        if (!listDiv) return;
+
+        let html = '';
+        contacts.forEach(c => {
+            const isActive = (c.no_telp === activePhone) ? 'active' : '';
+            const unreadBadge = (c.unread_count > 0 && c.no_telp !== activePhone) 
+                ? `<div class="unread-badge" id="badge-${c.no_telp}">${c.unread_count}</div>` 
+                : '';
+            
+            html += `
+                <div class="contact-item ${isActive}" onclick="loadChat('${c.no_telp}')" id="contact-${c.no_telp}">
+                    <div class="contact-name">
+                        <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 180px;" title="${c.nama || 'Tidak Dikenal'}">${c.nama || 'Tidak Dikenal'}</span>
+                        <span class="contact-time">${c.time_display || ''}</span>
+                    </div>
+                    <div class="contact-msg-row">
+                        <div class="contact-msg">${c.latest_pesan || ''}</div>
+                        ${unreadBadge}
+                    </div>
+                </div>
+            `;
+        });
+
+        listDiv.innerHTML = html;
+    }
+
+    function updateSidebarBadge(totalUnread) {
+        const sidebarLinks = document.querySelectorAll('.submenu-item a[href*="waba-chat"]');
+        sidebarLinks.forEach(link => {
+            let badge = link.querySelector('.badge-danger');
+            if (totalUnread > 0) {
+                if (!badge) {
+                    badge = document.createElement('span');
+                    badge.className = 'badge badge-danger';
+                    badge.style.cssText = 'margin-left: 5px; background-color: #dc3545; color: white; border-radius: 50%; padding: 3px 6px; font-size: 0.75rem;';
+                    link.appendChild(badge);
+                }
+                badge.innerText = totalUnread;
+            } else if (badge) {
+                badge.remove();
+            }
+        });
+    }
+
+    // Initialize UI and start auto-refresh interval
+    document.addEventListener('DOMContentLoaded', function() {
+        updateSoundButtonUI();
+        // Auto-refresh poll every 3 seconds
+        setInterval(pollWabaUpdates, 3000);
+    });
+
     // Handle Enter key in textarea
     document.getElementById('chat-input').addEventListener('keydown', function(e) {
         if (e.key === 'Enter' && !e.shiftKey) {

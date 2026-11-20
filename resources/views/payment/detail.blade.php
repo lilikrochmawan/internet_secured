@@ -308,6 +308,56 @@
                 </div>
             </div>
 
+                        <!-- Opsi Pembayaran Menggunakan Saldo Pelanggan -->
+            @php
+                $saldoTersedia = (int) ($saldo ?? ($pelanggan->saldo ?? 0));
+            @endphp
+            @if($saldoTersedia > 0)
+            <div class="section-card" id="saldoCardSection" style="margin-top: 20px; background: linear-gradient(135deg, #f5f3ff, #ede9fe); border: 2px solid #8b5cf6; border-radius: 20px; padding: 22px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div style="width: 44px; height: 44px; border-radius: 12px; background: #7c3aed; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.3rem;">
+                            <i class="fa-solid fa-wallet"></i>
+                        </div>
+                        <div>
+                            <strong style="color: #4c1d95; font-size: 1.05rem; display: block;">Saldo Akun Pelanggan</strong>
+                            <span style="font-size: 0.88rem; color: #6d28d9;">
+                                Saldo Anda: <strong style="color: #5b21b6;">Rp {{ number_format($saldoTersedia, 0, ',', '.') }}</strong>
+                            </span>
+                        </div>
+                    </div>
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; background: white; padding: 8px 16px; border-radius: 25px; border: 2px solid #8b5cf6; box-shadow: 0 2px 6px rgba(124,58,237,0.15);">
+                        <input type="checkbox" id="checkUseSaldo" name="use_saldo" value="1" style="width: 20px; height: 20px; accent-color: #7c3aed;" onchange="toggleSaldoUsage()">
+                        <span style="font-size: 0.9rem; font-weight: 700; color: #5b21b6;">Gunakan Saldo</span>
+                    </label>
+                </div>
+
+                <div id="saldoInputContainer" style="display: none; border-top: 1px dashed #c4b5fd; padding-top: 16px; margin-top: 14px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 8px;">
+                        <span style="font-size: 0.85rem; color: #4c1d95; font-weight: 700;">
+                            Nominal Saldo yang Dipotongkan:
+                        </span>
+                        <div style="display: flex; gap: 6px;">
+                            <button type="button" onclick="setSaldoMode('full')" style="padding: 4px 10px; border-radius: 8px; background: #7c3aed; color: white; border: none; font-size: 0.78rem; font-weight: 700; cursor: pointer;">
+                                Potong Penuh (Rp {{ number_format(min($saldoTersedia, $subtotal), 0, ',', '.') }})
+                            </button>
+                            <button type="button" onclick="setSaldoMode('half')" style="padding: 4px 10px; border-radius: 8px; background: #ede9fe; color: #6d28d9; border: 1px solid #c4b5fd; font-size: 0.78rem; font-weight: 700; cursor: pointer;">
+                                Potong Separuh (Rp {{ number_format(round(min($saldoTersedia, $subtotal) / 2), 0, ',', '.') }})
+                            </button>
+                        </div>
+                    </div>
+
+                    <div style="position: relative; max-width: 280px;">
+                        <span style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-weight: 700; color: #7c3aed;">Rp</span>
+                        <input type="number" id="inputSaldoDeduct" class="form-control" style="width: 100%; height: 42px; border-radius: 10px; border: 2px solid #8b5cf6; padding-left: 44px; padding-right: 14px; font-weight: 700; font-size: 1.05rem; color: #4c1d95; box-sizing: border-box;" min="0" max="{{ min($saldoTersedia, $subtotal) }}" value="{{ min($saldoTersedia, $subtotal) }}" oninput="updateAllCalculations()">
+                    </div>
+
+                    <div id="saldoStatusDesc" style="margin-top: 8px; font-size: 0.82rem; color: #6d28d9; line-height: 1.4;">
+                    </div>
+                </div>
+            </div>
+            @endif
+
             @if(($profile->admin_fee_type ?? 'flat') === 'payment_method')
             @php
                 $defaultSelected = 'qris';
@@ -321,7 +371,7 @@
                     }
                 }
             @endphp
-            <div class="section-card" style="margin-top: 20px;">
+            <div class="section-card" id="sectionPaymentMethods" style="margin-top: 20px;">
                 <h2>Pilih Metode Pembayaran</h2>
                 <div style="display: grid; gap: 12px; margin-top: 10px;">
                     @if(($profile->admin_fee_qris_status ?? 1) == 1)
@@ -388,7 +438,15 @@
                         <strong>{{ 'Rp ' . number_format($subtotal, 0, ',', '.') }}</strong>
                     </div>
                 @endif
-                <div class="summary-row">
+                <div class="summary-row" id="row-potongan-saldo" style="display: none; color: #7c3aed;">
+                    <span>Potongan Saldo Pelanggan:</span>
+                    <strong id="val-potongan-saldo">- Rp 0</strong>
+                </div>
+                <div class="summary-row" id="row-sisa-tagihan" style="display: none;">
+                    <span>Kekurangan Bayar Tagihan:</span>
+                    <strong id="val-sisa-tagihan">Rp 0</strong>
+                </div>
+                <div class="summary-row" id="row-admin-fee">
                     <span id="fee-name-label">
                         @if(($profile->admin_fee_type ?? 'flat') === 'flat')
                             Biaya Admin:
@@ -426,130 +484,140 @@
 @if(!$invoices->isEmpty())
     <script src="{{ $snapJsUrl }}" data-client-key="{{ $clientKey }}"></script>
     <script>
+        const subtotal = {{ $subtotal }};
+        const saldoTersedia = {{ $saldo ?? ($pelanggan->saldo ?? 0) }};
+        const feeType = '{{ $profile->admin_fee_type ?? 'flat' }}';
+        const showPpn = {{ $showPpn ? 'true' : 'false' }};
+        const ppnRate = {{ $ppnRate }};
+        const flatFee = {{ $profile->admin_fee_flat ?? 2000 }};
+        const qrisType = '{{ $profile->admin_fee_qris_type ?? 'percentage' }}';
+        const qrisVal = {{ $profile->admin_fee_qris_value ?? 0.70 }};
+        const vaFee = {{ $profile->admin_fee_va ?? 4000 }};
+        const retailFee = {{ $profile->admin_fee_retail ?? 3000 }};
+
         const payButton = document.getElementById('pay-button');
+        const checkUseSaldo = document.getElementById('checkUseSaldo');
+        const saldoInputContainer = document.getElementById('saldoInputContainer');
+        const inputSaldoDeduct = document.getElementById('inputSaldoDeduct');
+        const saldoStatusDesc = document.getElementById('saldoStatusDesc');
+        const sectionPaymentMethods = document.getElementById('sectionPaymentMethods');
 
-        payButton.addEventListener('click', function () {
-            payButton.disabled = true;
-            payButton.textContent = 'Menyiapkan pembayaran...';
+        const rowPotonganSaldo = document.getElementById('row-potongan-saldo');
+        const valPotonganSaldo = document.getElementById('val-potongan-saldo');
+        const rowSisaTagihan = document.getElementById('row-sisa-tagihan');
+        const valSisaTagihan = document.getElementById('val-sisa-tagihan');
+        const rowAdminFee = document.getElementById('row-admin-fee');
+        const feeNameLabel = document.getElementById('fee-name-label');
+        const feeAmountLabel = document.getElementById('fee-amount-label');
+        const totalPaymentLabel = document.getElementById('total-payment-label');
 
-            const chargeUrl = '{{ route("payment.charge") }}';
-            const dashboardUrl = '{{ route("dashboard") }}';
+        function formatRupiah(val) {
+            return 'Rp ' + Math.max(0, val).toLocaleString('id-ID');
+        }
 
-            const selectedMethodEl = document.querySelector('input[name="payment_method"]:checked');
-            const selectedMethod = selectedMethodEl ? selectedMethodEl.value : 'qris';
+        function toggleSaldoUsage() {
+            if (checkUseSaldo && checkUseSaldo.checked) {
+                if (saldoInputContainer) saldoInputContainer.style.display = 'block';
+                setSaldoMode('full');
+            } else {
+                if (saldoInputContainer) saldoInputContainer.style.display = 'none';
+                if (rowPotonganSaldo) rowPotonganSaldo.style.display = 'none';
+                if (rowSisaTagihan) rowSisaTagihan.style.display = 'none';
+                if (sectionPaymentMethods) sectionPaymentMethods.style.display = 'block';
+                if (rowAdminFee) rowAdminFee.style.display = 'flex';
+                updateAllCalculations();
+            }
+        }
 
-            fetch(chargeUrl, {
-                method: 'POST',
-                credentials: 'same-origin',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    'Accept': 'application/json',
-                },
-                body: JSON.stringify({
-                    payment_method: selectedMethod
-                })
-            })
-            .then(response => {
-                if (response.status === 401 || response.status === 419) {
-                    window.location.href = '{{ route("login") }}';
-                    throw new Error('Sesi Anda telah berakhir. Mengalihkan ke halaman login...');
+        function setSaldoMode(mode) {
+            if (!inputSaldoDeduct) return;
+            const maxUsable = Math.min(saldoTersedia, subtotal);
+            if (mode === 'full') {
+                inputSaldoDeduct.value = maxUsable;
+            } else if (mode === 'half') {
+                inputSaldoDeduct.value = Math.round(maxUsable / 2);
+            }
+            updateAllCalculations();
+        }
+
+        function updateAllCalculations() {
+            const isUsingSaldo = checkUseSaldo && checkUseSaldo.checked;
+            let saldoDeduct = 0;
+
+            if (isUsingSaldo && inputSaldoDeduct) {
+                const maxUsable = Math.min(saldoTersedia, subtotal);
+                saldoDeduct = parseInt(inputSaldoDeduct.value || 0);
+                if (saldoDeduct > maxUsable) {
+                    saldoDeduct = maxUsable;
+                    inputSaldoDeduct.value = maxUsable;
                 }
-                return response.json();
-            })
-            .then(data => {
-                if (data.token) {
-                    window.snap.pay(data.token, {
-                        onSuccess: function(result){
-                            window.location.href = dashboardUrl;
-                        },
-                        onPending: function(result){
-                            window.location.href = dashboardUrl;
-                        },
-                        onError: function(result){
-                            alert('Pembayaran gagal. Silakan coba lagi.');
-                            payButton.disabled = false;
-                            payButton.textContent = 'Lanjut Pembayaran →';
-                        },
-                        onClose: function(){
-                            payButton.disabled = false;
-                            payButton.textContent = 'Lanjut Pembayaran →';
-                        }
-                    });
-                } else {
-                    let errorText = data.error || 'Gagal membuat transaksi Midtrans.';
-                    if (data.message && data.message !== 'Unauthenticated.') {
-                        errorText += '\n' + data.message;
-                    }
-                    if (data.response) {
-                        errorText += '\n' + JSON.stringify(data.response);
-                    }
-                    throw new Error(errorText);
+                if (saldoDeduct < 0) {
+                    saldoDeduct = 0;
+                    inputSaldoDeduct.value = 0;
                 }
-            })
-            .catch(error => {
-                console.error('Midtrans charge error:', error);
-                alert(error.message || 'Terjadi kesalahan saat menghubungkan ke Midtrans.');
-                payButton.disabled = false;
-                payButton.textContent = 'Lanjut Pembayaran →';
-            });
-        });
-    </script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const subtotal = {{ $subtotal }};
-            const feeType = '{{ $profile->admin_fee_type ?? 'flat' }}';
-            const showPpn = {{ $showPpn ? 'true' : 'false' }};
-            const ppnAmount = {{ $ppnAmount }};
-            
-            // Flat settings
-            const flatFee = {{ $profile->admin_fee_flat ?? 2000 }};
-            
-            // QRIS settings
-            const qrisType = '{{ $profile->admin_fee_qris_type ?? 'percentage' }}';
-            const qrisVal = {{ $profile->admin_fee_qris_value ?? 0.70 }};
-            
-            // VA and Retail settings
-            const vaFee = {{ $profile->admin_fee_va ?? 4000 }};
-            const retailFee = {{ $profile->admin_fee_retail ?? 3000 }};
-
-            const feeNameLabel = document.getElementById('fee-name-label');
-            const feeAmountLabel = document.getElementById('fee-amount-label');
-            const totalPaymentLabel = document.getElementById('total-payment-label');
-
-            function formatRupiah(value) {
-                return 'Rp ' + value.toLocaleString('id-ID');
             }
 
-            function updatePaymentDetails() {
-                if (feeType === 'flat') {
-                    return; // No dynamic change if flat
+            const remainingBill = subtotal - saldoDeduct;
+            const isFullSaldo = (isUsingSaldo && remainingBill === 0);
+
+            // Update Saldo descriptions
+            if (isUsingSaldo) {
+                if (rowPotonganSaldo) {
+                    rowPotonganSaldo.style.display = 'flex';
+                    valPotonganSaldo.textContent = '- ' + formatRupiah(saldoDeduct);
                 }
+                if (saldoStatusDesc) {
+                    if (isFullSaldo) {
+                        saldoStatusDesc.innerHTML = '<strong style="color:#059669;">✓ Tagihan lunas sepenuhnya menggunakan saldo!</strong> Bebas biaya admin payment gateway.';
+                    } else {
+                        saldoStatusDesc.innerHTML = 'Saldo memotong <strong>' + formatRupiah(saldoDeduct) + '</strong>. Sisa tagihan <strong>' + formatRupiah(remainingBill) + '</strong> dibayar via Midtrans.';
+                    }
+                }
+                if (rowSisaTagihan) {
+                    rowSisaTagihan.style.display = isFullSaldo ? 'none' : 'flex';
+                    valSisaTagihan.textContent = formatRupiah(remainingBill);
+                }
+            }
 
-                const selectedEl = document.querySelector('input[name="payment_method"]:checked');
-                if (!selectedEl) return;
+            // Hitung Biaya Admin & Gateway
+            if (isFullSaldo) {
+                if (sectionPaymentMethods) sectionPaymentMethods.style.display = 'none';
+                if (rowAdminFee) rowAdminFee.style.display = 'none';
+                if (totalPaymentLabel) totalPaymentLabel.textContent = formatRupiah(0);
+                if (payButton) {
+                    payButton.textContent = '✓ Bayar Langsung dengan Saldo (' + formatRupiah(subtotal) + ')';
+                    payButton.style.background = 'linear-gradient(135deg, #7c3aed, #6366f1)';
+                    payButton.style.boxShadow = '0 10px 25px rgba(124, 58, 237, 0.4)';
+                }
+                return;
+            }
 
-                const method = selectedEl.value;
-                let fee = 0;
-                let feeName = '';
+            // Split payment or full gateway payment
+            if (sectionPaymentMethods) sectionPaymentMethods.style.display = 'block';
+            if (rowAdminFee) rowAdminFee.style.display = 'flex';
 
-                // Reset borders
-                const labelQris = document.getElementById('label-qris');
-                const labelVa = document.getElementById('label-va');
-                const labelRetail = document.getElementById('label-retail');
+            const selectedEl = document.querySelector('input[name="payment_method"]:checked');
+            const method = selectedEl ? selectedEl.value : 'qris';
+            let fee = 0;
+            let feeName = '';
 
-                if (labelQris) labelQris.style.borderColor = '#e2e8f0';
-                if (labelVa) labelVa.style.borderColor = '#e2e8f0';
-                if (labelRetail) labelRetail.style.borderColor = '#e2e8f0';
-                
-                // Highlight active option border
-                const activeLabel = document.getElementById('label-' + method);
-                if (activeLabel) activeLabel.style.borderColor = '#6366f1';
+            // Reset border selection
+            const labelQris = document.getElementById('label-qris');
+            const labelVa = document.getElementById('label-va');
+            const labelRetail = document.getElementById('label-retail');
+            if (labelQris) labelQris.style.borderColor = '#e2e8f0';
+            if (labelVa) labelVa.style.borderColor = '#e2e8f0';
+            if (labelRetail) labelRetail.style.borderColor = '#e2e8f0';
+            const activeLabel = document.getElementById('label-' + method);
+            if (activeLabel) activeLabel.style.borderColor = '#6366f1';
 
+            if (feeType === 'flat') {
+                fee = flatFee;
+                feeName = 'Biaya Admin:';
+            } else {
                 if (method === 'qris') {
                     if (qrisType === 'percentage') {
-                        fee = Math.round(subtotal * (qrisVal / 100));
+                        fee = Math.round(remainingBill * (qrisVal / 100));
                         feeName = 'Biaya Admin QRIS (' + qrisVal + '%):';
                     } else {
                         fee = qrisVal;
@@ -562,18 +630,131 @@
                     fee = retailFee;
                     feeName = 'Biaya Admin Retail:';
                 }
-
-                const total = subtotal + (showPpn ? ppnAmount : 0) + fee;
-
-                if (feeNameLabel) feeNameLabel.textContent = feeName;
-                if (feeAmountLabel) feeAmountLabel.textContent = formatRupiah(fee);
-                if (totalPaymentLabel) totalPaymentLabel.textContent = formatRupiah(total);
             }
 
+            const totalGateway = remainingBill + (showPpn ? Math.round(remainingBill * (ppnRate / 100)) : 0) + fee;
+
+            if (feeNameLabel) feeNameLabel.textContent = feeName;
+            if (feeAmountLabel) feeAmountLabel.textContent = formatRupiah(fee);
+            if (totalPaymentLabel) totalPaymentLabel.textContent = formatRupiah(totalGateway);
+
+            if (payButton) {
+                payButton.style.background = 'linear-gradient(90deg, #6366f1, #7c3aed)';
+                payButton.style.boxShadow = '0 10px 25px rgba(99, 102, 241, 0.35)';
+                if (isUsingSaldo && saldoDeduct > 0) {
+                    payButton.textContent = 'Bayar Sisa (' + formatRupiah(totalGateway) + ') via Midtrans →';
+                } else {
+                    payButton.textContent = 'Lanjut Pembayaran (' + formatRupiah(totalGateway) + ') →';
+                }
+            }
+        }
+
+        // Listener pay button
+        if (payButton) {
+            payButton.addEventListener('click', function () {
+                const isUsingSaldo = checkUseSaldo && checkUseSaldo.checked;
+                const saldoDeduct = isUsingSaldo ? parseInt(inputSaldoDeduct?.value || 0) : 0;
+                const remainingBill = subtotal - saldoDeduct;
+                const isFullSaldo = (isUsingSaldo && remainingBill === 0);
+
+                if (isFullSaldo) {
+                    // Pembayaran Penuh Menggunakan Saldo
+                    if (!confirm('Bayar tagihan sebesar ' + formatRupiah(subtotal) + ' langsung memotong saldo akun Anda?')) {
+                        return;
+                    }
+
+                    payButton.disabled = true;
+                    payButton.textContent = 'Memproses pembayaran saldo...';
+
+                    fetch('{{ route("payment.pay_saldo") }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({})
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            alert(data.message || 'Pembayaran dengan saldo berhasil!');
+                            window.location.href = data.redirect || '{{ route("dashboard") }}';
+                        } else {
+                            alert(data.error || 'Gagal memproses pembayaran saldo.');
+                            payButton.disabled = false;
+                            updateAllCalculations();
+                        }
+                    })
+                    .catch(err => {
+                        alert('Terjadi kesalahan jaringan.');
+                        payButton.disabled = false;
+                        updateAllCalculations();
+                        console.error(err);
+                    });
+                } else {
+                    // Pembayaran via Midtrans (Biasa atau Split Saldo)
+                    payButton.disabled = true;
+                    payButton.textContent = 'Menyiapkan Midtrans...';
+
+                    const selectedMethodEl = document.querySelector('input[name="payment_method"]:checked');
+                    const selectedMethod = selectedMethodEl ? selectedMethodEl.value : 'qris';
+
+                    fetch('{{ route("payment.charge") }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            payment_method: selectedMethod,
+                            use_saldo: isUsingSaldo,
+                            saldo_deduct: saldoDeduct
+                        })
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.token) {
+                            window.snap.pay(data.token, {
+                                onSuccess: function(result) {
+                                    window.location.href = '{{ route("dashboard") }}';
+                                },
+                                onPending: function(result) {
+                                    window.location.href = '{{ route("dashboard") }}';
+                                },
+                                onError: function(result) {
+                                    alert('Pembayaran gagal atau dibatalkan.');
+                                    payButton.disabled = false;
+                                    updateAllCalculations();
+                                },
+                                onClose: function() {
+                                    payButton.disabled = false;
+                                    updateAllCalculations();
+                                }
+                            });
+                        } else {
+                            alert(data.error || 'Gagal membuat transaksi Midtrans.');
+                            payButton.disabled = false;
+                            updateAllCalculations();
+                        }
+                    })
+                    .catch(err => {
+                        alert('Terjadi kesalahan koneksi ke Midtrans.');
+                        payButton.disabled = false;
+                        updateAllCalculations();
+                        console.error(err);
+                    });
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
             const radios = document.querySelectorAll('input[name="payment_method"]');
             radios.forEach(radio => {
-                radio.addEventListener('change', updatePaymentDetails);
+                radio.addEventListener('change', updateAllCalculations);
             });
+            updateAllCalculations();
         });
     </script>
 @endif

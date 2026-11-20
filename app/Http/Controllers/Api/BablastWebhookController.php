@@ -90,6 +90,7 @@ class BablastWebhookController extends Controller
         
         // Simpan ke database
         WabaChat::create([
+            'message_id' => $payload['data']['message_id'] ?? null,
             'no_telp' => $from,
             'nama' => $pelanggan ? $pelanggan->nama_pelanggan : 'Tidak Dikenal',
             'pesan' => $messageText,
@@ -97,6 +98,15 @@ class BablastWebhookController extends Controller
             'tipe' => 'incoming',
             'status' => 'received',
         ]);
+
+        // Karena pelanggan baru saja mengirim pesan balasan, tandai semua pesan keluar sebelumnya ke nomor ini sebagai 'read' (centang biru)
+        WabaChat::where(function($q) use ($from, $shortPhone) {
+                $q->where('no_telp', $from)
+                  ->orWhere('no_telp', 'like', "%{$shortPhone}%");
+            })
+            ->where('tipe', 'outgoing')
+            ->where('status', '!=', 'read')
+            ->update(['status' => 'read']);
         
         // Deteksi Kata Kunci
         $messageUpper = strtoupper(trim($messageText));
@@ -136,13 +146,46 @@ class BablastWebhookController extends Controller
     
     private function handleMessageStatus(array $payload)
     {
-        // Log status pengiriman pesan (sent, delivered, read, failed)
-        // Tidak perlu membalas apapun
-        $status = $payload['data']['status'] ?? 'unknown';
-        $messageId = $payload['data']['messageId'] ?? 'unknown';
+        file_put_contents(storage_path('logs/bablast_payload.log'), json_encode($payload) . "\n\n", FILE_APPEND);
+
+        $status = strtolower($payload['data']['status'] ?? $payload['status'] ?? 'unknown');
+        $messageId = $payload['data']['message_id'] ?? $payload['data']['messageId'] ?? $payload['data']['id'] ?? $payload['message_id'] ?? $payload['messageId'] ?? null;
         
-        Log::info("Bablast Message Status [{$messageId}]: {$status}");
-        
+        $recipient = $payload['data']['recipient_id'] 
+            ?? $payload['data']['to_phone'] 
+            ?? $payload['data']['phone'] 
+            ?? $payload['data']['to'] 
+            ?? $payload['to'] 
+            ?? null;
+
+        Log::info("Bablast Message Status [{$messageId}] ({$recipient}): {$status}");
+
+        if (in_array($status, ['sent', 'delivered', 'read', 'failed'])) {
+            $updated = false;
+            if (!empty($messageId)) {
+                $updated = WabaChat::where('message_id', $messageId)->update(['status' => $status]);
+            }
+
+            if (!$updated && !empty($recipient)) {
+                $cleanPhone = preg_replace('/[^0-9]/', '', $recipient);
+                $shortPhone = substr($cleanPhone, -9);
+
+                $query = WabaChat::where(function($q) use ($cleanPhone, $shortPhone) {
+                        $q->where('no_telp', $cleanPhone)
+                          ->orWhere('no_telp', 'like', "%{$shortPhone}%");
+                    })
+                    ->where('tipe', 'outgoing');
+
+                if ($status === 'read') {
+                    $query->where('status', '!=', 'read')->update(['status' => 'read']);
+                } elseif ($status === 'delivered') {
+                    $query->where('status', 'sent')->update(['status' => 'delivered']);
+                } elseif ($status === 'failed') {
+                    $query->latest()->limit(1)->update(['status' => 'failed']);
+                }
+            }
+        }
+
         return response()->json(['status' => 'success']);
     }
     
@@ -242,6 +285,7 @@ class BablastWebhookController extends Controller
         $waService->sendMessage($no_telp, $pesan, $mediaUrl);
         
         WabaChat::create([
+            'message_id' => $waService->lastMessageId ?? null,
             'no_telp' => $no_telp,
             'nama' => $nama,
             'pesan' => $pesan,

@@ -238,20 +238,20 @@
 
 @section('content')
 <!-- Ringkasan Statistik Kas -->
-<div class="stats-row">
+<div class="stats-row" style="grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));">
     <div class="stat-card stat-green">
         <div class="stat-icon"><i class="fa-solid fa-arrow-trend-up"></i></div>
         <div class="stat-info">
-            <span class="stat-value">Rp {{ number_format($total_masuk, 0, ',', '.') }}</span>
-            <span class="stat-label">Total Kas Masuk</span>
+            <span class="stat-value">Rp {{ number_format($total_masuk_riil ?? $total_masuk, 0, ',', '.') }}</span>
+            <span class="stat-label">Kas Masuk Riil (Fisik/Bank)</span>
         </div>
     </div>
 
-    <div class="stat-card stat-blue">
-        <div class="stat-icon"><i class="fa-solid fa-calendar-days"></i></div>
+    <div class="stat-card" style="border-left: 4px solid #7c3aed;">
+        <div class="stat-icon" style="background:#f5f3ff; color:#7c3aed;"><i class="fa-solid fa-wallet"></i></div>
         <div class="stat-info">
-            <span class="stat-value">Rp {{ number_format($pemasukan_bulan_ini, 0, ',', '.') }}</span>
-            <span class="stat-label">Pemasukan Bulan Ini</span>
+            <span class="stat-value" style="color:#7c3aed;">Rp {{ number_format($total_bayar_saldo ?? 0, 0, ',', '.') }}</span>
+            <span class="stat-label">Realisasi Dibayar Saldo</span>
         </div>
     </div>
     
@@ -263,11 +263,19 @@
         </div>
     </div>
 
-    <div class="stat-card stat-purple">
-        <div class="stat-icon"><i class="fa-solid fa-wallet"></i></div>
+    <div class="stat-card stat-blue">
+        <div class="stat-icon"><i class="fa-solid fa-vault"></i></div>
         <div class="stat-info">
-            <span class="stat-value">Rp {{ number_format($saldo, 0, ',', '.') }}</span>
-            <span class="stat-label">Saldo Saat Ini</span>
+            <span class="stat-value" style="color: #2563eb;">Rp {{ number_format($saldo_kas_riil ?? $saldo, 0, ',', '.') }}</span>
+            <span class="stat-label">Saldo Kas Riil (Netto Fisik)</span>
+        </div>
+    </div>
+
+    <div class="stat-card stat-purple">
+        <div class="stat-icon"><i class="fa-solid fa-piggy-bank"></i></div>
+        <div class="stat-info">
+            <span class="stat-value" style="color: #9333ea;">Rp {{ number_format($total_saldo_pelanggan ?? 0, 0, ',', '.') }}</span>
+            <span class="stat-label">Saldo Mengendap Pelanggan</span>
         </div>
     </div>
 </div>
@@ -508,7 +516,18 @@
 
     <!-- Search and Row Limiter -->
     <div style="display:flex; justify-content:space-between; align-items:center; margin-top: 10px; margin-bottom:16px; flex-wrap:wrap; gap:12px;">
-        <div></div>
+        <div>
+            <form method="GET" action="{{ route('admin.kas.index') }}" style="display:flex; align-items:center; gap:8px; margin:0;">
+                <input type="hidden" name="filter_bulan" value="{{ $selectedMonth }}">
+                <input type="hidden" name="filter_tahun" value="{{ $selectedYear }}">
+                <span style="font-size:0.85rem; font-weight:600; color:var(--text-gray);"><i class="fa-solid fa-filter"></i> Filter Kas:</span>
+                <select name="filter_tipe_kas" class="form-control" onchange="this.form.submit()" style="padding:4px 10px; height:40px; border-radius:10px; font-size:0.85rem; width:auto; font-weight:600; background:white; cursor:pointer;">
+                    <option value="semua" {{ ($filter_tipe_kas ?? 'semua') === 'semua' ? 'selected' : '' }}>Semua Transaksi</option>
+                    <option value="kas_riil" {{ ($filter_tipe_kas ?? '') === 'kas_riil' ? 'selected' : '' }}>Kas Riil Saja (Fisik/Bank)</option>
+                    <option value="saldo" {{ ($filter_tipe_kas ?? '') === 'saldo' ? 'selected' : '' }}>Realisasi Dibayar Saldo Saja</option>
+                </select>
+            </form>
+        </div>
         <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
             <div style="display: flex; align-items: center; gap: 8px;">
                 <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-gray);">Tampilkan:</span>
@@ -541,7 +560,12 @@
             </thead>
             <tbody>
                 @forelse($kas as $index => $k)
-                    <tr>
+                    @php
+                        $isSaldo = ($k->is_saldo == 1) || (($k->jenis_kas ?? '') === 'saldo');
+                        $isSplit = (!$isSaldo && ($k->bayar_saldo ?? 0) > 0);
+                        $isTopup = (($k->jenis_kas ?? '') === 'topup');
+                    @endphp
+                    <tr style="{{ $isSaldo ? 'background-color: #faf5ff;' : '' }}">
                         <td>{{ $index + 1 }}</td>
                         <td>
                             {{ Carbon\Carbon::parse($k->tgl_kas)->translatedFormat('d F Y') }}
@@ -553,8 +577,44 @@
                                 </span>
                             @endif
                         </td>
-                        <td><strong>{{ html_entity_decode($k->keterangan) }}</strong></td>
-                        <td style="color:#16a34a; font-weight:600;">{{ $k->penerimaan > 0 ? 'Rp ' . number_format($k->penerimaan, 0, ',', '.') : '-' }}</td>
+                        <td>
+                            <div style="display: flex; flex-direction: column; gap: 4px;">
+                                <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                                    <strong>{{ html_entity_decode($k->keterangan) }}</strong>
+                                    @if($isSaldo)
+                                        <span class="badge" style="background:#ede9fe; color:#6d28d9; border:1px solid #ddd6fe; font-size:0.72rem; padding:2px 8px; border-radius:6px; display:inline-flex; align-items:center; gap:4px;">
+                                            <i class="fa-solid fa-wallet"></i> DIBAYAR SALDO
+                                        </span>
+                                    @elseif($isSplit)
+                                        <span class="badge" style="background:#fef3c7; color:#b45309; border:1px solid #fde68a; font-size:0.72rem; padding:2px 8px; border-radius:6px; display:inline-flex; align-items:center; gap:4px;">
+                                            <i class="fa-solid fa-code-branch"></i> SPLIT SALDO
+                                        </span>
+                                    @elseif($isTopup)
+                                        <span class="badge" style="background:#dbeafe; color:#1d4ed8; border:1px solid #bfdbfe; font-size:0.72rem; padding:2px 8px; border-radius:6px; display:inline-flex; align-items:center; gap:4px;">
+                                            <i class="fa-solid fa-circle-arrow-up"></i> TOP UP SALDO
+                                        </span>
+                                    @endif
+                                </div>
+                                @if($isSaldo)
+                                    <small style="color: #6b21a8; font-size: 0.76rem;">* Catatan Akuntansi: Transaksi internal settlement saldo, tidak menambah kas fisik/bank.</small>
+                                @endif
+                            </div>
+                        </td>
+                        <td>
+                            @if($isSaldo)
+                                <span style="color:#6d28d9; font-weight:700;">Rp {{ number_format($k->penerimaan, 0, ',', '.') }}</span>
+                                <br><span style="color:#7c3aed; font-size:0.72rem; font-weight:600;"><i class="fa-solid fa-wallet"></i> Non-Tunai (Saldo)</span>
+                            @elseif($k->penerimaan > 0)
+                                <span style="color:#16a34a; font-weight:700;">Rp {{ number_format($k->penerimaan, 0, ',', '.') }}</span>
+                                @if($isSplit)
+                                    <br><span style="color:#6d28d9; font-size:0.75rem;">+ Rp {{ number_format($k->bayar_saldo, 0, ',', '.') }} <small>(Saldo)</small></span>
+                                @else
+                                    <br><span style="color:#059669; font-size:0.72rem; font-weight:600;"><i class="fa-solid fa-circle-check"></i> Kas Masuk Riil</span>
+                                @endif
+                            @else
+                                <span style="color: var(--text-gray);">-</span>
+                            @endif
+                        </td>
                         <td style="color:#dc2626; font-weight:600;">{{ $k->pengeluaran > 0 ? 'Rp ' . number_format($k->pengeluaran, 0, ',', '.') : '-' }}</td>
                         <td>
                             @if($k->status == 1)

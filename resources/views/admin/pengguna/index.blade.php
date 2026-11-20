@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Manajemen Pengguna Staff')
+@section('title', in_array(strtolower(Auth::user()->level), ['admin', 'administrator']) ? 'Manajemen Pengguna Staff' : 'Manajemen Pengguna Pelanggan')
 
 @section('styles')
 <style>
@@ -203,6 +203,11 @@
 @endsection
 
 @section('content')
+@php
+    $isAdmin = in_array(strtolower(Auth::user()->level), ['admin', 'administrator']);
+@endphp
+
+@if($isAdmin)
 <!-- Card Manajemen Pengguna Staff -->
 <div class="card">
     <div class="card-header">
@@ -308,9 +313,10 @@
     </div>
     <div id="penggunaPagination"></div>
 </div>
+@endif
 
 <!-- Card Manajemen Pengguna Pelanggan -->
-<div class="card" style="margin-top: 30px;">
+<div class="card" style="margin-top: {{ $isAdmin ? '30px' : '0' }};">
     <div class="card-header">
         <div class="card-title">
             <i class="fa-solid fa-user-group"></i>
@@ -424,6 +430,7 @@
     <div id="pelangganPagination"></div>
 </div>
 
+@if($isAdmin)
 <!-- Modal Tambah Pengguna -->
 <div class="modal" id="addModal">
     <div class="modal-content">
@@ -474,6 +481,7 @@
         </div>
     </div>
 </div>
+@endif
 
 <!-- Modal Edit Pengguna -->
 <div class="modal" id="editModal">
@@ -561,7 +569,9 @@
 @section('scripts')
 <script>
     document.addEventListener("DOMContentLoaded", function () {
+        @if($isAdmin)
         setupTablePagination("#penggunaTable", "#penggunaPagination", "#tableLimit", "#tableSearch");
+        @endif
         setupTablePagination("#pelangganTable", "#pelangganPagination", "#pelangganLimit", "#pelangganSearch");
     });
 

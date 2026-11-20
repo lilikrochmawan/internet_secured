@@ -25,6 +25,9 @@ Route::middleware(['auth', 'client'])->group(function () {
     Route::post('/laporan/buat', [KeluhanController::class, 'store'])->name('keluhan.store');
     Route::get('/profil', [AuthController::class, 'profil'])->name('profile');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::post('/saldo/topup-charge', [PaymentController::class, 'topupCharge'])->name('client.saldo.topup_charge');
+    Route::post('/payment/pay-saldo', [PaymentController::class, 'payWithFullSaldo'])->name('payment.pay_saldo');
+    Route::get('/saldo/riwayat', [AuthController::class, 'riwayatSaldo'])->name('client.saldo.riwayat');
 });
 
 // Administrator Routes Group
@@ -35,6 +38,7 @@ use App\Http\Controllers\Admin\AdminPaketController;
 use App\Http\Controllers\Admin\AdminPromoController;
 use App\Http\Controllers\Admin\AdminTransaksiController;
 use App\Http\Controllers\Admin\AdminKasController;
+use App\Http\Controllers\Admin\AdminSaldoController;
 use App\Http\Controllers\Admin\AdminPiutangController;
 use App\Http\Controllers\Admin\AdminRiwayatTransaksiController;
 use App\Http\Controllers\Admin\AdminKeluhanController;
@@ -119,6 +123,11 @@ Route::prefix('administrator')->group(function () {
         Route::post('/kas', [AdminKasController::class, 'store'])->name('admin.kas.store');
         Route::post('/kas/update', [AdminKasController::class, 'update'])->name('admin.kas.update');
         Route::post('/kas/delete', [AdminKasController::class, 'destroy'])->name('admin.kas.destroy');
+
+        // Top Up Saldo Pelanggan
+        Route::get('/saldo', [AdminSaldoController::class, 'index'])->name('admin.saldo.index');
+        Route::post('/saldo/topup', [AdminSaldoController::class, 'topup'])->name('admin.saldo.topup');
+        Route::get('/saldo/history/{id_pelanggan}', [AdminSaldoController::class, 'customerHistory'])->name('admin.saldo.history');
 
         // Piutang
         Route::get('/piutang', [AdminPiutangController::class, 'index'])->name('admin.piutang.index');
@@ -205,6 +214,7 @@ Route::prefix('administrator')->group(function () {
         Route::get('/waba-chat', [App\Http\Controllers\Admin\AdminWabaChatController::class, 'index'])->name('admin.waba_chat.index');
         Route::get('/waba-chat/media', [App\Http\Controllers\Admin\AdminWabaChatController::class, 'fetchMedia'])->name('admin.waba_chat.media');
         Route::get('/waba-chat/load/{no_telp}', [App\Http\Controllers\Admin\AdminWabaChatController::class, 'loadMessages'])->name('admin.waba_chat.load');
+        Route::get('/waba-chat/poll', [App\Http\Controllers\Admin\AdminWabaChatController::class, 'pollUpdates'])->name('admin.waba_chat.poll');
         Route::post('/waba-chat/reply', [App\Http\Controllers\Admin\AdminWabaChatController::class, 'reply'])->name('admin.waba_chat.reply');
         Route::get('/custom-pesan', [AdminCustomPesanController::class, 'index'])->name('admin.custom_pesan.index');
         Route::post('/custom-pesan/notif', [AdminCustomPesanController::class, 'updateNotif'])->name('admin.custom_pesan.notif');
@@ -271,6 +281,8 @@ Route::prefix('administrator')->group(function () {
         Route::get('/mapping', [AdminMapController::class, 'index'])->name('admin.mapping.index');
         Route::get('/mapping/coordinates', [AdminMapController::class, 'getCoordinates'])->name('admin.mapping.coordinates');
         Route::post('/mapping/update-odp', [AdminMapController::class, 'updateClientOdp'])->name('admin.mapping.update_odp');
+        Route::post('/mapping/update-odp-odc', [AdminMapController::class, 'updateOdpOdc'])->name('admin.mapping.update_odp_odc');
+        Route::post('/mapping/update-odc-parent', [AdminMapController::class, 'updateOdcParent'])->name('admin.mapping.update_odc_parent');
 
         // Log Aktivitas
         Route::get('/logs', [AdminLogController::class, 'index'])->name('admin.logs.index');

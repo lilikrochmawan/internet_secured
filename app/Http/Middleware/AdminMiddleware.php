@@ -82,6 +82,8 @@ class AdminMiddleware
             $menuKey = 'transaksi';
         } elseif (preg_match('/^kas/', $subPath)) {
             $menuKey = 'kas';
+        } elseif (preg_match('/^saldo/', $subPath)) {
+            $menuKey = 'kas';
         } elseif (preg_match('/^keluhan/', $subPath)) {
             $menuKey = 'keluhan';
         } elseif (preg_match('/^pengguna/', $subPath)) {

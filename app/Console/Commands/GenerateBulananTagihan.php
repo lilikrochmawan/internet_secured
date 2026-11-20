@@ -95,8 +95,13 @@ class GenerateBulananTagihan extends Command
                 }
             }
 
-            // Skip if price is 0 or not configured properly (to prevent empty invoices unless package is free or active promo)
-            if ($total_tagihan <= 0 && !$activePromo) {
+            $isFreePackage = ($plg->paketDetail && (
+                (int)($plg->paketDetail->harga ?? 0) === 0 || 
+                strtolower(trim($plg->paketDetail->nama_paket ?? '')) === 'free'
+            ));
+
+            // Lewati hanya jika tagihan <= 0 dan bukan promo aktif dan bukan paket Free
+            if ($total_tagihan <= 0 && !$activePromo && !$isFreePackage) {
                 continue;
             }
 
@@ -128,19 +133,35 @@ class GenerateBulananTagihan extends Command
 
             $tgl_jatuh_tempo = sprintf('%04d-%02d-%02d 23:59:00', $due_year, $due_month, $due_day);
 
-            DB::transaction(function () use ($plg, $bulantahun, $total_tagihan, $tgl_jatuh_tempo, $activePromo) {
-                $status_bayar = $activePromo ? 1 : null;
-                $terbayar = $activePromo ? $total_tagihan : null;
-                $waktu_bayar = $activePromo ? now()->format('Y-m-d H:i:s') : null;
+            DB::transaction(function () use ($plg, $bulantahun, $total_tagihan, $tgl_jatuh_tempo, $activePromo, $isFreePackage) {
+                $isFree = $isFreePackage || ((int)$total_tagihan === 0);
+                $status_bayar = ($activePromo || $isFree) ? 1 : null;
+                $terbayar = $activePromo ? $total_tagihan : ($isFree ? 0 : null);
+                $waktu_bayar = ($activePromo || $isFree) ? now()->format('Y-m-d H:i:s') : null;
+                $metode_pembayaran = $isFree ? 'Free' : ($activePromo ? 'Promo' : null);
+
+                // Buat no invoice otomatis jika lunas
+                $no_invoice = null;
+                if ($status_bayar == 1) {
+                    $latestInvoice = DB::table('tb_tagihan')->orderBy('no_invoice', 'desc')->first();
+                    $no_spt = $latestInvoice ? $latestInvoice->no_invoice : '00000.BLR.MST.';
+                    $urut = (int) substr($no_spt, 0, 5);
+                    $no_invoice = str_pad($urut + 1, 5, '0', STR_PAD_LEFT) . '.BLR.MST.';
+                }
 
                 // Insert bill
                 DB::table('tb_tagihan')->insert([
                     'id_pelanggan' => $plg->id_pelanggan,
                     'bulan_tahun' => $bulantahun,
-                    'jml_bayar' => $total_tagihan,
+                    'jml_bayar' => $isFree ? 0 : $total_tagihan,
                     'terbayar' => $terbayar,
+                    'bayar_saldo' => 0,
+                    'bayar_non_saldo' => 0,
+                    'metode_pembayaran' => $metode_pembayaran,
                     'status_bayar' => $status_bayar,
                     'waktu_bayar' => $waktu_bayar,
+                    'no_invoice' => $no_invoice,
+                    'blokir_status' => null,
                     'manual_invoice' => 0,
                     'jatuh_tempo' => $tgl_jatuh_tempo
                 ]);

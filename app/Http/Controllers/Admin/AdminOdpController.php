@@ -13,7 +13,7 @@ class AdminOdpController extends Controller
     public function index(Request $request)
     {
         $odp = Odp::with(['odcDetail', 'pelanggans.paketDetail', 'parentOdp'])->withCount('pelanggans')->orderBy('id_odp', 'desc')->get();
-        $odc = Odc::where('jenis_odc', 'distribusi')->orderBy('nama_odc')->get();
+        $odc = Odc::orderBy('nama_odc')->get();
         $allOdps = Odp::orderBy('nama_odp', 'asc')->get();
         return view('admin.odp.index', compact('odp', 'odc', 'allOdps'));
     }
@@ -38,10 +38,6 @@ class AdminOdpController extends Controller
             $odcId = $parentOdp->odc;
         } else {
             $request->validate(['odc' => 'required|integer|exists:tbl_odc,id_odc']);
-            $odcCheck = Odc::where('id_odc', $odcId)->first();
-            if (!$odcCheck || $odcCheck->jenis_odc !== 'distribusi') {
-                return back()->withErrors(['odc' => 'ODP hanya dapat dihubungkan ke ODC jenis Distribusi.'])->withInput();
-            }
         }
 
         Odp::create([
@@ -84,10 +80,6 @@ class AdminOdpController extends Controller
             $odcId = $parentOdp->odc;
         } else {
             $request->validate(['odc' => 'required|integer|exists:tbl_odc,id_odc']);
-            $odcCheck = Odc::where('id_odc', $odcId)->first();
-            if (!$odcCheck || $odcCheck->jenis_odc !== 'distribusi') {
-                return back()->withErrors(['odc' => 'ODP hanya dapat dihubungkan ke ODC jenis Distribusi.'])->withInput();
-            }
         }
 
         $odp->update([
@@ -144,6 +136,7 @@ class AdminOdpController extends Controller
                         'port_odp' => $row->port_odp,
                         'redaman' => $row->redaman ?? '-',
                         'nama_odc' => $row->odcDetail->nama_odc ?? 'N/A',
+                        'id_odc' => $row->odc,
                         'has_ratio' => $row->has_ratio,
                         'parent_odp_id' => $row->parent_odp_id,
                         'parent_odp_name' => $row->parentOdp->nama_odp ?? null,

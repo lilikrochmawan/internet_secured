@@ -524,7 +524,7 @@
                     <select id="odc" name="odc" class="form-control" required style="display: none;">
                         <option value="">-- Pilih ODC Induk --</option>
                         @foreach($odc as $o)
-                            <option value="{{ $o->id_odc }}">{{ $o->nama_odc }} ({{ $o->perangkat_odc }})</option>
+                            <option value="{{ $o->id_odc }}">{{ $o->nama_odc }} ({{ ucfirst($o->jenis_odc ?? 'ODC') }} - {{ $o->perangkat_odc }})</option>
                         @endforeach
                     </select>
 
@@ -544,8 +544,8 @@
                                     -- Pilih ODC Induk --
                                 </div>
                                 @foreach($odc as $o)
-                                    <div class="custom-select-option" data-value="{{ $o->id_odc }}" data-text="{{ $o->nama_odc }} ({{ $o->perangkat_odc }})">
-                                        {{ $o->nama_odc }} ({{ $o->perangkat_odc }})
+                                    <div class="custom-select-option" data-value="{{ $o->id_odc }}" data-text="{{ $o->nama_odc }} ({{ ucfirst($o->jenis_odc ?? 'ODC') }} - {{ $o->perangkat_odc }})">
+                                        {{ $o->nama_odc }} ({{ ucfirst($o->jenis_odc ?? 'ODC') }} - {{ $o->perangkat_odc }})
                                     </div>
                                 @endforeach
                             </div>
@@ -623,7 +623,7 @@
                     <select id="edit_odc" name="odc" class="form-control" required style="display: none;">
                         <option value="">-- Pilih ODC Induk --</option>
                         @foreach($odc as $o)
-                            <option value="{{ $o->id_odc }}">{{ $o->nama_odc }} ({{ $o->perangkat_odc }})</option>
+                            <option value="{{ $o->id_odc }}">{{ $o->nama_odc }} ({{ ucfirst($o->jenis_odc ?? 'ODC') }} - {{ $o->perangkat_odc }})</option>
                         @endforeach
                     </select>
 
@@ -643,8 +643,8 @@
                                     -- Pilih ODC Induk --
                                 </div>
                                 @foreach($odc as $o)
-                                    <div class="custom-select-option" data-value="{{ $o->id_odc }}" data-text="{{ $o->nama_odc }} ({{ $o->perangkat_odc }})">
-                                        {{ $o->nama_odc }} ({{ $o->perangkat_odc }})
+                                    <div class="custom-select-option" data-value="{{ $o->id_odc }}" data-text="{{ $o->nama_odc }} ({{ ucfirst($o->jenis_odc ?? 'ODC') }} - {{ $o->perangkat_odc }})">
+                                        {{ $o->nama_odc }} ({{ ucfirst($o->jenis_odc ?? 'ODC') }} - {{ $o->perangkat_odc }})
                                     </div>
                                 @endforeach
                             </div>

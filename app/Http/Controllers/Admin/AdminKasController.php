@@ -11,15 +11,44 @@ class AdminKasController extends Controller
 {
     public function index(Request $request)
     {
-        $kas = DB::table('tb_kas')
+        $filter_tipe_kas = $request->get('filter_tipe_kas', 'semua');
+
+        $kasQuery = DB::table('tb_kas')
             ->leftJoin('tb_tagihan', 'tb_tagihan.id_tagihan', '=', 'tb_kas.id_tagihan')
             ->select('tb_kas.*', 'tb_tagihan.waktu_bayar')
-            ->orderBy('tb_kas.id_kas', 'desc')
-            ->get();
+            ->orderBy('tb_kas.id_kas', 'desc');
 
-        $total_masuk = DB::table('tb_kas')->sum('penerimaan') ?? 0;
+        if ($filter_tipe_kas === 'kas_riil') {
+            $kasQuery->where(function($q) {
+                $q->whereNull('tb_kas.is_saldo')->orWhere('tb_kas.is_saldo', 0);
+            });
+        } elseif ($filter_tipe_kas === 'saldo') {
+            $kasQuery->where('tb_kas.is_saldo', 1);
+        }
+
+        $kas = $kasQuery->get();
+
+        // Pemisahan Akuntansi Buku Kas:
+        // 1. Kas Riil Masuk (Uang Fisik di Laci & Rekening Bank)
+        $total_masuk_riil = DB::table('tb_kas')->where(function($q) {
+            $q->whereNull('is_saldo')->orWhere('is_saldo', 0);
+        })->sum('penerimaan') ?? 0;
+
+        // 2. Realisasi Pembayaran Tagihan menggunakan Saldo Pelanggan (Internal settlement, bukan kas masuk baru)
+        $total_bayar_saldo = DB::table('tb_kas')->where('is_saldo', 1)->sum('penerimaan') ?? 0;
+
+        // 3. Kas Keluar (Beban operasional / pengeluaran fisik)
         $total_keluar = DB::table('tb_kas')->sum('pengeluaran') ?? 0;
-        $saldo = $total_masuk - $total_keluar;
+
+        // 4. Saldo Kas Riil Bersih (Kas Masuk Riil - Kas Keluar)
+        $saldo_kas_riil = $total_masuk_riil - $total_keluar;
+
+        // 5. Total Saldo Mengendap Akun Pelanggan (Kewajiban/Deposit)
+        $total_saldo_pelanggan = DB::table('tb_pelanggan')->sum('saldo') ?? 0;
+
+        // Total gabungan untuk kompatibilitas tampilan lama
+        $total_masuk = DB::table('tb_kas')->sum('penerimaan') ?? 0;
+        $saldo = $saldo_kas_riil;
 
         // User selected month & year filter
         $selectedYear = $request->get('filter_tahun', Carbon::now()->year);
@@ -103,7 +132,7 @@ class AdminKasController extends Controller
         $lastMonthTotalTax = $lastMonthPpn + $lastMonthBhp + $lastMonthUso;
 
         return view('admin.kas.index', compact(
-            'kas', 'total_masuk', 'total_keluar', 'saldo', 'pemasukan_bulan_ini', 'pemasukan_bulan_lalu',
+            'kas', 'total_masuk', 'total_keluar', 'saldo', 'total_masuk_riil', 'total_bayar_saldo', 'saldo_kas_riil', 'total_saldo_pelanggan', 'filter_tipe_kas', 'pemasukan_bulan_ini', 'pemasukan_bulan_lalu',
             'settings', 'isPpnActive', 'ppnPercent', 'bhpPercent', 'usoPercent',
             'allDpp', 'allPpn', 'allBhp', 'allUso', 'allTotalTax',
             'monthDpp', 'monthPpn', 'monthBhp', 'monthUso', 'monthTotalTax',

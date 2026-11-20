@@ -13,7 +13,8 @@ class AdminOdcController extends Controller
     {
         $odc = Odc::with(['odps.pelanggans', 'parentOdc'])->withCount('odps')->orderBy('id_odc', 'desc')->get();
         $mainOdcs = Odc::where('jenis_odc', 'utama')->orderBy('nama_odc', 'asc')->get();
-        return view('admin.odc.index', compact('odc', 'mainOdcs'));
+        $allOdcs = Odc::orderBy('nama_odc', 'asc')->get();
+        return view('admin.odc.index', compact('odc', 'mainOdcs', 'allOdcs'));
     }
 
     public function store(Request $request)
@@ -60,6 +61,10 @@ class AdminOdcController extends Controller
             'parent_id' => 'nullable|integer|exists:tbl_odc,id_odc',
         ]);
 
+        if ($request->filled('parent_id') && $request->parent_id == $request->id_odc) {
+            return back()->withErrors(['parent_id' => 'ODC tidak dapat menginduk ke dirinya sendiri.'])->withInput();
+        }
+
         $odc = Odc::findOrFail($request->id_odc);
         $odc->update([
             'nama_odc' => $request->nama_odc,
@@ -96,7 +101,7 @@ class AdminOdcController extends Controller
 
     public function getCoordinates()
     {
-        $odcs = Odc::all();
+        $odcs = Odc::with('parentOdc')->get();
         $coordinates = [];
 
         foreach ($odcs as $row) {
@@ -115,6 +120,7 @@ class AdminOdcController extends Controller
                         'lng' => floatval(trim($coord_parts[1])),
                         'jenis_odc' => $row->jenis_odc,
                         'parent_id' => $row->parent_id,
+                        'parent_nama_odc' => $row->parentOdc->nama_odc ?? null,
                     ];
                 }
             }

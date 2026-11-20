@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Odp;
 use App\Models\Pelanggan;
 use App\Models\Informasi;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
@@ -59,11 +60,23 @@ class AdminNotificationController extends Controller
         $judul = $request->input('judul');
         $pesan = $request->input('pesan');
 
+        // Dynamic parameters
+        Carbon::setLocale('id');
+        $nowFormatted = Carbon::now()->translatedFormat('l, d F Y H:i \W\I\B');
+        $penyebab = $request->input('waba_penyebab') ?: ($request->input('penyebab') ?: 'gangguan teknis');
+        $waktuMulai = $request->input('waba_waktu_mulai') ?: ($request->input('waktu_mulai') ?: $nowFormatted);
+        $estimasi = $request->input('waba_estimasi') ?: ($request->input('estimasi') ?: 'Sedang dalam penanganan teknisi');
+
         // 1. Tampilkan di Aplikasi Login Pelanggan (tbl_informasi)
         if (in_array('app', $channels)) {
+            $appPesan = str_replace(
+                ['$penyebab', '$eror', '$waktu_mulai', '$hari_tanggal', '$estimasi'],
+                [$penyebab, $penyebab, $waktuMulai, $waktuMulai, $estimasi],
+                $pesan
+            );
             Informasi::create([
                 'judul_informasi' => $judul ?? 'Pengumuman Resmi',
-                'isi_informasi' => $pesan,
+                'isi_informasi' => $appPesan,
             ]);
         }
 
@@ -75,23 +88,26 @@ class AdminNotificationController extends Controller
         if (in_array('wa', $channels)) {
             set_time_limit(1800);
 
-        if ($request->has('use_waba') && $request->use_waba === 'on' && !empty($request->waba_template)) {
-            DB::table('tb_profile')->update([
-                'waba_broadcast_template' => $request->waba_template,
-                'waba_broadcast_params' => $request->waba_params ?? '',
-            ]);
-        }
+            $isWaba = !empty($request->waba_template) && ($request->use_waba === 'on' || $request->use_waba === '1' || $request->use_waba === 1 || $request->use_waba === true);
+
+            if ($isWaba) {
+                DB::table('tb_profile')->update([
+                    'waba_broadcast_template' => $request->waba_template,
+                    'waba_broadcast_params' => $request->waba_params ?? '',
+                ]);
+            }
 
             $tokenInfo = DB::table('tbl_token')->where('id_token', 1)->where('status', 'aktif')->first();
-            if (!$tokenInfo || empty($tokenInfo->token)) {
+            if (!$tokenInfo || (empty($tokenInfo->token) && empty($tokenInfo->bablast_token))) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Token WhatsApp Fonnte belum dikonfigurasi di pengaturan.'
+                    'message' => 'Token WhatsApp (Fonnte/Bablast) belum dikonfigurasi di pengaturan.'
                 ], 400);
             }
 
             // Ambil semua pelanggan dengan nomor telepon
-            $pelangganList = Pelanggan::whereNotNull('no_telp')
+            $pelangganList = Pelanggan::with('odpDetail')
+                ->whereNotNull('no_telp')
                 ->where('no_telp', '!=', '')
                 ->get();
 
@@ -105,46 +121,41 @@ class AdminNotificationController extends Controller
                 ]);
             }
 
+            $waService = app(\App\Services\WhatsAppService::class);
+
             foreach ($pelangganList as $index => $pelanggan) {
-                // Jeda pengiriman 10 detik (kecuali pesan pertama)
-                if ($index > 0) {
-                    // sleep(10);
-                }
+                $odpName = $pelanggan->odpDetail->nama_odp ?? 'N/A';
 
                 // Format dinamis jika menggunakan tag nama
                 $customPesan = str_replace(
-                    ['$nama', '$pelanggan'],
-                    [$pelanggan->nama_pelanggan, $pelanggan->nama_pelanggan],
+                    ['$nama', '$pelanggan', '$penyebab', '$eror', '$waktu_mulai', '$hari_tanggal', '$estimasi', '$odp'],
+                    [$pelanggan->nama_pelanggan, $pelanggan->nama_pelanggan, $penyebab, $penyebab, $waktuMulai, $waktuMulai, $estimasi, $odpName],
                     $pesan
                 );
 
-                $waService = app(\App\Services\WhatsAppService::class);
                 $isSent = false;
-                if ($request->has('use_waba') && $request->use_waba === 'on' && !empty($request->waba_template)) {
-                    $templateParams = [];
-                    if (!empty($request->waba_params)) {
-                        $paramsList = explode(',', $request->waba_params);
-                        foreach ($paramsList as $param) {
-                            $param = trim($param);
-                            if ($param === 'nama') {
-                                $templateParams[] = $pelanggan->nama_pelanggan;
-                            } elseif ($param === '$pesan') {
-                                $templateParams[] = $customPesan;
-                            } else {
-                                $templateParams[] = $param;
-                            }
-                        }
-                    }
+                if ($isWaba) {
+                    $templateParams = $this->buildTemplateParams(
+                        $request->waba_params ?? '',
+                        $pelanggan,
+                        $customPesan,
+                        $penyebab,
+                        $waktuMulai,
+                        $estimasi,
+                        $odpName,
+                        ''
+                    );
                     $isSent = $waService->sendTemplateMessage(
-                    $pelanggan->no_telp,
-                    $customPesan,
-                    $request->waba_template,
-                    $templateParams,
-                    'id'
-                );
+                        $pelanggan->no_telp,
+                        $customPesan,
+                        $request->waba_template,
+                        $templateParams,
+                        'id'
+                    );
                 } else {
                     $isSent = $waService->sendMessage($pelanggan->no_telp, $customPesan);
                 }
+
                 if ($isSent) {
                     $berhasil++;
                     $results[] = [
@@ -159,7 +170,7 @@ class AdminNotificationController extends Controller
                         'status' => false,
                         'nama' => $pelanggan->nama_pelanggan,
                         'no_telp' => $pelanggan->no_telp,
-                        'message' => 'Gagal terkirim, periksa log sistem.'
+                        'message' => 'Gagal terkirim, periksa log gateway.'
                     ];
                 }
             }
@@ -188,7 +199,9 @@ class AdminNotificationController extends Controller
 
         set_time_limit(1800);
 
-        if ($request->has('use_waba') && $request->use_waba === 'on' && !empty($request->waba_template)) {
+        $isWaba = !empty($request->waba_template) && ($request->use_waba === 'on' || $request->use_waba === '1' || $request->use_waba === 1 || $request->use_waba === true);
+
+        if ($isWaba) {
             DB::table('tb_profile')->update([
                 'waba_broadcast_template' => $request->waba_template,
                 'waba_broadcast_params' => $request->waba_params ?? '',
@@ -199,13 +212,22 @@ class AdminNotificationController extends Controller
         $pesan = $request->input('pesan');
         $client_ids = $request->input('client_ids');
 
-        $odp = Odp::findOrFail($id_odp);
+        $odp = Odp::with('odcDetail')->findOrFail($id_odp);
+        $odpName = $odp->nama_odp;
+        $odcName = $odp->odcDetail->nama_odc ?? '';
+
+        // Dynamic parameters
+        Carbon::setLocale('id');
+        $nowFormatted = Carbon::now()->translatedFormat('l, d F Y H:i \W\I\B');
+        $penyebab = $request->input('waba_penyebab') ?: ($request->input('penyebab') ?: 'gangguan teknis');
+        $waktuMulai = $request->input('waba_waktu_mulai') ?: ($request->input('waktu_mulai') ?: $nowFormatted);
+        $estimasi = $request->input('waba_estimasi') ?: ($request->input('estimasi') ?: 'Sedang dalam penanganan teknisi');
 
         $tokenInfo = DB::table('tbl_token')->where('id_token', 1)->where('status', 'aktif')->first();
-        if (!$tokenInfo || empty($tokenInfo->token)) {
+        if (!$tokenInfo || (empty($tokenInfo->token) && empty($tokenInfo->bablast_token))) {
             return response()->json([
                 'success' => false,
-                'message' => 'Token WhatsApp Fonnte belum dikonfigurasi di pengaturan.'
+                'message' => 'Token WhatsApp (Fonnte/Bablast) belum dikonfigurasi di pengaturan.'
             ], 400);
         }
 
@@ -224,41 +246,28 @@ class AdminNotificationController extends Controller
         $results = [];
         $berhasil = 0;
         $gagal = 0;
+        $waService = app(\App\Services\WhatsAppService::class);
 
         foreach ($pelangganList as $index => $pelanggan) {
-            // Jeda pengiriman 10 detik (kecuali pesan pertama)
-            if ($index > 0) {
-                // sleep(10);
-            }
-
             // Format dinamis
             $customPesan = str_replace(
-                ['$nama', '$pelanggan', '$odp'],
-                [$pelanggan->nama_pelanggan, $pelanggan->nama_pelanggan, $odp->nama_odp],
+                ['$nama', '$pelanggan', '$penyebab', '$eror', '$waktu_mulai', '$hari_tanggal', '$estimasi', '$odp', '$odc'],
+                [$pelanggan->nama_pelanggan, $pelanggan->nama_pelanggan, $penyebab, $penyebab, $waktuMulai, $waktuMulai, $estimasi, $odpName, $odcName],
                 $pesan
             );
 
-            $waService = app(\App\Services\WhatsAppService::class);
             $isSent = false;
-            if ($request->has('use_waba') && $request->use_waba === 'on' && !empty($request->waba_template)) {
-                $templateParams = [];
-                if (!empty($request->waba_params)) {
-                    $paramsList = explode(',', $request->waba_params);
-                    foreach ($paramsList as $param) {
-                        $param = trim($param);
-                        if ($param === 'nama') {
-                            $templateParams[] = $pelanggan->nama_pelanggan;
-                        } elseif ($param === '$pesan') {
-                            $templateParams[] = $customPesan;
-                        } elseif ($param === 'odp') {
-                            $templateParams[] = $odp->nama_odp ?? $odpName ?? '';
-                        } elseif ($param === 'odc') {
-                            $templateParams[] = $odc->nama_odc ?? '';
-                        } else {
-                            $templateParams[] = $param;
-                        }
-                    }
-                }
+            if ($isWaba) {
+                $templateParams = $this->buildTemplateParams(
+                    $request->waba_params ?? '',
+                    $pelanggan,
+                    $customPesan,
+                    $penyebab,
+                    $waktuMulai,
+                    $estimasi,
+                    $odpName,
+                    $odcName
+                );
                 $isSent = $waService->sendTemplateMessage(
                     $pelanggan->no_telp,
                     $customPesan,
@@ -269,6 +278,7 @@ class AdminNotificationController extends Controller
             } else {
                 $isSent = $waService->sendMessage($pelanggan->no_telp, $customPesan);
             }
+
             if ($isSent) {
                 $berhasil++;
                 $results[] = [
@@ -283,7 +293,7 @@ class AdminNotificationController extends Controller
                     'status' => false,
                     'nama' => $pelanggan->nama_pelanggan,
                     'no_telp' => $pelanggan->no_telp,
-                    'message' => 'Gagal terkirim, periksa log sistem.'
+                    'message' => 'Gagal terkirim, periksa log gateway.'
                 ];
             }
         }
@@ -307,7 +317,9 @@ class AdminNotificationController extends Controller
 
         set_time_limit(1800);
 
-        if ($request->has('use_waba') && $request->use_waba === 'on' && !empty($request->waba_template)) {
+        $isWaba = !empty($request->waba_template) && ($request->use_waba === 'on' || $request->use_waba === '1' || $request->use_waba === 1 || $request->use_waba === true);
+
+        if ($isWaba) {
             DB::table('tb_profile')->update([
                 'waba_broadcast_template' => $request->waba_template,
                 'waba_broadcast_params' => $request->waba_params ?? '',
@@ -326,11 +338,20 @@ class AdminNotificationController extends Controller
             ], 404);
         }
 
+        $odcName = $odc->nama_odc;
+
+        // Dynamic parameters
+        Carbon::setLocale('id');
+        $nowFormatted = Carbon::now()->translatedFormat('l, d F Y H:i \W\I\B');
+        $penyebab = $request->input('waba_penyebab') ?: ($request->input('penyebab') ?: 'gangguan teknis');
+        $waktuMulai = $request->input('waba_waktu_mulai') ?: ($request->input('waktu_mulai') ?: $nowFormatted);
+        $estimasi = $request->input('waba_estimasi') ?: ($request->input('estimasi') ?: 'Sedang dalam penanganan teknisi');
+
         $tokenInfo = DB::table('tbl_token')->where('id_token', 1)->where('status', 'aktif')->first();
-        if (!$tokenInfo || empty($tokenInfo->token)) {
+        if (!$tokenInfo || (empty($tokenInfo->token) && empty($tokenInfo->bablast_token))) {
             return response()->json([
                 'success' => false,
-                'message' => 'Token WhatsApp Fonnte belum dikonfigurasi di pengaturan.'
+                'message' => 'Token WhatsApp (Fonnte/Bablast) belum dikonfigurasi di pengaturan.'
             ], 400);
         }
 
@@ -350,42 +371,30 @@ class AdminNotificationController extends Controller
         $results = [];
         $berhasil = 0;
         $gagal = 0;
+        $waService = app(\App\Services\WhatsAppService::class);
 
         foreach ($pelangganList as $index => $pelanggan) {
-            // Jeda pengiriman 10 detik (kecuali pesan pertama)
-            if ($index > 0) {
-                // sleep(10);
-            }
+            $odpName = $pelanggan->odpDetail->nama_odp ?? 'N/A';
 
             // Format dinamis
-            $odpName = $pelanggan->odpDetail->nama_odp ?? 'N/A';
             $customPesan = str_replace(
-                ['$nama', '$pelanggan', '$odp', '$odc'],
-                [$pelanggan->nama_pelanggan, $pelanggan->nama_pelanggan, $odpName, $odc->nama_odc],
+                ['$nama', '$pelanggan', '$penyebab', '$eror', '$waktu_mulai', '$hari_tanggal', '$estimasi', '$odp', '$odc'],
+                [$pelanggan->nama_pelanggan, $pelanggan->nama_pelanggan, $penyebab, $penyebab, $waktuMulai, $waktuMulai, $estimasi, $odpName, $odcName],
                 $pesan
             );
 
-            $waService = app(\App\Services\WhatsAppService::class);
             $isSent = false;
-            if ($request->has('use_waba') && $request->use_waba === 'on' && !empty($request->waba_template)) {
-                $templateParams = [];
-                if (!empty($request->waba_params)) {
-                    $paramsList = explode(',', $request->waba_params);
-                    foreach ($paramsList as $param) {
-                        $param = trim($param);
-                        if ($param === 'nama') {
-                            $templateParams[] = $pelanggan->nama_pelanggan;
-                        } elseif ($param === '$pesan') {
-                            $templateParams[] = $customPesan;
-                        } elseif ($param === 'odp') {
-                            $templateParams[] = $odp->nama_odp ?? $odpName ?? '';
-                        } elseif ($param === 'odc') {
-                            $templateParams[] = $odc->nama_odc ?? '';
-                        } else {
-                            $templateParams[] = $param;
-                        }
-                    }
-                }
+            if ($isWaba) {
+                $templateParams = $this->buildTemplateParams(
+                    $request->waba_params ?? '',
+                    $pelanggan,
+                    $customPesan,
+                    $penyebab,
+                    $waktuMulai,
+                    $estimasi,
+                    $odpName,
+                    $odcName
+                );
                 $isSent = $waService->sendTemplateMessage(
                     $pelanggan->no_telp,
                     $customPesan,
@@ -396,6 +405,7 @@ class AdminNotificationController extends Controller
             } else {
                 $isSent = $waService->sendMessage($pelanggan->no_telp, $customPesan);
             }
+
             if ($isSent) {
                 $berhasil++;
                 $results[] = [
@@ -410,7 +420,7 @@ class AdminNotificationController extends Controller
                     'status' => false,
                     'nama' => $pelanggan->nama_pelanggan,
                     'no_telp' => $pelanggan->no_telp,
-                    'message' => 'Gagal terkirim, periksa log sistem.'
+                    'message' => 'Gagal terkirim, periksa log gateway.'
                 ];
             }
         }
@@ -496,5 +506,45 @@ class AdminNotificationController extends Controller
             'success' => true,
             'notifications' => $notifications
         ]);
+    }
+
+    private function buildTemplateParams(string $rawParams, $pelanggan, string $customPesan, string $penyebab, string $waktuMulai, string $estimasi, string $odpName = '', string $odcName = ''): array
+    {
+        $templateParams = [];
+        if (empty(trim($rawParams))) {
+            return $templateParams;
+        }
+
+        $clientName = $pelanggan->nama_pelanggan ?? ($pelanggan->nama_lengkap ?? ($pelanggan->nama ?? 'Pelanggan'));
+        $paramsList = explode(',', $rawParams);
+        foreach ($paramsList as $param) {
+            $param = trim($param);
+            $lower = strtolower($param);
+
+            if (in_array($lower, ['nama', '$nama', '$pelanggan'])) {
+                $templateParams[] = $clientName;
+            } elseif (in_array($lower, ['penyebab', 'alasan', 'eror', 'kendala', '$penyebab', '$eror'])) {
+                $templateParams[] = $penyebab;
+            } elseif (in_array($lower, ['waktu_mulai', 'hari_tanggal', 'tanggal', 'waktu', '$waktu_mulai', '$hari_tanggal'])) {
+                $templateParams[] = $waktuMulai;
+            } elseif (in_array($lower, ['estimasi', 'estimasi_pengerjaan', 'estimasi_selesai', '$estimasi'])) {
+                $templateParams[] = $estimasi;
+            } elseif (in_array($lower, ['odp', '$odp'])) {
+                $templateParams[] = $odpName;
+            } elseif (in_array($lower, ['odc', '$odc'])) {
+                $templateParams[] = $odcName;
+            } elseif (in_array($lower, ['pesan', '$pesan'])) {
+                $templateParams[] = $customPesan;
+            } else {
+                $resolved = str_replace(
+                    ['{nama}', '{penyebab}', '{eror}', '{waktu_mulai}', '{hari_tanggal}', '{estimasi}', '{odp}', '{odc}'],
+                    [$clientName, $penyebab, $penyebab, $waktuMulai, $waktuMulai, $estimasi, $odpName, $odcName],
+                    $param
+                );
+                $templateParams[] = $resolved;
+            }
+        }
+
+        return $templateParams;
     }
 }

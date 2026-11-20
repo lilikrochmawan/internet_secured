@@ -225,7 +225,14 @@
                     <tr>
                         <td>{{ $index + 1 }}</td>
                         <td><strong>{{ $p->nama_paket }}</strong></td>
-                        <td>Rp {{ number_format($p->harga, 0, ',', '.') }}</td>
+                        <td>
+                            Rp {{ number_format($p->harga, 0, ',', '.') }}
+                            @if($p->harga == 0 || strtolower($p->nama_paket) === 'free')
+                                <span class="badge" style="background:#dcfce7; color:#15803d; border:1px solid #bbf7d0; font-size:0.72rem; margin-left:6px; padding:2px 8px; border-radius:6px; display:inline-flex; align-items:center; gap:4px;">
+                                    <i class="fa-solid fa-gift"></i> Free / Gratis
+                                </span>
+                            @endif
+                        </td>
                         <td>{{ $p->ppn }}%</td>
                         <td><span style="font-family: monospace; font-weight:600; color:#7c3aed;">{{ $p->id_pmikrotik ?: '-' }}</span></td>
                         <td>

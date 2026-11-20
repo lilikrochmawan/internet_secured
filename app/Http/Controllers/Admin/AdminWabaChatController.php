@@ -65,6 +65,99 @@ class AdminWabaChatController extends Controller
             'messages' => $messages
         ]);
     }
+
+    public function pollUpdates(Request $request)
+    {
+        $currentPhone = $request->query('no_telp');
+        $lastChatId = (int) $request->query('last_id', 0);
+        $lastIncomingId = (int) $request->query('last_incoming_id', 0);
+
+        // 1. Cek pesan masuk terbaru di sistem untuk memicu suara notifikasi
+        $latestIncoming = WabaChat::where('tipe', 'incoming')
+            ->orderBy('id', 'desc')
+            ->first();
+
+        $hasNewIncoming = false;
+        $newIncomingId = $lastIncomingId;
+        if ($latestIncoming) {
+            if ($lastIncomingId > 0 && $latestIncoming->id > $lastIncomingId) {
+                $hasNewIncoming = true;
+            }
+            $newIncomingId = $latestIncoming->id;
+        }
+
+        // 2. Jika sedang membuka percakapan dengan nomor tertentu:
+        $newMessages = [];
+        $updatedStatuses = [];
+        if (!empty($currentPhone)) {
+            // Tandai pesan incoming yang belum dibaca dari kontak ini sebagai 'read'
+            WabaChat::where('no_telp', $currentPhone)
+                ->where('tipe', 'incoming')
+                ->where('status', 'received')
+                ->update(['status' => 'read']);
+
+            // Ambil pesan baru yang id > $lastChatId
+            if ($lastChatId > 0) {
+                $newMessages = WabaChat::where('no_telp', $currentPhone)
+                    ->where('id', '>', $lastChatId)
+                    ->orderBy('created_at', 'asc')
+                    ->get();
+            }
+
+            // Ambil status pesan outgoing terkini untuk memperbarui centang (centang 1 -> 2 -> biru)
+            $updatedStatuses = WabaChat::where('no_telp', $currentPhone)
+                ->where('tipe', 'outgoing')
+                ->select('id', 'status')
+                ->get();
+        }
+
+        // 3. Ambil daftar kontak terkini (untuk auto-refresh sidebar kiri)
+        $contacts = DB::table('tbl_waba_chat')
+            ->select(
+                'no_telp', 
+                'nama', 
+                DB::raw('MAX(id) as latest_id'),
+                DB::raw('MAX(created_at) as last_message_time'),
+                DB::raw("SUM(CASE WHEN tipe = 'incoming' AND status = 'received' THEN 1 ELSE 0 END) as unread_count")
+            )
+            ->groupBy('no_telp', 'nama')
+            ->orderBy('last_message_time', 'desc')
+            ->get();
+
+        foreach ($contacts as $contact) {
+            $latestMsg = WabaChat::where('no_telp', $contact->no_telp)
+                ->orderBy('created_at', 'desc')
+                ->first();
+            $contact->latest_pesan = $latestMsg ? $latestMsg->pesan : '';
+
+            $lastTime = \Carbon\Carbon::parse($contact->last_message_time);
+            if ($lastTime->isToday()) {
+                $contact->time_display = $lastTime->format('H:i');
+            } elseif ($lastTime->isYesterday()) {
+                $contact->time_display = 'Kemarin';
+            } elseif ($lastTime->isCurrentYear()) {
+                $contact->time_display = $lastTime->translatedFormat('d M');
+            } else {
+                $contact->time_display = $lastTime->format('d/m/Y');
+            }
+        }
+
+        // Total unread count untuk badge di sidebar
+        $totalUnread = DB::table('tbl_waba_chat')
+            ->where('tipe', 'incoming')
+            ->where('status', 'received')
+            ->count();
+
+        return response()->json([
+            'status' => 'success',
+            'has_new_incoming' => $hasNewIncoming,
+            'latest_incoming_id' => $newIncomingId,
+            'new_messages' => $newMessages,
+            'updated_statuses' => $updatedStatuses,
+            'contacts' => $contacts,
+            'total_unread' => $totalUnread
+        ]);
+    }
     
     public function reply(Request $request)
     {
@@ -96,6 +189,7 @@ class AdminWabaChatController extends Controller
         
         // Save to DB
         $chat = WabaChat::create([
+            'message_id' => $waService->lastMessageId ?? null,
             'no_telp' => $no_telp,
             'nama' => $nama,
             'pesan' => $pesan,

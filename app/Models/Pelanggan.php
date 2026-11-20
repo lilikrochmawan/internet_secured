@@ -31,7 +31,16 @@ class Pelanggan extends Model
         'id_mikrotik',
         'id_branch',
         'id_sub_branch',
+        'saldo',
     ];
+
+    /**
+     * Relationship: Pelanggan has many mutasi saldo
+     */
+    public function mutasiSaldo()
+    {
+        return $this->hasMany(SaldoMutasi::class, 'id_pelanggan', 'id_pelanggan')->orderBy('id', 'desc');
+    }
 
     /**
      * Relationship: Pelanggan has many users

@@ -105,9 +105,26 @@ class AuthController extends Controller
             ->limit(5)
             ->get();
 
+        $saldo = (int) ($pelanggan->saldo ?? 0);
+        $mutasiSaldo = \App\Models\SaldoMutasi::where('id_pelanggan', $pelanggan->id_pelanggan)
+            ->orderBy('id', 'desc')
+            ->limit(3)
+            ->get();
+
+        $pgate = \App\Models\Pgate::first();
+        $clientKey = $pgate ? trim($pgate->tclientkey ?? '') : '';
+        $isSandbox = $pgate ? ($pgate->mode === 'sandbox' || (!$pgate->mode && str_starts_with($clientKey, 'SB-'))) : true;
+        $snapJsUrl = $isSandbox
+            ? 'https://app.sandbox.midtrans.com/snap/snap.js'
+            : 'https://app.midtrans.com/snap/snap.js';
+
         return view('dashboard', [
             'user' => $user,
             'pelanggan' => $pelanggan,
+            'saldo' => $saldo,
+            'mutasiSaldo' => $mutasiSaldo,
+            'clientKey' => $clientKey,
+            'snapJsUrl' => $snapJsUrl,
             'paket' => $pelanggan->paketDetail,
             'paketRekomendasi' => $paketRekomendasi,
             'tagihanTotal' => $tagihanTotal,
@@ -117,6 +134,32 @@ class AuthController extends Controller
             'informasi' => $informasi,
             'hasInformasi' => $hasInformasi,
             'invoices' => $invoices,
+        ]);
+    }
+
+        public function riwayatSaldo()
+    {
+        $user = Auth::user();
+        $pelanggan = $user->pelanggan;
+        if (!$pelanggan) return response()->json(['error' => 'Pelanggan not found'], 404);
+
+        $mutasi = \App\Models\SaldoMutasi::where('id_pelanggan', $pelanggan->id_pelanggan)
+            ->orderBy('id', 'desc')
+            ->get();
+
+        return response()->json([
+            'saldo' => (int) ($pelanggan->saldo ?? 0),
+            'saldo_formatted' => 'Rp ' . number_format($pelanggan->saldo ?? 0, 0, ',', '.'),
+            'mutasi' => $mutasi->map(function($m) {
+                return [
+                    'tanggal' => \Carbon\Carbon::parse($m->created_at)->translatedFormat('d F Y H:i'),
+                    'tipe' => $m->tipe,
+                    'jumlah' => (int) $m->jumlah,
+                    'jumlah_formatted' => ($m->tipe === 'masuk' ? '+' : '-') . ' Rp ' . number_format($m->jumlah, 0, ',', '.'),
+                    'saldo_akhir_formatted' => 'Rp ' . number_format($m->saldo_akhir, 0, ',', '.'),
+                    'keterangan' => $m->keterangan ?: '-',
+                ];
+            })
         ]);
     }
 

@@ -79,6 +79,30 @@ class AdminTransaksiController extends Controller
         $paidCount = $tagihan->where('status_bayar', 1)->count();
         $paidAmount = $tagihan->where('status_bayar', 1)->sum('jml_bayar');
 
+        // Pemisahan Akuntansi Transaksi Pembayaran: Saldo vs Non-Saldo
+        $paidViaSaldoAmount = $tagihan->where('status_bayar', 1)->sum(function($item) {
+            return (int) ($item->bayar_saldo ?? ($item->metode_pembayaran === 'Saldo' ? $item->jml_bayar : 0));
+        });
+
+        $paidViaNonSaldoAmount = $tagihan->where('status_bayar', 1)->sum(function($item) {
+            if (isset($item->bayar_non_saldo) && $item->bayar_non_saldo > 0) {
+                return (int) $item->bayar_non_saldo;
+            }
+            $s = (int) ($item->bayar_saldo ?? ($item->metode_pembayaran === 'Saldo' ? $item->jml_bayar : 0));
+            return max(0, (int)$item->jml_bayar - $s);
+        });
+
+        $paidViaSaldoCount = $tagihan->where('status_bayar', 1)->filter(function($item) {
+            $s = (int) ($item->bayar_saldo ?? ($item->metode_pembayaran === 'Saldo' ? $item->jml_bayar : 0));
+            return $s > 0;
+        })->count();
+
+        $paidViaNonSaldoCount = $tagihan->where('status_bayar', 1)->filter(function($item) {
+            $s = (int) ($item->bayar_saldo ?? ($item->metode_pembayaran === 'Saldo' ? $item->jml_bayar : 0));
+            $non = (int) ($item->bayar_non_saldo ?? max(0, $item->jml_bayar - $s));
+            return $non > 0;
+        })->count();
+
         $unpaidCount = $totalCount - $paidCount;
         $unpaidAmount = $totalAmount - $paidAmount;
 
@@ -179,6 +203,7 @@ class AdminTransaksiController extends Controller
         return view('admin.transaksi.index', compact(
             'tagihan', 'search', 'status', 'pelanggan', 'selectedMonth', 'selectedYear',
             'totalCount', 'totalAmount', 'paidCount', 'paidAmount', 'unpaidCount', 'unpaidAmount',
+            'paidViaSaldoAmount', 'paidViaNonSaldoAmount', 'paidViaSaldoCount', 'paidViaNonSaldoCount',
             'todayPaidCount', 'todayPaidAmount', 'blockedClientIds'
         ));
     }
@@ -249,15 +274,54 @@ class AdminTransaksiController extends Controller
         }
 
         $pelanggan = Pelanggan::find($tagihan->id_pelanggan);
+        $metodePembayaran = $request->input('metode_pembayaran', 'Tunai');
 
-        // Catat pembayaran manual oleh staff
-        $tagihan->update([
-            'status_bayar' => 1,
-            'waktu_bayar' => Carbon::now()->format('Y-m-d H:i:s'),
-            'user_id' => Auth::id(), // ID staff yang menerima pembayaran
-            'terbayar' => $tagihan->jml_bayar, // Set terbayar to jml_bayar
-            'blokir_status' => null, // Bersihkan status blokir karena sudah dibayar
-        ]);
+        $isPaySaldo = ($metodePembayaran === 'Saldo');
+        if ($isPaySaldo) {
+            $customerSaldo = (int) ($pelanggan->saldo ?? 0);
+            if ($customerSaldo < (int) $tagihan->jml_bayar) {
+                return back()->with('error', 'Saldo pelanggan tidak mencukupi (Saldo: Rp ' . number_format($customerSaldo, 0, ',', '.') . ', Tagihan: Rp ' . number_format($tagihan->jml_bayar, 0, ',', '.') . '). Silakan gunakan pembayaran tunai atau top up saldo terlebih dahulu.');
+            }
+
+            // Potong saldo pelanggan
+            $saldoAwal = $customerSaldo;
+            $saldoAkhir = $saldoAwal - (int) $tagihan->jml_bayar;
+            $pelanggan->update(['saldo' => $saldoAkhir]);
+
+            \App\Models\SaldoMutasi::create([
+                'id_pelanggan' => $pelanggan->id_pelanggan,
+                'user_id' => Auth::id(),
+                'tipe' => 'keluar',
+                'jumlah' => $tagihan->jml_bayar,
+                'saldo_awal' => $saldoAwal,
+                'saldo_akhir' => $saldoAkhir,
+                'kategori' => 'bayar_tagihan',
+                'keterangan' => 'Pembayaran Tagihan oleh Admin/Kasir menggunakan Saldo Pelanggan',
+                'reference_id' => 'ADMIN-SALDO-' . $tagihan->id_tagihan . '-' . time(),
+            ]);
+
+            $tagihan->update([
+                'status_bayar' => 1,
+                'waktu_bayar' => Carbon::now()->format('Y-m-d H:i:s'),
+                'user_id' => Auth::id(),
+                'terbayar' => $tagihan->jml_bayar,
+                'bayar_saldo' => $tagihan->jml_bayar,
+                'bayar_non_saldo' => 0,
+                'metode_pembayaran' => 'Saldo',
+                'blokir_status' => null,
+            ]);
+        } else {
+            $tagihan->update([
+                'status_bayar' => 1,
+                'waktu_bayar' => Carbon::now()->format('Y-m-d H:i:s'),
+                'user_id' => Auth::id(),
+                'terbayar' => $tagihan->jml_bayar,
+                'bayar_saldo' => 0,
+                'bayar_non_saldo' => $tagihan->jml_bayar,
+                'metode_pembayaran' => $metodePembayaran,
+                'blokir_status' => null,
+            ]);
+        }
 
         if ($pelanggan) {
             $tanggal_sekarang = date('Y-m-d');
@@ -406,13 +470,31 @@ class AdminTransaksiController extends Controller
             if (!$existsInKas) {
                 $paket = DB::table('tb_paket')->where('id_paket', $pelanggan->paket)->first();
                 $nama_paket = $paket ? $paket->nama_paket : '';
-                $ket = "Pembayaran Internet AN. " . $pelanggan->nama_pelanggan . ", Paket " . $nama_paket;
-                DB::table('tb_kas')->insert([
-                    'tgl_kas' => date('Y-m-d'),
-                    'keterangan' => $ket,
-                    'penerimaan' => $tagihan->jml_bayar,
-                    'id_tagihan' => $tagihan->id_tagihan
-                ]);
+                if ($isPaySaldo) {
+                    $ket = "[SALDO] Pembayaran Internet AN. " . $pelanggan->nama_pelanggan . ", Paket " . $nama_paket;
+                    DB::table('tb_kas')->insert([
+                        'tgl_kas' => date('Y-m-d'),
+                        'keterangan' => $ket,
+                        'penerimaan' => $tagihan->jml_bayar,
+                        'bayar_saldo' => $tagihan->jml_bayar,
+                        'is_saldo' => 1,
+                        'jenis_kas' => 'saldo',
+                        'id_tagihan' => $tagihan->id_tagihan,
+                        'status' => 1
+                    ]);
+                } else {
+                    $ket = "Pembayaran Internet AN. " . $pelanggan->nama_pelanggan . ", Paket " . $nama_paket;
+                    DB::table('tb_kas')->insert([
+                        'tgl_kas' => date('Y-m-d'),
+                        'keterangan' => $ket,
+                        'penerimaan' => $tagihan->jml_bayar,
+                        'bayar_saldo' => 0,
+                        'is_saldo' => 0,
+                        'jenis_kas' => 'tagihan',
+                        'id_tagihan' => $tagihan->id_tagihan,
+                        'status' => 1
+                    ]);
+                }
                 \App\Models\Tagihan::allocateMitraCommission($tagihan->id_tagihan);
             }
 
@@ -468,12 +550,34 @@ class AdminTransaksiController extends Controller
 
         $pelanggan = Pelanggan::find($tagihan->id_pelanggan);
 
+        if (($tagihan->bayar_saldo ?? 0) > 0 && $pelanggan) {
+            $saldoAwal = (int) ($pelanggan->saldo ?? 0);
+            $refundAmount = (int) $tagihan->bayar_saldo;
+            $saldoAkhir = $saldoAwal + $refundAmount;
+            $pelanggan->update(['saldo' => $saldoAkhir]);
+
+            \App\Models\SaldoMutasi::create([
+                'id_pelanggan' => $pelanggan->id_pelanggan,
+                'user_id' => Auth::id(),
+                'tipe' => 'masuk',
+                'jumlah' => $refundAmount,
+                'saldo_awal' => $saldoAwal,
+                'saldo_akhir' => $saldoAkhir,
+                'kategori' => 'refund',
+                'keterangan' => 'Pengembalian saldo atas pembatalan invoice ID: ' . $tagihan->id_tagihan,
+                'reference_id' => 'REFUND-' . $tagihan->id_tagihan . '-' . time(),
+            ]);
+        }
+
         // Batalkan pembayaran
         $tagihan->update([
             'status_bayar' => null,
             'waktu_bayar' => null,
             'user_id' => null,
             'terbayar' => null,
+            'bayar_saldo' => 0,
+            'bayar_non_saldo' => 0,
+            'metode_pembayaran' => null,
         ]);
 
         if ($pelanggan && $pelanggan->jatuh_tempo) {
@@ -858,23 +962,41 @@ class AdminTransaksiController extends Controller
                 $due_day_str = str_pad($due_day, 2, '0', STR_PAD_LEFT);
                 $tgl_jatuh_tempo = sprintf('%04d-%02d-%02d 23:59:00', $due_year, $due_month, $due_day);
 
+                // Cek apakah pelanggan memiliki paket Free atau harga 0
+                $paket_data = $pelanggan_data ? DB::table('tb_paket')->where('id_paket', $pelanggan_data->paket)->first() : null;
+                $isFreePackage = ($paket_data && ((int)$paket_data->harga === 0 || strtolower(trim($paket_data->nama_paket)) === 'free')) || ((int)$harga_oke === 0);
+
                 // Cek apakah pelanggan sedang dalam masa promo aktif pada bulan & tahun target
                 $target_month = (int) substr($bulan2[$i], 0, 2);
                 $target_year = (int) substr($bulan2[$i], 2, 4);
                 $activePromo = \App\Models\Promo::getActivePromoForPeriod($id_pelanggan[$i], $target_month, $target_year);
 
-                $status_bayar = $activePromo ? 1 : null;
-                $terbayar = $activePromo ? $harga_oke : null;
-                $waktu_bayar = $activePromo ? now()->format('Y-m-d H:i:s') : null;
+                $status_bayar = ($activePromo || $isFreePackage) ? 1 : null;
+                $terbayar = $activePromo ? $harga_oke : ($isFreePackage ? 0 : null);
+                $waktu_bayar = ($activePromo || $isFreePackage) ? now()->format('Y-m-d H:i:s') : null;
+                $metode_pembayaran = $isFreePackage ? 'Free' : ($activePromo ? 'Promo' : null);
+
+                $no_invoice = null;
+                if ($status_bayar == 1) {
+                    $latestInvoice = DB::table('tb_tagihan')->orderBy('no_invoice', 'desc')->first();
+                    $no_spt = $latestInvoice ? $latestInvoice->no_invoice : '00000.BLR.MST.';
+                    $urut = (int) substr($no_spt, 0, 5);
+                    $no_invoice = str_pad($urut + 1, 5, '0', STR_PAD_LEFT) . '.BLR.MST.';
+                }
 
                 // Buat tagihan baru
                 DB::table('tb_tagihan')->insert([
                     'id_pelanggan' => $id_pelanggan[$i],
                     'bulan_tahun' => $bulan2[$i],
-                    'jml_bayar' => $harga_oke,
+                    'jml_bayar' => $isFreePackage ? 0 : $harga_oke,
                     'terbayar' => $terbayar,
+                    'bayar_saldo' => 0,
+                    'bayar_non_saldo' => 0,
+                    'metode_pembayaran' => $metode_pembayaran,
                     'status_bayar' => $status_bayar,
                     'waktu_bayar' => $waktu_bayar,
+                    'no_invoice' => $no_invoice,
+                    'blokir_status' => null,
                     'manual_invoice' => 0,
                     'jatuh_tempo' => $tgl_jatuh_tempo
                 ]);

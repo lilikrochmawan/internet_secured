@@ -378,11 +378,11 @@
                 </div>
 
                 <div class="form-group" id="parent_odc_group" style="display: none;">
-                    <label for="parent_id">Menginduk ke ODC Utama *</label>
+                    <label for="parent_id">Menginduk ke ODC Induk *</label>
                     <select id="parent_id" name="parent_id" class="form-control">
-                        <option value="" selected disabled>-- Pilih ODC Utama --</option>
-                        @foreach($mainOdcs as $mo)
-                            <option value="{{ $mo->id_odc }}">{{ $mo->nama_odc }}</option>
+                        <option value="" selected disabled>-- Pilih ODC Induk --</option>
+                        @foreach($allOdcs as $mo)
+                            <option value="{{ $mo->id_odc }}">{{ $mo->nama_odc }} ({{ ucfirst($mo->jenis_odc ?? 'ODC') }} - {{ $mo->perangkat_odc }})</option>
                         @endforeach
                     </select>
                 </div>
@@ -465,11 +465,11 @@
                 </div>
 
                 <div class="form-group" id="edit_parent_odc_group" style="display: none;">
-                    <label for="edit_parent_id">Menginduk ke ODC Utama *</label>
+                    <label for="edit_parent_id">Menginduk ke ODC Induk *</label>
                     <select id="edit_parent_id" name="parent_id" class="form-control">
-                        <option value="" selected disabled>-- Pilih ODC Utama --</option>
-                        @foreach($mainOdcs as $mo)
-                            <option value="{{ $mo->id_odc }}">{{ $mo->nama_odc }}</option>
+                        <option value="" selected disabled>-- Pilih ODC Induk --</option>
+                        @foreach($allOdcs as $mo)
+                            <option value="{{ $mo->id_odc }}">{{ $mo->nama_odc }} ({{ ucfirst($mo->jenis_odc ?? 'ODC') }} - {{ $mo->perangkat_odc }})</option>
                         @endforeach
                     </select>
                 </div>
@@ -785,9 +785,21 @@ maxNativeZoom: 21,
         document.getElementById('edit_tube').value = odc.tube || '';
         document.getElementById('edit_core_number').value = odc.core_number || '';
         
-        document.getElementById('edit_jenis_odc').value = odc.jenis_odc || 'utama';
+        var parentSelect = document.getElementById('edit_parent_id');
+        Array.from(parentSelect.options).forEach(opt => {
+            if (opt.value == odc.id_odc) {
+                opt.style.display = 'none';
+                opt.disabled = true;
+            } else {
+                opt.style.display = 'block';
+                opt.disabled = false;
+            }
+        });
+
+        var jenis = odc.jenis_odc || (odc.parent_id ? 'distribusi' : 'utama');
+        document.getElementById('edit_jenis_odc').value = jenis;
+        toggleParentOdcSelector(jenis, 'edit_parent_odc_group');
         document.getElementById('edit_parent_id').value = odc.parent_id || '';
-        toggleParentOdcSelector(odc.jenis_odc || 'utama', 'edit_parent_odc_group');
 
         document.getElementById('editModal').classList.add('active');
         document.getElementById('map-edit-picker').style.display = 'none';

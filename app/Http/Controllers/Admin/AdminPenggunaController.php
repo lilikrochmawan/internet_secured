@@ -11,18 +11,28 @@ class AdminPenggunaController extends Controller
 {
     public function index()
     {
-        // Tampilkan akun staff dan administrator
-        $users = User::whereIn('level', ['admin', 'kasir', 'teknisi', 'sales', 'mitra', 'noc'])->orderBy('id', 'desc')->get();
+        $isAdmin = in_array(strtolower(auth()->user()->level), ['admin', 'administrator']);
+
+        // Tampilkan akun staff dan administrator hanya jika hak akses administrator
+        $users = $isAdmin 
+            ? User::whereIn('level', ['admin', 'kasir', 'teknisi', 'sales', 'mitra', 'noc'])->orderBy('id', 'desc')->get()
+            : collect([]);
+
         // Tampilkan akun pelanggan (eager load pelanggan dan paket detail)
         $customerUsers = User::with('pelanggan.paketDetail')
             ->whereNotIn('level', ['admin', 'kasir', 'teknisi', 'sales', 'mitra', 'noc'])
             ->orderBy('id', 'desc')
             ->get();
-        return view('admin.pengguna.index', compact('users', 'customerUsers'));
+
+        return view('admin.pengguna.index', compact('users', 'customerUsers', 'isAdmin'));
     }
 
     public function store(Request $request)
     {
+        if (!in_array(strtolower(auth()->user()->level), ['admin', 'administrator'])) {
+            abort(403, 'Akses ditolak. Hanya administrator yang dapat menambah akun staff.');
+        }
+
         $request->validate([
             'username' => 'required|string|unique:tb_user,username',
             'nama_user' => 'required|string',
@@ -67,6 +77,12 @@ class AdminPenggunaController extends Controller
         ]);
 
         $user = User::findOrFail($request->id);
+
+        if ($user->level !== 'user' || $request->level !== 'user') {
+            if (!in_array(strtolower(auth()->user()->level), ['admin', 'administrator'])) {
+                abort(403, 'Akses ditolak. Hanya administrator yang dapat mengubah akun staff.');
+            }
+        }
         
         $oldUsername = $user->username;
         $newUsername = htmlspecialchars(strip_tags($request->username));
@@ -210,6 +226,9 @@ class AdminPenggunaController extends Controller
 
             return redirect()->route('admin.pengguna.index')->with('success', 'Akun pelanggan beserta data profil langganan berhasil dihapus!');
         } else {
+            if (!in_array(strtolower(auth()->user()->level), ['admin', 'administrator'])) {
+                abort(403, 'Akses ditolak. Hanya administrator yang dapat menghapus akun staff.');
+            }
             $user->delete();
             return redirect()->route('admin.pengguna.index')->with('success', 'Akun staff berhasil dihapus!');
         }

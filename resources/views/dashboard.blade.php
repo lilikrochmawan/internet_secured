@@ -945,6 +945,55 @@
                     @endif
                 </div>
 
+                <!-- Card Saldo Akun Pelanggan -->
+                <div class="card" style="background: linear-gradient(135deg, rgba(30, 41, 59, 0.85), rgba(15, 23, 42, 0.95)); border: 1px solid rgba(99, 102, 241, 0.25);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <div style="width: 42px; height: 42px; border-radius: 12px; background: rgba(99, 102, 241, 0.15); display: flex; align-items: center; justify-content: center; color: #818cf8; font-size: 1.25rem;">
+                                <i class="fa-solid fa-wallet"></i>
+                            </div>
+                            <div>
+                                <span style="font-size: 0.78rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Saldo Akun Anda</span>
+                                <h2 style="font-size: 1.55rem; font-weight: 800; color: #ffffff; margin: 2px 0 0 0; font-family: 'Outfit', sans-serif;">
+                                    Rp {{ number_format($saldo ?? ($pelanggan->saldo ?? 0), 0, ',', '.') }}
+                                </h2>
+                            </div>
+                        </div>
+                        <span class="badge badge-success" style="font-size: 0.72rem; padding: 4px 8px; border-radius: 20px;">
+                            Tersedia
+                        </span>
+                    </div>
+
+                    <p style="font-size: 0.8rem; color: var(--text-dim); margin-bottom: 14px; line-height: 1.4;">
+                        Saldo dapat digunakan untuk membayar tagihan internet bulanan Anda secara otomatis atau sebagian.
+                    </p>
+
+                    <div style="display: flex; gap: 8px;">
+                        <button type="button" class="btn" onclick="openClientTopupModal()" style="flex: 1; background: linear-gradient(135deg, #6366f1, #4f46e5); color: white; border: none; padding: 10px 14px; border-radius: 12px; font-weight: 700; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);">
+                            <i class="fa-solid fa-qrcode"></i> Top Up Saldo (QRIS)
+                        </button>
+                        <button type="button" class="btn" onclick="openClientHistoryModal()" style="background: rgba(148, 163, 184, 0.1); color: var(--text-light); border: 1px solid var(--border-color); padding: 10px 14px; border-radius: 12px; font-weight: 600; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer;">
+                            <i class="fa-solid fa-clock-rotate-left"></i> Riwayat
+                        </button>
+                    </div>
+
+                    @if(isset($mutasiSaldo) && $mutasiSaldo->isNotEmpty())
+                        <div style="margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.06);">
+                            <span style="font-size: 0.72rem; color: var(--text-dim); display: block; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">Mutasi Terakhir:</span>
+                            @foreach($mutasiSaldo->take(2) as $ms)
+                                <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; margin-bottom: 4px;">
+                                    <span style="color: var(--text-gray); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 170px;">
+                                        {{ $ms->keterangan ?: ($ms->tipe === 'masuk' ? 'Top Up' : 'Pembayaran') }}
+                                    </span>
+                                    <strong style="color: {{ $ms->tipe === 'masuk' ? '#34d399' : '#f87171' }}; font-family: monospace;">
+                                        {{ ($ms->tipe === 'masuk' ? '+' : '-') }} Rp {{ number_format($ms->jumlah, 0, ',', '.') }}
+                                    </strong>
+                                </div>
+                            @endforeach
+                        </div>
+                    @endif
+                </div>
+
                 <!-- Card 2: Usage Card (Translated to Indonesian) -->
                 <div class="card">
                     <div class="card-title-with-icon">
@@ -1051,6 +1100,210 @@
 
         @include('partials.bottom-nav')
     </div>
+
+    <!-- Modal Top Up Saldo Client -->
+    <div id="modalClientTopup" style="display:none; position:fixed; z-index:9999; left:0; top:0; width:100%; height:100%; background:rgba(11,17,36,0.85); backdrop-filter:blur(6px); align-items:center; justify-content:center; padding:16px;">
+        <div style="background:#0f172a; border:1px solid rgba(99,102,241,0.3); border-radius:24px; width:min(440px, 100%); padding:24px; box-shadow:0 25px 50px rgba(0,0,0,0.5); color:#f8fafc; animation:modalSlide 0.2s ease-out;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
+                <h3 style="margin:0; font-size:1.15rem; font-weight:700; display:flex; align-items:center; gap:8px;">
+                    <i class="fa-solid fa-qrcode" style="color:#818cf8;"></i> Top Up Saldo (Midtrans QRIS)
+                </h3>
+                <button type="button" onclick="closeClientTopupModal()" style="background:transparent; border:none; color:#94a3b8; font-size:1.4rem; cursor:pointer;">&times;</button>
+            </div>
+
+            <div style="background:rgba(99,102,241,0.1); border:1px solid rgba(99,102,241,0.25); border-radius:14px; padding:12px 16px; margin-bottom:18px; display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:0.82rem; color:var(--text-gray);">Saldo Saat Ini:</span>
+                <strong style="color:#a5b4fc; font-size:1.1rem; font-family:'Outfit', sans-serif;">Rp {{ number_format($saldo ?? ($pelanggan->saldo ?? 0), 0, ',', '.') }}</strong>
+            </div>
+
+            <div style="margin-bottom:16px;">
+                <label style="display:block; font-size:0.85rem; font-weight:600; color:var(--text-gray); margin-bottom:8px;">
+                    Pilih / Masukkan Nominal Top Up *
+                </label>
+                <div style="position:relative;">
+                    <span style="position:absolute; left:14px; top:50%; transform:translateY(-50%); font-weight:700; color:#818cf8;">Rp</span>
+                    <input type="number" id="clientTopupAmount" placeholder="Minimal 10.000" min="10000" step="1000" style="width:100%; height:46px; border-radius:12px; background:rgba(30,41,59,0.8); border:1px solid rgba(148,163,184,0.2); color:white; padding-left:44px; padding-right:14px; font-size:1.05rem; font-weight:700; outline:none; box-sizing:border-box;">
+                </div>
+                <div style="margin-top:10px; display:flex; flex-wrap:wrap; gap:6px;">
+                    <button type="button" onclick="setClientTopup(20000)" style="background:rgba(30,41,59,0.9); border:1px solid rgba(148,163,184,0.2); color:#cbd5e1; border-radius:8px; padding:6px 12px; font-size:0.8rem; font-weight:600; cursor:pointer;">+20.000</button>
+                    <button type="button" onclick="setClientTopup(50000)" style="background:rgba(30,41,59,0.9); border:1px solid rgba(148,163,184,0.2); color:#cbd5e1; border-radius:8px; padding:6px 12px; font-size:0.8rem; font-weight:600; cursor:pointer;">+50.000</button>
+                    <button type="button" onclick="setClientTopup(100000)" style="background:rgba(30,41,59,0.9); border:1px solid rgba(148,163,184,0.2); color:#cbd5e1; border-radius:8px; padding:6px 12px; font-size:0.8rem; font-weight:600; cursor:pointer;">+100.000</button>
+                    <button type="button" onclick="setClientTopup(200000)" style="background:rgba(30,41,59,0.9); border:1px solid rgba(148,163,184,0.2); color:#cbd5e1; border-radius:8px; padding:6px 12px; font-size:0.8rem; font-weight:600; cursor:pointer;">+200.000</button>
+                </div>
+            </div>
+
+            <div style="background:rgba(15,23,42,0.6); border:1px solid rgba(148,163,184,0.15); border-radius:12px; padding:12px; margin-bottom:20px; font-size:0.78rem; color:var(--text-dim); line-height:1.5;">
+                <i class="fa-solid fa-circle-info" style="color:#38bdf8; margin-right:4px;"></i>
+                Pembayaran menggunakan <strong>Midtrans QRIS</strong>. Anda dapat membayar menggunakan GoPay, ShopeePay, BCA QRIS, Dana, OVO, LinkAja, atau seluruh aplikasi mobile banking.
+            </div>
+
+            <div style="display:flex; gap:10px;">
+                <button type="button" onclick="closeClientTopupModal()" style="flex:1; background:rgba(148,163,184,0.15); color:white; border:none; padding:12px; border-radius:12px; font-weight:600; cursor:pointer;">Batal</button>
+                <button type="button" id="btnSubmitClientTopup" onclick="processClientTopup()" style="flex:2; background:linear-gradient(135deg, #6366f1, #4f46e5); color:white; border:none; padding:12px; border-radius:12px; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px; box-shadow:0 4px 12px rgba(79,70,229,0.4);">
+                    <i class="fa-solid fa-qrcode"></i> Lanjut Bayar QRIS
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Riwayat Saldo Client -->
+    <div id="modalClientHistory" style="display:none; position:fixed; z-index:9999; left:0; top:0; width:100%; height:100%; background:rgba(11,17,36,0.85); backdrop-filter:blur(6px); align-items:center; justify-content:center; padding:16px;">
+        <div style="background:#0f172a; border:1px solid rgba(99,102,241,0.3); border-radius:24px; width:min(520px, 100%); padding:24px; box-shadow:0 25px 50px rgba(0,0,0,0.5); color:#f8fafc; animation:modalSlide 0.2s ease-out; max-height:85vh; display:flex; flex-direction:column;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                <h3 style="margin:0; font-size:1.15rem; font-weight:700; display:flex; align-items:center; gap:8px;">
+                    <i class="fa-solid fa-clock-rotate-left" style="color:#38bdf8;"></i> Riwayat Mutasi Saldo
+                </h3>
+                <button type="button" onclick="closeClientHistoryModal()" style="background:transparent; border:none; color:#94a3b8; font-size:1.4rem; cursor:pointer;">&times;</button>
+            </div>
+
+            <div id="clientHistoryLoading" style="text-align:center; padding:30px; color:var(--text-dim);">
+                <i class="fa-solid fa-spinner fa-spin" style="font-size:1.5rem; color:#818cf8;"></i>
+                <div style="margin-top:8px;">Memuat riwayat saldo...</div>
+            </div>
+
+            <div id="clientHistoryContent" style="display:none; overflow-y:auto; flex:1; padding-right:4px;">
+                <div id="clientHistoryList" style="display:grid; gap:8px;">
+                </div>
+            </div>
+
+            <div id="clientHistoryEmpty" style="display:none; text-align:center; padding:30px; color:var(--text-dim);">
+                Belum ada transaksi saldo.
+            </div>
+
+            <div style="margin-top:16px; text-align:right;">
+                <button type="button" onclick="closeClientHistoryModal()" style="background:rgba(148,163,184,0.15); color:white; border:none; padding:10px 18px; border-radius:10px; font-weight:600; cursor:pointer;">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Snap JS SDK -->
+    @if(!empty($snapJsUrl) && !empty($clientKey))
+        <script src="{{ $snapJsUrl }}" data-client-key="{{ $clientKey }}"></script>
+    @endif
+
+    <script>
+        function openClientTopupModal() {
+            document.getElementById('modalClientTopup').style.display = 'flex';
+            document.getElementById('clientTopupAmount').focus();
+        }
+        function closeClientTopupModal() {
+            document.getElementById('modalClientTopup').style.display = 'none';
+        }
+        function setClientTopup(val) {
+            document.getElementById('clientTopupAmount').value = val;
+        }
+
+        function openClientHistoryModal() {
+            document.getElementById('modalClientHistory').style.display = 'flex';
+            loadClientSaldoHistory();
+        }
+        function closeClientHistoryModal() {
+            document.getElementById('modalClientHistory').style.display = 'none';
+        }
+
+        function processClientTopup() {
+            const nominal = parseInt(document.getElementById('clientTopupAmount').value || 0);
+            if (isNaN(nominal) || nominal < 10000) {
+                alert('Minimal top up saldo adalah Rp 10.000');
+                return;
+            }
+
+            const btn = document.getElementById('btnSubmitClientTopup');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyiapkan QRIS...';
+
+            fetch('{{ route("client.saldo.topup_charge") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({ nominal: nominal })
+            })
+            .then(res => res.json())
+            .then(data => {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-qrcode"></i> Lanjut Bayar QRIS';
+
+                if (data.token) {
+                    closeClientTopupModal();
+                    if (window.snap) {
+                        window.snap.pay(data.token, {
+                            onSuccess: function(result) {
+                                alert('Top Up Saldo berhasil! Halaman akan dimuat ulang.');
+                                window.location.reload();
+                            },
+                            onPending: function(result) {
+                                alert('Silakan selesaikan pembayaran QRIS Anda.');
+                                window.location.reload();
+                            },
+                            onError: function(result) {
+                                alert('Pembayaran QRIS gagal atau dibatalkan.');
+                            },
+                            onClose: function() {
+                                // Dialog ditutup
+                            }
+                        });
+                    } else {
+                        alert('Midtrans Snap tidak tersedia. Pastikan kredensial Midtrans telah dikonfigurasi.');
+                    }
+                } else {
+                    alert(data.error || 'Gagal memulai transaksi Midtrans.');
+                }
+            })
+            .catch(err => {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-qrcode"></i> Lanjut Bayar QRIS';
+                alert('Terjadi kesalahan koneksi.');
+                console.error(err);
+            });
+        }
+
+        function loadClientSaldoHistory() {
+            const loading = document.getElementById('clientHistoryLoading');
+            const content = document.getElementById('clientHistoryContent');
+            const empty = document.getElementById('clientHistoryEmpty');
+            const list = document.getElementById('clientHistoryList');
+
+            loading.style.display = 'block';
+            content.style.display = 'none';
+            empty.style.display = 'none';
+            list.innerHTML = '';
+
+            fetch('{{ route("client.saldo.riwayat") }}')
+                .then(res => res.json())
+                .then(data => {
+                    loading.style.display = 'none';
+                    if (!data.mutasi || data.mutasi.length === 0) {
+                        empty.style.display = 'block';
+                    } else {
+                        data.mutasi.forEach(m => {
+                            const isMasuk = m.tipe === 'masuk';
+                            const item = document.createElement('div');
+                            item.style.cssText = 'background:rgba(30,41,59,0.7); border:1px solid rgba(148,163,184,0.12); border-radius:14px; padding:12px 16px; display:flex; justify-content:space-between; align-items:center;';
+                            item.innerHTML = `
+                                <div>
+                                    <div style="font-weight:700; color:white; font-size:0.88rem;">${m.keterangan}</div>
+                                    <div style="font-size:0.75rem; color:var(--text-dim); margin-top:2px;">${m.tanggal} &bull; Sisa: ${m.saldo_akhir_formatted}</div>
+                                </div>
+                                <strong style="color:${isMasuk ? '#34d399' : '#f87171'}; font-size:0.95rem; font-family:monospace;">
+                                    ${m.jumlah_formatted}
+                                </strong>
+                            `;
+                            list.appendChild(item);
+                        });
+                        content.style.display = 'block';
+                    }
+                })
+                .catch(err => {
+                    loading.style.display = 'none';
+                    empty.style.display = 'block';
+                    empty.innerText = 'Gagal memuat riwayat.';
+                    console.error(err);
+                });
+        }
+    </script>
 
     <!-- AJAX script to load live session stats and Uptime from router -->
     <script>
