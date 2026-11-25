@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'Order Pemasangan Baru')
 
@@ -984,8 +984,8 @@
 
                 <div class="form-group">
                     <label for="username">Username PPPoE (Akun Client) *</label>
-                    <input type="text" id="username" name="username" class="form-control" required placeholder="Contoh: budi_s">
-                    <small style="color: var(--text-gray);">Akan digunakan untuk login ke WiFi/PPPoE client.</small>
+                    <input type="text" id="username" name="username" class="form-control" required placeholder="Contoh: 000031001">
+                    <small style="color: var(--text-gray);">Otomatis menggunakan Kode Pelanggan untuk akun PPPoE & login client.</small>
                 </div>
 
                 <div class="form-group">
@@ -1195,7 +1195,7 @@
                 </button>
             </div>
 
-            <form action="{{ route('admin.order_pemasangan.store') }}" method="POST" enctype="multipart/form-data">
+            <form id="formTambahOrder" action="{{ route('admin.order_pemasangan.store') }}" method="POST" enctype="multipart/form-data" onsubmit="return handleOrderFormSubmit(event, this)">
                 @csrf
                 <div class="form-group">
                     <label for="nik_modal">NIK Pelanggan *</label>
@@ -1257,7 +1257,7 @@
 
                 <div class="form-group">
                     <label for="foto_ktp_modal">Upload Foto KTP *</label>
-                    <input type="file" id="foto_ktp_modal" name="foto_ktp" class="form-control" required accept="image/*" onchange="if(this.files && this.files[0]) updateKtpInputPreview(this.files[0]);">
+                    <input type="file" id="foto_ktp_modal" name="foto_ktp" class="form-control" required accept="image/*" onchange="handleFotoKtpModalChange(this)">
                     <!-- Preview Thumbnail KTP -->
                     <div id="ktp_preview_container" style="display: none; margin-top: 10px;">
                         <div style="position: relative; display: inline-block;">
@@ -1267,7 +1267,7 @@
                             </span>
                         </div>
                     </div>
-                    <small style="color:var(--text-gray);">Maksimal ukuran file 5 MB (Format: jpeg, png, webp).</small>
+                    <small id="foto_ktp_size_info" style="color:var(--text-gray); display:block; margin-top:4px;">Foto otomatis dioptimasi & dikompres agar ringan dikirim (Format: JPG, PNG, WEBP).</small>
                 </div>
 
                 <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:24px;">
@@ -1646,6 +1646,9 @@
     let odpMarkers = [];
     let currentClientCoords = '';
     const odpsList = {!! json_encode($odps) !!};
+    window.nextKodePelanggan = "{{ $nextKodePelanggan ?? '' }}";
+    window.lastPelangganId = {{ $lastPelangganId ?? 0 }};
+    window.routeNextKode = "{{ route('admin.order_pemasangan.next_kode') }}";
 
     document.addEventListener("DOMContentLoaded", function () {
         setupTablePagination("#ordersTable", "#ordersPagination", "#tableLimit", "#tableSearch");
@@ -1877,7 +1880,7 @@
                 item.style.border = '1px dashed rgba(220, 38, 38, 0.2)';
                 item.style.marginBottom = '6px';
                 item.innerHTML = `
-                    <div style="font-weight: 700; color: #b91c1c; margin-bottom: 4px;">⚠️ ${w.matched_by}</div>
+                    <div style="font-weight: 700; color: #b91c1c; margin-bottom: 4px;">⚠️  ${w.matched_by}</div>
                     <div style="color: #475569;"><strong>Nama Pelanggan:</strong> ${w.nama_pelanggan}</div>
                     <div style="color: #475569;"><strong>Dihapus Pada:</strong> ${w.created_at}</div>
                     <div style="margin-top: 6px; padding: 6px 10px; background-color: #fee2e2; color: #991b1b; border-radius: 8px; font-weight: 500;">
@@ -1891,10 +1894,23 @@
             warningBox.style.display = 'none';
         }
         
-        // Default username and password suggestion
-        var nameSlug = order.nama.toLowerCase().replace(/[^a-z0-9]/g, '_').substring(0, 10);
-        document.getElementById('username').value = nameSlug + '_' + Math.floor(100 + Math.random() * 900);
+        // Username PPPoE otomatis disesuaikan menggunakan Kode Pelanggan
+        const defaultKode = window.nextKodePelanggan || ('00003100' + ((window.lastPelangganId || 0) + 1));
+        document.getElementById('username').value = defaultKode;
         document.getElementById('password').value = Math.floor(100000 + Math.random() * 900000);
+
+        // Ambil kode pelanggan terkini secara asinkron jika tersedia
+        if (window.routeNextKode) {
+            fetch(window.routeNextKode)
+                .then(res => res.json())
+                .then(data => {
+                    if (data && data.next_kode) {
+                        window.nextKodePelanggan = data.next_kode;
+                        document.getElementById('username').value = data.next_kode;
+                    }
+                })
+                .catch(err => console.error(err));
+        }
         
         document.getElementById('no_telp_approve').value = order.no_telp || '';
         
@@ -2038,14 +2054,14 @@ maxNativeZoom: 21,
             // Haversine formula
             function calculateDistance(lat1, lon1, lat2, lon2) {
                 const R = 6371e3; // metres
-                const φ1 = lat1 * Math.PI/180;
-                const φ2 = lat2 * Math.PI/180;
-                const Δφ = (lat2-lat1) * Math.PI/180;
-                const Δλ = (lon2-lon1) * Math.PI/180;
+                const phi1 = lat1 * Math.PI/180;
+                const phi2 = lat2 * Math.PI/180;
+                const deltaPhi = (lat2-lat1) * Math.PI/180;
+                const deltaLambda = (lon2-lon1) * Math.PI/180;
 
-                const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
-                          Math.cos(φ1) * Math.cos(φ2) *
-                          Math.sin(Δλ/2) * Math.sin(Δλ/2);
+                const a = Math.sin(deltaPhi/2) * Math.sin(deltaPhi/2) +
+                          Math.cos(phi1) * Math.cos(phi2) *
+                          Math.sin(deltaLambda/2) * Math.sin(deltaLambda/2);
                 const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
                 return R * c;
             }
@@ -2387,7 +2403,7 @@ maxNativeZoom: 21,
             }
             item.innerHTML = `
                 <div style="font-weight: 700; color: #dc2626; margin-bottom: 6px; font-size: 0.95rem;">
-                    ⚠️ Kriteria Cocok: ${w.matched_by}
+                    ⚠️  Kriteria Cocok: ${w.matched_by}
                 </div>
                 <div style="font-size: 0.85rem; color: #475569; line-height: 1.5;">
                     <strong>Nama Pelanggan:</strong> ${w.nama_pelanggan}<br>
@@ -2561,6 +2577,118 @@ maxNativeZoom: 21,
     let currentFacingMode = 'environment';
     let currentKtpSource = 'none';
     window.currentKtpFile = null;
+
+    // Helper kompresi gambar otomatis di sisi klien (Client-side Canvas Compression)
+    async function compressImageFile(file, maxWidth = 1600, maxHeight = 1600, quality = 0.82) {
+        if (!file || !file.type || !file.type.startsWith('image/')) return file;
+        // Jika file sudah sangat ringan (< 400 KB) dan berupa JPEG, tidak perlu kompres ulang
+        if (file.size <= 400 * 1024 && file.type === 'image/jpeg') return file;
+
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    let w = img.naturalWidth || img.width;
+                    let h = img.naturalHeight || img.height;
+
+                    if (w > maxWidth || h > maxHeight) {
+                        if (w > h) {
+                            h = Math.round((h * maxWidth) / w);
+                            w = maxWidth;
+                        } else {
+                            w = Math.round((w * maxHeight) / h);
+                            h = maxHeight;
+                        }
+                    }
+
+                    const canvas = document.createElement('canvas');
+                    canvas.width = w;
+                    canvas.height = h;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, w, h);
+
+                    canvas.toBlob(function(blob) {
+                        if (!blob) {
+                            resolve(file);
+                            return;
+                        }
+                        const cleanName = (file.name || 'foto_ktp.jpg').replace(/\.[^/.]+$/, "") + ".jpg";
+                        const compressedFile = new File([blob], cleanName, {
+                            type: 'image/jpeg',
+                            lastModified: Date.now()
+                        });
+                        console.log('Kompresi Gambar: ' + (file.size / 1024).toFixed(0) + ' KB -> ' + (compressedFile.size / 1024).toFixed(0) + ' KB');
+                        resolve(compressedFile);
+                    }, 'image/jpeg', quality);
+                };
+                img.onerror = function() { resolve(file); };
+                img.src = e.target.result;
+            };
+            reader.onerror = function() { resolve(file); };
+            reader.readAsDataURL(file);
+        });
+    }
+
+    // Tangani input file langsung di form tambah order
+    async function handleFotoKtpModalChange(input) {
+        if (!input.files || !input.files[0]) return;
+        const infoEl = document.getElementById('foto_ktp_size_info');
+        let file = input.files[0];
+
+        updateKtpInputPreview(file);
+
+        if (file.size > 500 * 1024) {
+            if (infoEl) infoEl.innerHTML = '<i class="fa-solid fa-spinner fa-spin" style="color:#0284c7;"></i> Sedang mengompres foto (' + (file.size / (1024 * 1024)).toFixed(1) + ' MB)...';
+            const compressed = await compressImageFile(file, 1600, 1600, 0.82);
+            try {
+                const dt = new DataTransfer();
+                dt.items.add(compressed);
+                input.files = dt.files;
+                file = compressed;
+            } catch (err) {
+                console.warn('DataTransfer update skipped:', err);
+            }
+            if (infoEl) infoEl.innerHTML = '<i class="fa-solid fa-circle-check" style="color:#16a34a;"></i> Foto berhasil dikompres: <b>' + (file.size / 1024).toFixed(0) + ' KB</b> (Optimal & Siap Dikirim)';
+        } else {
+            if (infoEl) infoEl.innerHTML = '<i class="fa-solid fa-circle-check" style="color:#16a34a;"></i> Ukuran foto optimal: <b>' + (file.size / 1024).toFixed(0) + ' KB</b>';
+        }
+
+        window.currentKtpFile = file;
+        updateKtpInputPreview(file);
+    }
+
+    // Tangani pencegahan submit form jika file foto masih terlalu besar
+    async function handleOrderFormSubmit(event, form) {
+        const fileInput = document.getElementById('foto_ktp_modal');
+        if (fileInput && fileInput.files && fileInput.files[0]) {
+            const file = fileInput.files[0];
+            if (file.size > 1024 * 1024) {
+                event.preventDefault();
+                const submitBtn = form.querySelector('button[type="submit"]');
+                const origHtml = submitBtn ? submitBtn.innerHTML : '';
+                if (submitBtn) {
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Mengompres foto KTP...';
+                }
+                const compressed = await compressImageFile(file, 1600, 1600, 0.80);
+                try {
+                    const dt = new DataTransfer();
+                    dt.items.add(compressed);
+                    fileInput.files = dt.files;
+                } catch (e) {
+                    console.warn(e);
+                }
+                if (submitBtn) {
+                    submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Mengirim order...';
+                }
+                form.submit();
+                return false;
+            }
+        }
+        return true;
+    }
+
     window.ktpRotation = 0;
     window.lastRawSourceImg = null;
 
@@ -2760,7 +2888,7 @@ maxNativeZoom: 21,
     function handleKtpFileSelected(input) {
         if (input.files && input.files[0]) {
             const file = input.files[0];
-            window.currentKtpFile = file;
+            window.currentKtpFile = file; // Simpan file asli tanpa kompresi agar OCR tajam
 
             const reader = new FileReader();
             reader.onload = function(e) {
@@ -2974,55 +3102,131 @@ maxNativeZoom: 21,
         }
     }
 
+    function isExcludedName(str) {
+        if (!str) return true;
+        const upper = str.toUpperCase();
+        const excludedKeywords = [
+            'KEWARGANEGARAAN', 'PEKERJAAN', 'STATUS', 'PERKAWINAN', 'KAWIN', 'BERLAKU',
+            'HINGGA', 'SEUMUR', 'HIDUP', 'GOLONGAN', 'DARAH', 'AGAMA', 'ALAMAT',
+            'TEMPAT', 'LAHIR', 'JENIS', 'KELAMIN', 'PROVINSI', 'KABUPATEN', 'KOTA',
+            'KECAMATAN', 'KELURAHAN', 'DESA', 'RT/RW', 'RTRW', 'INDONESIA', 'REPUBLIK', 'WNI'
+        ];
+        for (let kw of excludedKeywords) {
+            if (upper.includes(kw)) return true;
+        }
+        return false;
+    }
+
+    function splitMergedName(token) {
+        if (!token || token.length < 8) return token;
+        let t = token;
+
+        // Split known prefixes
+        const commonPrefixes = ['MUHAMMAD', 'MOCHAMMAD', 'MOHAMMAD', 'ACHMAD', 'AHMAD', 'ABDUL', 'SITI', 'DEWI', 'DWI', 'TRI', 'NUR', 'SRI'];
+        for (let pfx of commonPrefixes) {
+            if (t.length > pfx.length + 3 && t.startsWith(pfx) && !t.includes(' ')) {
+                t = pfx + ' ' + t.slice(pfx.length);
+                break;
+            }
+        }
+
+        // Recursively split known suffixes from end
+        const commonSuffixes = [
+            'PRASETYO', 'PRASETYA', 'PRATAMA', 'SAPUTRA', 'SAPUTRO', 'WIJAYA', 'KUSUMA',
+            'WIBOWO', 'NUGROHO', 'HIDAYAT', 'SANTOSO', 'GUNAWAN', 'SETIAWAN', 'HERMAWAN',
+            'RAHMAWAN', 'SUGIARTO', 'SUSANTO', 'PURNOMO', 'LESTARI', 'WULANDARI', 'MAHENDRA',
+            'SURYANTO', 'ISKANDAR', 'SYAHPUTRA', 'FIRMANDY', 'RAMADHAN', 'KURNIAWAN',
+            'LINGGAR', 'OENTORO', 'PUTRANTO', 'PUTRA', 'PUTRI', 'HANDOKO', 'HARTANTO',
+            'BUDIMAN', 'BUDIONO', 'WAHYUDI', 'WAHYONO', 'WAHYUNING', 'IRAWAN', 'SUHARTO',
+            'YUWONO', 'SUSILO', 'SUTRISNO', 'HARTONO', 'HARIYONO', 'PRAYOGO', 'PRAYOGO'
+        ];
+
+        // Apply suffix split - work on the last token (after any existing spaces)
+        let parts = t.split(' ');
+        let lastPart = parts[parts.length - 1];
+        for (let sfx of commonSuffixes) {
+            if (lastPart.length > sfx.length + 3 && lastPart.endsWith(sfx)) {
+                let rest = lastPart.slice(0, lastPart.length - sfx.length);
+                // Recursively split the rest
+                rest = splitMergedName(rest);
+                parts[parts.length - 1] = rest + ' ' + sfx;
+                t = parts.join(' ');
+                break;
+            }
+        }
+        return t;
+    }
+
     function cleanName(val) {
         if (!val) return '';
         let cleaned = val.trim();
 
-        // 1. Strip label patterns like 'Nama :', 'NAMA :', 'Narna :', 'N ama :', etc.
-        cleaned = cleaned.replace(/^(?:N[a|A|4][m|rn|M][a|A|4]|N\s*ama|Narna|Hama|Mama|Name)[\s:\.;\-_]*/i, '');
-        
-        // 2. Strip leading colon, dashes, symbols
+        // 1. Strip label patterns like 'Nama :', 'NAMA:', 'Narna :', 'N ama :', etc.
+        cleaned = cleaned.replace(/^[^a-zA-Z]*(?:N\s*[a4A]\s*[mM]\s*[a4A]|N\s*ama|Narna|Hama|Mama|Name)(?:\b|(?=[A-Z]))[:.;\-_=\s]*/i, '');
+        cleaned = cleaned.replace(/^(?:NAMA|NAME)\s+/i, '');
+
+        // 2. Strip leading colon, dashes, symbols again
         cleaned = cleaned.replace(/^[:\s\-_\.]+/, '');
 
-        // 3. Strip trailing fields if merged (Tempat/Tgl Lahir, Gol Darah, etc.)
-        cleaned = cleaned.replace(/\b(?:TEMPAT|TGL|LAHIR|GOL|DARAH|JENIS|KELAMIN|AGAMA|WNI|ISLAM|NIK|KTP)\b.*$/i, '');
+        // 3. Strip trailing KTP field labels if OCR merged them onto same line
+        cleaned = cleaned.replace(/\s*\b(?:TEMPAT|TGL|LAHIR|GOL\.?\s*DARAH|DARAH|JENIS|KELAMIN|AGAMA|WNI|ISLAM|NIK|KTP|RT\/?RW|ALAMAT|KEWARGANEGARAAN|PEKERJAAN|STATUS|KAWIN|BERLAKU)\b.*$/i, '');
 
-        // 4. Tokenize and remove noise words
+        // 4. Pre-fix common OCR ligatures & merged characters before tokenization
+        cleaned = cleaned.replace(/^ULIK([A-Z])/i, 'LILIK $1').replace(/^ULIK\b/i, 'LILIK');
+        cleaned = cleaned.replace(/LUINGGAR/gi, 'LINGGAR');
+        cleaned = cleaned.replace(/UINGGAR/gi, 'LINGGAR');
+        cleaned = cleaned.replace(/OENTOROLU(?=[A-Z])/gi, 'OENTORO ').replace(/\bOENTOROL\b/gi, 'OENTORO');
+
+        // 5. Tokenize and remove noise words
         let tokens = cleaned.split(/\s+/).filter(Boolean);
         let validTokens = [];
-        const noiseWords = ['ENG', 'INA', 'IDN', 'LAKI', 'PEREMPUAN', 'PROV', 'KAB', 'KOTA', 'REPUBLIK', 'INDONESIA'];
+        const noiseWords = ['ENG', 'INA', 'IDN', 'LAKI', 'PEREMPUAN', 'PROV', 'KAB', 'KOTA', 'REPUBLIK', 'INDONESIA', 'NAMA', 'NAME', 'NIK', 'KTP', 'WNI', 'M', 'ISLAM', 'KAWIN', 'SWASTA', 'KEWARGANEGARAAN'];
         for (let t of tokens) {
             let upper = t.toUpperCase().replace(/[^A-Z]/g, '');
             if (noiseWords.includes(upper)) continue;
             if (upper.length === 1 && validTokens.length > 0) continue;
-            validTokens.push(t);
+            let splitToken = splitMergedName(upper);
+            validTokens.push(splitToken);
         }
         cleaned = validTokens.join(' ');
-        cleaned = cleaned.replace(/[^a-zA-Z\s\.,'\-]/g, '').trim();
+        cleaned = cleaned.replace(/[^A-Za-z\s\.,'\-]/g, '').trim();
 
-        // 5. Fix common ligature misread: 'LI' read as 'U' (e.g. ULIK -> LILIK)
-        cleaned = cleaned.replace(/^ULIK([A-Z])/i, 'LILIK $1').replace(/^ULIK\b/i, 'LILIK');
+        // 6. Post-clean duplicate spaces
+        cleaned = cleaned.replace(/\s{2,}/g, ' ').trim();
 
         return cleaned;
     }
 
+    // Check if cleaned name has at least one word >= 4 chars (rejects "BI NL", etc.)
+    function isValidName(name) {
+        if (!name || name.length < 4) return false;
+        const words = name.trim().split(/\s+/);
+        // Need at least one word with 4+ letters
+        return words.some(w => w.replace(/[^A-Za-z]/g, '').length >= 4);
+    }
+
     function extractNama(lines, nikLineIdx) {
+        const isNamaLabel = (line) => /^\s*[^a-zA-Z]*(?:N\s*[a4A]\s*[mM]\s*[a4A]|N\s*ama|Narna|Hama|Mama|Name)\b/i.test(line);
+
         // Strategy 1: Look for explicit 'Nama' label on any line
-        const namaLabelRegex = /(?:N[a|A|4][m|rn|M][a|A|4]|N\s*ama|Narna|Hama|Mama|Name)[\s:\.;\-_]*/i;
         for (let i = 0; i < lines.length; i++) {
             let line = lines[i].trim();
-            if (namaLabelRegex.test(line)) {
-                let extracted = cleanName(line);
-                if (extracted.length >= 3) {
-                    return extracted;
+            if (isNamaLabel(line)) {
+                let afterLabel = line.replace(/^\s*[^a-zA-Z]*(?:N\s*[a4A]\s*[mM]\s*[a4A]|N\s*ama|Narna|Hama|Mama|Name)\b\s*[:.\;\-_=]*\s*/i, '').trim();
+                if (afterLabel.length >= 3) {
+                    let candidate = cleanName(afterLabel);
+                    if (candidate.length >= 3 && !isExcludedName(candidate) && isValidName(candidate)) {
+                        return candidate;
+                    }
                 }
-                // If the line only contained the label 'Nama :' with no value, check the NEXT line!
-                if (i + 1 < lines.length) {
-                    let nextLine = lines[i + 1].trim();
-                    if (!/tempat|tgl|lahir|jenis|alamat|nik|agama|prov/i.test(nextLine)) {
-                        let nextExtracted = cleanName(nextLine);
-                        if (nextExtracted.length >= 3) {
-                            return nextExtracted;
+                // If the name is on the NEXT line
+                for (let j = i + 1; j < Math.min(lines.length, i + 3); j++) {
+                    let nextLine = lines[j].trim();
+                    if (/^(?:tempat|tgl|lahir|jenis|kelamin|alamat|nik|agama|prov|rt|rw|kel|kec|gol|kewarganegaraan|pekerjaan|status)/i.test(nextLine)) break;
+                    if (nextLine.length >= 3 && !/^\d+$/.test(nextLine.replace(/\s/g, ''))) {
+                        let candidate = cleanName(nextLine);
+                        if (candidate.length >= 3 && !isExcludedName(candidate) && isValidName(candidate)) {
+                            return candidate;
                         }
                     }
                 }
@@ -3030,29 +3234,31 @@ maxNativeZoom: 21,
         }
 
         // Strategy 2: Positional detection between NIK and Tempat Lahir / Alamat
-        // In every Indonesian e-KTP, the name is strictly located after NIK and before Lahir/Alamat
         if (nikLineIdx !== -1) {
-            for (let i = nikLineIdx + 1; i < Math.min(lines.length, nikLineIdx + 4); i++) {
+            for (let i = nikLineIdx + 1; i < Math.min(lines.length, nikLineIdx + 5); i++) {
                 let line = lines[i].trim();
-                // Skip pure digit lines or NIK residue
                 if (/^\d+$/.test(line.replace(/\s/g, ''))) continue;
-                // Stop if reached Tempat Lahir / Alamat / Jenis Kelamin
-                if (/tempat|tgl|lahir|jenis|kelamin|alamat|gol/i.test(line)) break;
-                
+                if (/^(?:tempat|tgl|lahir|jenis|kelamin|alamat|gol|rt[\/\s]|kewarganegaraan|pekerjaan|status)/i.test(line)) break;
+                if (/^[A-Z][a-zA-Z]{2,10}\s*:/i.test(line) && line.split(':')[0].length < 15) continue;
+
                 let candidate = cleanName(line);
-                if (candidate.length >= 3) {
+                if (candidate.length >= 3 && !isExcludedName(candidate) && isValidName(candidate)) {
                     return candidate;
                 }
             }
         }
 
-        // Strategy 3: Look for line with colon that has a person's name format (2-4 uppercase words)
-        for (let i = 1; i < Math.min(lines.length, 7); i++) {
+        // Strategy 3: Look for lines after NIK that look like a person's name
+        const startIdx = (nikLineIdx !== -1) ? nikLineIdx + 1 : 1;
+        for (let i = startIdx; i < Math.min(lines.length, startIdx + 8); i++) {
             let line = lines[i].trim();
-            if (/tempat|tgl|lahir|jenis|alamat|nik|prov|kab|kota|agama/i.test(line)) continue;
+            if (/^(?:tempat|tgl|lahir|jenis|kelamin|alamat|nik|prov|kab|kota|agama|rt|kel|kec|gol|darah|status|kawin|pekerjaan|kewarganegaraan|berlaku|seumur|hidup|wni)/i.test(line)) continue;
             if (/^\d+$/.test(line.replace(/\s/g, ''))) continue;
+            if (isNamaLabel(line)) continue;
+            if (isExcludedName(line)) continue;
+
             let candidate = cleanName(line);
-            if (candidate.length >= 3 && candidate.split(' ').length >= 1) {
+            if (candidate.length >= 3 && !isExcludedName(candidate) && isValidName(candidate)) {
                 return candidate;
             }
         }
@@ -3065,9 +3271,14 @@ maxNativeZoom: 21,
         let cleaned = val.replace(/^[:\s\-_\+\.]+/, '').trim();
 
         if (type === 'jalan') {
-            cleaned = cleaned.replace(/\s+[A-Z]{1,2}\s+\d.*$/, '');
+            cleaned = cleaned.replace(/\b(RT\/?RW|KEL\.?|DESA|KEC\.?|KECAMATAN|KELURAHAN|AGAMA|JENIS|KELAMIN|STATUS|KAWIN|PEKERJAAN|WNI|BERLAKU)\b.*$/i, '').trim();
+            cleaned = cleaned.replace(/\s+\b(?:men|man|dan|rt|rw|no)\b.*$/i, '').trim();
+            // Strip short garbage tokens after street address (e.g. "wv lil", "nv il", etc.)
+            cleaned = cleaned.replace(/\s+[a-z]{1,3}\s+[a-z]{1,3}\s*$/i, '').trim();
+            cleaned = cleaned.replace(/\s+[a-z]{1,3}\s*$/i, '').trim();
             cleaned = cleaned.replace(/[^\w\s\.,\/\-]/g, '').trim();
         } else if (type === 'kelurahan' || type === 'kecamatan') {
+            cleaned = cleaned.replace(/\b(AGAMA|STATUS|KAWIN|WNI|PEKERJAAN|BERLAKU|KEWARGANEGARAAN)\b.*$/i, '').trim();
             let words = cleaned.split(/\s+/).filter(Boolean);
             let validWords = [];
             for (let w of words) {
@@ -3075,9 +3286,9 @@ maxNativeZoom: 21,
                 if (cleanW.length < 2) continue;
                 if (/^[a-z]+$/.test(w) && cleanW.length <= 3) continue;
                 if (validWords.length > 0 && cleanW.length <= 2) continue;
-                if (/^(AGAMA|STATUS|KAWIN|WNI|PEKERJAAN|BERLAKU)$/i.test(cleanW)) break;
+                if (/^(AGAMA|STATUS|KAWIN|WNI|PEKERJAAN|BERLAKU|KEWARGANEGARAAN)$/.test(cleanW)) break;
                 validWords.push(cleanW.toUpperCase());
-                if (validWords.length >= 2) break;
+                if (validWords.length >= 3) break;
             }
             cleaned = validWords.join(' ');
         }
@@ -3092,15 +3303,32 @@ maxNativeZoom: 21,
 
         // 1. EXTRACT NIK (16 Digits)
         let nikLineIdx = -1;
-        const digit16 = rawText.replace(/[^\d\s]/g, ' ').match(/\b\d{16}\b/);
+
+        // A. Direct 16 continuous digits
+        const digit16 = rawText.match(/\b\d{16}\b/);
         if (digit16) {
             result.nik = digit16[0];
             nikLineIdx = lines.findIndex(l => l.includes(result.nik) || /N[I|!1l\s]*K/i.test(l));
-        } else {
+        }
+
+        // B. 16 digits that might have spaces or dashes
+        if (!result.nik) {
+            const spacedDigits = rawText.match(/\b(?:\d[\s\-_.]*){16}\b/);
+            if (spacedDigits) {
+                const clean = spacedDigits[0].replace(/\D/g, '');
+                if (clean.length === 16) {
+                    result.nik = clean;
+                    nikLineIdx = lines.findIndex(l => l.replace(/\D/g, '').includes(clean));
+                }
+            }
+        }
+
+        // C. Line containing 'NIK' label with OCR character fixes
+        if (!result.nik) {
             for (let i = 0; i < lines.length; i++) {
                 let line = lines[i];
                 if (/N[I|!1l\s]*K/i.test(line)) {
-                    let clean = line.replace(/N[I|!1l\s]*K/i, '')
+                    let clean = line.replace(/.*N[I|!1l\s]*K/i, '')
                                     .replace(/[:\s\-=._]/g, '')
                                     .replace(/[oO]/g, '0')
                                     .replace(/[dD]/g, '0')
@@ -3114,6 +3342,20 @@ maxNativeZoom: 21,
                         nikLineIdx = i;
                         break;
                     }
+                    if (i + 1 < lines.length) {
+                        let nextClean = lines[i + 1].replace(/[oO]/g, '0')
+                                                    .replace(/[dD]/g, '0')
+                                                    .replace(/[iIl|!]/g, '1')
+                                                    .replace(/[bB]/g, '8')
+                                                    .replace(/[sS]/g, '5')
+                                                    .replace(/[zZ]/g, '2')
+                                                    .replace(/\D/g, '');
+                        if (nextClean.length >= 16) {
+                            result.nik = nextClean.slice(0, 16);
+                            nikLineIdx = i + 1;
+                            break;
+                        }
+                    }
                 }
             }
         }
@@ -3122,7 +3364,7 @@ maxNativeZoom: 21,
             nikLineIdx = lines.findIndex(l => /N[I|!1l\s]*K/i.test(l));
         }
 
-        // 2. EXTRACT NAMA (Multi-strategy)
+        // 2. EXTRACT NAMA
         result.nama = extractNama(lines, nikLineIdx);
 
         // 3. EXTRACT ALAMAT (Jalan, RT/RW, Kelurahan, Kecamatan)
@@ -3134,31 +3376,87 @@ maxNativeZoom: 21,
         for (let i = 0; i < lines.length; i++) {
             let line = lines[i];
 
-            if (!jalan && /(?:ALAMAT|Alamat|AL4MAT)[\s:\.;\-_]+/i.test(line)) {
-                let val = line.replace(/.*(?:ALAMAT|Alamat|AL4MAT)[\s:\.;\-_]+/i, '').trim();
-                jalan = cleanAddressPart(val, 'jalan');
-                if (!jalan && i + 1 < lines.length && !/rt|rw|kel|kec/i.test(lines[i + 1])) {
-                    jalan = cleanAddressPart(lines[i + 1], 'jalan');
+            // Extract Jalan
+            if (!jalan && /(?:ALAMAT|AL4MAT)\b/i.test(line)) {
+                let val = line.replace(/.*?(?:ALAMAT|AL4MAT)\s*[:.;\-_=]*\s*/i, '').trim();
+                if (val.length >= 2 && !/^(?:RT\/?RW|KEL|KEC)/i.test(val)) {
+                    jalan = cleanAddressPart(val, 'jalan');
+                }
+                if (!jalan) {
+                    for (let j = i + 1; j < Math.min(lines.length, i + 4); j++) {
+                        let nextLine = lines[j].trim();
+                        if (/^(?:RT[\s\/\.]*RW|Kel[\/\s\.]*Desa|Kelurahan|Desa|Kecamatan|Kec\b|Agama|Jenis|Status|Pekerjaan)/i.test(nextLine)) break;
+                        if (/(?:JL\.?\s|JALAN\s)/i.test(nextLine)) {
+                            let candidate = cleanAddressPart(nextLine, 'jalan');
+                            if (candidate.length >= 2) { jalan = candidate; break; }
+                        }
+                        let candidate = cleanAddressPart(nextLine, 'jalan');
+                        if (candidate.length >= 4) { jalan = candidate; break; }
+                    }
                 }
             }
 
-            if (!rtrw && /(?:RT[\s\/\.]*RW|RT\/RW|RTRW)[\s:\.;\-_]+/i.test(line)) {
+            // Extract RT/RW
+            if (!rtrw && /(?:RT[\s\/\.]*RW|RT\/RW|RTRW)\b/i.test(line)) {
                 let match = line.match(/(\d{1,3}\s*[\/\-]\s*\d{1,3})/);
                 if (match) {
                     rtrw = 'RT/RW ' + match[1].replace(/\s+/g, '');
+                } else if (i + 1 < lines.length) {
+                    let nextMatch = lines[i + 1].match(/(\d{1,3}\s*[\/\-]\s*\d{1,3})/);
+                    if (nextMatch) {
+                        rtrw = 'RT/RW ' + nextMatch[1].replace(/\s+/g, '');
+                    }
                 }
             }
 
-            if (!kel && /(?:Kel[\/\s\.]*Desa|Kelurahan[\/\s\.]*Desa|Kelurahan|Desa)[\s:\.;\-_]+/i.test(line)) {
-                let val = line.replace(/.*(?:Kel[\/\s\.]*Desa|Kelurahan[\/\s\.]*Desa|Kelurahan|Desa)[\s:\.;\-_]+/i, '').trim();
+            // Extract Kelurahan/Desa
+            if (!kel && /(?:Kel[\/\s\.]*Desa|Kelurahan[\/\s\.]*Desa|Kelurahan|Desa)\b/i.test(line)) {
+                let val = line.replace(/.*?(?:Kel[\/\s\.]*Desa|Kelurahan[\/\s\.]*Desa|Kelurahan|Desa)\s*[:.\;\-_=]*\s*/i, '').trim();
                 let cleanedKel = cleanAddressPart(val, 'kelurahan');
                 if (cleanedKel) kel = 'Kel. ' + cleanedKel;
+                if (!cleanedKel && i + 1 < lines.length) {
+                    let nextLine = lines[i + 1].trim();
+                    if (!/^(?:Kecamatan|Kec|Agama|Status)/i.test(nextLine)) {
+                        let candidate = cleanAddressPart(nextLine, 'kelurahan');
+                        if (candidate) kel = 'Kel. ' + candidate;
+                    }
+                }
             }
 
-            if (!kec && /(?:Kecamatan|Kec)[\s:\.;\-_]+/i.test(line)) {
-                let val = line.replace(/.*(?:Kecamatan|Kec)[\s:\.;\-_]+/i, '').trim();
+            // Extract Kecamatan
+            if (!kec && /(?:Kecamatan|Kec)\b/i.test(line)) {
+                let val = line.replace(/.*?(?:Kecamatan|Kec)\s*[:.\;\-_=]*\s*/i, '').trim();
                 let cleanedKec = cleanAddressPart(val, 'kecamatan');
                 if (cleanedKec) kec = 'Kec. ' + cleanedKec;
+                if (!cleanedKec && i + 1 < lines.length) {
+                    let nextLine = lines[i + 1].trim();
+                    if (!/^(?:Agama|Status|Kawin|Pekerjaan)/i.test(nextLine)) {
+                        let candidate = cleanAddressPart(nextLine, 'kecamatan');
+                        if (candidate) kec = 'Kec. ' + candidate;
+                    }
+                }
+            }
+        }
+
+
+        // Fallback: search for any JL/JALAN line in full text if jalan still empty
+        if (!jalan) {
+            for (let j = 0; j < lines.length; j++) {
+                let ln = lines[j].trim();
+                if (/^(?:JL\.?\s|JALAN\s)/i.test(ln)) {
+                    let candidate = cleanAddressPart(ln, 'jalan');
+                    if (candidate.length >= 4) { jalan = candidate; break; }
+                }
+            }
+        }
+        // Fallback search for RT/RW anywhere in text if not yet found
+        if (!rtrw) {
+            for (let i = 0; i < lines.length; i++) {
+                let m = lines[i].match(/\b(\d{2,3}\s*[\/\-]\s*\d{2,3})\b/);
+                if (m) {
+                    rtrw = 'RT/RW ' + m[1].replace(/\s+/g, '');
+                    break;
+                }
             }
         }
 
@@ -3197,14 +3495,19 @@ maxNativeZoom: 21,
         if (alamat) document.getElementById('alamat_ktp_modal').value = alamat;
 
         if (window.currentKtpFile) {
-            try {
-                const dt = new DataTransfer();
-                dt.items.add(window.currentKtpFile);
-                const fileInput = document.getElementById('foto_ktp_modal');
-                fileInput.files = dt.files;
-            } catch (err) {
-                console.warn('DataTransfer not supported:', err);
-            }
+            // Kompres foto secara halus untuk form agar ukuran upload ringan (< 500 KB)
+            compressImageFile(window.currentKtpFile, 1600, 1600, 0.82).then(compressed => {
+                try {
+                    const dt = new DataTransfer();
+                    dt.items.add(compressed);
+                    const fileInput = document.getElementById('foto_ktp_modal');
+                    if (fileInput) fileInput.files = dt.files;
+                    window.currentKtpFile = compressed;
+                    updateKtpInputPreview(compressed);
+                } catch (err) {
+                    console.warn('DataTransfer update skipped:', err);
+                }
+            });
             updateKtpInputPreview(window.currentKtpFile);
         }
 

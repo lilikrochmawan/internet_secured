@@ -968,12 +968,15 @@
                         Saldo dapat digunakan untuk membayar tagihan internet bulanan Anda secara otomatis atau sebagian.
                     </p>
 
-                    <div style="display: flex; gap: 8px;">
-                        <button type="button" class="btn" onclick="openClientTopupModal()" style="flex: 1; background: linear-gradient(135deg, #6366f1, #4f46e5); color: white; border: none; padding: 10px 14px; border-radius: 12px; font-weight: 700; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);">
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        <button type="button" class="btn" onclick="openClientTopupModal()" style="flex: 1; min-width: 130px; background: linear-gradient(135deg, #6366f1, #4f46e5); color: white; border: none; padding: 10px 14px; border-radius: 12px; font-weight: 700; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);">
                             <i class="fa-solid fa-qrcode"></i> Top Up Saldo (QRIS)
                         </button>
                         <button type="button" class="btn" onclick="openClientHistoryModal()" style="background: rgba(148, 163, 184, 0.1); color: var(--text-light); border: 1px solid var(--border-color); padding: 10px 14px; border-radius: 12px; font-weight: 600; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer;">
                             <i class="fa-solid fa-clock-rotate-left"></i> Riwayat
+                        </button>
+                        <button type="button" class="btn" onclick="checkClientPendingTopup()" title="Cek Status Pembayaran QRIS Terakhir" style="background: rgba(148, 163, 184, 0.1); color: #818cf8; border: 1px solid rgba(99, 102, 241, 0.3); padding: 10px 12px; border-radius: 12px; font-weight: 600; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer;">
+                            <i class="fa-solid fa-arrows-rotate"></i> Cek Status
                         </button>
                     </div>
 
@@ -1228,21 +1231,30 @@
 
                 if (data.token) {
                     closeClientTopupModal();
+                    if (data.order_id) {
+                        localStorage.setItem('pending_topup_order_id', data.order_id);
+                    }
                     if (window.snap) {
                         window.snap.pay(data.token, {
                             onSuccess: function(result) {
-                                alert('Top Up Saldo berhasil! Halaman akan dimuat ulang.');
-                                window.location.reload();
+                                const oid = (result && result.order_id) ? result.order_id : data.order_id;
+                                verifyAndFinishTopup(oid, false);
                             },
                             onPending: function(result) {
-                                alert('Silakan selesaikan pembayaran QRIS Anda.');
-                                window.location.reload();
+                                const oid = (result && result.order_id) ? result.order_id : data.order_id;
+                                if (oid) {
+                                    localStorage.setItem('pending_topup_order_id', oid);
+                                }
+                                verifyAndFinishTopup(oid, true);
                             },
                             onError: function(result) {
                                 alert('Pembayaran QRIS gagal atau dibatalkan.');
                             },
                             onClose: function() {
-                                // Dialog ditutup
+                                const oid = data.order_id || localStorage.getItem('pending_topup_order_id');
+                                if (oid) {
+                                    verifyAndFinishTopup(oid, true);
+                                }
                             }
                         });
                     } else {
@@ -1259,6 +1271,80 @@
                 console.error(err);
             });
         }
+
+        function verifyAndFinishTopup(orderId, silentIfPending = false) {
+            if (!orderId) {
+                orderId = localStorage.getItem('pending_topup_order_id');
+            }
+            if (!orderId) {
+                if (!silentIfPending) {
+                    alert('Tidak ada transaksi top up pending yang ditemukan.');
+                }
+                return;
+            }
+
+            let overlay = null;
+            if (!silentIfPending) {
+                overlay = document.createElement('div');
+                overlay.id = 'topupVerifOverlay';
+                overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(15,23,42,0.7);backdrop-filter:blur(4px);z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;color:white;text-align:center;padding:20px;';
+                overlay.innerHTML = `
+                    <div style="background:#1e293b;border:1px solid #334155;border-radius:18px;padding:28px 36px;max-width:380px;box-shadow:0 20px 25px -5px rgba(0,0,0,0.5);">
+                        <i class="fa-solid fa-spinner fa-spin" style="font-size:2.5rem;color:#6366f1;margin-bottom:14px;"></i>
+                        <h3 style="margin:0 0 8px 0;font-size:1.15rem;font-weight:700;">Memverifikasi Pembayaran...</h3>
+                        <p style="margin:0;font-size:0.85rem;color:#94a3b8;">Sedang memeriksa status pembayaran QRIS ke Midtrans. Mohon tunggu sebentar...</p>
+                    </div>
+                `;
+                document.body.appendChild(overlay);
+            }
+
+            fetch('{{ route("client.saldo.topup_finish") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({ order_id: orderId })
+            })
+            .then(res => res.json())
+            .then(res => {
+                if (overlay) overlay.remove();
+
+                if (res.status === 'success') {
+                    localStorage.removeItem('pending_topup_order_id');
+                    alert(res.message || 'Top Up Saldo berhasil ditambahkan!');
+                    window.location.reload();
+                } else if (res.status === 'pending') {
+                    if (!silentIfPending) {
+                        alert(res.message || 'Pembayaran QRIS belum diselesaikan. Silakan scan QRIS dan lakukan pembayaran.');
+                    }
+                } else {
+                    if (!silentIfPending) {
+                        alert(res.message || 'Gagal memverifikasi status pembayaran.');
+                    }
+                }
+            })
+            .catch(err => {
+                if (overlay) overlay.remove();
+                console.error(err);
+                if (!silentIfPending) {
+                    alert('Gagal menghubungi server untuk verifikasi.');
+                }
+            });
+        }
+
+        function checkClientPendingTopup() {
+            const oid = localStorage.getItem('pending_topup_order_id');
+            verifyAndFinishTopup(oid, false);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const pendingOid = localStorage.getItem('pending_topup_order_id');
+            if (pendingOid) {
+                verifyAndFinishTopup(pendingOid, true);
+            }
+        });
 
         function loadClientSaldoHistory() {
             const loading = document.getElementById('clientHistoryLoading');

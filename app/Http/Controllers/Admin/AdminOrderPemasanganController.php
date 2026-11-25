@@ -189,9 +189,23 @@ class AdminOrderPemasanganController extends Controller
             }
         }
 
+        $lastPelangganId = Pelanggan::max('id_pelanggan') ?? 0;
+        $nextKodePelanggan = "00003100" . ($lastPelangganId + 1);
+
         return view('admin.order_pemasangan.index', compact(
-            'orders', 'pakets', 'mikrotiks', 'odps', 'branches', 'subBranches', 'teknisis', 'topTeknisi', 'salesList'
+            'orders', 'pakets', 'mikrotiks', 'odps', 'branches', 'subBranches', 'teknisis', 'topTeknisi', 'salesList',
+            'nextKodePelanggan', 'lastPelangganId'
         ));
+    }
+
+    public function getNextKode()
+    {
+        $lastId = Pelanggan::max('id_pelanggan') ?? 0;
+        $nextId = $lastId + 1;
+        return response()->json([
+            'next_id' => $nextId,
+            'next_kode' => "00003100" . $nextId,
+        ]);
     }
 
     public function store(Request $request)
@@ -206,11 +220,11 @@ class AdminOrderPemasanganController extends Controller
                 'alamat_pemasangan' => 'required|string',
                 'koordinat_pemasangan' => 'required|string|max:100',
                 'jadwal_pemasangan' => 'nullable|string',
-                'foto_ktp' => 'required|image|mimes:jpeg,jpg,png,gif,webp|max:5120',
+                'foto_ktp' => 'required|image|mimes:jpeg,jpg,png,gif,webp|max:20480',
             ], [
                 'foto_ktp.required' => 'Foto KTP wajib diunggah.',
                 'foto_ktp.image' => 'File harus berupa gambar.',
-                'foto_ktp.max' => 'Ukuran file maksimal 5 MB.',
+                'foto_ktp.max' => 'Ukuran file foto KTP maksimal 20 MB.',
                 'paket.required' => 'Paket internet wajib dipilih.',
             ]);
 
@@ -249,9 +263,12 @@ class AdminOrderPemasanganController extends Controller
             ]);
 
             return redirect()->route('admin.order_pemasangan.index')->with('success', 'Order pemasangan baru berhasil dikirim dan menunggu persetujuan admin!');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            $firstError = collect($e->validator->errors()->all())->first();
+            return back()->withErrors($e->validator)->withInput()->with('error', $firstError ?: 'Data yang diisi belum lengkap.');
         } catch (\Throwable $e) {
-            return response("Error: " . $e->getMessage() . " in " . $e->getFile() . " on line " . $e->getLine() . "\n\nTrace:\n" . $e->getTraceAsString(), 200)
-                ->header('Content-Type', 'text/plain');
+            \Illuminate\Support\Facades\Log::error('Error store order pemasangan: ' . $e->getMessage());
+            return back()->withErrors(['error' => 'Gagal mengirim order: ' . $e->getMessage()])->withInput();
         }
     }
 
@@ -367,10 +384,20 @@ class AdminOrderPemasanganController extends Controller
             return back()->withErrors(['no_telp' => 'Nomor telepon sudah tercatat di database. Silakan gunakan nomor lain.'])->withInput();
         }
 
+        // Generate customer code (format 000)
+        $lastId = Pelanggan::max('id_pelanggan') ?? 0;
+        $newId = $lastId + 1;
+        $kode_pelanggan = "00003100" . $newId;
+
+        // Username PPPoE disesuaikan menggunakan kode pelanggan
+        if (empty($username) || str_starts_with($username, 'WNG') || str_starts_with($username, '00003100')) {
+            $username = $kode_pelanggan;
+        }
+
         // Check if username already exists in users
         $existingUser = User::where('username', $username)->first();
         if ($existingUser) {
-            return back()->withErrors(['username' => 'Username ini sudah digunakan. Silakan cari username lain.'])->withInput();
+            return back()->withErrors(['username' => 'Username (' . $username . ') sudah digunakan. Silakan cari username lain.'])->withInput();
         }
 
         // Check ODP port capacity
@@ -384,11 +411,6 @@ class AdminOrderPemasanganController extends Controller
                 }
             }
         }
-
-        // Generate customer code
-        $lastId = Pelanggan::max('id_pelanggan') ?? 0;
-        $newId = $lastId + 1;
-        $kode_pelanggan = "WNG03100" . $newId;
 
         // Date calculation for billing
         $tgl_pemasangan = Carbon::now()->format('Y-m-d H:i');
@@ -483,14 +505,14 @@ class AdminOrderPemasanganController extends Controller
         $request->validate([
             'id_order' => 'required|integer|exists:tbl_order_pemasangan,id',
             'foto_dokumentasi' => 'required|array|min:1|max:3',
-            'foto_dokumentasi.*' => 'image|mimes:jpeg,jpg,png,gif,webp|max:5120',
+            'foto_dokumentasi.*' => 'image|mimes:jpeg,jpg,png,gif,webp|max:20480',
         ], [
             'foto_dokumentasi.required' => 'Wajib melampirkan foto bukti dokumentasi pemasangan!',
             'foto_dokumentasi.array' => 'Format file tidak valid.',
             'foto_dokumentasi.min' => 'Wajib melampirkan minimal 1 foto bukti dokumentasi!',
             'foto_dokumentasi.max' => 'Maksimal hanya boleh mengunggah 3 foto bukti dokumentasi!',
             'foto_dokumentasi.*.image' => 'File harus berupa gambar.',
-            'foto_dokumentasi.*.max' => 'Ukuran setiap file gambar maksimal 5 MB.',
+            'foto_dokumentasi.*.max' => 'Ukuran setiap file gambar maksimal 20 MB.',
         ]);
 
         $uploadedFiles = [];

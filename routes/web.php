@@ -26,6 +26,7 @@ Route::middleware(['auth', 'client'])->group(function () {
     Route::get('/profil', [AuthController::class, 'profil'])->name('profile');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::post('/saldo/topup-charge', [PaymentController::class, 'topupCharge'])->name('client.saldo.topup_charge');
+    Route::post('/saldo/topup-finish', [PaymentController::class, 'topupFinish'])->name('client.saldo.topup_finish');
     Route::post('/payment/pay-saldo', [PaymentController::class, 'payWithFullSaldo'])->name('payment.pay_saldo');
     Route::get('/saldo/riwayat', [AuthController::class, 'riwayatSaldo'])->name('client.saldo.riwayat');
 });
@@ -244,6 +245,7 @@ Route::prefix('administrator')->group(function () {
 
         // Order Pemasangan Management
         Route::get('/order-pemasangan', [AdminOrderPemasanganController::class, 'index'])->name('admin.order_pemasangan.index');
+        Route::get('/order-pemasangan/next-kode', [AdminOrderPemasanganController::class, 'getNextKode'])->name('admin.order_pemasangan.next_kode');
         Route::post('/order-pemasangan', [AdminOrderPemasanganController::class, 'store'])->name('admin.order_pemasangan.store');
         Route::post('/order-pemasangan/assign', [AdminOrderPemasanganController::class, 'assign'])->name('admin.order_pemasangan.assign');
         Route::post('/order-pemasangan/approve', [AdminOrderPemasanganController::class, 'approve'])->name('admin.order_pemasangan.approve');

@@ -962,7 +962,7 @@
         }
 
         // Reset fields
-        document.getElementById('username').value = '';
+        document.getElementById('username').value = "{{ $nextKodePelanggan ?? '' }}";
         document.getElementById('password').value = '';
         document.getElementById('nama').value = '';
         $('#add_branch').val('').trigger('change.select2');

@@ -568,7 +568,7 @@
                         <div class="custom-select-dropdown" id="topup_select_dropdown">
                             <div class="custom-select-search-wrapper">
                                 <i class="fa-solid fa-magnifying-glass"></i>
-                                <input type="text" id="topup_search_pelanggan" class="form-control custom-select-search-input" placeholder="Cari nama, kode (WNG...), no. WA..." autocomplete="off">
+                                <input type="text" id="topup_search_pelanggan" class="form-control custom-select-search-input" placeholder="Cari nama, kode (000...), no. WA..." autocomplete="off">
                             </div>
                             <div class="custom-select-options" id="topup_select_options">
                                 <div class="custom-select-option selected" data-value="" data-text="-- Cari / Pilih Pelanggan --" data-saldo="0" data-search="">

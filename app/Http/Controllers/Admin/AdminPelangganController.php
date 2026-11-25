@@ -75,6 +75,9 @@ class AdminPelangganController extends Controller
         $pppSecret = [];
         $mikrotikError = null;
 
+        $lastPelangganId = Pelanggan::max('id_pelanggan') ?? 0;
+        $nextKodePelanggan = "00003100" . ($lastPelangganId + 1);
+
         return view('admin.pelanggan.index', compact(
             'pelanggan',
             'pakets',
@@ -86,7 +89,8 @@ class AdminPelangganController extends Controller
             'pppSecret',
             'selected_device_id',
             'checkUser',
-            'mikrotikError'
+            'mikrotikError',
+            'nextKodePelanggan'
         ));
     }
 
@@ -258,10 +262,15 @@ class AdminPelangganController extends Controller
             }
         }
 
-        // Generate customer code
+        // Generate customer code (format 000)
         $lastId = Pelanggan::max('id_pelanggan') ?? 0;
         $newId = $lastId + 1;
-        $kode_pelanggan = "WNG03100" . $newId;
+        $kode_pelanggan = "00003100" . $newId;
+
+        // PPPoE username disesuaikan menggunakan kode pelanggan jika default
+        if (empty($username) || str_starts_with($username, 'WNG') || str_starts_with($username, '00003100')) {
+            $username = $kode_pelanggan;
+        }
 
         try {
             DB::transaction(function() use (

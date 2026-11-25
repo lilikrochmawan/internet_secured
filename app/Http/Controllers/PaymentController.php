@@ -374,7 +374,174 @@ class PaymentController extends Controller
             ], 500);
         }
 
-        return response()->json($response->json());
+        session(['last_topup_order_id' => $orderId]);
+        $responseData = $response->json();
+        $responseData['order_id'] = $orderId;
+        $responseData['nominal'] = $nominal;
+
+        return response()->json($responseData);
+    }
+
+    public function topupFinish(Request $request)
+    {
+        $user = Auth::user();
+        $pelanggan = $user->pelanggan;
+
+        if (!$pelanggan) {
+            return response()->json(['status' => 'error', 'message' => 'Pelanggan tidak ditemukan.'], 404);
+        }
+
+        $orderId = trim($request->input('order_id', ''));
+        if (!$orderId) {
+            $orderId = session('last_topup_order_id', '');
+        }
+
+        if (!$orderId || !str_starts_with($orderId, 'TOPUP-')) {
+            return response()->json(['status' => 'error', 'message' => 'Order ID top up tidak ditemukan.'], 422);
+        }
+
+        $parts = explode('-', $orderId);
+        if (count($parts) < 3 || (int)$parts[1] !== (int)$pelanggan->id_pelanggan) {
+            return response()->json(['status' => 'error', 'message' => 'Akses ditolak: Order ID ini bukan milik akun Anda.'], 403);
+        }
+
+        // Cek jika sudah pernah diproses sebelumnya (idempoten)
+        $existing = SaldoMutasi::where('keterangan', 'like', "%{$orderId}%")->first();
+        if ($existing) {
+            $freshSaldo = (int) ($pelanggan->fresh()->saldo ?? 0);
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Top up saldo telah berhasil diproses!',
+                'saldo' => $freshSaldo,
+                'saldo_formatted' => 'Rp ' . number_format($freshSaldo, 0, ',', '.'),
+            ]);
+        }
+
+        // Verifikasi ke Midtrans API secara langsung menggunakan Server Key
+        $pgate = Pgate::first();
+        if (!$pgate || !$pgate->tserverkey) {
+            return response()->json(['status' => 'error', 'message' => 'Koneksi Midtrans belum tersedia.'], 500);
+        }
+
+        $isSandbox = $pgate->mode === 'sandbox' || (!$pgate->mode && str_starts_with($pgate->tclientkey, 'SB-'));
+        $baseUrl = $isSandbox ? 'https://api.sandbox.midtrans.com/v2' : 'https://api.midtrans.com/v2';
+
+        $response = Http::withBasicAuth($pgate->tserverkey, '')
+            ->get("{$baseUrl}/{$orderId}/status");
+
+        if (!$response->successful()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Transaksi belum ditemukan di Midtrans (Status: ' . $response->status() . ').',
+                'response' => $response->json(),
+            ], 400);
+        }
+
+        $statusData = $response->json();
+        $transactionStatus = $statusData['transaction_status'] ?? '';
+        $fraudStatus = $statusData['fraud_status'] ?? '';
+
+        $isSettled = ($transactionStatus === 'settlement') ||
+                     ($transactionStatus === 'capture' && $fraudStatus === 'accept');
+
+        if (!$isSettled) {
+            return response()->json([
+                'status' => 'pending',
+                'transaction_status' => $transactionStatus,
+                'message' => 'Pembayaran belum diselesaikan (Status Midtrans: ' . $transactionStatus . '). Silakan selesaikan pembayaran QRIS Anda terlebih dahulu.',
+            ]);
+        }
+
+        return $this->processTopupSettlement($orderId, $statusData);
+    }
+
+    public function processTopupSettlement($orderId, $payload = [])
+    {
+        $parts = explode('-', $orderId);
+        if (count($parts) < 3) {
+            return response()->json(['status' => 'error', 'message' => 'Format Order ID tidak valid.'], 400);
+        }
+
+        $id_pelanggan = (int) $parts[1];
+        $grossAmount = isset($payload['gross_amount']) ? (int) round((float) $payload['gross_amount']) : 0;
+
+        // Cek jika sudah pernah dicatat mutasinya
+        $existingMutasi = SaldoMutasi::where('keterangan', 'like', "%{$orderId}%")->first();
+        if ($existingMutasi) {
+            $currentSaldo = (int) ($existingMutasi->pelanggan->saldo ?? 0);
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Top up saldo telah berhasil diproses sebelumnya.',
+                'saldo' => $currentSaldo,
+                'saldo_formatted' => 'Rp ' . number_format($currentSaldo, 0, ',', '.'),
+            ]);
+        }
+
+        $pelanggan = Pelanggan::find($id_pelanggan);
+        if (!$pelanggan) {
+            Log::error("Topup order {$orderId} failed: Pelanggan ID {$id_pelanggan} not found.");
+            return response()->json(['status' => 'error', 'message' => 'Pelanggan tidak ditemukan.'], 404);
+        }
+
+        // Jika grossAmount tidak disertakan di payload, ambil langsung dari Midtrans API
+        if ($grossAmount <= 0) {
+            $pgate = Pgate::first();
+            if ($pgate && $pgate->tserverkey) {
+                $isSandbox = $pgate->mode === 'sandbox' || (!$pgate->mode && str_starts_with($pgate->tclientkey, 'SB-'));
+                $baseUrl = $isSandbox ? 'https://api.sandbox.midtrans.com/v2' : 'https://api.midtrans.com/v2';
+                $res = Http::withBasicAuth($pgate->tserverkey, '')->get("{$baseUrl}/{$orderId}/status");
+                if ($res->successful()) {
+                    $json = $res->json();
+                    $grossAmount = (int) round((float) ($json['gross_amount'] ?? 0));
+                }
+            }
+        }
+
+        if ($grossAmount <= 0) {
+            Log::error("Topup order {$orderId} failed: Gross amount 0 or invalid.");
+            return response()->json(['status' => 'error', 'message' => 'Nominal top up tidak valid.'], 400);
+        }
+
+        DB::transaction(function() use ($pelanggan, $grossAmount, $orderId) {
+            $locked = Pelanggan::lockForUpdate()->find($pelanggan->id_pelanggan);
+            $saldoAwal = (int) ($locked->saldo ?? 0);
+            $saldoAkhir = $saldoAwal + $grossAmount;
+            $locked->update(['saldo' => $saldoAkhir]);
+
+            SaldoMutasi::create([
+                'id_pelanggan' => $locked->id_pelanggan,
+                'tipe' => 'masuk',
+                'jumlah' => $grossAmount,
+                'saldo_awal' => $saldoAwal,
+                'saldo_akhir' => $saldoAkhir,
+                'kategori' => 'topup_qris',
+                'keterangan' => "Top Up Saldo via Midtrans QRIS (Order ID: {$orderId})",
+                'created_by' => null,
+            ]);
+
+            // Catat di Buku Kas sesuai ketentuan pembukuan
+            DB::table('tb_kas')->insert([
+                'tgl_kas' => date('Y-m-d'),
+                'keterangan' => "[TOPUP SALDO QRIS] " . $locked->nama_pelanggan . " (" . $locked->kode_pelanggan . ") - Order: " . $orderId,
+                'penerimaan' => $grossAmount,
+                'pengeluaran' => 0,
+                'bayar_saldo' => 0,
+                'jenis_kas' => 'topup',
+                'is_saldo' => 0,
+                'id_tagihan' => null,
+                'status' => 1,
+            ]);
+        });
+
+        Log::info("Topup order {$orderId} successfully completed for Pelanggan {$pelanggan->nama_pelanggan} (+Rp {$grossAmount}).");
+
+        $updatedPelanggan = Pelanggan::find($id_pelanggan);
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Top Up Saldo sebesar Rp ' . number_format($grossAmount, 0, ',', '.') . ' berhasil ditambahkan ke akun Anda!',
+            'saldo' => (int) ($updatedPelanggan->saldo ?? 0),
+            'saldo_formatted' => 'Rp ' . number_format($updatedPelanggan->saldo ?? 0, 0, ',', '.'),
+        ]);
     }
 
     public function payWithFullSaldo(Request $request)
@@ -660,6 +827,12 @@ public function notification(Request $request)
             return response()->json(['status' => 'ok', 'message' => 'Transaction status: ' . $transactionStatus]);
         }
 
+        // Webhook otomatis untuk Top Up Saldo Pelanggan
+        if (str_starts_with($orderId, 'TOPUP-')) {
+            Log::info("Midtrans Webhook: Memproses penambahan saldo untuk {$orderId}", ['payload' => $payload]);
+            return $this->processTopupSettlement($orderId, $payload);
+        }
+
         $id_tagihan_list = [];
 
         if (str_starts_with($orderId, 'COMBINED-')) {
@@ -689,24 +862,10 @@ public function notification(Request $request)
                 $inIds = [$id_pelanggan];
             }
 
-            $tagihans = DB::table('tb_tagihan')
-                ->whereIn('id_pelanggan', $inIds)
-                ->where(function($q) {
-                    $q->whereNull('status_bayar')
-                      ->orWhereIn('status_bayar', [0, '0', 'belum', '']);
-                })
-                ->where(function($q) use ($targetMonth) {
-                    $q->where(function($sub) use ($targetMonth) {
-                        $sub->where(function($sub2) {
-                                $sub2->whereNull('manual_invoice')->orWhere('manual_invoice', 0);
-                            })
-                            ->where('bulan_tahun', $targetMonth);
-                    })->orWhere('manual_invoice', 1);
-                })
-                ->pluck('id_tagihan')
+            $id_tagihan_list = $this->tagihanService
+                ->getUnpaidInvoices($inIds, $targetMonth)
+                ->pluck('id')
                 ->toArray();
-
-            $id_tagihan_list = $tagihans;
         } else {
             $pieces = explode('-', $orderId);
             $id_tagihan_list = [$pieces[0]];
